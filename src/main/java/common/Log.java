@@ -17,11 +17,13 @@ public class Log {
 		l.setLevel(Level.ALL);	
 		
 		String fileName = "";
+		//TODO logs dir in app data
 		if (l.getName() == null)
 			fileName = "logs/_default.log";
 		else
 			fileName = "logs/" + l.getName() + ".log";
 		
+		l.setUseParentHandlers(false);
 		l.addHandler(consoleHandler());
 		l.addHandler(fileHandler(fileName));
 	}
