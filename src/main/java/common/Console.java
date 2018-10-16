@@ -1,6 +1,5 @@
 package common;
 
-import java.io.InputStream;
 import java.util.Scanner;
 
 public class Console {
@@ -9,10 +8,6 @@ public class Console {
 	
 	public Console() {
 		this.scanner = new Scanner(System.in);
-	}
-	
-	protected Console(InputStream stream) {
-		this.scanner = new Scanner(stream);
 	}
 	
 	public synchronized void out(String message) {
