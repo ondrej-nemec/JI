@@ -19,8 +19,7 @@ public class Terminal {
 		this.loader = new PlainTextLoader();
 	}
 	
-	public int run(Consumer<String> stdOut, Consumer<String> stdErr, String... command) {
-		/*
+	public int run(Consumer<String> stdOut, Consumer<String> stdErr, String command) {
 		try {
 			Process pr = Runtime.getRuntime().exec(command);
 			pr.waitFor();
@@ -33,7 +32,6 @@ public class Terminal {
 			//TODO what do with error
 			e.printStackTrace();
 		}
-		*/
 		//TODO find code of fatal error
 		return -1;
 	}
