@@ -1,20 +1,29 @@
 package common;
 
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class Console {
 
-	private static Scanner scanner = new Scanner(System.in);
+	private final Scanner scanner;	
 	
-	public synchronized static void out(String message) {
+	public Console() {
+		this.scanner = new Scanner(System.in);
+	}
+	
+	protected Console(InputStream stream) {
+		this.scanner = new Scanner(stream);
+	}
+	
+	public synchronized void out(String message) {
 		System.out.println(message);
 	}
 	
-	public synchronized static void err(String message) {
+	public synchronized void err(String message) {
 		System.err.println(message);
 	}
 	
-	public synchronized static String in() {
+	public synchronized String in() {
 		return scanner.nextLine();
 	}	
 }
