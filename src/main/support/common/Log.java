@@ -2,8 +2,6 @@ package common;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -13,28 +11,33 @@ import text.plaintext.PlainTextCreator;
 
 public class Log {
 	
-	public static void setLogger(Logger l) {
-		l.setLevel(Level.ALL);	
-		
-		String fileName = "";
-		//TODO logs dir in app data
-		if (l.getName() == null)
-			fileName = "logs/_default.log";
-		else
-			fileName = "logs/" + l.getName() + ".log";
-		
-		l.setUseParentHandlers(false);
-		l.addHandler(consoleHandler());
-		l.addHandler(fileHandler(fileName));
+	private final Console console;
+	
+	private final String logDir;
+	
+	private final PlainTextCreator creator;
+	
+	public Log(Console console, String logDir) {
+		this(console, logDir, new PlainTextCreator());
 	}
 	
-	private static Handler fileHandler(String path) {
+	public Log(Console console, String logDir, PlainTextCreator creator) {
+		this.logDir = logDir + "/";
+		this.creator = creator;
+		this.console = console;
+	}
+	
+	public void setLogger(Logger logger) {
+		logger.setLevel(Level.ALL);
+				
+		logger.setUseParentHandlers(false);
+		logger.addHandler(consoleHandler());
+		logger.addHandler(fileHandler(logger.getName()));
+	}
+	
+	public Handler fileHandler(String loggerName) {
 		return new Handler() {
-			
-			private PlainTextCreator c = new PlainTextCreator();
-			
-			private List<LogRecord> front = new LinkedList<>();
-			
+						
 			@Override
 			public Level getLevel() {
 				return Level.ALL;
@@ -42,14 +45,15 @@ public class Log {
 			
 			@Override
 			public void publish(LogRecord record) {
-				try(BufferedWriter bw = c.buffer(path, true)) {
-					for (LogRecord rec : front) {
-						c.write(bw, makeMessage(rec));
-						front.remove(rec);
-					}					
-					c.write(bw, makeMessage(record));
+				String fileName = loggerName;
+				if (fileName == null)
+					fileName = "_default";
+				fileName = logDir + fileName + ".log";
+				
+				try(BufferedWriter bw = creator.buffer(fileName, true)) {
+					creator.write(bw, makeMessage(record));
 				} catch (IOException e) {
-					front.add(record);
+					//TODO what do if writing falls
 					e.printStackTrace();
 				}
 			}
@@ -66,7 +70,7 @@ public class Log {
 		};
 	}
 	
-	private static Handler consoleHandler () {
+	public Handler consoleHandler () {
 		return new Handler() {
 						
 			@Override
@@ -77,9 +81,9 @@ public class Log {
 			@Override
 			public synchronized void publish(LogRecord record) {
 				if (record.getLevel().intValue() >= Level.CONFIG.intValue())
-					Console.err(makeMessage(record));
+					console.err(makeMessage(record));
 				else
-					Console.out(makeMessage(record));
+					console.out(makeMessage(record));
 			}
 			
 			@Override
@@ -94,7 +98,7 @@ public class Log {
 		};
 	}
 	
-	private static String makeMessage(LogRecord record) {
+	private String makeMessage(LogRecord record) {
 		return record.getLevel() + ": " + record.getMessage(); //TODO format message
 	}
 }
