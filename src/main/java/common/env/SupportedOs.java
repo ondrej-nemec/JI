@@ -1,4 +1,4 @@
-package common.envenums;
+package common.env;
 
 public enum SupportedOs {
 	LINUX,
