@@ -1,11 +1,9 @@
 package common;
 
 import common.env.AppMode;
-import common.env.Os;
 
 public class Env {
-		
-	public final Os os;
+	//TODO app data or some else free space for writing
 	
 	public final AppMode mode;
 	
@@ -18,7 +16,6 @@ public class Env {
 	public final String pathToLogs;
 	
 	public Env() {
-		this.os = new Os();		
 		this.mode = AppMode.DEV;		
 		this.databaseUrlConnection = "";		
 		this.databaseLogin = "";
@@ -27,8 +24,6 @@ public class Env {
 	}
 	
 	public Env(Console console) {
-		this.os = new Os();
-		
 		console.out("App Mode dev/prod (DEV):");
 		String answer = console.in().toLowerCase();
 		this.mode = answer.equals("prod") ? AppMode.PROD : AppMode.DEV;
@@ -49,7 +44,6 @@ public class Env {
 	@Override
 	public String toString() {
 		return "AppMode: " + mode + "\n"
-				+ "OS: " + os.getOs() + "\n"
 				+ "path to logs: " + pathToLogs + "\n"
 				+ "database connection url: " + databaseUrlConnection + "\n"
 				+ "database login: " + databaseLogin + "\n"

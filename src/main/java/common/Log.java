@@ -2,6 +2,7 @@ package common;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -98,7 +99,21 @@ public class Log {
 		};
 	}
 	
+	private String makeDetailedMessage(LogRecord record) {
+		Date d = new Date(record.getMillis());
+		String result = "";
+		//kde kdy co
+		result += record.getSourceClassName() + " "
+				+ record.getSourceMethodName() + " "
+				+ record.getParameters();
+		result += Os.getNewLine();
+		result += d.toString();
+		result += Os.getNewLine();
+		
+		return result + makeMessage(record);
+	}
+	
 	private String makeMessage(LogRecord record) {
-		return record.getLevel() + ": " + record.getMessage(); //TODO format message
+		return record.getLevel() + ": " + record.getMessage();
 	}
 }
