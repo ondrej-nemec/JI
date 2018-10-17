@@ -3,7 +3,7 @@ package tools;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-import common.env.Os;
+import common.Os;
 import text.plaintext.PlainTextCreator;
 
 public class RunnerGenerate {
