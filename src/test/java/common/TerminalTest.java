@@ -17,19 +17,15 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class TerminalTest {
 	
-	private String pre = "cmd /c "; //TODO depend on OS
-		
 	private String path = 
 			"src" +
-			File.separator +
+			Os.getPathSeparator() +
 			"test" +
-			File.separator +
+			Os.getPathSeparator() +
 			"resource" +
-			File.separator +
-			"terminaltest" +
+			Os.getPathSeparator() +
+			"terminal" +
 			File.separator;
-	
-	private String exc = ".bat"; //TODO depend on OS
 	
 	@Test
 	@Parameters
@@ -44,16 +40,16 @@ public class TerminalTest {
 	public Collection<Object[]> parametersForTestRunWorks() {
 		return Arrays.asList(
 				new Object[]{ //working void command
-					pre + "exit", 0,
+					Os.getPreCommand() + "exit", 0,
 				},
 				new Object[]{ // not working command
 					"notExisting", -1,
 				},
 				new Object[]{
-					path + "success" + exc, 0,
+					path + "success" + Os.getCliExtention(), 0,
 				},
 				new Object[]{
-					path + "bad-command" + exc, 1, 
+					path + "bad-command" + Os.getCliExtention(), 1, 
 				}
 			);
 	}
