@@ -1,4 +1,4 @@
-package migrationtool;
+package tools;
 
 import org.flywaydb.core.Flyway;
 
