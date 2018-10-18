@@ -3,7 +3,8 @@
 /.settings
 
 /bin
-/
-.classpath
+/bin/
+/.classpath
 
 /target/
+/rip
