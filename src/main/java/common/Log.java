@@ -23,7 +23,7 @@ public class Log {
 	}
 	
 	public Log(Console console, String logDir, PlainTextCreator creator) {
-		this.logDir = logDir + "/";
+		this.logDir = logDir;
 		this.creator = creator;
 		this.console = console;
 	}
@@ -99,17 +99,13 @@ public class Log {
 		};
 	}
 	
-	private String makeDetailedMessage(LogRecord record) {
-		Date d = new Date(record.getMillis());
-		String result = "";
-		//kde kdy co
-		result += record.getSourceClassName() + " "
+	//TODO use it somewhere
+	protected String makeDetailedMessage(LogRecord record) {
+		String result = new Date(record.getMillis()) + " | "
+				+ record.getSourceClassName() + " "
 				+ record.getSourceMethodName() + " "
 				+ record.getParameters();
-		result += Os.getNewLine();
-		result += d.toString();
-		result += Os.getNewLine();
-		
+		result += Os.getNewLine();		
 		return result + makeMessage(record);
 	}
 	

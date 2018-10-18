@@ -25,7 +25,7 @@ public class LogTest {
 	@Test
 	public void testSetLoggerWorks() {
 		Logger logger = Logger.getAnonymousLogger();
-		Log log = new Log(new Console(), "logs");
+		Log log = new Log(new Console(), "logs/");
 		
 		log.setLogger(logger);
 		
@@ -38,7 +38,7 @@ public class LogTest {
 	@Parameters
 	public void testFileHandlerWorks(String loggerName, Level level, String message, String expectedFileName, String expectedMessage) throws IOException {
 		PlainTextCreator creator = mock(PlainTextCreator.class);
-		Handler handler = new Log(null, "logs", creator).fileHandler(loggerName);
+		Handler handler = new Log(null, "logs/", creator).fileHandler(loggerName);
 		
 		handler.publish(new LogRecord(level, message));
 		
