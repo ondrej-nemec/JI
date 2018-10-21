@@ -17,25 +17,31 @@ public class Env {
 	
 	public final String databaseUrlConnection;
 	
+	public final String databaseName;
+	
 	public final String databaseLogin;
 
 	public final String databasePassword;
 	
 	public Env() {
 		this.mode = AppMode.DEV;		
-		this.databaseUrlConnection = "";		
-		this.databaseLogin = "";
+		this.databaseUrlConnection = "";
+		this.databaseName = "";
+		this.databaseLogin = "root";
 		this.databasePassword = "";		
 		this.pathToLogs = "logs/";
-		this.pathToAppWorkspace = "workspace/";	}
+		this.pathToAppWorkspace = "workspace/";
+	}
 	
 	public Env(
 			String databaseUrlConnection,
+			String databaseName,
 			String databseLogin,
 			String databasePassword
 	) throws IOException {
 		this.mode = AppMode.DEV;		
-		this.databaseUrlConnection = databaseUrlConnection;		
+		this.databaseUrlConnection = databaseUrlConnection;	
+		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
 		this.pathToLogs = "logs/";
@@ -46,11 +52,13 @@ public class Env {
 			String appName,
 			AppMode appMode,
 			String databaseUrlConnection,
+			String databaseName,
 			String databseLogin,
 			String databasePassword
 	) throws IOException {
 		this.mode = appMode;		
-		this.databaseUrlConnection = databaseUrlConnection;		
+		this.databaseUrlConnection = databaseUrlConnection;	
+		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
 		
@@ -60,7 +68,7 @@ public class Env {
 					: System.getenv("APPDATA")
 				) + "/" + appName;
 		this.pathToAppWorkspace = initDir(workspace) + "/";
-		this.pathToLogs = initDir(workspace + "/logs") + "/";		
+		this.pathToLogs = initDir(workspace + "/logs") + "/";
 	}
 	
 	private String initDir(String dirName) throws IOException {
@@ -74,14 +82,17 @@ public class Env {
 		String answer = console.in().toLowerCase();
 		this.mode = answer.equals("prod") ? AppMode.PROD : AppMode.DEV;
 		
-		console.out("path to logs dir:");	
-		this.pathToLogs = console.in();
-		
 		console.out("path to app workspace dir:");	
 		this.pathToAppWorkspace = console.in();
 		
+		console.out("path to logs dir:");	
+		this.pathToLogs = console.in();
+		
 		console.out("database connection url:");
 		this.databaseUrlConnection = console.in();
+		
+		console.out("database name url:");
+		this.databaseName = console.in();
 		
 		console.out("database login:");		
 		this.databaseLogin = console.in();

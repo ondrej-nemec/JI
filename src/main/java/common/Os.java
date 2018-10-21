@@ -9,7 +9,7 @@ public class Os {
 	public final static String LINUX_NEW_LINE = "\n";
 	public final static String LINUX_PATH_SEPARATOR = "/";
 	public final static String LINUX_PRE_COMMAND = "";
-	public final static String LINUX_CLI_EXTENTION = ".sh";
+	public final static String LINUX_CLI_EXTENTION = ""; //.sh
 	
 	public final static String WINDOWS_NEW_LINE = "\r\n";
 	public final static String WINDOWS_PATH_SEPARATOR = "\\";
