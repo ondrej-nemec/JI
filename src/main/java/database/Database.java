@@ -1,15 +1,43 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.logging.Logger;
 
-public interface Database {
+import common.Env;
 
-	void startServer();
+public abstract class Database {
+
+	private Connection con;
 	
-	void stopServer();
+	protected final Env env;
 	
-	Connection getConnnection() throws SQLException;
+	protected final Logger logger;
 	
-	void stopConnection() throws SQLException;
+	public Database(Env env, Logger logger) {
+		this.env = env;
+		this.logger = logger;
+	}
+	
+	public Connection getConnnection() throws SQLException {
+		Properties props = new Properties();
+		props.setProperty("create", "true");
+		props.setProperty("user", env.databaseLogin);
+		props.setProperty("password", env.databasePassword);
+		
+		String connectionString = "jdbc:" + env.databaseType + ":" + env.databaseLocation +"/" + env.databaseName;
+		return DriverManager.getConnection(connectionString, props);
+	}
+	
+	public void stopConnection() throws SQLException {
+		if(con != null)
+			con.close();
+	}
+	
+	public abstract void startServer();
+	
+	public abstract void stopServer();
+
 }

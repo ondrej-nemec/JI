@@ -1,45 +1,23 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import common.Env;
 
-public class MySQL implements Database {
+public class MySQL extends Database {
 
-	private Connection con = null;
-	
-	private final Env env;
-	
-	public MySQL(Env env) {
-		this.env = env;
+	public MySQL(Env env, Logger logger) {
+		super(env, logger);
 	}
 	
 	@Override
 	public void startServer() {
-		// TODO Auto-generated method stub
-		
+		// implemetation is not required
 	}
 
 	@Override
 	public void stopServer() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Connection getConnnection() throws SQLException {
-		if (con == null) {
-			con = DriverManager.getConnection(env.databaseUrlConnection);
-		}
-		return con;
-	}
-
-	@Override
-	public void stopConnection() throws SQLException {
-		if (con != null)
-			con.close();
+		// implemetation is not required
 	}
 
 }
