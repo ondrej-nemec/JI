@@ -15,7 +15,9 @@ public class Env {
 	
 	public final String pathToAppWorkspace;
 	
-	public final String databaseUrlConnection;
+	public final String databaseType;
+	
+	public final String databaseLocation;
 	
 	public final String databaseName;
 	
@@ -25,7 +27,8 @@ public class Env {
 	
 	public Env() {
 		this.mode = AppMode.DEV;		
-		this.databaseUrlConnection = "";
+		this.databaseType = "";
+		this.databaseLocation = "";
 		this.databaseName = "";
 		this.databaseLogin = "root";
 		this.databasePassword = "";		
@@ -35,12 +38,14 @@ public class Env {
 	
 	public Env(
 			String databaseUrlConnection,
+			String databaseLocation,
 			String databaseName,
 			String databseLogin,
 			String databasePassword
 	) throws IOException {
 		this.mode = AppMode.DEV;		
-		this.databaseUrlConnection = databaseUrlConnection;	
+		this.databaseType = databaseUrlConnection;	
+		this.databaseLocation = databaseLocation;
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
@@ -52,12 +57,14 @@ public class Env {
 			String appName,
 			AppMode appMode,
 			String databaseUrlConnection,
+			String databaseLocation,
 			String databaseName,
 			String databseLogin,
 			String databasePassword
 	) throws IOException {
 		this.mode = appMode;		
-		this.databaseUrlConnection = databaseUrlConnection;	
+		this.databaseType = databaseUrlConnection;
+		this.databaseLocation = databaseLocation;
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
@@ -88,8 +95,11 @@ public class Env {
 		console.out("path to logs dir:");	
 		this.pathToLogs = console.in();
 		
-		console.out("database connection url:");
-		this.databaseUrlConnection = console.in();
+		console.out("database type (mysql / derby supported):");
+		this.databaseType = console.in();
+		
+		console.out("database location:");
+		this.databaseLocation = console.in();
 		
 		console.out("database name url:");
 		this.databaseName = console.in();
@@ -106,7 +116,9 @@ public class Env {
 		return "AppMode: " + mode + "\n"
 				+ "path to logs: " + pathToLogs + "\n"
 				+ "path to app workspace: " + pathToAppWorkspace + "\n"
-				+ "database connection url: " + databaseUrlConnection + "\n"
+				+ "database type: " + databaseType + "\n"
+				+ "database location: " + databaseLocation + "\n"
+				+ "database name: " + databaseName + "\n"
 				+ "database login: " + databaseLogin + "\n"
 				+ "database password: " + databasePassword + "\n";
 	}
