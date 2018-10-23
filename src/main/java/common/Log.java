@@ -28,12 +28,13 @@ public class Log {
 		this.console = console;
 	}
 	
-	public void setLogger(Logger logger) {
+	public Logger setLogger(Logger logger) {
 		logger.setLevel(Level.ALL);
 				
 		logger.setUseParentHandlers(false);
 		logger.addHandler(consoleHandler());
 		logger.addHandler(fileHandler(logger.getName()));
+		return logger;
 	}
 	
 	public Handler fileHandler(String loggerName) {
