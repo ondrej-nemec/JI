@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import common.Env;
+import common.Terminal;
 
 public abstract class Database {
 
@@ -39,5 +40,16 @@ public abstract class Database {
 	public abstract void startServer();
 	
 	public abstract void stopServer();
+	
+	public static Database getDatabase(Env env, Logger logger, Terminal terminal) {
+		switch (env.databaseType) {
+		case "derby":
+			return new Derby(env, logger, terminal, env.pathToAppWorkspace);
+		case "mysql":
+			return new MySQL(env, logger);
+		default:
+			return null;
+		}		
+	}
 
 }
