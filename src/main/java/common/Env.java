@@ -37,14 +37,14 @@ public class Env {
 	}
 	
 	public Env(
-			String databaseUrlConnection,
+			String databaseType,
 			String databaseLocation,
 			String databaseName,
 			String databseLogin,
 			String databasePassword
-	) throws IOException {
+	) {
 		this.mode = AppMode.DEV;		
-		this.databaseType = databaseUrlConnection;	
+		this.databaseType = databaseType;	
 		this.databaseLocation = databaseLocation;
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
@@ -56,14 +56,14 @@ public class Env {
 	public Env(
 			String appName,
 			AppMode appMode,
-			String databaseUrlConnection,
+			String databaseType,
 			String databaseLocation,
 			String databaseName,
 			String databseLogin,
 			String databasePassword
 	) throws IOException {
 		this.mode = appMode;		
-		this.databaseType = databaseUrlConnection;
+		this.databaseType = databaseType;
 		this.databaseLocation = databaseLocation;
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
