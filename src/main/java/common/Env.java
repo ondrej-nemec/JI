@@ -1,8 +1,11 @@
 package common;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import org.apache.commons.io.FileUtils;
 
 import common.env.AppMode;
 import common.env.SupportedOs;
@@ -25,13 +28,16 @@ public class Env {
 
 	public final String databasePassword;
 	
+	private final boolean isDatabaseOnLocalhost;
+	
 	public Env() {
 		this.mode = AppMode.DEV;		
 		this.databaseType = "";
 		this.databaseLocation = "";
 		this.databaseName = "";
 		this.databaseLogin = "root";
-		this.databasePassword = "";		
+		this.databasePassword = "";
+		this.isDatabaseOnLocalhost = false;
 		this.pathToLogs = "workspace/logs/";
 		this.pathToAppWorkspace = "workspace/";
 	}
@@ -41,16 +47,21 @@ public class Env {
 			String databaseLocation,
 			String databaseName,
 			String databseLogin,
-			String databasePassword
+			String databasePassword,
+			boolean isDatabaseOnLocalhost
 	) {
-		this.mode = AppMode.DEV;		
-		this.databaseType = databaseType;	
-		this.databaseLocation = databaseLocation;
+		this.mode = AppMode.DEV;
+		this.pathToLogs = "workspace/logs/";
+		this.pathToAppWorkspace = "workspace/";		
+		this.databaseType = databaseType;
+		if (isDatabaseOnLocalhost) 
+			this.databaseLocation = databaseLocation;
+		else
+			this.databaseLocation = pathToAppWorkspace + databaseLocation;
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
-		this.pathToLogs = "workspace/logs/";
-		this.pathToAppWorkspace = "workspace/";
+		this.isDatabaseOnLocalhost = isDatabaseOnLocalhost;
 	}
 	
 	public Env(
@@ -60,24 +71,33 @@ public class Env {
 			String databaseLocation,
 			String databaseName,
 			String databseLogin,
-			String databasePassword
+			String databasePassword,
+			boolean isDatabaseOnLocalhost
 	) {
-		this.mode = appMode;		
+		this.mode = appMode;
+		if (appMode == AppMode.DEV) {
+			this.pathToLogs = "workspace/logs/";
+			this.pathToAppWorkspace = "workspace/";
+		} else {
+			String workspace = (
+						Os.getOs() == SupportedOs.LINUX
+						? System.getenv("HOME")
+						: System.getenv("APPDATA")
+					) + "/" + appName;
+			this.pathToAppWorkspace = workspace + "/";
+			this.pathToLogs = workspace + "/logs/";
+		}
 		this.databaseType = databaseType;
-		this.databaseLocation = databaseLocation;
+		if (isDatabaseOnLocalhost) 
+			this.databaseLocation = databaseLocation;
+		else
+			this.databaseLocation = pathToAppWorkspace + databaseLocation;
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
-		
-		String workspace = (
-					Os.getOs() == SupportedOs.LINUX
-					? System.getenv("HOME")
-					: System.getenv("APPDATA")
-				) + "/" + appName;
-		this.pathToAppWorkspace = workspace + "/";
-		this.pathToLogs = workspace + "/logs/";
+		this.isDatabaseOnLocalhost = isDatabaseOnLocalhost;		
 	}
-
+/*
 	public Env(Console console) {
 		console.out("App Mode dev/prod (DEV):");
 		String answer = console.in().toLowerCase();
@@ -104,7 +124,7 @@ public class Env {
 		console.out("database password:");
 		this.databasePassword = console.in();
 	}
-	
+	*/
 	@Override
 	public String toString() {
 		return "AppMode: " + mode + "\n"
@@ -125,5 +145,13 @@ public class Env {
 	private void initDir(String dirName) throws IOException {
 		if (!Files.isDirectory(Paths.get(dirName)))
 			Files.createDirectory(Paths.get(dirName));
+	}
+	
+	public void copyDb(String db) throws IOException {
+		if (!isDatabaseOnLocalhost)
+			FileUtils.copyDirectory(
+					new File(db),
+					new File(pathToAppWorkspace + Paths.get(db).getFileName())
+				);
 	}
 }
