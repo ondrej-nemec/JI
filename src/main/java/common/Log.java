@@ -100,17 +100,12 @@ public class Log {
 		};
 	}
 	
-	//TODO use it somewhere
-	protected String makeDetailedMessage(LogRecord record) {
+	private String makeMessage(LogRecord record) {
 		String result = new Date(record.getMillis()) + " | "
-				+ record.getSourceClassName() + " "
-				+ record.getSourceMethodName() + " "
+				+ record.getSourceClassName() + " : "
+				+ record.getSourceMethodName() + " : "
 				+ record.getParameters();
 		result += Os.getNewLine();		
-		return result + makeMessage(record);
-	}
-	
-	private String makeMessage(LogRecord record) {
-		return record.getLevel() + ": " + record.getMessage();
+		return result + record.getLevel() + ": " + record.getMessage();
 	}
 }

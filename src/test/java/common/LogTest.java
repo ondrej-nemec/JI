@@ -40,10 +40,12 @@ public class LogTest {
 		PlainTextCreator creator = mock(PlainTextCreator.class);
 		Handler handler = new Log(null, "logs/", creator).fileHandler(loggerName);
 		
-		handler.publish(new LogRecord(level, message));
+		LogRecord record = new LogRecord(level, message);
+		record.setMillis(0);
+		handler.publish(record);
 		
 		BufferedWriter br = verify(creator, times(1)).buffer("logs/" + expectedFileName + ".log", true);
-		verify(creator, times(1)).write(br, expectedMessage);
+		verify(creator, times(1)).write(br, getMessage(expectedMessage));
 		verifyNoMoreInteractions(creator);
 	}
 	
@@ -100,12 +102,14 @@ public class LogTest {
 		Console console = mock(Console.class);
 		Handler handler = new Log(console, "logs").consoleHandler();
 		
-		handler.publish(new LogRecord(level, message));
+		LogRecord record = new LogRecord(level, message);
+		record.setMillis(0);
+		handler.publish(record);
 		
 		if(isErr)
-			verify(console, times(1)).err(expectedMessage);
+			verify(console, times(1)).err(getMessage(expectedMessage));
 		else
-			verify(console, times(1)).out(expectedMessage);
+			verify(console, times(1)).out(getMessage(expectedMessage));
 		verifyNoMoreInteractions(console);
 	}
 	
@@ -133,5 +137,9 @@ public class LogTest {
 						 Level.SEVERE, "severe message", "SEVERE: severe message", true 
 				 }
 			);
+	}
+	
+	private String getMessage(String expect) {
+		return "Thu Jan 01 01:00:00 CET 1970 | null : null : null" + Os.getNewLine() + expect;
 	}
 }
