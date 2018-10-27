@@ -23,7 +23,8 @@ public class Derby extends Database {
 
 	@Override
 	public void startServer() {
-		System.getProperties().setProperty("derby.system.home", databasesStorage);
+		if (databasesStorage != "")
+			System.getProperties().setProperty("derby.system.home", databasesStorage);
 		terminal.run((a)->{}, (a)->{}, env.databaseLocation + "/startNetworkServer" + Os.getCliExtention());
 		logger.info("Derby has been started");
 	}
