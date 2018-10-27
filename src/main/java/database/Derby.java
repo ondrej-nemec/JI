@@ -12,19 +12,14 @@ public class Derby extends Database {
 	
 	private final Logger logger;
 	
-	private final String databasesStorage;
-	
-	public Derby(Env env, Logger logger, Terminal terminal, String databasesStorage) {
+	public Derby(Env env, Logger logger, Terminal terminal) {
 		super(env, logger);
 		this.terminal = terminal;
 		this.logger = logger;
-		this.databasesStorage = databasesStorage;
 	}
 
 	@Override
 	public void startServer() {
-		if (databasesStorage != "")
-			System.getProperties().setProperty("derby.system.home", databasesStorage);
 		terminal.run((a)->{}, (a)->{}, env.databaseLocation + "/startNetworkServer" + Os.getCliExtention());
 		logger.info("Derby has been started");
 	}

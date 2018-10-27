@@ -50,7 +50,7 @@ public abstract class Database {
 	public static Database getDatabase(Env env, Logger logger, Terminal terminal) {
 		switch (env.databaseType) {
 		case "derby":
-			return new Derby(env, logger, terminal, env.pathToAppWorkspace);
+			return new Derby(env, logger, terminal);
 		case "mysql":
 			return new MySQL(env, logger);
 		default:
