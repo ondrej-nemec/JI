@@ -12,7 +12,7 @@ public class Derby extends Database {
 	
 	private final Logger logger;
 	
-	private String databasesStorage;
+	private final String databasesStorage;
 	
 	public Derby(Env env, Logger logger, Terminal terminal, String databasesStorage) {
 		super(env, logger);
