@@ -17,9 +17,12 @@ public abstract class Database {
 	
 	protected final Logger logger;
 	
+	private String connectionString;
+	
 	public Database(Env env, Logger logger) {
 		this.env = env;
 		this.logger = logger;
+		this.connectionString = "jdbc:" + env.databaseType + ":" + env.databaseLocation +"/" + env.databaseName;
 	}
 	
 	public Connection getConnnection() throws SQLException {
@@ -28,13 +31,16 @@ public abstract class Database {
 		props.setProperty("user", env.databaseLogin);
 		props.setProperty("password", env.databasePassword);
 		
-		String connectionString = "jdbc:" + env.databaseType + ":" + env.databaseLocation +"/" + env.databaseName;
 		return DriverManager.getConnection(connectionString, props);
 	}
 	
-	public void stopConnection() throws SQLException {
+	public void closeConnection() throws SQLException {
 		if(con != null)
 			con.close();
+	}
+	
+	public String getConnectionString() {
+		return this.connectionString;
 	}
 	
 	public abstract void startServer();
