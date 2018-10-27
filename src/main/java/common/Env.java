@@ -32,7 +32,7 @@ public class Env {
 		this.databaseName = "";
 		this.databaseLogin = "root";
 		this.databasePassword = "";		
-		this.pathToLogs = "logs/";
+		this.pathToLogs = "workspace/logs/";
 		this.pathToAppWorkspace = "workspace/";
 	}
 	
@@ -49,7 +49,7 @@ public class Env {
 		this.databaseName = databaseName;
 		this.databaseLogin = databseLogin;
 		this.databasePassword = databasePassword;
-		this.pathToLogs = "logs/";
+		this.pathToLogs = "workspace/logs/";
 		this.pathToAppWorkspace = "workspace/";
 	}
 	
@@ -61,7 +61,7 @@ public class Env {
 			String databaseName,
 			String databseLogin,
 			String databasePassword
-	) throws IOException {
+	) {
 		this.mode = appMode;		
 		this.databaseType = databaseType;
 		this.databaseLocation = databaseLocation;
@@ -74,16 +74,10 @@ public class Env {
 					? System.getenv("HOME")
 					: System.getenv("APPDATA")
 				) + "/" + appName;
-		this.pathToAppWorkspace = initDir(workspace) + "/";
-		this.pathToLogs = initDir(workspace + "/logs") + "/";
+		this.pathToAppWorkspace = workspace + "/";
+		this.pathToLogs = workspace + "/logs/";
 	}
-	
-	private String initDir(String dirName) throws IOException {
-		if (!Files.isDirectory(Paths.get(dirName)))
-			Files.createDirectory(Paths.get(dirName));
-		return dirName;
-	}
-	
+
 	public Env(Console console) {
 		console.out("App Mode dev/prod (DEV):");
 		String answer = console.in().toLowerCase();
@@ -121,5 +115,15 @@ public class Env {
 				+ "database name: " + databaseName + "\n"
 				+ "database login: " + databaseLogin + "\n"
 				+ "database password: " + databasePassword + "\n";
+	}
+	
+	public void createAppDirs() throws IOException {
+		initDir(pathToAppWorkspace);
+		initDir(pathToLogs);
+	}	
+	
+	private void initDir(String dirName) throws IOException {
+		if (!Files.isDirectory(Paths.get(dirName)))
+			Files.createDirectory(Paths.get(dirName));
 	}
 }
