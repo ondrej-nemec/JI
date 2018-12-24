@@ -27,7 +27,7 @@ public class LogTest {
 		Logger logger = Logger.getAnonymousLogger();
 		Log log = new Log(new Console(), "logs/");
 		
-		log.setLogger(logger);
+		log.addAllHandlers(logger);
 		
 		assertEquals(Level.ALL, logger.getLevel());
 		assertFalse(logger.getUseParentHandlers());

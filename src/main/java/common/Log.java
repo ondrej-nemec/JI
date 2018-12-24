@@ -12,6 +12,10 @@ import text.plaintext.PlainTextCreator;
 
 public class Log {
 	
+	public static final int CONSOLE = 0;
+	
+	public static final int FILE = 1;
+	
 	private final Console console;
 	
 	private final String logDir;
@@ -28,12 +32,27 @@ public class Log {
 		this.console = console;
 	}
 	
-	public Logger setLogger(Logger logger) {
+	public Logger addAllHandlers(Logger logger) {
 		logger.setLevel(Level.ALL);
-				
-		logger.setUseParentHandlers(false);
+		logger.setUseParentHandlers(false);		
+		
 		logger.addHandler(consoleHandler());
 		logger.addHandler(fileHandler(logger.getName()));
+		
+		return logger;
+	}
+	
+	public Logger setHandler(Logger logger, int... handlers) {
+		logger.setLevel(Level.ALL);
+		logger.setUseParentHandlers(false);
+		
+		for (int handler : handlers) {
+			switch(handler) {
+			case CONSOLE: logger.addHandler(consoleHandler()); break;
+			case FILE: logger.addHandler(fileHandler(logger.getName())); break;
+			}
+		}
+		
 		return logger;
 	}
 	
