@@ -14,17 +14,17 @@ public class Terminal {
 	
 	private final Logger logger;
 	
-	public Terminal(Logger logger, PlainTextLoader loader) {
+	public Terminal(final Logger logger, final PlainTextLoader loader) {
 		this.loader = loader;
 		this.logger = logger;
 	}
 	
-	public Terminal(Logger logger) {
+	public Terminal(final Logger logger) {
 		this.loader = new PlainTextLoader();
 		this.logger = logger;
 	}
 	
-	public int run(Consumer<String> stdOut, Consumer<String> stdErr, String command) {
+	public int run(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
 		try {
 			Process pr = Runtime.getRuntime().exec(command);
 			pr.waitFor();
@@ -39,7 +39,7 @@ public class Terminal {
 		return -1;
 	}
 	
-	private void readsAndApplyConsumer(InputStream stream, Consumer<String> consumer) throws IOException {
+	private void readsAndApplyConsumer(final InputStream stream, final Consumer<String> consumer) throws IOException {
 		try (BufferedReader br = loader.buffer(stream)) {
 			loader.read(br, consumer);
 		} finally {}

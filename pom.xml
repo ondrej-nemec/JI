@@ -43,11 +43,6 @@
 	  <groupId>com.github.ondrej-nemec</groupId>
 	  <artifactId>lordoffiles</artifactId>
 	  <version>v1.3-alpha</version>
-	</dependency>	
-  <dependency>
-	  <groupId>com.github.ondrej-nemec</groupId>
-	  <artifactId>translator</artifactId>
-	  <version>v1.1-alpha</version>
 	</dependency>
   </dependencies>
 </project>

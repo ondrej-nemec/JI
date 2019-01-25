@@ -8,7 +8,7 @@ import text.plaintext.PlainTextCreator;
 
 public class RunnerGenerate {
 
-	public RunnerGenerate(PlainTextCreator creator, String jarName) {
+	public RunnerGenerate(final PlainTextCreator creator, final String jarName) {
 		try(BufferedWriter br = creator.buffer("runApp.bat", false)) {
 			creator.write(
 				br,

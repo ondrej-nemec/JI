@@ -10,11 +10,11 @@ public class Console {
 		this.scanner = new Scanner(System.in);
 	}
 	
-	public synchronized void out(String message) {
+	public synchronized void out(final String message) {
 		System.out.println(message);
 	}
 	
-	public synchronized void err(String message) {
+	public synchronized void err(final String message) {
 		System.err.println(message);
 	}
 	

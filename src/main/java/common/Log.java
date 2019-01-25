@@ -22,17 +22,17 @@ public class Log {
 	
 	private final PlainTextCreator creator;
 	
-	public Log(Console console, String logDir) {
+	public Log(final Console console, final String logDir) {
 		this(console, logDir, new PlainTextCreator());
 	}
 	
-	public Log(Console console, String logDir, PlainTextCreator creator) {
+	public Log(final Console console, final String logDir, final PlainTextCreator creator) {
 		this.logDir = logDir;
 		this.creator = creator;
 		this.console = console;
 	}
 	
-	public Logger addAllHandlers(Logger logger) {
+	public Logger addAllHandlers(final Logger logger) {
 		logger.setLevel(Level.ALL);
 		logger.setUseParentHandlers(false);		
 		
@@ -42,7 +42,7 @@ public class Log {
 		return logger;
 	}
 	
-	public Logger setHandler(Logger logger, int... handlers) {
+	public Logger setHandler(final Logger logger, int... handlers) {
 		logger.setLevel(Level.ALL);
 		logger.setUseParentHandlers(false);
 		
@@ -56,7 +56,7 @@ public class Log {
 		return logger;
 	}
 	
-	public Handler fileHandler(String loggerName) {
+	public Handler fileHandler(final String loggerName) {
 		return new Handler() {
 						
 			@Override
@@ -80,14 +80,10 @@ public class Log {
 			}
 			
 			@Override
-			public void flush() {
-				// implement me if you wish				
-			}
+			public void flush() { /* implement me if you wish	*/	}
 			
 			@Override
-			public void close() throws SecurityException {
-				// implement me if you wish			
-			}
+			public void close() throws SecurityException { /* implement me if you wish	*/ }
 		};
 	}
 	
@@ -108,18 +104,14 @@ public class Log {
 			}
 			
 			@Override
-			public void flush() {
-				// implement me if you wish
-			}
+			public void flush() { /* implement me if you wish	*/	}
 			
 			@Override
-			public void close() throws SecurityException {
-				// implement me if you wish
-			}
+			public void close() throws SecurityException { /* implement me if you wish	*/ }
 		};
 	}
 	
-	private String makeMessage(LogRecord record) {
+	private String makeMessage(final LogRecord record) {
 		String result = new Date(record.getMillis()) + " | "
 				+ record.getSourceClassName() + " : "
 				+ record.getSourceMethodName() + " : "

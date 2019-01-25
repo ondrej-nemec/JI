@@ -2,12 +2,12 @@ package database;
 
 import java.util.logging.Logger;
 
-import common.Env;
+import common.DatabaseConfig;
 
 public class MySQL extends Database {
 
-	public MySQL(Env env, Logger logger) {
-		super(env, logger);
+	public MySQL(final DatabaseConfig config, final Logger logger) {
+		super(config, logger);
 	}
 	
 	@Override
