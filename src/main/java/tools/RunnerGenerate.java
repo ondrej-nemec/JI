@@ -4,14 +4,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 import common.Os;
+import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
 
 public class RunnerGenerate {
 
-	public RunnerGenerate(final PlainTextCreator creator, final String jarName) {
-		try(BufferedWriter br = creator.buffer("runApp.bat", false)) {
-			creator.write(
-				br,
+	public RunnerGenerate(final String jarName) {
+		try(BufferedWriter br = BufferedWriterFactory.buffer("runApp.bat", false)) {
+			new PlainTextCreator(br).write(
 				"#!/bin/bash" +
 				Os.WINDOWS_NEW_LINE + Os.LINUX_NEW_LINE +
 				"java -version" +
@@ -33,6 +33,6 @@ public class RunnerGenerate {
 	}
 	
 	public static void main(String[] args) {
-		new RunnerGenerate(new PlainTextCreator(), args[0]);
+		new RunnerGenerate(args[0]);
 	}
 }

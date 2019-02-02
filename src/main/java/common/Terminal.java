@@ -6,21 +6,14 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import text.BufferedReaderFactory;
 import text.plaintext.PlainTextLoader;
 
 public class Terminal {
 	
-	private final PlainTextLoader loader;
-	
 	private final Logger logger;
 	
-	public Terminal(final Logger logger, final PlainTextLoader loader) {
-		this.loader = loader;
-		this.logger = logger;
-	}
-	
 	public Terminal(final Logger logger) {
-		this.loader = new PlainTextLoader();
 		this.logger = logger;
 	}
 	
@@ -40,8 +33,8 @@ public class Terminal {
 	}
 	
 	private void readsAndApplyConsumer(final InputStream stream, final Consumer<String> consumer) throws IOException {
-		try (BufferedReader br = loader.buffer(stream)) {
-			loader.read(br, consumer);
+		try (BufferedReader br = BufferedReaderFactory.buffer(stream)) {
+			new PlainTextLoader(br).read(consumer);
 		} finally {}
 	}
 }

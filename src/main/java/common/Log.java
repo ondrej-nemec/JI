@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
 
 public class Log {
@@ -19,16 +20,9 @@ public class Log {
 	private final Console console;
 	
 	private final String logDir;
-	
-	private final PlainTextCreator creator;
-	
+		
 	public Log(final Console console, final String logDir) {
-		this(console, logDir, new PlainTextCreator());
-	}
-	
-	public Log(final Console console, final String logDir, final PlainTextCreator creator) {
 		this.logDir = logDir;
-		this.creator = creator;
 		this.console = console;
 	}
 	
@@ -71,8 +65,8 @@ public class Log {
 					fileName = "_default";
 				fileName = logDir + fileName + ".log";
 				
-				try(BufferedWriter bw = creator.buffer(fileName, true)) {
-					creator.write(bw, makeMessage(record));
+				try(BufferedWriter bw = BufferedWriterFactory.buffer(fileName, true)) {
+					new PlainTextCreator(bw).write(makeMessage(record));
 				} catch (IOException e) {
 					//TODO what do if writing falls
 					e.printStackTrace();
