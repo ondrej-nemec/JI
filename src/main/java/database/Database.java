@@ -24,7 +24,9 @@ public abstract class Database {
 	public Database(final DatabaseConfig config, final Logger logger) {
 		this.config = config;
 		this.logger = logger;
-		this.connectionString = "jdbc:" + config.type + ":" + config.pathOrUrlToLocation +"/" + config.schemaName;
+		this.connectionString = "jdbc:" + config.type + ":"
+				+ (config.runOnExternalServer ? "//" : "")
+				+ config.pathOrUrlToLocation + "/" + config.schemaName;
 	}
 	
 	public Connection getConnnection() throws SQLException {
