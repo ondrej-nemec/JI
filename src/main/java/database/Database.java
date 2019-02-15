@@ -24,18 +24,11 @@ public abstract class Database {
 	public Database(final DatabaseConfig config, final Logger logger) {
 		this.config = config;
 		this.logger = logger;
-		this.connectionString = "jdbc:" + config.type + ":"
-				+ (config.runOnExternalServer ? "//" : "")
-				+ config.pathOrUrlToLocation + "/" + config.schemaName;
+		this.connectionString = createConnectionString() + config.schemaName;
 	}
 	
 	public Connection getConnnection() throws SQLException {
-		Properties props = new Properties();
-		props.setProperty("create", "true");
-		props.setProperty("user", config.login);
-		props.setProperty("password", config.password);
-		
-		return DriverManager.getConnection(connectionString, props);
+		return DriverManager.getConnection(connectionString, createProperties());
 	}
 	
 	public void closeConnection() throws SQLException {
@@ -44,26 +37,45 @@ public abstract class Database {
 	}
 	
 	public String getConnectionString() {
-		return this.connectionString;
+		return connectionString;
 	}
 	
-	public void createDbAndMigrate() throws SQLException, FlywaySqlException {
-		// create and close - create db schema
-		getConnnection();
-		closeConnection();
-		logger.info("DB schema was created");
-		new Migrate(
-				getConnectionString(),
-				config.login,
-				config.password,
-				config.pathToMigrations
-		);
-		logger.info("All migrations were applied");
+	public boolean createDbAndMigrate() {
+		try {
+			if (config.runOnExternalServer) {
+				DriverManager
+					.getConnection(
+							createConnectionString(),
+							createProperties()
+					).createStatement()
+					.executeUpdate("CREATE DATABASE IF NOT EXISTS " + config.schemaName);
+			} else {
+				// create and close - create db schema
+				getConnnection();
+				closeConnection();			
+			}
+			logger.info("DB schema was created");
+			new Migrate(
+					getConnectionString(),
+					config.login,
+					config.password,
+					config.pathToMigrations
+			);
+			logger.info("All migrations were applied");
+		} catch (SQLException | FlywaySqlException e) {
+			logger.severe("Create db and migrante fail: " + e.getClass() + ": " + e.getMessage());
+			return false;
+		}
+		return true;
 	}
+	
+	/*** SEPARATOR ***/
 	
 	public abstract void startServer();
 	
 	public abstract void stopServer();
+	
+	/*** SEPARATOR ***/
 	
 	public static Database getDatabase(final DatabaseConfig config, final Logger logger, final Terminal terminal) {
 		switch (config.type) {
@@ -75,5 +87,19 @@ public abstract class Database {
 			return null;
 		}		
 	}
-
+	
+	/*** SEPARATOR ***/
+	
+	private String createConnectionString() {
+		return "jdbc:" + config.type + ":" + config.pathOrUrlToLocation + "/";
+	}
+	
+	private Properties createProperties() {
+		Properties props = new Properties();
+		props.setProperty("create", "true");
+		props.setProperty("user", config.login);
+		props.setProperty("password", config.password);
+		
+		return props;
+	}
 }

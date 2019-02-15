@@ -59,7 +59,7 @@ public class Log {
 			}
 			
 			@Override
-			public void publish(LogRecord record) {
+			public synchronized void publish(LogRecord record) {
 				String fileName = loggerName;
 				if (fileName == null)
 					fileName = "_default";
