@@ -29,7 +29,7 @@ public class TerminalTest {
 	
 	@Test
 	@Parameters
-	public void testRunWorks(String command, int expectedCode) {
+	public void testRunWorks(final String command, int expectedCode) {
 		Terminal terminal = new Terminal(mock(Logger.class));
 		
 		int code = terminal.run((a)->{}, (a)->{}, command);
@@ -41,6 +41,9 @@ public class TerminalTest {
 		return Arrays.asList(
 				new Object[]{ //working void command
 					Os.getPreCommand() + "exit", 0,
+				},
+				new Object[]{ //working void command
+					Os.getPreCommand() + "echo success", 0,
 				},
 				new Object[]{ // not working command
 					"notExisting", -1,
