@@ -3,7 +3,6 @@ package database;
 import java.util.logging.Logger;
 
 import common.DatabaseConfig;
-import common.Os;
 import common.Terminal;
 
 public class Derby extends Database {
@@ -21,13 +20,13 @@ public class Derby extends Database {
 	@Override
 	public void startServer() {
 		System.getProperties().setProperty("derby.system.home", config.pathOrUrlToLocation);
-		terminal.run((a)->{}, (a)->{}, config.pathOrUrlToLocation + "/startNetworkServer" + Os.getCliExtention());
+		terminal.runFile((a)->{}, (a)->{}, config.pathOrUrlToLocation + "/startNetworkServer");
 		logger.info("Derby has been started");
 	}
 
 	@Override
 	public void stopServer() {
-		terminal.run((a)->{}, (a)->{},config.pathOrUrlToLocation + "/stopNetworkServer" + Os.getCliExtention());
+		terminal.runFile((a)->{}, (a)->{},config.pathOrUrlToLocation + "/stopNetworkServer");
 		logger.info("Derby has been shutdowned");
 	}
 

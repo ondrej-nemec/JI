@@ -17,6 +17,8 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class TerminalTest {
 	
+	private final String SYSTEM_ERROR_MESSAGE = "SYSTEM_ERROR_MESSAGE"; 
+	
 	private String path = 
 			"src" +
 			Os.getPathSeparator() +
@@ -27,32 +29,86 @@ public class TerminalTest {
 			"terminal" +
 			File.separator;
 	
+	private String stdErr = "";
+	
+	private String stdOut = "";
+	
 	@Test
 	@Parameters
-	public void testRunWorks(final String command, int expectedCode) {
+	public void testRunCommandWorks(final String command, int expectedCode, final String expectedOut, final String expectedErr) {
 		Terminal terminal = new Terminal(mock(Logger.class));
 		
-		int code = terminal.run((a)->{}, (a)->{}, command);
+		int code = terminal.runCommand(
+				(a)->{stdOut += a;},
+				(a)->{stdErr += a;},
+				command
+			);
 		
-		assertEquals(expectedCode, code);		
+		assertEquals(expectedCode, code);
+		assertEquals(expectedOut, this.stdOut);
+		
+		if (SYSTEM_ERROR_MESSAGE.equals(expectedErr)) {
+			assertTrue(expectedErr.length() > 14);
+		} else {
+			assertEquals(expectedErr, this.stdErr);
+		}		
 	}
 	
-	public Collection<Object[]> parametersForTestRunWorks() {
+	public Collection<Object[]> parametersForTestRunCommandWorks() {
 		return Arrays.asList(
 				new Object[]{ //working void command
-					Os.getPreCommand() + "exit", 0,
+					"exit", 0, "", ""
 				},
 				new Object[]{ //working void command
-					Os.getPreCommand() + "echo success", 0,
+					"echo success", 0, "success", ""
 				},
 				new Object[]{ // not working command
-					"notExisting", -1,
+					"notExisting", 1, "", SYSTEM_ERROR_MESSAGE
+				}
+			);
+	}
+	
+	@Test
+	@Parameters
+	public void testRunFileWorks(final String file, int expectedCode, final String expectedOut, final String expectedErr) {
+		Terminal terminal = new Terminal(mock(Logger.class));
+		
+		int code = terminal.runFile(
+				(a)->{stdOut += a + " | ";},
+				(a)->{stdErr += a + " | ";},
+				file
+			);
+		
+		assertEquals(expectedCode, code);
+		assertEquals(expectedOut, this.stdOut);
+		
+		if (SYSTEM_ERROR_MESSAGE.equals(expectedErr)) {
+			assertTrue(expectedErr.length() > 7);
+		} else {
+			assertEquals(expectedErr, this.stdErr);
+		}		
+	}
+	
+	public Collection<Object[]> parametersForTestRunFileWorks() {
+		String absolutePath = System.getProperty("user.dir");
+		return Arrays.asList(
+				new Object[]{
+					path + "success",
+					0,
+					" | " + absolutePath + ">echo standart output  | standart output | ",
+					""
 				},
 				new Object[]{
-					path + "success" + Os.getCliExtention(), 0,
+					path + "bad-command", 1, " | " + absolutePath + ">echor | ", SYSTEM_ERROR_MESSAGE
 				},
 				new Object[]{
-					path + "bad-command" + Os.getCliExtention(), 1, 
+					path + "std-err-out",
+					0,
+					" | " + absolutePath + ">echo std err  1>&2  |  | " + absolutePath + ">echo std out  | std out | ",
+					"std err  | "
+				},
+				new Object[]{
+					path + "exit-code-5", 5, " | " + absolutePath + ">exit 5  | ", ""
 				}
 			);
 	}

@@ -17,7 +17,15 @@ public class Terminal {
 		this.logger = logger;
 	}
 	
-	public int run(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
+	public int runFile(final Consumer<String> stdOut, final Consumer<String> stdErr, final String fileName) {
+		return run(stdOut, stdErr, fileName + Os.getCliExtention());
+	}
+	
+	public int runCommand(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
+		return run(stdOut, stdErr, Os.getPreCommand() + command);
+	}
+	
+	private int run(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
 		try {
 			Process pr = Runtime.getRuntime().exec(command);
 			pr.waitFor();
