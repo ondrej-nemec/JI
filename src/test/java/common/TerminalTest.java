@@ -1,13 +1,9 @@
 package common;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Logger;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,7 +32,7 @@ public class TerminalTest {
 	@Test
 	@Parameters
 	public void testRunCommandWorks(final String command, int expectedCode, final String expectedOut, final String expectedErr) {
-		Terminal terminal = new Terminal(mock(Logger.class));
+		Terminal terminal = new Terminal();
 		
 		int code = terminal.runCommand(
 				(a)->{stdOut += a;},
@@ -71,7 +67,7 @@ public class TerminalTest {
 	@Test
 	@Parameters
 	public void testRunFileWorks(final String file, int expectedCode, final String expectedOut, final String expectedErr) {
-		Terminal terminal = new Terminal(mock(Logger.class));
+		Terminal terminal = new Terminal();
 		
 		int code = terminal.runFile(
 				(a)->{stdOut += a + " | ";},

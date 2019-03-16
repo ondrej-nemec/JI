@@ -13,6 +13,8 @@ import text.plaintext.PlainTextCreator;
 
 public class Log {
 	
+	// TODO change to factory for log4j.logger, configuration from env?
+	
 	public static final int CONSOLE = 0;
 	
 	public static final int FILE = 1;
