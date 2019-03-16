@@ -1,13 +1,11 @@
 package database;
 
-import java.util.logging.Logger;
-
 import common.DatabaseConfig;
 
 public class MySQL extends Database {
 
-	public MySQL(final DatabaseConfig config, final Logger logger) {
-		super(config, logger);
+	public MySQL(final DatabaseConfig config) {
+		super(config);
 	}
 	
 	@Override

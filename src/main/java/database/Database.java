@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.DatabaseConfig;
@@ -17,13 +17,12 @@ public abstract class Database {
 	
 	protected final DatabaseConfig config;
 	
-	protected final Logger logger;
+	protected final Logger logger = Logger.getLogger(Database.class);
 	
 	private String connectionString;
 	
-	public Database(final DatabaseConfig config, final Logger logger) {
+	public Database(final DatabaseConfig config) {
 		this.config = config;
-		this.logger = logger;
 		this.connectionString = createConnectionString() + config.schemaName;
 	}
 	
@@ -63,7 +62,7 @@ public abstract class Database {
 			);
 			logger.info("All migrations were applied");
 		} catch (SQLException | FlywaySqlException e) {
-			logger.severe("Create db and migrante fail: " + e.getClass() + ": " + e.getMessage());
+			logger.fatal("Create db and migrante fail", e);
 			return false;
 		}
 		return true;
@@ -77,12 +76,12 @@ public abstract class Database {
 	
 	/*** SEPARATOR ***/
 	
-	public static Database getDatabase(final DatabaseConfig config, final Logger logger, final Terminal terminal) {
+	public static Database getDatabase(final DatabaseConfig config, final Terminal terminal) {
 		switch (config.type) {
 		case "derby":
-			return new Derby(config, logger, terminal);
+			return new Derby(config, terminal);
 		case "mysql":
-			return new MySQL(config, logger);
+			return new MySQL(config);
 		default:
 			return null;
 		}		

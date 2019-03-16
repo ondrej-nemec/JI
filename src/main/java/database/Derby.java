@@ -1,7 +1,5 @@
 package database;
 
-import java.util.logging.Logger;
-
 import common.DatabaseConfig;
 import common.Terminal;
 
@@ -9,12 +7,9 @@ public class Derby extends Database {
 
 	private final Terminal terminal;
 	
-	private final Logger logger;
-	
-	public Derby(final DatabaseConfig config, final Logger logger, final Terminal terminal) {
-		super(config, logger);
+	public Derby(final DatabaseConfig config, final Terminal terminal) {
+		super(config);
 		this.terminal = terminal;
-		this.logger = logger;
 	}
 
 	@Override
