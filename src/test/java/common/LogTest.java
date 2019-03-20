@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import logging.Log;
 
 @RunWith(JUnitParamsRunner.class)
 public class LogTest {

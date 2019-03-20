@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.DatabaseConfig;
 import common.Terminal;
+import logging.Logger;
 
 public abstract class Database {
 

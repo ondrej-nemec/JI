@@ -1,4 +1,4 @@
-package common;
+package logging;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,12 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import common.Console;
+import common.Os;
 import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
 
 public class Log {
-	
-	// TODO change to factory for log4j.logger, configuration from env?
 	
 	public static final int CONSOLE = 0;
 	

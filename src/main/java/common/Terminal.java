@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
-import org.apache.log4j.Logger;
-
+import logging.Logger;
 import text.BufferedReaderFactory;
 import text.plaintext.PlainTextLoader;
 
