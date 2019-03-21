@@ -2,6 +2,7 @@ package common;
 
 import common.env.AppMode;
 import common.env.SupportedOs;
+import logging.Logger;
 
 public class Env {
 	
@@ -13,11 +14,13 @@ public class Env {
 	
 	public final String pathToAppWorkspace;
 	
+	@Deprecated
 	public Env() {
 		this.mode = AppMode.DEV;
 		this.appName = "App name";
 		this.pathToLogs = "workspace/logs/";
 		this.pathToAppWorkspace = "workspace/";
+		Logger.setMode(this);
 	}
 	
 	public Env(final String appName, final AppMode appMode) {
@@ -35,5 +38,18 @@ public class Env {
 			this.pathToAppWorkspace = workspace + "/";
 			this.pathToLogs = workspace + "/logs/";
 		}	
+		Logger.setMode(this);
+	}
+
+	public Env(
+			final AppMode mode,
+			final String appName,
+			final String pathToLogs,
+			final String pathToAppWorkspace) {
+		this.mode = mode;
+		this.appName = appName;
+		this.pathToLogs = pathToLogs;
+		this.pathToAppWorkspace = pathToAppWorkspace;
+		Logger.setMode(this);
 	}
 }

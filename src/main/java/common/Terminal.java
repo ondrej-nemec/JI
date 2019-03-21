@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
+import logging.ILogger;
 import logging.Logger;
 import text.BufferedReaderFactory;
 import text.plaintext.PlainTextLoader;
 
 public class Terminal {
 	
-	private final Logger logger = Logger.getLogger(Terminal.class);
+	private final ILogger logger = Logger.getLogger(Terminal.class);
 	
 	public int runFile(final Consumer<String> stdOut, final Consumer<String> stdErr, final String fileName) {
 		return run(stdOut, stdErr, fileName + Os.getCliExtention());

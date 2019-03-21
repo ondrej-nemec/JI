@@ -1,55 +1,29 @@
 package logging;
 
+import common.Env;
+
 public class Logger {
 	
-	// TODO implement me
+	private static Env env = null;
 	
-	public static Logger getLogger(final Object name) {
-		return null;
+	public static ILogger getLogger(final Object name) {
+		if (env == null)
+			return new NullLogger();
+		switch(env.mode) {
+			case TEST:
+			case DEV:
+			case PROD:
+			default: return new NullLogger();
+		}
 	}
 	
-	public static Logger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
-		return null;
-	}
-
-	public void debug(final Object message) {
-		
+	public static ILogger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
+		return getLogger(clazz.getName());
 	}
 	
-	public void debug(final Object message, final Throwable t) {
-		
-	}
-	
-	public void info(final Object message) {
-		
-	}
-	
-	public void info(final Object message, final Throwable t) {
-		
-	}
-	
-	public void warn(final Object message) {
-		
-	}
-	
-	public void warn(final Object message, final Throwable t) {
-		
-	}
-	
-	public void error(final Object message) {
-		
-	}
-	
-	public void error(final Object message, final Throwable t) {
-		
-	}
-	
-	public void fatal(final Object message) {
-		
-	}
-	
-	public void fatal(final Object message, final Throwable t) {
-		
+	public static void setMode(Env env) {
+		if (env == null)
+			Logger.env = env;
 	}
 
 }

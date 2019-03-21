@@ -9,6 +9,7 @@ import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.DatabaseConfig;
 import common.Terminal;
+import logging.ILogger;
 import logging.Logger;
 
 public abstract class Database {
@@ -17,7 +18,7 @@ public abstract class Database {
 	
 	protected final DatabaseConfig config;
 	
-	protected final Logger logger = Logger.getLogger(Database.class);
+	protected final ILogger logger = Logger.getLogger(Database.class);
 	
 	private String connectionString;
 	
