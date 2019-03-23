@@ -12,8 +12,6 @@ import logging.ILogger;
 import logging.Logger;
 
 public abstract class Database {
-
-	private Connection con;
 	
 	protected final DatabaseConfig config;
 	
@@ -28,11 +26,6 @@ public abstract class Database {
 	
 	public Connection getConnnection() throws SQLException {
 		return DriverManager.getConnection(connectionString, createProperties());
-	}
-	
-	public void closeConnection() throws SQLException {
-		if(con != null)
-			con.close();
 	}
 	
 	public String getConnectionString() {
@@ -50,8 +43,7 @@ public abstract class Database {
 					.executeUpdate("CREATE DATABASE IF NOT EXISTS " + config.schemaName);
 			} else {
 				// create and close - create db schema
-				getConnnection();
-				closeConnection();			
+				getConnnection().close();		
 			}
 			logger.info("DB schema was created");
 			new Migrate(
