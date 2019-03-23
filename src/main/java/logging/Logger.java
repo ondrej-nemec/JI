@@ -21,7 +21,7 @@ public class Logger {
 		return getLogger(clazz.getName());
 	}
 	
-	public static void setMode(Env env) {
+	public static void setEnvIfNotSetted(Env env) {
 		if (env == null)
 			Logger.env = env;
 	}

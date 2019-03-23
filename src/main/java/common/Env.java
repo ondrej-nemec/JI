@@ -1,5 +1,9 @@
 package common;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import common.env.AppMode;
 import common.env.SupportedOs;
 import logging.Logger;
@@ -8,48 +12,44 @@ public class Env {
 	
 	public final AppMode mode;
 	
-	public final String appName;
-	
-	public final String pathToLogs;
-	
-	public final String pathToAppWorkspace;
-	
-	@Deprecated
-	public Env() {
-		this.mode = AppMode.DEV;
-		this.appName = "App name";
-		this.pathToLogs = "workspace/logs/";
-		this.pathToAppWorkspace = "workspace/";
-		Logger.setMode(this);
-	}
-	
-	public Env(final String appName, final AppMode appMode) {
-		this.mode = appMode;
-		this.appName = appName;
-		if (appMode == AppMode.DEV) {
-			this.pathToLogs = "workspace/logs/";
-			this.pathToAppWorkspace = "workspace/";
-		} else {
-			String workspace = (
-						Os.getOs() == SupportedOs.LINUX
-						? System.getenv("HOME")
-						: System.getenv("APPDATA")
-					) + "/" + appName;
-			this.pathToAppWorkspace = workspace + "/";
-			this.pathToLogs = workspace + "/logs/";
-		}	
-		Logger.setMode(this);
-	}
-
-	public Env(
-			final AppMode mode,
-			final String appName,
-			final String pathToLogs,
-			final String pathToAppWorkspace) {
+	private final Properties properties;
+		
+	public Env(final AppMode mode) throws FileNotFoundException, IOException {
 		this.mode = mode;
-		this.appName = appName;
-		this.pathToLogs = pathToLogs;
-		this.pathToAppWorkspace = pathToAppWorkspace;
-		Logger.setMode(this);
+		this.properties = new Properties();
+		properties.load(getClass().getResourceAsStream("env.\" + mode.toString().toLowerCase() + \".properties"));
+		Logger.setEnvIfNotSetted(this);
+	}
+	
+	public Env(final AppMode mode, final Properties properties) {
+		this.mode = mode;
+		this.properties = properties;
+		Logger.setEnvIfNotSetted(this);
+	}
+	
+	public String getProperty(final String key) {
+		switch(key) {
+			case "APPDATA": return generateAppData() + properties.getProperty("app.name") + "/";
+			default: return properties.getProperty(key);
+		}		
+	}
+	
+	public DatabaseConfig createDbConfig() {
+		return new DatabaseConfig(
+				getProperty("db.type"),
+				getProperty("db.pathOrUrl"),
+				getProperty("db.externalServer").equals("1") ? true : false,
+				getProperty("db.schema"),
+				getProperty("db.login"),
+				getProperty("db.password"),
+				getProperty("db.pathToMigrations")
+		);
+	}
+	
+	private String generateAppData() {
+		return Os.getOs() == SupportedOs.LINUX
+				? System.getenv("HOME")
+				: System.getenv("APPDATA")
+			 + "/";
 	}
 }
