@@ -17,7 +17,7 @@ public class Env {
 	public Env(final AppMode mode) throws FileNotFoundException, IOException {
 		this.mode = mode;
 		this.properties = new Properties();
-		properties.load(getClass().getResourceAsStream("env.\" + mode.toString().toLowerCase() + \".properties"));
+		properties.load(getClass().getResourceAsStream("/env." + mode.toString().toLowerCase() + ".properties"));
 		Logger.setEnvIfNotSetted(this);
 	}
 	
