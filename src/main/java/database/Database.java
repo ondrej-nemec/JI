@@ -8,7 +8,6 @@ import java.util.Properties;
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.DatabaseConfig;
-import common.Terminal;
 import logging.ILogger;
 import logging.Logger;
 
@@ -77,10 +76,10 @@ public abstract class Database {
 	
 	/*** SEPARATOR ***/
 	
-	public static Database getDatabase(final DatabaseConfig config, final Terminal terminal) {
+	public static Database getDatabase(final DatabaseConfig config) {
 		switch (config.type) {
 		case "derby":
-			return new Derby(config, terminal);
+			return new Derby(config);
 		case "mysql":
 			return new MySQL(config);
 		default:

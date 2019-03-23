@@ -7,9 +7,9 @@ public class Derby extends Database {
 
 	private final Terminal terminal;
 	
-	public Derby(final DatabaseConfig config, final Terminal terminal) {
+	public Derby(final DatabaseConfig config) {
 		super(config);
-		this.terminal = terminal;
+		this.terminal = new Terminal();
 	}
 
 	@Override
