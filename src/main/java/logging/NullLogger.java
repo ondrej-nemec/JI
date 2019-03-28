@@ -19,7 +19,8 @@ public class NullLogger implements ILogger {
 
 	@Override
 	public void info(final Object message, final Throwable t) {
-		// not implemented		
+		// not implemented
+		t.printStackTrace();	
 	}
 
 	@Override
@@ -29,7 +30,8 @@ public class NullLogger implements ILogger {
 
 	@Override
 	public void warn(final Object message, final Throwable t) {
-		// not implemented		
+		// not implemented
+		t.printStackTrace();	
 	}
 
 	@Override
@@ -39,7 +41,8 @@ public class NullLogger implements ILogger {
 
 	@Override
 	public void error(final Object message, final Throwable t) {
-		// not implemented		
+		// not implemented
+		t.printStackTrace();	
 	}
 
 	@Override
@@ -49,7 +52,8 @@ public class NullLogger implements ILogger {
 
 	@Override
 	public void fatal(final Object message, final Throwable t) {
-		// not implemented		
+		// not implemented
+		t.printStackTrace();
 	}
 
 }
