@@ -9,19 +9,16 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 
-import common.Env;
 import database.Database;
 
-public abstract class DatabaseTestCase {
+public abstract class DatabaseTestCase extends TestCase {
 	
 	protected Connection con;
 	
-	private final Database database;
-	
-	protected final Env env;
+	protected final Database database;
 	
 	public DatabaseTestCase() {
-		this.env = TestEnvFactory.createEnv();
+		super();
 		this.database = Database.getDatabase(env.createDbConfig());
 		database.startServer();
 	}
@@ -50,6 +47,9 @@ public abstract class DatabaseTestCase {
 	
 	private void applyDataSet() {
 		Map<String, List<Map<String, String>>> dataSet = getDataSet();
+		
+		if (dataSet == null)
+			return;
 		
 		dataSet.forEach((table, rows)->{			
 			for(Map<String, String> row : rows) {
