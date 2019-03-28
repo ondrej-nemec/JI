@@ -19,13 +19,24 @@ public abstract class Database {
 	
 	private String connectionString;
 	
+	private Connection connection = null;
+	
 	public Database(final DatabaseConfig config) {
 		this.config = config;
 		this.connectionString = createConnectionString() + config.schemaName;
 	}
 	
 	public Connection getConnnection() throws SQLException {
-		return DriverManager.getConnection(connectionString, createProperties());
+		if (this.connection == null)
+			this.connection = DriverManager.getConnection(connectionString, createProperties());
+		return connection;
+	}
+	
+	public void stopConnection() throws SQLException {
+		if (connection != null) {
+			connection.close();
+			connection = null;
+		}
 	}
 	
 	public String getConnectionString() {

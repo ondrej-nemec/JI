@@ -13,7 +13,7 @@ import database.Database;
 
 public abstract class DatabaseTestCase extends TestCase {
 	
-	protected Connection con;
+	private Connection con;
 	
 	protected final Database database;
 	
