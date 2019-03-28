@@ -27,14 +27,14 @@ public abstract class DatabaseTestCase extends TestCase {
 	public void before() throws SQLException {
 		database.createDbAndMigrate();
 		con = database.getConnnection();
-		con.setAutoCommit(false);
+	//	con.setAutoCommit(false);
 		applyDataSet();
 	}
 	
 	@After
 	public void after() throws SQLException {
 		if (con != null) {
-			con.rollback();
+	//		con.rollback();
 			con.close();
 		}
 	}
