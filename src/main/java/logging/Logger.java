@@ -6,13 +6,19 @@ public class Logger {
 	
 	private static Env env = null;
 	
+	@Deprecated
 	public static ILogger getLogger(final Object name) {
+		return getLogger(name.toString());
+	}
+	
+	public static ILogger getLogger(final String name) {
 		if (env == null)
 			return new NullLogger();
+		//TODO switch by data from env
 		switch(env.mode) {
-			case TEST:
-			case DEV:
 			case PROD:
+			case DEV: return new ConsoleLogger(name);
+			case TEST:
 			default: return new NullLogger();
 		}
 	}
