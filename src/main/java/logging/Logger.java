@@ -6,11 +6,6 @@ public class Logger {
 	
 	private static Env env = null;
 	
-	@Deprecated
-	public static ILogger getLogger(final Object name) {
-		return getLogger(name.toString());
-	}
-	
 	public static ILogger getLogger(final String name) {
 		if (env == null)
 			return new NullLogger();
@@ -28,6 +23,7 @@ public class Logger {
 	}
 	
 	public static void setEnvIfNotSetted(Env env) {
+		System.out.println("env setted");
 		if (env == null)
 			Logger.env = env;
 	}
