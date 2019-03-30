@@ -1,4 +1,4 @@
-package logging;
+package logging.another;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
