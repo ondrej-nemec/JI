@@ -7,6 +7,7 @@ public class Logger {
 	private static Env env = null;
 	
 	public static ILogger getLogger(final String name) {
+		System.out.println("get logger");
 		if (env == null)
 			return new NullLogger();
 		//TODO switch by data from env
