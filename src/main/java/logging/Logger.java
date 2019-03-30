@@ -29,7 +29,7 @@ public class Logger {
 			Logger.env = env;
 	}
 	
-	public Env getEnv() {
+	public static Env getEnv() {
 		return env;
 	}
 
