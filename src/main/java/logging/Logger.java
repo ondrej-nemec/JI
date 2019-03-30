@@ -7,9 +7,9 @@ public class Logger {
 	private static Env env = null;
 	
 	public static ILogger getLogger(final String name) {
-		System.out.println("get logger " + name);
 		if (env == null)
-			return new NullLogger();
+			return new ConsoleLogger(name);
+			//return new NullLogger();
 		//TODO switch by data from env
 		switch(env.mode) {
 			case PROD:
@@ -24,13 +24,8 @@ public class Logger {
 	}
 	
 	public static void setEnvIfNotSetted(Env env) {
-		System.out.println("env setted");
 		if (env == null)
 			Logger.env = env;
-	}
-	
-	public static Env getEnv() {
-		return env;
 	}
 
 }
