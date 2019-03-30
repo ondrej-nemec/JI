@@ -27,5 +27,9 @@ public class Logger {
 		if (env == null)
 			Logger.env = env;
 	}
+	
+	public Env getEnv() {
+		return env;
+	}
 
 }
