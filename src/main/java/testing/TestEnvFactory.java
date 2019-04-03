@@ -7,7 +7,7 @@ public class TestEnvFactory {
 
 	public static Env createEnv() {
 		try {
-			return new Env(AppMode.TEST);
+			return new Env(AppMode.TEST, "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
