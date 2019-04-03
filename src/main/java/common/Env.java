@@ -1,5 +1,6 @@
 package common;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
@@ -15,9 +16,23 @@ public class Env {
 	private final Properties properties;
 		
 	public Env(final AppMode mode) throws FileNotFoundException, IOException {
-		this.mode = mode;
 		this.properties = new Properties();
-		properties.load(getClass().getResourceAsStream("/env." + mode.toString().toLowerCase() + ".properties"));
+		
+		if (mode == AppMode.AUTOLOAD) {
+			if (existsProperties(AppMode.PROD)) {
+				this.mode = AppMode.PROD;
+			} else if (existsProperties(AppMode.DEV)) {
+				this.mode = AppMode.DEV;
+			} else if (existsProperties(AppMode.TEST)) {
+				this.mode = AppMode.TEST;
+			} else {
+				throw new IOException("No properties file was founded.");
+			}
+		} else {
+			this.mode = mode;
+		}
+		
+		loadProperties();
 		Logger.setEnvIfNotSetted(this);
 	}
 	
@@ -32,6 +47,13 @@ public class Env {
 			case "APPDATA": return generateAppData() + properties.getProperty("app.name") + "/";
 			default: return properties.getProperty(key);
 		}		
+	}
+	
+	public String getPropertyOrThrowIfNotExist(final String key) {
+		String property = getProperty(key);
+		if (property == null)
+			throw new RuntimeException("Property was not found. Key: " + key + ", in " + mode + " mode.");
+		return property;
 	}
 	
 	public DatabaseConfig createDbConfig() {
@@ -51,5 +73,18 @@ public class Env {
 				? System.getenv("HOME")
 				: System.getenv("APPDATA")
 			 + "/";
+	}
+	
+	private boolean existsProperties(final AppMode mode) {
+		File f = new File(getPropertiesPath(mode));
+		return f.exists() && f.isFile();
+	}
+	
+	private String getPropertiesPath(final AppMode mode) {
+		return "/env." + mode.toString().toLowerCase() + ".properties";
+	}
+	
+	private void loadProperties() throws IOException {
+		properties.load(getClass().getResourceAsStream(getPropertiesPath(mode)));
 	}
 }
