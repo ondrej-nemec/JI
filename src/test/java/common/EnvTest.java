@@ -48,25 +48,54 @@ public class EnvTest {
 	
 	@Test
 	@Ignore
+	@Parameters
 	public void testCreateDbConfigReturnCorrectConfig() {
 		// get env from dataprovider - file and code loading
 	}
 	
 	@Test
 	@Ignore
+	@Parameters
 	public void testGetPropertyReturnPropertyOrNullIfNotExists() {
 		// get env from dataprovider - file and code loading
 	}
 	
 	@Test(expected=RuntimeException.class)
 	@Ignore
+	@Parameters
 	public void testGetPropertyOrThrowIfNotExistsThrowsIfPropertyNotExists() {
 		// get env from dataprovider - file and code loading
 	}
 	
 	@Test
 	@Ignore
-	public void testGetPropertyOrThrowIfNotExistsReturnProperty() {
-		// get env from dataprovider - file and code loading
+	@Parameters
+	public void testGetPropertyOrThrowIfNotExistsReturnProperty(final Env env, final String key, final String expectedValue) {
+		assertEquals(expectedValue, env.getProperty(key));
 	}
+	
+	/*
+	private Env[] getEnvs(final AppMode mode) throws FileNotFoundException, IOException {
+		Properties properties = new Properties();
+		switch (mode) {
+		case PROD:
+			
+			break;
+		case DEV:
+			
+			break;
+		case TEST:
+			
+			break;
+
+		default:
+			break;
+		}
+		
+		return new Env[] {
+				new Env(mode, properties),
+				new Env(mode, "/env")
+		};
+	}
+	*/
 }
