@@ -45,6 +45,7 @@ public abstract class Database {
 	
 	public boolean createDbAndMigrate() {
 		try {
+			// TODO check if this condition is nessesery
 			if (config.runOnExternalServer) {
 				DriverManager
 					.getConnection(
