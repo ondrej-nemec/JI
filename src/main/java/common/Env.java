@@ -55,7 +55,7 @@ public class Env {
 	}
 	
 	private String getProp(final String key) {
-		String property = getProperty(key);
+		String property = properties.getProperty(key);
 		if (property == null)
 			throw new RuntimeException("Property was not found. Key: " + key + ", in " + mode + " mode.");
 		return property;

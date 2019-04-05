@@ -19,6 +19,7 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class EnvTest {
 
+	//TODO new env
 	@Test(expected = IOException.class)
 	public void testConstructorForFilesThrowIfNoFileInDir() throws FileNotFoundException, IOException {
 		new Env(AppMode.AUTOLOAD, "/env/empty");
