@@ -1,0 +1,122 @@
+package testing;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
+import testing.entities.Row;
+import testing.entities.Table;
+
+public class DatabaseTestCaseTest {
+	
+	class DbtcImpl extends DatabaseTestCase {
+		
+		public DbtcImpl(Properties prop) {
+			super(prop);
+		}
+			
+		@Test
+		public void testDumpTest() {
+			testDataInDb(this);
+		}
+			
+		@Override
+		protected List<Table> getDataSet() {			
+			return Arrays.asList(
+				new Table(
+					"dbtc",
+					Arrays.asList(
+						getRow(0),
+						getRow(1),
+						getRow(2)
+					)
+				)
+			);
+		}
+		
+		private Row getRow(int i) {
+			Row row = new Row();
+			row.addColumn("id", i);
+			row.addColumn("name", "Name #" + i);
+			return row;
+		}
+	}
+	
+	//TODO not a test - run via main - without db maven don't compile this
+
+	@Test
+	public void testDbtcInsertDataAndAfterTestClearDb() throws SQLException {
+		Properties prop = new Properties();
+		prop.put("db.type", "mysql");
+		prop.put("db.pathOrUrl", "//localhost:3306");
+		prop.put("db.externalServer", "1");
+		prop.put("db.schema", "env_test");
+		prop.put("db.login", "root");
+		prop.put("db.password", "");
+		prop.put("db.pathToMigrations", "testing");	
+		
+		DbtcImpl dbtc = new DbtcImpl(prop);
+		
+		testDbEmptyOrNotExists(dbtc);
+		
+		dbtc.before();
+		testDataInDb(dbtc);	
+		
+		dbtc.testDumpTest();		
+		dbtc.after();		
+		testDbEmpty(dbtc);
+		
+	}
+	
+	@Test
+	@Ignore
+	public void testBeforeAndAfterInteraction() {
+		
+	}
+	
+	private void testDbEmptyOrNotExists(DatabaseTestCase dbtc) {
+		try {
+			PreparedStatement stat = dbtc.database.getConnnection().prepareStatement("select * from dbtc");
+			ResultSet res = stat.executeQuery();
+			assertFalse(res.next());
+		} catch (SQLException e) {
+			assertEquals("Unknown database 'env_test'", e.getMessage());
+		}
+	}
+	
+	private void testDataInDb(DatabaseTestCase dbtc) {
+		try {
+			PreparedStatement stat = dbtc.database.getConnnection().prepareStatement("select * from dbtc");
+			ResultSet res = stat.executeQuery();
+			
+			for (int i = 0; i < 3; i++) {
+				assertTrue(res.next());
+				assertEquals(i, res.getInt(1));
+				assertEquals("Name #" + i, res.getObject(2));
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void testDbEmpty(DatabaseTestCase dbtc) {
+		try {
+			PreparedStatement stat = dbtc.database.getConnnection().prepareStatement("select * from dbtc");
+			ResultSet res = stat.executeQuery();
+			assertFalse(res.next());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+}

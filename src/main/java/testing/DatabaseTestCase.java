@@ -5,11 +5,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.junit.After;
 import org.junit.Before;
 
 import database.Database;
+import exceptions.NotImplementedYet;
+import testing.entities.Row;
+import testing.entities.Table;
 
 public abstract class DatabaseTestCase extends TestCase {
 	
@@ -17,36 +21,46 @@ public abstract class DatabaseTestCase extends TestCase {
 	
 	protected final Database database;
 	
-	public DatabaseTestCase() {
-		super();
+	public DatabaseTestCase(final String propertiesPath) {
+		super(propertiesPath);
 		this.database = Database.getDatabase(env.createDbConfig());
 		database.startServer();
 	}
 	
+	public DatabaseTestCase(final Properties properties) {
+		super(properties);
+		this.database = Database.getDatabase(env.createDbConfig());
+		database.startServer();
+	}
+	
+	//TODO
 	@Before
 	public void before() throws SQLException {
 		database.createDbAndMigrate();
-		con = database.getConnnection();
-	//	con.setAutoCommit(false);
+	/*	con = database.getConnnection();
+	//	con.setAutoCommit(false);*/
 		applyDataSet();
 	}
-	
+
+	//TODO
 	@After
 	public void after() throws SQLException {
-		if (con != null) {
+		/*if (con != null) {
 	//		con.rollback();
 			con.close();
-		}
+		}*/
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
-		database.stopServer();
-		super.finalize();
+		/*database.stopServer();
+		super.finalize();*/
 	}
-	
+
+	//TODO
 	private void applyDataSet() {
-		Map<String, List<Map<String, String>>> dataSet = getDataSet();
+		throw new NotImplementedYet();
+		/*Map<String, List<Map<String, String>>> dataSet =  null; // getDataSet();
 		
 		if (dataSet == null)
 			return;
@@ -69,13 +83,13 @@ public abstract class DatabaseTestCase extends TestCase {
 					throw new RuntimeException(e);
 				}
 			}	
-		});
+		});*/
 	}
 	
 	private String getBracketString(final String origin) {
 		return "(" + origin.trim().replace(' ', ',') + ")";
 	}
 	
-	protected abstract Map<String, List<Map<String, String>>> getDataSet();
+	protected abstract List<Table> getDataSet();
 
 }

@@ -11,8 +11,8 @@ public class Row {
 		this.columns = new HashMap<>();
 	}
 	
-	public void addColumn(final String columnName, final String value) {
-		columns.put(columnName, value);
+	public void addColumn(final String columnName, final Object value) {
+		columns.put(columnName, value.toString());
 	}
 	
 	public Map<String, String> getColumns() {
