@@ -5,21 +5,21 @@ import java.util.Properties;
 import common.Env;
 import common.env.AppMode;
 
-abstract public class TestCase {
+public class TestCase {
 
 	protected final Env env;
 	
-	public TestCase() {
-		Properties prop = getProperties();
-		
-		if(prop == null) {
-			this.env = TestEnvFactory.createEnv();
-		} else {
-			this.env = new Env(AppMode.TEST, prop);
-		}	
-		
+	public TestCase(final Properties properties) {
+		this.env = new Env(AppMode.TEST, properties);
 	}
 	
-	protected abstract Properties getProperties();
+	public TestCase(final String propertiesPath) {
+		try {
+			this.env = new Env(AppMode.TEST, propertiesPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 	
 }
