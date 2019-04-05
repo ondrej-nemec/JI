@@ -13,6 +13,7 @@ public class Logger {
 		//TODO switch by data from env
 		switch(env.mode) {
 			case PROD:
+			case BETA:
 			case DEV: return new ConsoleLogger(name);
 			case TEST:
 			default: return new NullLogger();

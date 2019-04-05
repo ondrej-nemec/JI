@@ -1,8 +1,9 @@
 package common.env;
 
 public enum AppMode {
-	DEV,
 	PROD,
+	BETA,
+	DEV,
 	TEST,
 	AUTOLOAD
 }

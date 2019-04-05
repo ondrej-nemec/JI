@@ -49,16 +49,21 @@ public class Env {
 	
 	public String getProperty(final String key) {
 		switch(key) {
-			case "APPDATA": return generateAppData() + properties.getProperty("app.name") + "/";
-			default: return properties.getProperty(key);
+			case "APPDATA": return generateAppData() + getProp("app.name") + "/";
+			default: return getProp(key);
 		}		
 	}
 	
-	public String getPropertyOrThrowIfNotExists(final String key) {
+	private String getProp(final String key) {
 		String property = getProperty(key);
 		if (property == null)
 			throw new RuntimeException("Property was not found. Key: " + key + ", in " + mode + " mode.");
 		return property;
+	}
+	
+	@Deprecated
+	public String getPropertyOrThrowIfNotExists(final String key) {
+		return getProperty(key);
 	}
 	
 	public DatabaseConfig createDbConfig() {
@@ -92,6 +97,10 @@ public class Env {
 		try {
 			loadProperties(path, prop, AppMode.PROD);
 			return AppMode.PROD;
+		} catch(FileNotFoundException e) { /*ignored*/ }
+		try {
+			loadProperties(path, prop, AppMode.BETA);
+			return AppMode.BETA;
 		} catch(FileNotFoundException e) { /*ignored*/ }
 		try {
 			loadProperties(path, prop, AppMode.DEV);
