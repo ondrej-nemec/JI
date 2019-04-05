@@ -99,10 +99,6 @@ public class Env {
 			return AppMode.PROD;
 		} catch(FileNotFoundException e) { /*ignored*/ }
 		try {
-			loadProperties(path, prop, AppMode.BETA);
-			return AppMode.BETA;
-		} catch(FileNotFoundException e) { /*ignored*/ }
-		try {
 			loadProperties(path, prop, AppMode.DEV);
 			return AppMode.DEV;
 		} catch(FileNotFoundException e) { /*ignored*/ }
