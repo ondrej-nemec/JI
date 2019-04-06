@@ -1,6 +1,7 @@
 package testing;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -12,20 +13,18 @@ import database.Database;
 import testing.entities.Row;
 import testing.entities.Table;
 
-public class DatabaseMock extends Database {
+public class DatabaseMock extends Database  {
 
 	private final Database nestedDatabase;
 	
 	private final List<Table> tables;
 	
+	private Connection connection;
+	
 	public DatabaseMock(final DatabaseConfig config, final List<Table> tables) {
 		super(config);
 		this.nestedDatabase = Database.getDatabase(config);
 		this.tables = tables;
-	}
-	
-	public Database getNestedDatabase() {
-		return nestedDatabase;
 	}
 
 	@Override
@@ -39,36 +38,36 @@ public class DatabaseMock extends Database {
 	}
 	
 	@Override
-	public void applyQuery(final Consumer<Connection> chidlConsumer) throws SQLException {
-		createDbAndMigrate();
-		Consumer<Connection> parentConsumer = (con)->{
-			try {
-				con.setAutoCommit(false);
-				applyDataSet(con);
-				chidlConsumer.accept(con);
-				con.rollback();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
-		};
-		
-		super.applyQuery(parentConsumer);
-	}	
-
+	public void applyQuery(Consumer<Connection> consumer) throws SQLException {
+		consumer.accept(connection);
+	}
+	
+	public Database getNestedDatabase() {
+		return nestedDatabase;
+	}
+	
+	public void prepare() throws SQLException {
+		connection = DriverManager.getConnection(getConnectionString(), createProperties());
+		connection.setAutoCommit(false);
+		applyDataSet(connection);
+	}
+	
+	public void clean() throws SQLException {
+		connection.rollback();
+		connection.close();
+	}
+	
 	private void applyDataSet(final Connection conn) {
 		for(Table table : tables) {
 			for(Row row : table.getRows()) {
-				Consumer<Connection> insert = (connection)->{
-					try {
-						Statement st = connection.createStatement();
-						st.executeUpdate(
-								"INSERT INTO " + table.getName() + " " + getInsertString(row.getColumns())
-						);
-					} catch (SQLException e) {
-						throw new RuntimeException(e);
-					}
-				};	
-				insert.accept(conn);						
+				try {
+					Statement st = connection.createStatement();
+					st.executeUpdate(
+							"INSERT INTO " + table.getName() + " " + getInsertString(row.getColumns())
+					);
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}						
 			}
 		}
 	}

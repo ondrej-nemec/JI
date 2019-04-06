@@ -106,7 +106,7 @@ public abstract class Database {
 		return "jdbc:" + config.type + ":" + config.pathOrUrlToLocation + "/";
 	}
 	
-	private Properties createProperties() {
+	protected Properties createProperties() {
 		Properties props = new Properties();
 		props.setProperty("create", "true");
 		props.setProperty("user", config.login);
