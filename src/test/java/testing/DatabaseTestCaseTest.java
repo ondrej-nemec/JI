@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import testing.entities.Row;
@@ -26,8 +25,26 @@ public class DatabaseTestCaseTest {
 		}
 			
 		@Test
-		public void testDumpTest() {
-			testDataInDb(this);
+		public void testDataInDb() throws SQLException {
+			getDatabase().applyQuery((con)->{
+				try {
+					PreparedStatement stat = con.prepareStatement("select * from dbtc");
+					ResultSet res = stat.executeQuery();
+					
+					for (int i = 0; i < 3; i++) {
+						assertTrue(res.next());
+						assertEquals(i, res.getInt(1));
+						assertEquals("Name #" + i, res.getObject(2));
+					}
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			});
+		}
+		
+		@Test
+		public void testThrowingTest() {
+			// TODO throw
 		}
 			
 		@Override
@@ -69,54 +86,40 @@ public class DatabaseTestCaseTest {
 		
 		testDbEmptyOrNotExists(dbtc);
 		
-		dbtc.before();
-		testDataInDb(dbtc);	
+		dbtc.testDataInDb();
+		dbtc.testThrowingTest();
 		
-		dbtc.testDumpTest();		
-		dbtc.after();		
 		testDbEmpty(dbtc);
-		
-	}
-	
-	@Test
-	@Ignore
-	public void testBeforeAndAfterInteraction() {
 		
 	}
 	
 	private void testDbEmptyOrNotExists(DatabaseTestCase dbtc) {
 		try {
-			PreparedStatement stat = dbtc.database.getConnnection().prepareStatement("select * from dbtc");
-			ResultSet res = stat.executeQuery();
-			assertFalse(res.next());
+			dbtc.getNestedDatabase().applyQuery((con)->{
+				try {
+					PreparedStatement stat = con.prepareStatement("select * from dbtc");
+					ResultSet res = stat.executeQuery();
+					assertFalse(res.next());
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			});
 		} catch (SQLException e) {
 			assertEquals("Unknown database 'env_test'", e.getMessage());
 		}
+		
 	}
 	
-	private void testDataInDb(DatabaseTestCase dbtc) {
-		try {
-			PreparedStatement stat = dbtc.database.getConnnection().prepareStatement("select * from dbtc");
-			ResultSet res = stat.executeQuery();
-			
-			for (int i = 0; i < 3; i++) {
-				assertTrue(res.next());
-				assertEquals(i, res.getInt(1));
-				assertEquals("Name #" + i, res.getObject(2));
+	private void testDbEmpty(DatabaseTestCase dbtc) throws SQLException {
+		dbtc.getNestedDatabase().applyQuery((con)->{
+			try {
+				PreparedStatement stat = con.prepareStatement("select * from dbtc");
+				ResultSet res = stat.executeQuery();
+				assertFalse(res.next());
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
 			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	private void testDbEmpty(DatabaseTestCase dbtc) {
-		try {
-			PreparedStatement stat = dbtc.database.getConnnection().prepareStatement("select * from dbtc");
-			ResultSet res = stat.executeQuery();
-			assertFalse(res.next());
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		});
 	}
 	
 }

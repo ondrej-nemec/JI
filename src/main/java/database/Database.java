@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
@@ -26,17 +27,25 @@ public abstract class Database {
 		this.connectionString = createConnectionString() + config.schemaName;
 	}
 	
+	@Deprecated
 	public Connection getConnnection() throws SQLException {
 		if (this.connection == null)
 			this.connection = DriverManager.getConnection(connectionString, createProperties());
 		return connection;
 	}
 	
+	@Deprecated
 	public void stopConnection() throws SQLException {
 		if (connection != null) {
 			connection.close();
 			connection = null;
 		}
+	}
+	
+	public void applyQuery(final Consumer<Connection> consumer) throws SQLException {
+		Connection con = DriverManager.getConnection(connectionString, createProperties());
+		consumer.accept(con);
+		con.close();
 	}
 	
 	public String getConnectionString() {
