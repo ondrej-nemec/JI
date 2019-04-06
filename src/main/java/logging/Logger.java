@@ -1,6 +1,8 @@
 package logging;
 
 import common.Env;
+import logging.loggers.ConsoleLogger;
+import logging.loggers.NullLogger;
 
 public class Logger {
 	

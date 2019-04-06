@@ -1,4 +1,6 @@
-package logging;
+package logging.loggers;
+
+import logging.ILogger;
 
 public class NullLogger implements ILogger {
 

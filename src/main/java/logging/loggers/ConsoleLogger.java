@@ -1,6 +1,7 @@
-package logging;
+package logging.loggers;
 
 import common.Console;
+import logging.ILogger;
 
 public class ConsoleLogger implements ILogger {
 	
