@@ -13,8 +13,6 @@ import testing.entities.Table;
 public abstract class DatabaseTestCase extends TestCase {
 	
 	private final DatabaseMock database;
-	
-	protected boolean commit = false;
 
 	public DatabaseTestCase(final Properties properties) {
 		super(properties);
@@ -36,8 +34,7 @@ public abstract class DatabaseTestCase extends TestCase {
 	
 	@After
 	public void after() throws SQLException {
-		if (!commit)
-			database.clean();
+		database.clean();
 	}
 	
 	protected Database getDatabase() {
