@@ -84,7 +84,7 @@ public class DatabaseMock extends Database  {
 				values += ", ";
 			}
 			names += key;
-			values += "'" + columns.get(key) + "'";
+			values += columns.get(key);
 		}
 		names += ")";
 		values += ")";

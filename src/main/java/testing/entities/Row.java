@@ -12,7 +12,11 @@ public class Row {
 	}
 	
 	public void addColumn(final String columnName, final Object value) {
-		columns.put(columnName, value.toString());
+		columns.put(columnName, "'" + value.toString() + "'");
+	}
+	
+	public void addColumn(final String columnName, final Object value, final String function) {
+		columns.put(columnName, function + "('" + value.toString() + "')");
 	}
 	
 	public Map<String, String> getColumns() {
