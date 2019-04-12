@@ -1,31 +1,38 @@
 package tools;
 
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
-import common.Os;
-import text.BufferedWriterFactory;
-import text.plaintext.PlainTextCreator;
-
 public class RunnerGenerate {
+	
+	private String win = "\r\n";
+	
+	private String linux = "\n";
 
 	public RunnerGenerate(final String jarName) {
-		try(BufferedWriter br = BufferedWriterFactory.buffer("runApp.bat", false)) {
-			new PlainTextCreator(br).write(
-				"#!/bin/bash" +
-				Os.WINDOWS_NEW_LINE + Os.LINUX_NEW_LINE +
-				"java -version" +
-				"# Linux" + Os.LINUX_NEW_LINE +
-				"if [ $? -eq 0 ]; then" + Os.LINUX_NEW_LINE +
-				"	java -Dfile.encoding=UTF8 -jar " + jarName +
-				"else" + Os.LINUX_NEW_LINE +
-				"	echo You must install java first" + Os.LINUX_NEW_LINE +
-				"fi" +
+		try(BufferedWriter br = new BufferedWriter(new FileWriter("run.bat"))) {
+			br.write(
+				"#!/bin/bash" + win + linux
+				+ "# commented if run on linux" + win
+				+ "GOTO Windows" + win + linux
 				
-				Os.WINDOWS_NEW_LINE + Os.LINUX_NEW_LINE +
+				+ "# Linux" + linux
+				+ "java -version" + linux
+				+ "if [ $? -eq 0 ]; then" + linux
+				+ "	java --Dfile.encoding=UTF8 jar ./" + jarName + linux
+				+ "else" + linux
+				+ "	echo You must install java first" + linux
+				+ "fi" + linux
+				+ "exit" + linux + win
 				
-				"# Windows" + Os.WINDOWS_NEW_LINE +
-				"if errorlevel 0 start javaw -Dfile.encoding=UTF8 -jar " + jarName + " else echo You must install java first"
+				+ ":Windows" + win
+				+ "java -version" + win
+				+ "IF errorlevel 0 "
+				+ "(start javaw -Dfile.encoding=UTF8 -jar ./" + jarName + ")"
+				+ "ELSE"
+				+ " (echo You must install java first)" + win + linux
+				// + "exit"
 			);
 		} catch (IOException e) {
 			e.printStackTrace();
