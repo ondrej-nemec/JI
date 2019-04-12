@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
-import common.DatabaseConfig;
 import logging.ILogger;
 import logging.Logger;
 

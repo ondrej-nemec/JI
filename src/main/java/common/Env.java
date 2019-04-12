@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import common.env.AppMode;
 import common.env.SupportedOs;
+import database.DatabaseConfig;
 import logging.Logger;
 
 public class Env {

@@ -1,6 +1,5 @@
 package database;
 
-import common.DatabaseConfig;
 import common.Terminal;
 
 public class Derby extends Database {

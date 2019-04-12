@@ -1,4 +1,4 @@
-package common;
+package database;
 
 
 public class DatabaseConfig {

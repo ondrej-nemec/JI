@@ -1,7 +1,5 @@
 package database;
 
-import common.DatabaseConfig;
-
 public class MySQL extends Database {
 
 	public MySQL(final DatabaseConfig config) {

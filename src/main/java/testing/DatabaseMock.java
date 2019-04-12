@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import common.DatabaseConfig;
 import database.Database;
+import database.DatabaseConfig;
 import testing.entities.Row;
 import testing.entities.Table;
 
