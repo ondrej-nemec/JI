@@ -4,11 +4,11 @@ import common.ILogger;
 import logging.loggers.ConsoleLogger;
 import utils.Env;
 
-public class Logger {
+public class LoggerFactory {
 	
 	private final Env env;
 	
-	public Logger(final Env env) { // TODO config
+	public LoggerFactory(final Env env) { // TODO config
 		this.env = env;
 	}
 	
