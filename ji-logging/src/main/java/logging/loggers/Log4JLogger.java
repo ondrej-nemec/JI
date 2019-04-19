@@ -9,15 +9,10 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Priority;
 
 import common.ILogger;
-//import common.env.AppMode;
+import utils.enums.AppMode;
 
 public class Log4JLogger extends Logger implements ILogger {
-	protected Log4JLogger(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
-	}
-
-	/*
+	
 	public Log4JLogger(final String name, final AppMode mode, final String pathToLogs) {
 		super(name);
 		clearConfiguration();
@@ -31,7 +26,7 @@ public class Log4JLogger extends Logger implements ILogger {
 		Logger.getRootLogger().addAppender(createConsoleAppender(priority));
 		Logger.getRootLogger().addAppender(createFileAppender(priority, pathToLogs));
 	}
-	*/
+
 	public static void clearConfiguration() {
 		Logger.getRootLogger().getLoggerRepository().resetConfiguration();
 	}

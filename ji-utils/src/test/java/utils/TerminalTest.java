@@ -2,7 +2,6 @@ package utils;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Test;
@@ -19,6 +18,8 @@ public class TerminalTest {
 	private final String SYSTEM_ERROR_MESSAGE = "SYSTEM_ERROR_MESSAGE"; 
 	
 	private String path = 
+			"ji-utils" +
+			Os.getPathSeparator() +
 			"src" +
 			Os.getPathSeparator() +
 			"test" +
@@ -26,7 +27,7 @@ public class TerminalTest {
 			"resource" +
 			Os.getPathSeparator() +
 			"terminal" +
-			File.separator;
+			Os.getPathSeparator();
 	
 	private String stdErr = "";
 	

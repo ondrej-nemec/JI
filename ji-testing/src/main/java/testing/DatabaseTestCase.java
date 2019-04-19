@@ -7,11 +7,11 @@ import java.util.Properties;
 import org.junit.After;
 import org.junit.Before;
 
-//import database.Database;
+import database.Database;
 import testing.entities.Table;
 
 public abstract class DatabaseTestCase extends TestCase {
-	/*
+
 	private final DatabaseMock database;
 
 	public DatabaseTestCase(final Properties properties) {
@@ -44,5 +44,5 @@ public abstract class DatabaseTestCase extends TestCase {
 	protected Database getNestedDatabase() {
 		return database.getNestedDatabase();
 	}
-	*/
+
 }

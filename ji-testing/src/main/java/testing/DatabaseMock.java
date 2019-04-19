@@ -7,14 +7,15 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-/*
+
 import database.Database;
-import database.DatabaseConfig;*/
+import logging.Logger;
 import testing.entities.Row;
 import testing.entities.Table;
+import utils.env.DatabaseConfig;
 
-public class DatabaseMock /*extends Database */ {
-/*
+public class DatabaseMock extends Database {
+
 	private final Database nestedDatabase;
 	
 	private final List<Table> tables;
@@ -22,8 +23,8 @@ public class DatabaseMock /*extends Database */ {
 	private Connection connection;
 	
 	public DatabaseMock(final DatabaseConfig config, final List<Table> tables) {
-		super(config);
-		this.nestedDatabase = Database.getDatabase(config);
+		super(config, Logger.getLogger(DatabaseMock.class));
+		this.nestedDatabase = Database.getDatabase(config, Logger.getLogger(DatabaseMock.class));
 		this.tables = tables;
 	}
 
@@ -91,5 +92,5 @@ public class DatabaseMock /*extends Database */ {
 		
 		return names + " VALUES " + values;
 	}
-	*/
+
 }

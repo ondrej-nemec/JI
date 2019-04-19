@@ -20,7 +20,7 @@ import testing.entities.Row;
 import testing.entities.Table;
 
 public class DatabaseTestCaseTest extends DatabaseTestCase {
-/*
+
 	public DatabaseTestCaseTest() {
 		super(getProperties());
 	}
@@ -125,5 +125,5 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.pathToMigrations", "testing");
 		return prop;
 	}
-	*/
+
 }
