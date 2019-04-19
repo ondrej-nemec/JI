@@ -6,8 +6,7 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import common.Os;
-import logging.ILogger;
-import logging.Logger;
+import common.ILogger;
 import text.BufferedReaderFactory;
 import text.plaintext.PlainTextLoader;
 

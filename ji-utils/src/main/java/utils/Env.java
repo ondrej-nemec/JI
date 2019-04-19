@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import common.Os;
-import common.enums.SupportedOs;
+import common.emuns.SupportedOs;
 import utils.env.DatabaseConfig;
 import utils.enums.AppMode;
 

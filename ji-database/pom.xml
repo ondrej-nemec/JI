@@ -11,10 +11,10 @@
   <version>0.0.1</version>
   <name>ji-database</name>
   <dependencies>
-    <dependency>
-      <groupId>javainit</groupId>
+  	<dependency>
+	    <groupId>com.github.ondrej-nemec.javainit</groupId>
       <artifactId>ji-common</artifactId>
-      <version>0.0.1</version>
-    </dependency>
+      <version>5b94a96819</version>
+	</dependency>
   </dependencies>
 </project>
