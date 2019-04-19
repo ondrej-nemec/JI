@@ -17,9 +17,7 @@ public class TerminalTest {
 	
 	private final String SYSTEM_ERROR_MESSAGE = "SYSTEM_ERROR_MESSAGE"; 
 	
-	private String path = 
-			"ji-utils" +
-			Os.getPathSeparator() +
+	private String path =
 			"src" +
 			Os.getPathSeparator() +
 			"test" +
