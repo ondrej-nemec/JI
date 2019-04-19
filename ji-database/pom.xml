@@ -17,9 +17,9 @@
       <version>ab627d006f</version>
 	</dependency>
 	<dependency>
-	    <groupId>com.github.ondrej-nemec</groupId>
-	    <artifactId>javainit</artifactId>
-	    <version>04e7f0fd09</version>
+	    <groupId>com.github.ondrej-nemec.javainit</groupId>
+	    <artifactId>ji-utils</artifactId>
+	    <version>fffdd09a83</version>
 	</dependency>
   </dependencies>
 </project>
