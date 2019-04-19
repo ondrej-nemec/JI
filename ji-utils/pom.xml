@@ -16,5 +16,11 @@
       <artifactId>ji-common</artifactId>
       <version>-SNAPSHOT</version>
 	</dependency>
+	<!-- LOF -->
+	<dependency>
+	    <groupId>com.github.ondrej-nemec.lordoffiles</groupId>
+	    <artifactId>lof-text</artifactId>
+	    <version>v3.1</version>
+	</dependency>
   </dependencies>
 </project>
