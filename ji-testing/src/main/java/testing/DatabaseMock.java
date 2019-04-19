@@ -7,14 +7,14 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
+/*
 import database.Database;
-import database.DatabaseConfig;
+import database.DatabaseConfig;*/
 import testing.entities.Row;
 import testing.entities.Table;
 
-public class DatabaseMock extends Database  {
-
+public class DatabaseMock /*extends Database */ {
+/*
 	private final Database nestedDatabase;
 	
 	private final List<Table> tables;
@@ -91,5 +91,5 @@ public class DatabaseMock extends Database  {
 		
 		return names + " VALUES " + values;
 	}
-	
+	*/
 }

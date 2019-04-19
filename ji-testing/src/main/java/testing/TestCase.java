@@ -1,12 +1,12 @@
 package testing;
 
 import java.util.Properties;
-
+/*
 import common.Env;
 import common.env.AppMode;
-
+*/
 public class TestCase {
-
+/*
 	protected final Env env;
 	
 	public TestCase(final Properties properties) {
@@ -21,5 +21,5 @@ public class TestCase {
 			throw new RuntimeException(e);
 		}
 	}
-	
+	*/
 }

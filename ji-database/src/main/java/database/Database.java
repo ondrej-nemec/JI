@@ -8,25 +8,24 @@ import java.util.function.Consumer;
 
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
-import logging.ILogger;
-import logging.Logger;
-import utils.env.DatabaseConfig;
+import common.ILogger;
 
 public abstract class Database {
 	
-	protected final DatabaseConfig config;
+//	protected final DatabaseConfig config;
 	
-	protected final ILogger logger = Logger.getLogger(Database.class);
+//	protected final ILogger logger;
 	
 	private String connectionString;
 	
 	private Connection connection = null;
-	
-	public Database(final DatabaseConfig config) {
+	/*
+	public Database(final DatabaseConfig config, final ILogger logger) {
 		this.config = config;
+		this.logger = logger;
 		this.connectionString = createConnectionString() + config.schemaName;
 	}
-	
+	*/
 	@Deprecated
 	public Connection getConnnection() throws SQLException {
 		if (this.connection == null)
@@ -53,7 +52,7 @@ public abstract class Database {
 	}
 	
 	public boolean createDbAndMigrate() {
-		try {
+	/*	try {
 			// TODO check if this condition is nessesery
 			if (config.runOnExternalServer) {
 				DriverManager
@@ -77,7 +76,7 @@ public abstract class Database {
 		} catch (SQLException | FlywaySqlException e) {
 			logger.fatal("Create db and migrante fail", e);
 			return false;
-		}
+		}*/
 		return true;
 	}
 	
@@ -88,7 +87,7 @@ public abstract class Database {
 	public abstract void stopServer();
 	
 	/*** SEPARATOR ***/
-	
+	/*
 	public static Database getDatabase(final DatabaseConfig config) {
 		switch (config.type) {
 		case "derby":
@@ -99,18 +98,18 @@ public abstract class Database {
 			return null;
 		}		
 	}
-	
+	*/
 	/*** SEPARATOR ***/
 	
 	private String createConnectionString() {
-		return "jdbc:" + config.type + ":" + config.pathOrUrlToLocation + "/";
+		return "jdbc:";// + config.type + ":" + config.pathOrUrlToLocation + "/";
 	}
 	
 	protected Properties createProperties() {
 		Properties props = new Properties();
 		props.setProperty("create", "true");
-		props.setProperty("user", config.login);
-		props.setProperty("password", config.password);
+	//	props.setProperty("user", config.login);
+	//	props.setProperty("password", config.password);
 		
 		return props;
 	}

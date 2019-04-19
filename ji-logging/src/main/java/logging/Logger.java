@@ -1,6 +1,5 @@
 package logging;
 
-import common.Env;
 import common.ILogger;
 import logging.loggers.ConsoleLogger;
 import logging.loggers.Log4JLogger;
@@ -8,7 +7,7 @@ import logging.loggers.NullLogger;
 
 public class Logger {
 	
-	private static Env env = null;
+//	private static Env env = null;
 	
 	public static ILogger getLogger(final String name) {
 		//TODO 
@@ -31,10 +30,10 @@ public class Logger {
 	public static ILogger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
 		return getLogger(clazz.getName());
 	}
-	
+	/*
 	public static void setEnvIfNotSetted(Env env) {
 		if (env == null)
 			Logger.env = env;
 	}
-
+*/
 }

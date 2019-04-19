@@ -11,6 +11,10 @@
   <version>0.0.1</version>
   <name>ji-logging</name>
   <dependencies>
-  
+  	<dependency>
+	    <groupId>com.github.ondrej-nemec.javainit</groupId>
+      <artifactId>ji-common</artifactId>
+      <version>ab627d006f</version>
+	</dependency>
   </dependencies>
 </project>
