@@ -6,10 +6,16 @@ import utils.Env;
 
 public class Logger {
 	
-	private static Env env = null;
+	private final Env env;
 	
-	public static ILogger getLogger(final String name) {
+	public Logger(final Env env) { // TODO config
+		this.env = env;
+	}
+	
+	public ILogger getLogger(final String name) {
 		//TODO 
+		env.createDbConfig();
+		
 		return new ConsoleLogger(name);
 		/*if (env == null) {
 			Log4JLogger.clearConfiguration();
@@ -25,13 +31,8 @@ public class Logger {
 		}*/
 	}
 	
-	public static ILogger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
+	public ILogger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
 		return getLogger(clazz.getName());
 	}
-
-	public static void setEnvIfNotSetted(Env env) {
-		if (env == null)
-			Logger.env = env;
-	}
-
+	
 }
