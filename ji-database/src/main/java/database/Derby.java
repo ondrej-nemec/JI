@@ -1,10 +1,22 @@
 package database;
-
+/*
 import common.Terminal;
 import utils.env.DatabaseConfig;
-
+*/
 public class Derby extends Database {
 
+	@Override
+	public void startServer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopServer() {
+		// TODO Auto-generated method stub
+		
+	}
+/*
 	private final Terminal terminal;
 	
 	public Derby(final DatabaseConfig config) {
@@ -24,5 +36,5 @@ public class Derby extends Database {
 		terminal.runFile((a)->{}, (a)->{},config.pathOrUrlToLocation + "/stopNetworkServer");
 		logger.info("Derby has been shutdowned");
 	}
-
+*/
 }

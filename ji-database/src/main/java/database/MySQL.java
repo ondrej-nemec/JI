@@ -1,9 +1,9 @@
 package database;
-
+/*
 import utils.env.DatabaseConfig;
-
+*/
 public class MySQL extends Database {
-
+/*
 	public MySQL(final DatabaseConfig config) {
 		super(config);
 		try {
@@ -12,7 +12,7 @@ public class MySQL extends Database {
 			logger.warn("MySQL driver could not be registered", e);
 		}
 	}
-	
+	*/
 	@Override
 	public void startServer() {
 		// implemetation is not required
