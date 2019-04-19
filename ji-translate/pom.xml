@@ -6,7 +6,7 @@
     <artifactId>javainit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>javainit</groupId>
+  <groupId>javainit-translate</groupId>
   <artifactId>ji-translate</artifactId>
   <version>0.0.1</version>
   <name>ji-translate</name>
