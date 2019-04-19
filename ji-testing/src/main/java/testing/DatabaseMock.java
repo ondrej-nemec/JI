@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import common.ILogger;
 import database.Database;
-import logging.Logger;
 import testing.entities.Row;
 import testing.entities.Table;
 import utils.env.DatabaseConfig;
@@ -22,9 +22,9 @@ public class DatabaseMock extends Database {
 	
 	private Connection connection;
 	
-	public DatabaseMock(final DatabaseConfig config, final List<Table> tables) {
-		super(config, Logger.getLogger(DatabaseMock.class));
-		this.nestedDatabase = Database.getDatabase(config, Logger.getLogger(DatabaseMock.class));
+	public DatabaseMock(final DatabaseConfig config, final List<Table> tables, final ILogger logger) {
+		super(config, logger);
+		this.nestedDatabase = Database.getDatabase(config, logger);
 		this.tables = tables;
 	}
 
