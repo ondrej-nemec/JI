@@ -11,6 +11,10 @@
   <version>0.0.1</version>
   <name>ji-utils</name>
   <dependencies>
-  
+    <dependency>
+	  <groupId>com.github.ondrej-nemec.javainit</groupId>
+      <artifactId>ji-common</artifactId>
+      <version>5b94a96819</version>
+	</dependency>
   </dependencies>
 </project>
