@@ -20,7 +20,7 @@ import testing.entities.Row;
 import testing.entities.Table;
 
 public class DatabaseTestCaseTest extends DatabaseTestCase {
-
+/*
 	public DatabaseTestCaseTest() {
 		super(getProperties());
 	}
@@ -41,7 +41,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	
 	@Test
 	public void testDataInDb() throws SQLException {
-		/*getDatabase().applyQuery((con)->{
+		getDatabase().applyQuery((con)->{
 			try {
 				PreparedStatement stat = con.prepareStatement("select * from dbtc");
 				ResultSet res = stat.executeQuery();
@@ -54,15 +54,13 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
-		});*/
+		});
 	}
 	
-	/*
 	@Test
 	public void testThrowingTest() throws IOException {
 		throw new IOException("Expected exception");
 	}
-	*/
 	
 	@Test(expected=IOException.class)
 	public void testWithExpectedException() throws IOException {
@@ -84,7 +82,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	}
 	
 	private void testDbEmptyOrNotExists() {
-		/*try {
+		try {
 			getNestedDatabase().applyQuery((con)->{
 				try {
 					testDbEmpty();
@@ -95,11 +93,10 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		} catch (SQLException | RuntimeException e) {
 			assertEquals("Unknown database 'javainit_test'", e.getMessage());
 		}
-		*/
 	}
 	
 	private void testDbEmpty() throws SQLException {
-		/*getNestedDatabase().applyQuery((con)->{
+		getNestedDatabase().applyQuery((con)->{
 			try {
 				PreparedStatement stat = con.prepareStatement("select * from dbtc");
 				ResultSet res = stat.executeQuery();
@@ -107,7 +104,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
-		});*/
+		});
 	}
 	
 	private Row getRow(int i) {
@@ -128,5 +125,5 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.pathToMigrations", "testing");
 		return prop;
 	}
-	
+	*/
 }
