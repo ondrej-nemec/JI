@@ -19,17 +19,17 @@
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-utils</artifactId>
-	    <version>-SNAPSHOT</version>
+	    <version>v1.0-utils</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-database</artifactId>
-	    <version>-SNAPSHOT</version>
+	    <version>v1.0-database</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-logging</artifactId>
-	    <version>-SNAPSHOT</version>
+	    <version>v1.0-database</version>
 	</dependency>
   	<!-- https://mvnrepository.com/artifact/junit/junit -->
   	<dependency>
