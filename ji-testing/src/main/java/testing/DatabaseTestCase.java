@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import database.Database;
-import logging.Logger;
+import logging.LoggerFactory;
 import testing.entities.Table;
 
 public abstract class DatabaseTestCase extends TestCase {
@@ -17,12 +17,12 @@ public abstract class DatabaseTestCase extends TestCase {
 
 	public DatabaseTestCase(final Properties properties) {
 		super(properties);
-		this.database = new DatabaseMock(env.createDbConfig(), getDataSet(), new Logger(env).getLogger(DatabaseMock.class));
+		this.database = new DatabaseMock(env.createDbConfig(), getDataSet(), new LoggerFactory(env).getLogger(DatabaseMock.class));
 	}
 
 	public DatabaseTestCase(final String propertiesPath) {
 		super(propertiesPath);
-		this.database = new DatabaseMock(env.createDbConfig(), getDataSet(), new Logger(env).getLogger(DatabaseMock.class));
+		this.database = new DatabaseMock(env.createDbConfig(), getDataSet(), new LoggerFactory(env).getLogger(DatabaseMock.class));
 	}	
 
 	protected abstract List<Table> getDataSet();
