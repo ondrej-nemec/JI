@@ -16,10 +16,5 @@
       <artifactId>ji-common</artifactId>
       <version>v1.0-common</version>
 	</dependency>
-	<dependency>
-	  <groupId>com.github.ondrej-nemec.javainit</groupId>
-      <artifactId>ji-logging</artifactId>
-      <version>-SNAPSHOT</version>
-	</dependency>
   </dependencies>
 </project>

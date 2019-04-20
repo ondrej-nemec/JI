@@ -48,12 +48,15 @@
   </dependencies>
   <modules>
     <module>ji-common</module>
-    <module>ji-acl</module>
-    <module>ji-database</module>
-    <module>ji-logging</module>
-    <module>ji-testing</module>
-    <module>ji-translate</module>
-    <module>ji-utils</module>
+    
+    <module>ji-utils</module> <!-- common -->    
+    <module>ji-translate</module> <!-- common -->
+    <module>ji-acl</module> <!-- common -->
+    
+    <module>ji-database</module> <!-- common, utils -->
+    <module>ji-logging</module> <!-- common, utils -->
+    
+    <module>ji-testing</module> <!-- common, utils, logging, database -->
 
   </modules>
 </project>
