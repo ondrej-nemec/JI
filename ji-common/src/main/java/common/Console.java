@@ -14,6 +14,12 @@ public class Console {
 		System.out.println(message);
 	}
 	
+	public synchronized void out(final String... messages) {
+		for(String message : messages) {
+			out(message);
+		}
+	}
+	
 	public synchronized void err(final String message) {
 		System.err.println(message);
 	}
