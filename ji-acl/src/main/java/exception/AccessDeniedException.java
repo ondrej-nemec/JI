@@ -4,7 +4,7 @@ import helper.Action;
 import interfaces.AclDestination;
 import interfaces.AclUser;
 
-public class AccessDeniedException extends Exception{
+public class AccessDeniedException extends RuntimeException{
 
 	private static final long serialVersionUID = 1L;
 

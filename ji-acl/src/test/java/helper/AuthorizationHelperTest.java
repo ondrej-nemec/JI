@@ -4,15 +4,16 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import exception.AccessDeniedException;
-import helper.implementations.TestDestination;
-import helper.implementations.TestRole;
-import helper.implementations.TestUser;
+import exception.NotAllowedActionException;
 import interfaces.AclDestination;
+import interfaces.AclRole;
 import interfaces.AclRules;
 import interfaces.AclUser;
 import junitparams.JUnitParamsRunner;
@@ -21,159 +22,376 @@ import common.ILogger;
 
 @RunWith(JUnitParamsRunner.class)
 public class AuthorizationHelperTest {
-
+	
 	@Test
 	@Parameters
-	public void testIsAllowedWorks(AclUser user, AclDestination dest, Action act, boolean isAllowed) {
-		AuthorizationHelper helper = getHelper();
+	public void testIsAllowedReturnFalseIfNoRulesGiven(Action action) {
+		String domain = "undefined";
+		AclRole role = getRole("role");
+		AclUser user = getUser("user", 10, role);
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForUserId(user.getId(), domain)).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForUserRank(user.getRank(), domain)).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForRoleId(role.getId(), domain)).thenReturn(Action.UNDEFINED);
+		
+		AuthorizationHelper helper = getHelper(mock);
 		assertEquals(
-				isAllowed,
-				helper.isAllowed(user, dest, act)
+				false,
+				helper.isAllowed(user, getDestination(domain), action)
 		);
 	}
 	
-	public Object[] parametersForTestIsAllowedWorks() {
+	public Object[] parametersForTestIsAllowedReturnFalseIfNoRulesGiven() {
 		return new Object[] {
 				new Object[]{
-						new TestUser("undefined", 0, Arrays.asList(
-								new TestRole("undefinedR", 0)
-								)),
-						new TestDestination("main page"),
-						Action.READ,
-						false
-					},
-					new Object[]{
-						new TestUser("forbidden", 0, Arrays.asList(
-								)),
-						new TestDestination("main page"),
-						Action.READ,
-						false
-					},
-					/**********/
-					new Object[]{
-						new TestUser("userId", 0, Arrays.asList(
-								)),
-						new TestDestination("list"),
-						Action.READ,
-						true
-					},
-					new Object[]{
-						new TestUser("user rank", 30, Arrays.asList(
-								)),
-						new TestDestination("list"),
-						Action.READ,
-						true
-					},
-					new Object[]{
-						new TestUser("role id", 0, Arrays.asList(
-								new TestRole("roleId", 0)
-								)),
-						new TestDestination("list"),
-						Action.READ,
-						true
-					},
-					new Object[]{
-						new TestUser("role rank", 0, Arrays.asList(
-								new TestRole("roleRank", 30)
-								)),
-						new TestDestination("list"),
-						Action.READ,
-						true
-					},
-					/*************/
-					new Object[]{
-						new TestUser("userId", 0, Arrays.asList(
-								new TestRole("undefinedR", 0)
-								)),
-						new TestDestination("list"),
-						Action.READ,
-						true
-					},
-					new Object[]{
-						new TestUser("oneRoleAllowedSecondNot", 0, Arrays.asList(
-								new TestRole("allowed", 0),
-								new TestRole("disallowed", 0)
-								)),
-						new TestDestination("article"),
-						Action.READ,
-						true
-					},
-					new Object[]{
-						new TestUser("disallowed", 0, Arrays.asList(
-								new TestRole("allowed", 0)
-								)),
-						new TestDestination("article"),
-						Action.READ,
-						false
-					}
-			};
+						Action.READ,	
+				},
+				new Object[]{
+						Action.UPDATE,
+				},
+				new Object[]{
+						Action.CREATE,	
+				},
+				new Object[]{
+						Action.DELETE
+				},
+				new Object[]{
+						Action.ADMIN	
+				}
+		};
+	}
+	
+	@Test(expected=NotAllowedActionException.class)
+	@Parameters
+	public void testIsAllowedThrowsIfNotAllowedActionIsGiven(Action act) {
+		AuthorizationHelper helper = getHelper(null);
+		helper.isAllowed(null, null, act);
+	}
+	
+	public Object[] parametersForTestIsAllowedThrowsIfNotAllowedActionIsGiven() {
+		return new Object[] {
+				new Object[]{Action.UNDEFINED},
+				new Object[]{Action.FORBIDDEN},
+		};
+	}
+
+	@Test
+	@Parameters
+	public void testIsAllowedWithUserIdRules(Action action, boolean isAllowed) {
+		AclRole role = getRole("role");
+		AclUser disallowed = getUser("disalowed", 10, role);
+		AclUser allowed = getUser("allowed", 10, role);
+		AclUser forbidden = getUser("forbidden", 10, role);
+		AclDestination destination = getDestination("user-id-rule");
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForUserId(
+				allowed.getId(),
+				destination.getId()
+			)).thenReturn(Action.CREATE);
+		
+		when(mock.getActionForUserId(
+				forbidden.getId(), 
+				destination.getId()
+			)).thenReturn(Action.FORBIDDEN);
+		
+		when(mock.getActionForUserId(
+				disallowed.getId(),
+				destination.getId()
+			)).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForUserRank(
+				disallowed.getRank(),
+				destination.getId()
+			)).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForRoleId(
+				role.getId(),
+				destination.getId()
+			)).thenReturn(Action.UNDEFINED);
+		
+		AuthorizationHelper helper = getHelper(mock);
+		
+		assertFalse(helper.isAllowed(disallowed, destination, action));
+		assertFalse(helper.isAllowed(forbidden, destination, action));
+		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));		
+	}
+	
+	public Object[] parametersForTestIsAllowedWithUserIdRules() {
+		return new Object[] {
+				new Object[]{
+						Action.READ, true	
+				},
+				new Object[]{
+						Action.UPDATE, true
+				},
+				new Object[]{
+						Action.CREATE, true
+				},
+				new Object[]{
+						Action.DELETE, false
+				},
+				new Object[]{
+						Action.ADMIN, false	
+				}
+		};
+	}		
+
+	@Test
+	@Parameters
+	public void testIsAllowedWithUserRankRules(Action action, boolean isAllowed) {		
+		AclRole role = getRole("role");
+		AclUser allowed = getUser("allowed", 10, role);
+		AclDestination destination = getDestination("user-id-rule");
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForUserId(
+				allowed.getId(),
+				destination.getId()
+			)).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForUserRank(
+				allowed.getRank(),
+				destination.getId()
+			)).thenReturn(Action.CREATE);
+		
+		AuthorizationHelper helper = getHelper(mock);
+		
+		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));		
+	}
+	
+	public Object[] parametersForTestIsAllowedWithUserRankRules() {
+		return new Object[] {
+				new Object[]{
+						Action.READ, true	
+				},
+				new Object[]{
+						Action.UPDATE, true
+				},
+				new Object[]{
+						Action.CREATE, true
+				},
+				new Object[]{
+						Action.DELETE, false
+				},
+				new Object[]{
+						Action.ADMIN, false	
+				}
+		};
+	}
+	
+	@Test
+	@Parameters
+	public void testIsAllowedWithRoleIdRules(Action action, boolean isAllowed) {
+		AclRole disallowedRole = getRole("disallowed-role");
+		AclRole allowedRole = getRole("allowed-role");
+		AclRole allowedRole2 = getRole("allowed-role2");
+		AclRole forbiddenRole = getRole("forbidden-role");
+		
+		AclUser disallowed = getUser("disalowed", 10, disallowedRole);
+		AclUser allowed = getUser("allowed", 10, disallowedRole, allowedRole, disallowedRole, allowedRole2);
+		AclUser forbidden = getUser("forbidden", 10, forbiddenRole, disallowedRole);
+		AclDestination destination = getDestination("user-id-rule");
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForUserId(anyString(), anyString())).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForUserRank(anyInt(), anyString())).thenReturn(Action.UNDEFINED);		
+		
+		when(mock.getActionForRoleId(
+				allowedRole.getId(),
+				destination.getId()
+			)).thenReturn(Action.CREATE);
+		when(mock.getActionForRoleId(
+				allowedRole2.getId(),
+				destination.getId()
+			)).thenReturn(Action.UPDATE);
+		when(mock.getActionForRoleId(
+				disallowedRole.getId(),
+				destination.getId()
+			)).thenReturn(Action.UNDEFINED);
+		when(mock.getActionForRoleId(
+				forbiddenRole.getId(), 
+				destination.getId()
+			)).thenReturn(Action.FORBIDDEN);
+		
+		AuthorizationHelper helper = getHelper(mock);
+		
+		assertFalse(helper.isAllowed(disallowed, destination, action));
+		assertFalse(helper.isAllowed(forbidden, destination, action));
+		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));
+	}
+	
+	public Object[] parametersForTestIsAllowedWithRoleIdRules() {
+		return new Object[] {
+				new Object[]{
+						Action.READ, true	
+				},
+				new Object[]{
+						Action.UPDATE, true
+				},
+				new Object[]{
+						Action.CREATE, true
+				},
+				new Object[]{
+						Action.DELETE, false
+				},
+				new Object[]{
+						Action.ADMIN, false	
+				}
+		};
+	}
+	
+	@Test
+	@Ignore
+	@Parameters
+	public void testIsAllowedSelectBeetweenUserIdRankAndRoleId(
+			boolean isAllowed,
+			Action tested,
+			Action userId,
+			Action userRank,
+			Action roleId) {
+		AclRole role = getRole("role");
+		AclUser user = getUser("allowed", 10, role);
+		AclDestination destination = getDestination("user-id-rule");
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForRoleId(
+				role.getId(),
+				destination.getId()
+			)).thenReturn(roleId);
+		when(mock.getActionForUserRank(
+				user.getRank(),
+				destination.getId()
+			)).thenReturn(userRank);
+		when(mock.getActionForUserId(
+				user.getId(), 
+				destination.getId()
+			)).thenReturn(userId);
+		
+		AuthorizationHelper helper = getHelper(mock);
+		assertEquals(isAllowed, helper.isAllowed(user, destination, tested));
+		
+	}	
+	
+	public Object[] parametersForTestIsAllowedSelectBeetweenUserIdRankAndRoleId() {
+		return new Object[] {
+				new Object[]{
+						Action.READ, true	
+				},
+				new Object[]{
+						Action.UPDATE, true
+				},
+				new Object[]{
+						Action.CREATE, true
+				},
+				new Object[]{
+						Action.DELETE, false
+				},
+				new Object[]{
+						Action.ADMIN, false	
+				}
+		};
 	}
 	
 	@Test(expected=AccessDeniedException.class)
 	public void testThrowIfIsNotAllowedThrows() throws AccessDeniedException {
-		AuthorizationHelper helper = getHelper();
+		AclRole disallowedRole = getRole("disallowed-role");
+		AclUser disallowed = getUser("disallowed", 10, disallowedRole);
+		AclDestination destination = getDestination("user-id-rule");
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForUserId(
+				disallowed.getId(),
+				destination.getId()
+			)).thenReturn(Action.READ);
+				
+		AuthorizationHelper helper = getHelper(mock);
 		helper.throwIfIsNotAllowed(
-				new TestUser("forbidden", 0, Arrays.asList(
-				)),
-				new TestDestination("main page"),
-				Action.READ
+				disallowed,
+				destination,
+				Action.CREATE
 		);
 	}
 	
 	@Test
-	public void testThrowIfIsNotAllowedNotThrowsWhenUserIsAllowed() throws AccessDeniedException {
-		AuthorizationHelper helper = getHelper();
+	public void testThrowIfIsNotAllowedNotThrowsWhenUserIsAllowed() {
+		AclRole role = getRole("disallowed-role");
+		AclUser allowed = getUser("allowed", 10, role);
+		AclDestination destination = getDestination("user-id-rule");
+		
+		AclRules mock = mock(AclRules.class);
+		when(mock.getActionForUserId(
+				allowed.getId(),
+				destination.getId()
+			)).thenReturn(Action.CREATE);
+				
+		AuthorizationHelper helper = getHelper(mock);
 		helper.throwIfIsNotAllowed(
-				new TestUser("userId", 0, Arrays.asList(
-						)),
-				new TestDestination("list"),
+				allowed,
+				destination,
 				Action.READ
 		);
 		assertTrue(true);
 	}
 	
-	private AuthorizationHelper getHelper() {
-		return new AuthorizationHelper(getRules(), mock(ILogger.class));
-	}
-
-	private AclRules getRules() {
-		AclRules mock = mock(AclRules.class);
-		
-		when(mock.getRuleUserId("undefined", "main page", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleUserRank(0, "main page", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleRoleId("undefinedR", "main page", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleRoleRank(0, "main page", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		
-		when(mock.getRuleUserId("forbidden", "main page", Action.READ)).thenReturn(Status.DISALLOWED);
-		/******/
-		when(mock.getRuleUserId("userId", "list", Action.READ)).thenReturn(Status.ALLOWED);
-		
-		when(mock.getRuleUserId("user rank", "list", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleUserRank(30, "list", Action.READ)).thenReturn(Status.ALLOWED);
-		
-		when(mock.getRuleUserId("role id", "list", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleUserRank(0, "list", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleRoleId("roleId", "list", Action.READ)).thenReturn(Status.ALLOWED);
-		
-		when(mock.getRuleUserId("role rank", "list", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleUserRank(0, "list", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleRoleId("roleRank", "list", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleRoleRank(30, "list", Action.READ)).thenReturn(Status.ALLOWED);
-		/************/
-		when(mock.getRuleUserId("oneRoleAllowedSecondNot", "article", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleUserRank(0, "article", Action.READ)).thenReturn(Status.UNSPECIFIED);
-		when(mock.getRuleRoleId("allowed", "article", Action.READ)).thenReturn(Status.ALLOWED);
-		when(mock.getRuleRoleId("disallowed", "article", Action.READ)).thenReturn(Status.DISALLOWED);
-		
-		when(mock.getRuleUserId("disallowed", "article", Action.READ)).thenReturn(Status.DISALLOWED);
-		return mock;
-	}
-
+	/*** SEPARATOR ***/
 	
-	public static Collection<Object[]> getDataSet() {
-		return Arrays.asList(
-				
-			);
-		}
+	
+	private AuthorizationHelper getHelper(AclRules rules) {
+		return new AuthorizationHelper(rules, mock(ILogger.class));
+	}
+	
+	private AclDestination getDestination(String id) {
+		return new AclDestination() {
+			
+			@Override
+			public String getId() {
+				return id;
+			}
+			
+			@Override
+			public boolean equals(AclDestination destination) {
+				return getId() == destination.getId();
+			}
+		};
+	}
+	
+	private AclRole getRole(String id) {
+		return new AclRole() {
+			
+			@Override
+			public String getId() {
+				return id;
+			}
+			
+			@Override
+			public boolean equals(AclRole role) {
+				return getId() == role.getId();
+			}
+		};
+	}
+	
+	private AclUser getUser(String id, int rank, AclRole... aclRoles) {
+		return new AclUser() {
+			
+			@Override
+			public List<AclRole> getRoles() {
+				return Arrays.asList(aclRoles);
+			}
+			
+			@Override
+			public int getRank() {
+				return rank;
+			}
+			
+			@Override
+			public String getId() {
+				return id;
+			}
+			
+			@Override
+			public boolean equals(AclUser user) {
+				return getId() == user.getId();
+			}
+		};
+	}
 	
 }

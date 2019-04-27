@@ -1,23 +1,18 @@
 package interfaces;
 
 import helper.Action;
-import helper.Status;
 
 public interface AclRules {
 	
-	default Status getRuleUserId(String userId, String destinationId, Action action) {
-		return Status.UNSPECIFIED;
+	default Action getActionForUserId(String userId, String destinationId) {
+		return Action.UNDEFINED;
 	}
 	
-	default Status getRuleUserRank(int userRank, String destinationId, Action action) {
-		return Status.UNSPECIFIED;
+	default Action getActionForUserRank(int userRank, String destinationId) {
+		return Action.UNDEFINED;
 	}
 	
-	default Status getRuleRoleId(String roleId, String destinationId, Action action) {
-		return Status.UNSPECIFIED;
-	}
-	
-	default Status getRuleRoleRank(int roleRank, String destinationId, Action action) {
-		return Status.UNSPECIFIED;
+	default Action getActionForRoleId(String roleId, String destinationId) {
+		return Action.UNDEFINED;
 	}
 }
