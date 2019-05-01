@@ -94,6 +94,10 @@ public abstract class Database {
 		return props;
 	}
 	
+	protected String getConnectionString() {
+		return connectionString;
+	}
+	
 	private void migrate() throws FlywaySqlException {
 		Flyway f  = Flyway
 				.configure()
