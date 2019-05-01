@@ -6,10 +6,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import common.ILogger;
 import database.Database;
+import database.support.ConnectionConsumer;
+import querybuilder.DeleteQueryBuilder;
+import querybuilder.InsertQueryBuilder;
+import querybuilder.SelectQueryBuilder;
+import querybuilder.UpdateQueryBuilder;
 import testing.entities.Row;
 import testing.entities.Table;
 import utils.env.DatabaseConfig;
@@ -39,7 +43,7 @@ public class DatabaseMock extends Database {
 	}
 	
 	@Override
-	public void applyQuery(Consumer<Connection> consumer) throws SQLException {
+	public void applyQuery(ConnectionConsumer consumer) throws SQLException {
 		consumer.accept(connection);
 	}
 	
@@ -91,6 +95,31 @@ public class DatabaseMock extends Database {
 		values += ")";
 		
 		return names + " VALUES " + values;
+	}
+
+	@Override
+	protected void createDb() throws SQLException {
+		nestedDatabase.createDbAndMigrate();
+	}
+
+	@Override
+	public SelectQueryBuilder getSelectBuilder() {
+		return nestedDatabase.getSelectBuilder();
+	}
+
+	@Override
+	public UpdateQueryBuilder getUpdateBuilder() {
+		return nestedDatabase.getUpdateBuilder();
+	}
+
+	@Override
+	public DeleteQueryBuilder getDeletetBuilder() {
+		return nestedDatabase.getDeletetBuilder();
+	}
+
+	@Override
+	public InsertQueryBuilder getInsertBuilder() {
+		return nestedDatabase.getInsertBuilder();
 	}
 
 }
