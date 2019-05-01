@@ -4,11 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.function.Consumer;
 
+import org.flywaydb.core.Flyway;
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.ILogger;
+import database.support.ConnectionConsumer;
+import querybuilder.DeleteQueryBuilder;
+import querybuilder.InsertQueryBuilder;
+import querybuilder.SelectQueryBuilder;
+import querybuilder.UpdateQueryBuilder;
 import utils.env.DatabaseConfig;
 
 public abstract class Database {
@@ -18,61 +23,25 @@ public abstract class Database {
 	protected final ILogger logger;
 	
 	private String connectionString;
-	
-	private Connection connection = null;
 
 	public Database(final DatabaseConfig config, final ILogger logger) {
 		this.config = config;
 		this.logger = logger;
 		this.connectionString = createConnectionString() + config.schemaName;
 	}
-
-	@Deprecated
-	public Connection getConnnection() throws SQLException {
-		if (this.connection == null)
-			this.connection = DriverManager.getConnection(connectionString, createProperties());
-		return connection;
-	}
 	
-	@Deprecated
-	public void stopConnection() throws SQLException {
-		if (connection != null) {
-			connection.close();
-			connection = null;
-		}
-	}
-	
-	public void applyQuery(final Consumer<Connection> consumer) throws SQLException {
+	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
 		Connection con = DriverManager.getConnection(connectionString, createProperties());
 		consumer.accept(con);
 		con.close();
 	}
 	
-	public String getConnectionString() {
-		return connectionString;
-	}
-	
 	public boolean createDbAndMigrate() {
 		try {
-			// TODO check if this condition is nessesery
-			if (config.runOnExternalServer) {
-				DriverManager
-					.getConnection(
-							createConnectionString(),
-							createProperties()
-					).createStatement()
-					.executeUpdate("CREATE DATABASE IF NOT EXISTS " + config.schemaName);
-			} else {
-				// create and close - create db schema
-				getConnnection().close();		
-			}
+			createDb();
 			logger.info("DB schema was created");
-			new Migrate(
-					getConnectionString(),
-					config.login,
-					config.password,
-					config.pathToMigrations
-			);
+
+			migrate();
 			logger.info("All migrations were applied");
 		} catch (SQLException | FlywaySqlException e) {
 			logger.fatal("Create db and migrante fail", e);
@@ -86,6 +55,16 @@ public abstract class Database {
 	public abstract void startServer();
 	
 	public abstract void stopServer();
+	
+	protected abstract void createDb() throws SQLException;
+
+	public abstract SelectQueryBuilder getSelectBuilder();
+	
+	public abstract UpdateQueryBuilder getUpdateBuilder();
+	
+	public abstract DeleteQueryBuilder getDeletetBuilder();
+	
+	public abstract InsertQueryBuilder getInsertBuilder();
 	
 	/*** SEPARATOR ***/
 	
@@ -102,7 +81,7 @@ public abstract class Database {
 
 	/*** SEPARATOR ***/
 	
-	private String createConnectionString() {
+	protected String createConnectionString() {
 		return "jdbc:" + config.type + ":" + config.pathOrUrlToLocation + "/";
 	}
 	
@@ -113,5 +92,18 @@ public abstract class Database {
 		props.setProperty("password", config.password);
 		
 		return props;
+	}
+	
+	private void migrate() throws FlywaySqlException {
+		Flyway f  = Flyway
+				.configure()
+				.dataSource(
+					connectionString,
+					config.login,
+					config.password
+				)
+				.locations(config.pathToMigrations)
+				.load();
+		f.migrate();
 	}
 }
