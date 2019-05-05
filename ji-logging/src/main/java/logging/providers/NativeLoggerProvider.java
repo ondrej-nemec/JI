@@ -1,4 +1,4 @@
-package logging.another;
+package logging.providers;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import common.Os;
 import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
 
-public class Log {
+public class NativeLoggerProvider {
 	
 	public static final int CONSOLE = 0;
 	
@@ -23,7 +23,7 @@ public class Log {
 	
 	private final String logDir;
 		
-	public Log(final Console console, final String logDir) {
+	public NativeLoggerProvider(final Console console, final String logDir) {
 		this.logDir = logDir;
 		this.console = console;
 	}
