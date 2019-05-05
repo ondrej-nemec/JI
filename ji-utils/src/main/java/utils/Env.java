@@ -8,6 +8,7 @@ import java.util.Properties;
 import common.Os;
 import common.emuns.SupportedOs;
 import utils.env.DatabaseConfig;
+import utils.env.LoggerConfig;
 import utils.enums.AppMode;
 
 public class Env {
@@ -62,11 +63,6 @@ public class Env {
 		return property;
 	}
 	
-	@Deprecated
-	public String getPropertyOrThrowIfNotExists(final String key) {
-		return getProperty(key);
-	}
-	
 	public DatabaseConfig createDbConfig() {
 		return new DatabaseConfig(
 				getProperty("db.type"),
@@ -76,6 +72,13 @@ public class Env {
 				getProperty("db.login"),
 				getProperty("db.password"),
 				getProperty("db.pathToMigrations")
+		);
+	}
+	
+	public LoggerConfig createLogConfig() {
+		return new LoggerConfig(
+				mode,
+				getProperty("log.logFile")
 		);
 	}
 	
