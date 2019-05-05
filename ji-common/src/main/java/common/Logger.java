@@ -1,6 +1,6 @@
 package common;
 
-public interface ILogger {
+public interface Logger {
 
 	public void debug(final Object message);
 	
