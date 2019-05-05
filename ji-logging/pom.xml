@@ -14,12 +14,12 @@
   	<dependency>
 	  <groupId>com.github.ondrej-nemec.javainit</groupId>
       <artifactId>ji-common</artifactId>
-      <version>v1.0-common</version>
+      <version>v2.0.2-common</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-utils</artifactId>
-	    <version>v1.0-utils</version>
+	    <version>v2.0.3-utils</version>
 	</dependency>
 	<!-- LOF -->
 	<dependency>
@@ -32,6 +32,12 @@
 	    <groupId>log4j</groupId>
 	    <artifactId>log4j</artifactId>
 	    <version>1.2.17</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+	<dependency>
+	    <groupId>org.flywaydb</groupId>
+	    <artifactId>flyway-core</artifactId>
+	    <version>5.2.4</version>
 	</dependency>
   </dependencies>
 </project>

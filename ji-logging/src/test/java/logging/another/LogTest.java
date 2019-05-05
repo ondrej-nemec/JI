@@ -19,6 +19,7 @@ import common.Console;
 import common.Os;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import logging.providers.NativeLoggerProvider;
 
 @RunWith(JUnitParamsRunner.class)
 public class LogTest {
@@ -26,7 +27,7 @@ public class LogTest {
 	@Test
 	public void testSetLoggerWorks() {
 		Logger logger = Logger.getAnonymousLogger();
-		Log log = new Log(new Console(), "logs/");
+		NativeLoggerProvider log = new NativeLoggerProvider(new Console(), "logs/");
 		
 		log.addAllHandlers(logger);
 		
@@ -39,7 +40,7 @@ public class LogTest {
 	@Parameters
 	@Ignore("make end to end test")
 	public void testFileHandlerWorks(String loggerName, Level level, String message, String expectedFileName, String expectedMessage) throws IOException {
-		Handler handler = new Log(null, "logs/").fileHandler(loggerName);
+		Handler handler = new NativeLoggerProvider(null, "logs/").fileHandler(loggerName);
 		
 		LogRecord record = new LogRecord(level, message);
 		record.setMillis(0);
@@ -98,7 +99,7 @@ public class LogTest {
 	@Parameters
 	public void testConsoleHandlerWorks(Level level, String message, String expectedMessage, boolean isErr) {
 		Console console = mock(Console.class);
-		Handler handler = new Log(console, "logs").consoleHandler();
+		Handler handler = new NativeLoggerProvider(console, "logs").consoleHandler();
 		
 		LogRecord record = new LogRecord(level, message);
 		record.setMillis(0);

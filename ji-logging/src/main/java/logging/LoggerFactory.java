@@ -1,37 +1,30 @@
 package logging;
 
-import common.ILogger;
+import common.Logger;
 import logging.loggers.ConsoleLogger;
-import utils.Env;
+import logging.loggers.Log4JLogger;
+import logging.loggers.NullLogger;
+import utils.env.LoggerConfig;
 
 public class LoggerFactory {
 	
-	private final Env env;
+	private final LoggerConfig config;
 	
-	public LoggerFactory(final Env env) { // TODO config
-		this.env = env;
+	public LoggerFactory(final LoggerConfig config) {
+		this.config = config;
 	}
 	
-	public ILogger getLogger(final String name) {
-		//TODO 
-		env.createDbConfig();
-		
-		return new ConsoleLogger(name);
-		/*if (env == null) {
-			Log4JLogger.clearConfiguration();
-			return new NullLogger();
-		}
-		return new Log4JLogger(name, env.mode, env.getProperty("log.pathToLogs"));*/
-		//switch by data from env
-		/*switch(env.mode) {
+	public Logger getLogger(final String name) {
+		//TODO switch by data from env
+		switch(config.getAppMode()) {
 			case PROD:
-			case DEV: return new ConsoleLogger(name);
-			case TEST:
+			case DEV: return Log4JLogger.createLog4JLogger(name, config);
+			case TEST: return new ConsoleLogger(name);
 			default: return new NullLogger();
-		}*/
+		}
 	}
 	
-	public ILogger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
+	public Logger getLogger(@SuppressWarnings("rawtypes") final Class clazz) {
 		return getLogger(clazz.getName());
 	}
 	

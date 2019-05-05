@@ -1,8 +1,8 @@
 package logging.loggers;
 
-import common.ILogger;
+import common.Logger;
 
-public class NullLogger implements ILogger {
+public class NullLogger implements Logger {
 
 	@Override
 	public void debug(final Object message) {

@@ -1,9 +1,9 @@
 package logging.loggers;
 
 import common.Console;
-import common.ILogger;
+import common.Logger;
 
-public class ConsoleLogger implements ILogger {
+public class ConsoleLogger implements Logger {
 	
 	private final String name;
 	

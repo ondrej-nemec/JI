@@ -7,78 +7,128 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Priority;
+import org.flywaydb.core.api.logging.Log;
+import org.flywaydb.core.api.logging.LogFactory;
 
-import common.ILogger;
-import utils.enums.AppMode;
+import utils.env.LoggerConfig;
 
-public class Log4JLogger extends Logger implements ILogger {
+public class Log4JLogger implements common.Logger, Log {
 	
-	public Log4JLogger(final String name, final AppMode mode, final String pathToLogs) {
-		super(name);
-		clearConfiguration();
+	private final Logger log;
+	
+	private final boolean isDebugEnabled;
+	
+	public static Log4JLogger createLog4JLogger(final String name, final LoggerConfig config) {
+		Logger.getRootLogger().getLoggerRepository().resetConfiguration();
+		
+		Log4JLogger log = new Log4JLogger(name, config);
+		LogFactory.setLogCreator((clazz)->{
+			return log;
+		});
+		return log;
+	}
+	
+	private Log4JLogger(final String name, final LoggerConfig config) {
 		Priority priority = null;
-		switch (mode) {
-		case TEST: priority = Level.OFF; break;
-		case DEV: priority = Level.ALL; break;
-		case PROD: priority = Level.INFO; break;
-			default: throw new RuntimeException("Unsupported app mode " + mode);
+		switch (config.getAppMode()) {
+			case TEST:
+				priority = Level.OFF;
+				this.isDebugEnabled = false;
+				break;
+			case DEV:
+				priority = Level.ALL;
+				this.isDebugEnabled = true;
+				break;
+			case PROD:
+				priority = Level.INFO;
+				this.isDebugEnabled = false;
+				break;
+			default: throw new RuntimeException("Unsupported app mode " + config.getAppMode());
 		}
 		Logger.getRootLogger().addAppender(createConsoleAppender(priority));
-		Logger.getRootLogger().addAppender(createFileAppender(priority, pathToLogs));
-	}
-
-	public static void clearConfiguration() {
-		Logger.getRootLogger().getLoggerRepository().resetConfiguration();
+		Logger.getRootLogger().addAppender(createFileAppender(priority, config.getPathToLogs()));
+		
+		this.log = Logger.getLogger(name);
 	}
 
 	@Override
 	public void debug(Object message) {
-		super.debug(message);
+		log.debug(message);
 	}
 
 	@Override
 	public void debug(Object message, Throwable t) {
-		super.debug(message, t);
+		log.debug(message, t);
 	}
 
 	@Override
 	public void info(Object message) {
-		super.info(message);
+		log.info(message);
 	}
 
 	@Override
 	public void info(Object message, Throwable t) {
-		super.info(message, t);
+		log.info(message, t);
 	}
 
 	@Override
 	public void warn(Object message) {
-		super.warn(message);
+		log.warn(message);
 	}
 
 	@Override
 	public void warn(Object message, Throwable t) {
-		super.warn(message, t);
+		log.warn(message, t);
 	}
 
 	@Override
 	public void error(Object message) {
-		super.error(message);
+		log.error(message);
 	}
 
 	@Override
 	public void error(Object message, Throwable t) {
-		super.error(message, t);
+		log.error(message, t);
 	}
 
 	@Override
 	public void fatal(Object message) {
-		super.fatal(message);
+		log.fatal(message);
 	}
 
 	@Override
 	public void fatal(Object message, Throwable t) {
-		super.fatal(message, t);
+		log.fatal(message, t);
+	}
+
+	@Override
+	public boolean isDebugEnabled() {
+		return isDebugEnabled;
+	}
+
+	@Override
+	public void debug(String message) {
+		debug((Object)message);
+	}
+
+	@Override
+	public void info(String message) {
+		info((Object)message);
+	}
+
+	@Override
+	public void warn(String message) {
+		warn((Object)message);
+	}
+
+	@Override
+	public void error(String message) {
+		error((Object)message);
+	}
+
+	@Override
+	public void error(String message, Exception e) {
+		error((Object)message, e);
 	}
 	
 	private ConsoleAppender createConsoleAppender(final Priority priority) {
@@ -98,7 +148,7 @@ public class Log4JLogger extends Logger implements ILogger {
 		file.setThreshold(priority);
 		file.setAppend(true);
 		file.activateOptions();
-		return null;
+		return file;
 	}
 	
 	//TODO
