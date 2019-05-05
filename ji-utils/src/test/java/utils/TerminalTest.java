@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import common.ILogger;
+import common.Logger;
 import common.Os;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -34,7 +34,7 @@ public class TerminalTest {
 	@Test
 	@Parameters
 	public void testRunCommandWorks(final String command, int expectedCode, final String expectedOut, final String expectedErr) {
-		Terminal terminal = new Terminal(mock(ILogger.class));
+		Terminal terminal = new Terminal(mock(Logger.class));
 		
 		int code = terminal.runCommand(
 				(a)->{stdOut += a;},
@@ -69,7 +69,7 @@ public class TerminalTest {
 	@Test
 	@Parameters
 	public void testRunFileWorks(final String file, int expectedCode, final String expectedOut, final String expectedErr) {
-		Terminal terminal = new Terminal(mock(ILogger.class));
+		Terminal terminal = new Terminal(mock(Logger.class));
 		
 		int code = terminal.runFile(
 				(a)->{stdOut += a + " | ";},

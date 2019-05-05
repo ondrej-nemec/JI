@@ -6,15 +6,15 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import common.Os;
-import common.ILogger;
+import common.Logger;
 import text.BufferedReaderFactory;
 import text.plaintext.PlainTextLoader;
 
 public class Terminal {
 	
-	private final ILogger logger;
+	private final Logger logger;
 	
-	public Terminal(final ILogger logger) {
+	public Terminal(final Logger logger) {
 		this.logger = logger;
 	}
 	
