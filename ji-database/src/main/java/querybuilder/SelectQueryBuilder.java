@@ -12,7 +12,7 @@ public interface SelectQueryBuilder {
 
 	SelectQueryBuilder where(String where);
 	
-	SelectQueryBuilder andWhere(String where);
+	SelectQueryBuilder and(String where);
 	
 	SelectQueryBuilder orderBy(String orderBy);
 	

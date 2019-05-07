@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.logging.LogFactory;
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.ILogger;
@@ -99,6 +100,9 @@ public abstract class Database {
 	}
 	
 	private void migrate() throws FlywaySqlException {
+		/*LogFactory.setLogCreator((clazz)->{
+			return log;
+		});*/
 		Flyway f  = Flyway
 				.configure()
 				.dataSource(
