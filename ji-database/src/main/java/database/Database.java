@@ -9,7 +9,7 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.logging.LogFactory;
 import org.flywaydb.core.internal.exception.FlywaySqlException;
 
-import common.ILogger;
+import common.Logger;
 import database.support.ConnectionConsumer;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.InsertQueryBuilder;
@@ -21,11 +21,11 @@ public abstract class Database {
 	
 	protected final DatabaseConfig config;
 	
-	protected final ILogger logger;
+	protected final Logger logger;
 	
 	private String connectionString;
 
-	public Database(final DatabaseConfig config, final ILogger logger) {
+	public Database(final DatabaseConfig config, final Logger logger) {
 		this.config = config;
 		this.logger = logger;
 		this.connectionString = createConnectionString() + config.schemaName;
@@ -69,7 +69,7 @@ public abstract class Database {
 	
 	/*** SEPARATOR ***/
 	
-	public static Database getDatabase(final DatabaseConfig config, final ILogger logger) {
+	public static Database getDatabase(final DatabaseConfig config, final Logger logger) {
 		switch (config.type) {
 		case "derby":
 			return new Derby(config, logger);

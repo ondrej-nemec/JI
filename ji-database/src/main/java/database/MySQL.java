@@ -3,7 +3,7 @@ package database;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import common.ILogger;
+import common.Logger;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.InsertQueryBuilder;
 import querybuilder.SelectQueryBuilder;
@@ -12,7 +12,7 @@ import utils.env.DatabaseConfig;
 
 public class MySQL extends Database {
 
-	public MySQL(final DatabaseConfig config, final ILogger logger) {
+	public MySQL(final DatabaseConfig config, final Logger logger) {
 		super(config, logger);
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

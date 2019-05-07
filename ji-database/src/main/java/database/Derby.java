@@ -2,7 +2,7 @@ package database;
 
 import java.sql.SQLException;
 
-import common.ILogger;
+import common.Logger;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.InsertQueryBuilder;
 import querybuilder.SelectQueryBuilder;
@@ -14,7 +14,7 @@ public class Derby extends Database {
 
 	private final Terminal terminal;
 	
-	public Derby(final DatabaseConfig config, final ILogger logger) {
+	public Derby(final DatabaseConfig config, final Logger logger) {
 		super(config, logger);
 		this.terminal = new Terminal(logger);
 	}
