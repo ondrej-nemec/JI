@@ -18,7 +18,7 @@ public class LoggerFactory {
 		//TODO switch by data from env
 		switch(config.getAppMode()) {
 			case PROD:
-			case DEV: return Log4JLogger.createLog4JLogger(name, config);
+			case DEV: return new Log4JLogger(name, config);
 			case TEST: return new ConsoleLogger(name);
 			default: return new NullLogger();
 		}

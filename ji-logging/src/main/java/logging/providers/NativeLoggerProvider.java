@@ -12,62 +12,41 @@ import common.Console;
 import common.Os;
 import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
+import utils.env.LoggerConfig;
 
 public class NativeLoggerProvider {
 	
-	public static final int CONSOLE = 0;
-	
-	public static final int FILE = 1;
-	
 	private final Console console;
 	
-	private final String logDir;
-		
-	public NativeLoggerProvider(final Console console, final String logDir) {
-		this.logDir = logDir;
+	private final LoggerConfig config;
+			
+	public NativeLoggerProvider(final Console console, final LoggerConfig config) {
+		this.config = config;
 		this.console = console;
 	}
 	
-	public Logger addAllHandlers(final Logger logger) {
+	public Logger getLogger(String name, final Level loggeredLevel) {
+		Logger logger = Logger.getLogger(name);
 		logger.setLevel(Level.ALL);
 		logger.setUseParentHandlers(false);		
 		
-		logger.addHandler(consoleHandler());
-		logger.addHandler(fileHandler(logger.getName()));
+		logger.addHandler(consoleHandler(loggeredLevel));
+		logger.addHandler(fileHandler(loggeredLevel, config.getPathToLogs()));
 		
 		return logger;
 	}
 	
-	public Logger setHandler(final Logger logger, int... handlers) {
-		logger.setLevel(Level.ALL);
-		logger.setUseParentHandlers(false);
-		
-		for (int handler : handlers) {
-			switch(handler) {
-			case CONSOLE: logger.addHandler(consoleHandler()); break;
-			case FILE: logger.addHandler(fileHandler(logger.getName())); break;
-			}
-		}
-		
-		return logger;
-	}
-	
-	public Handler fileHandler(final String loggerName) {
+	private Handler fileHandler(final Level loggeredLevel, final String pathToLogger) {
 		return new Handler() {
 						
 			@Override
 			public Level getLevel() {
-				return Level.ALL;
+				return loggeredLevel;
 			}
 			
 			@Override
 			public synchronized void publish(LogRecord record) {
-				String fileName = loggerName;
-				if (fileName == null)
-					fileName = "_default";
-				fileName = logDir + fileName + ".log";
-				
-				try(BufferedWriter bw = BufferedWriterFactory.buffer(fileName, true)) {
+				try(BufferedWriter bw = BufferedWriterFactory.buffer(pathToLogger, true)) {
 					new PlainTextCreator(bw).write(makeMessage(record));
 				} catch (IOException e) {
 					//TODO what do if writing falls
@@ -83,12 +62,12 @@ public class NativeLoggerProvider {
 		};
 	}
 	
-	public Handler consoleHandler () {
+	private Handler consoleHandler (final Level loggeredLevel) {
 		return new Handler() {
 						
 			@Override
 			public Level getLevel() {
-				return Level.ALL;
+				return loggeredLevel;
 			}
 			
 			@Override
