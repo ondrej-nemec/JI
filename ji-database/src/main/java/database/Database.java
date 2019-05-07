@@ -11,6 +11,7 @@ import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.Logger;
 import database.support.ConnectionConsumer;
+import database.support.FlywayLogger;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.InsertQueryBuilder;
 import querybuilder.SelectQueryBuilder;
@@ -100,9 +101,9 @@ public abstract class Database {
 	}
 	
 	private void migrate() throws FlywaySqlException {
-		/*LogFactory.setLogCreator((clazz)->{
-			return log;
-		});*/
+		LogFactory.setLogCreator((clazz)->{
+			return new FlywayLogger(this.logger);
+		});
 		Flyway f  = Flyway
 				.configure()
 				.dataSource(

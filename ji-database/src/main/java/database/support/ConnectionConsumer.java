@@ -3,7 +3,9 @@ package database.support;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface ConnectionConsumer {
+import common.ThrowingConsumer;
+
+public interface ConnectionConsumer extends ThrowingConsumer<Connection, SQLException> {
 
 	void accept(Connection connection) throws SQLException;
 	
