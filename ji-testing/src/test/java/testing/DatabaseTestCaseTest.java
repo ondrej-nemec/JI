@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import testing.entities.Row;
@@ -42,22 +43,19 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	@Test
 	public void testDataInDb() throws SQLException {
 		getDatabase().applyQuery((con)->{
-			try {
-				PreparedStatement stat = con.prepareStatement("select * from dbtc");
-				ResultSet res = stat.executeQuery();
-				
-				for (int i = 0; i < 3; i++) {
-					assertTrue(res.next());
-					assertEquals(i, res.getInt(1));
-					assertEquals("Name #" + i, res.getObject(2));
-				}
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
+			PreparedStatement stat = con.prepareStatement("select * from dbtc");
+			ResultSet res = stat.executeQuery();
+			
+			for (int i = 0; i < 3; i++) {
+				assertTrue(res.next());
+				assertEquals(i, res.getInt(1));
+				assertEquals("Name #" + i, res.getObject(2));
 			}
 		});
 	}
 	
 	@Test
+	@Ignore
 	public void testThrowingTest() throws IOException {
 		throw new IOException("Expected exception");
 	}
@@ -84,11 +82,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	private void testDbEmptyOrNotExists() {
 		try {
 			getNestedDatabase().applyQuery((con)->{
-				try {
-					testDbEmpty();
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
+				testDbEmpty();
 			});
 		} catch (SQLException | RuntimeException e) {
 			assertEquals("Unknown database 'javainit_test'", e.getMessage());
@@ -97,13 +91,9 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	
 	private void testDbEmpty() throws SQLException {
 		getNestedDatabase().applyQuery((con)->{
-			try {
-				PreparedStatement stat = con.prepareStatement("select * from dbtc");
-				ResultSet res = stat.executeQuery();
-				assertFalse(res.next());
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+			PreparedStatement stat = con.prepareStatement("select * from dbtc");
+			ResultSet res = stat.executeQuery();
+			assertFalse(res.next());
 		});
 	}
 	
@@ -123,6 +113,9 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.login", "root");
 		prop.put("db.password", "");
 		prop.put("db.pathToMigrations", "testing");
+		
+		prop.put("log.logFile", "log.txt");
+		prop.put("", "");
 		return prop;
 	}
 
