@@ -19,7 +19,7 @@
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-utils</artifactId>
-	    <version>master-SNAPSHOT</version> <!-- v1.0-utils -->
+	    <version>22b3da6fe5</version> <!-- v1.0-utils -->
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
 	<dependency>
