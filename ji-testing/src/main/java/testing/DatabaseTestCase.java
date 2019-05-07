@@ -17,12 +17,20 @@ public abstract class DatabaseTestCase extends TestCase {
 
 	public DatabaseTestCase(final Properties properties) {
 		super(properties);
-		this.database = new DatabaseMock(env.createDbConfig(), getDataSet(), new LoggerFactory(env).getLogger(DatabaseMock.class));
+		this.database = new DatabaseMock(
+				env.createDbConfig(),
+				getDataSet(),
+				new LoggerFactory(env.createLogConfig()).getLogger(DatabaseMock.class)
+		);
 	}
 
 	public DatabaseTestCase(final String propertiesPath) {
 		super(propertiesPath);
-		this.database = new DatabaseMock(env.createDbConfig(), getDataSet(), new LoggerFactory(env).getLogger(DatabaseMock.class));
+		this.database = new DatabaseMock(
+				env.createDbConfig(),
+				getDataSet(), 
+				new LoggerFactory(env.createLogConfig()).getLogger(DatabaseMock.class)
+		);
 	}	
 
 	protected abstract List<Table> getDataSet();

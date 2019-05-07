@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-import common.ILogger;
+import common.Logger;
 import database.Database;
 import database.support.ConnectionConsumer;
 import querybuilder.DeleteQueryBuilder;
@@ -26,7 +26,7 @@ public class DatabaseMock extends Database {
 	
 	private Connection connection;
 	
-	public DatabaseMock(final DatabaseConfig config, final List<Table> tables, final ILogger logger) {
+	public DatabaseMock(final DatabaseConfig config, final List<Table> tables, final Logger logger) {
 		super(config, logger);
 		this.nestedDatabase = Database.getDatabase(config, logger);
 		this.tables = tables;
