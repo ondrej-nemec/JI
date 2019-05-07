@@ -13,8 +13,8 @@
   <dependencies>
   	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
-      <artifactId>ji-common</artifactId>
-      <version>v1.0-common</version>
+        <artifactId>ji-common</artifactId>
+        <version>694ed6aabc</version> <!-- v1.0-common -->
 	</dependency>
   </dependencies>
 </project>

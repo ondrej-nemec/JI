@@ -7,11 +7,11 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import common.ILogger;
+import common.Logger;
 
 public class Translator {
 	
-	private final ILogger logger;
+	private final Logger logger;
 	
 	private Info info;
 	
@@ -27,13 +27,13 @@ public class Translator {
 	
 	private final Map<String, ResourceBundle> namedMessages;
 	
-	public Translator(ResourceBundle resource, ILogger logger) {
+	public Translator(ResourceBundle resource, Logger logger) {
 		this.defaultMessages = resource;
 		this.namedMessages = new HashMap<>();
 		this.logger = logger;
 	}
 	
-	public Translator(ResourceBundle resource, Map<String, ResourceBundle> otherMessages, ILogger logger) {
+	public Translator(ResourceBundle resource, Map<String, ResourceBundle> otherMessages, Logger logger) {
 		this.defaultMessages = resource;
 		this.namedMessages = otherMessages;
 		this.logger = logger;

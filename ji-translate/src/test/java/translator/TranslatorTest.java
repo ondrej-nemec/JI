@@ -10,17 +10,17 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import common.ILogger;
+import common.Logger;
 
 @RunWith(JUnitParamsRunner.class)
 public class TranslatorTest {
 	
 	private Translator translator;
 	
-	private ILogger logger;
+	private Logger logger;
 	
 	public TranslatorTest() {
-		this.logger = mock(ILogger.class);
+		this.logger = mock(Logger.class);
 		translator = new Translator(ResourceBundle.getBundle("messages"), logger);
 	}
 	
