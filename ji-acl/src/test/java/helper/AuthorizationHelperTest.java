@@ -18,7 +18,7 @@ import interfaces.AclRules;
 import interfaces.AclUser;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import common.ILogger;
+import common.Logger;
 
 @RunWith(JUnitParamsRunner.class)
 public class AuthorizationHelperTest {
@@ -336,7 +336,7 @@ public class AuthorizationHelperTest {
 	
 	
 	private AuthorizationHelper getHelper(AclRules rules) {
-		return new AuthorizationHelper(rules, mock(ILogger.class));
+		return new AuthorizationHelper(rules, mock(Logger.class));
 	}
 	
 	private AclDestination getDestination(String id) {

@@ -6,15 +6,15 @@ import interfaces.AclDestination;
 import interfaces.AclRole;
 import interfaces.AclRules;
 import interfaces.AclUser;
-import common.ILogger;
+import common.Logger;
 
 public class AuthorizationHelper {
 
 	private AclRules rules;
 	
-	private final ILogger logger;
+	private final Logger logger;
 	
-	public AuthorizationHelper(final AclRules rules, ILogger logger) {
+	public AuthorizationHelper(final AclRules rules, Logger logger) {
 		this.rules = rules;
 		this.logger = logger;
 	}
