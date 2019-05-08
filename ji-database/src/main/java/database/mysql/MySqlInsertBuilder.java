@@ -1,5 +1,6 @@
 package database.mysql;
 
+import common.exceptions.NotImplementedYet;
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
 import querybuilder.InsertQueryBuilder;
@@ -12,32 +13,27 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	@Override
 	public InsertQueryBuilder addColumns(String... columns) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public InsertQueryBuilder values(String... values) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public InsertQueryBuilder addParameter(String name, String value) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public String getSql() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 	
 }

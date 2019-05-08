@@ -1,5 +1,6 @@
 package database.mysql;
 
+import common.exceptions.NotImplementedYet;
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
 import querybuilder.DeleteQueryBuilder;
@@ -12,32 +13,27 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 
 	@Override
 	public DeleteQueryBuilder where(String where) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public DeleteQueryBuilder andWhere(String where) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public DeleteQueryBuilder addParameter(String name, String value) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
+		throw new NotImplementedYet();
 	}
 
 	@Override
 	public String getSql() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedYet();
 	}
 
 }

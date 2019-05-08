@@ -3,7 +3,6 @@ package querybuilder;
 import java.util.List;
 
 import database.support.DatabaseRow;
-import querybuilder.join.Join;
 
 public interface SelectQueryBuilder {
 
