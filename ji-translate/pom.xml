@@ -14,7 +14,7 @@
   	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
         <artifactId>ji-common</artifactId>
-        <version>master-SNAPSHOT</version> <!-- v1.0-common -->
+        <version>8e8fb21cf6</version> <!-- v1.0-common -->
 	</dependency>
   </dependencies>
 </project>
