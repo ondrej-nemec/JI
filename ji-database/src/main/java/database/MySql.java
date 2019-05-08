@@ -8,9 +8,9 @@ import database.mysql.MySqlQueryBuilder;
 import querybuilder.QueryBuilder;
 import utils.env.DatabaseConfig;
 
-public class MySQL extends Database {
+public class MySql extends Database {
 
-	public MySQL(final DatabaseConfig config, final Logger logger) {
+	public MySql(final DatabaseConfig config, final Logger logger) {
 		super(config, logger);
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

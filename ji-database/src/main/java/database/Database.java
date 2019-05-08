@@ -75,7 +75,7 @@ public abstract class Database {
 		case "derby":
 			return new Derby(config, logger);
 		case "mysql":
-			return new MySQL(config, logger);
+			return new MySql(config, logger);
 		default:
 			return null;
 		}		
