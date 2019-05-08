@@ -3,10 +3,8 @@ package database;
 import java.sql.SQLException;
 
 import common.Logger;
-import querybuilder.DeleteQueryBuilder;
-import querybuilder.InsertQueryBuilder;
-import querybuilder.SelectQueryBuilder;
-import querybuilder.UpdateQueryBuilder;
+import database.mysql.MySqlQueryBuilder;
+import querybuilder.QueryBuilder;
 import utils.Terminal;
 import utils.env.DatabaseConfig;
 
@@ -33,27 +31,8 @@ public class Derby extends Database {
 	}
 
 	@Override
-	public SelectQueryBuilder getSelectBuilder() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public UpdateQueryBuilder getUpdateBuilder() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DeleteQueryBuilder getDeletetBuilder() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public InsertQueryBuilder getInsertBuilder() {
-		// TODO Auto-generated method stub
-		return null;
+	public QueryBuilder getQueryBuilder() {
+		return new MySqlQueryBuilder(getDoubleConsumer());
 	}
 
 	@Override

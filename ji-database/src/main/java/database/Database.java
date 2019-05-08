@@ -13,10 +13,7 @@ import common.Logger;
 import database.support.ConnectionConsumer;
 import database.support.DoubleConsumer;
 import database.support.FlywayLogger;
-import querybuilder.DeleteQueryBuilder;
-import querybuilder.InsertQueryBuilder;
-import querybuilder.SelectQueryBuilder;
-import querybuilder.UpdateQueryBuilder;
+import querybuilder.QueryBuilder;
 import utils.env.DatabaseConfig;
 
 public abstract class Database {
@@ -48,11 +45,6 @@ public abstract class Database {
 	}
 	
 	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
-		/*
-		Connection con = DriverManager.getConnection(connectionString, createProperties());
-		consumer.accept(con);
-		con.close();
-		*/
 		getDoubleConsumer().accept(consumer);
 	}
 	
@@ -72,13 +64,9 @@ public abstract class Database {
 	
 	protected abstract void createDb() throws SQLException;
 
-	public abstract SelectQueryBuilder getSelectBuilder();
+	public abstract QueryBuilder getQueryBuilder();
 	
-	public abstract UpdateQueryBuilder getUpdateBuilder();
-	
-	public abstract DeleteQueryBuilder getDeletetBuilder();
-	
-	public abstract InsertQueryBuilder getInsertBuilder();
+	// TODO	protected abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
 	
 	/*** SEPARATOR ***/
 	
