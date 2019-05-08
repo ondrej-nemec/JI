@@ -1,8 +1,6 @@
 package querybuilder;
 
 public interface InsertQueryBuilder {
-
-	InsertQueryBuilder insert(String table);
 	
 	InsertQueryBuilder addColumns(String... columns);
 	

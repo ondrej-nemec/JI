@@ -1,8 +1,6 @@
 package querybuilder;
 
 public interface DeleteQueryBuilder {
-
-	DeleteQueryBuilder delete(String table);
 	
 	DeleteQueryBuilder where(String where);
 	

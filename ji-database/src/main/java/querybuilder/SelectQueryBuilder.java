@@ -1,10 +1,11 @@
 package querybuilder;
 
+import java.util.List;
+
+import database.support.DatabaseRow;
 import querybuilder.join.Join;
 
 public interface SelectQueryBuilder {
-
-	SelectQueryBuilder select(String select);
 
 	SelectQueryBuilder from(String table);
 	
@@ -13,6 +14,8 @@ public interface SelectQueryBuilder {
 	SelectQueryBuilder where(String where);
 	
 	SelectQueryBuilder and(String where);
+	
+	SelectQueryBuilder or(String where);
 	
 	SelectQueryBuilder orderBy(String orderBy);
 	
@@ -28,6 +31,10 @@ public interface SelectQueryBuilder {
 	
 	String getSql();
 	
-	//TODO returns
+	String fetchSingle();
+	
+	DatabaseRow fetchRow();
+	
+	List<DatabaseRow> fetchAll();
 	
 }

@@ -1,8 +1,6 @@
 package querybuilder;
 
 public interface UpdateQueryBuilder {
-
-	UpdateQueryBuilder update(String table);
 	
 	UpdateQueryBuilder set(String update);
 	
