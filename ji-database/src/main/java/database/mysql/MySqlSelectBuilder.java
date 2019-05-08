@@ -31,12 +31,12 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	}
 
 	@Override
-	public SelectQueryBuilder and(String where) {
+	public SelectQueryBuilder andWhere(String where) {
 		throw new NotImplementedYet();
 	}
 
 	@Override
-	public SelectQueryBuilder or(String where) {
+	public SelectQueryBuilder orWhere(String where) {
 		throw new NotImplementedYet();
 	}
 
