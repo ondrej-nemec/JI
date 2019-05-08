@@ -3,19 +3,18 @@ package helper;
 import exception.AccessDeniedException;
 import exception.NotAllowedActionException;
 import interfaces.AclDestination;
-import interfaces.AclRole;
-import interfaces.AclRules;
+import interfaces.RulesDao;
 import interfaces.AclUser;
 import common.Logger;
 
 public class AuthorizationHelper {
 
-	private AclRules rules;
+	private RulesDao rulesDao;
 	
 	private final Logger logger;
 	
-	public AuthorizationHelper(final AclRules rules, Logger logger) {
-		this.rules = rules;
+	public AuthorizationHelper(final RulesDao rulesDao, Logger logger) {
+		this.rulesDao = rulesDao;
 		this.logger = logger;
 	}
 	
@@ -30,20 +29,19 @@ public class AuthorizationHelper {
 		if (what == Action.FORBIDDEN || what == Action.UNDEFINED)
 			throw new NotAllowedActionException(what);
 		
-		Action userId = rules.getActionForUserId(who.getId(), where.getId());
+		Rules rules = rulesDao.getRulesForUser(who, where);
+		
+		Action userId = rules.getForUserId();		
 		if (userId != Action.UNDEFINED)
 			return isAllowed(userId, what);
-		
-		Action userRank = rules.getActionForUserRank(who.getRank(), where.getId());
+				
+		Action userRank = rules.getForUserRank();
 		if (userRank != Action.UNDEFINED)
 			return isAllowed(userRank, what);		
 		
 		Action roleId = Action.UNDEFINED;
-		for (AclRole role : who.getRoles()) {
-			roleId = selectRole(
-						roleId,
-						rules.getActionForRoleId(role.getId(), where.getId())
-					);
+		for (Action actualRole : rules.getForRoleIds()) {
+			roleId = selectRole(roleId, actualRole);
 		}
 		if (roleId != Action.UNDEFINED)
 			return isAllowed(roleId, what);		

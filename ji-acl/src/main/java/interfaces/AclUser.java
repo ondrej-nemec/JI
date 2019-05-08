@@ -10,6 +10,4 @@ public interface AclUser {
 	
 	public List<AclRole> getRoles();
 	
-	public boolean equals(AclUser user);
-	
 }

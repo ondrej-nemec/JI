@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -14,7 +15,7 @@ import exception.AccessDeniedException;
 import exception.NotAllowedActionException;
 import interfaces.AclDestination;
 import interfaces.AclRole;
-import interfaces.AclRules;
+import interfaces.RulesDao;
 import interfaces.AclUser;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -26,19 +27,20 @@ public class AuthorizationHelperTest {
 	@Test
 	@Parameters
 	public void testIsAllowedReturnFalseIfNoRulesGiven(Action action) {
-		String domain = "undefined";
+		AclDestination domain = getDestination("undefined");
 		AclRole role = getRole("role");
 		AclUser user = getUser("user", 10, role);
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForUserId(user.getId(), domain)).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForUserRank(user.getRank(), domain)).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForRoleId(role.getId(), domain)).thenReturn(Action.UNDEFINED);
+		RulesDao mock = mock(RulesDao.class);
+		
+		when(mock.getRulesForUser(user, domain)).thenReturn(
+			new Rules(Action.UNDEFINED, Action.UNDEFINED, new LinkedList<>())
+		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		assertEquals(
 				false,
-				helper.isAllowed(user, getDestination(domain), action)
+				helper.isAllowed(user, domain, action)
 		);
 	}
 	
@@ -85,29 +87,18 @@ public class AuthorizationHelperTest {
 		AclUser forbidden = getUser("forbidden", 10, role);
 		AclDestination destination = getDestination("user-id-rule");
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForUserId(
-				allowed.getId(),
-				destination.getId()
-			)).thenReturn(Action.CREATE);
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUser(allowed, destination)).thenReturn(
+			new Rules(Action.CREATE, Action.UNDEFINED, new LinkedList<>())
+		);
 		
-		when(mock.getActionForUserId(
-				forbidden.getId(), 
-				destination.getId()
-			)).thenReturn(Action.FORBIDDEN);
+		when(mock.getRulesForUser(forbidden, destination)).thenReturn(
+			new Rules(Action.FORBIDDEN, Action.UNDEFINED, new LinkedList<>())
+		);
 		
-		when(mock.getActionForUserId(
-				disallowed.getId(),
-				destination.getId()
-			)).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForUserRank(
-				disallowed.getRank(),
-				destination.getId()
-			)).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForRoleId(
-				role.getId(),
-				destination.getId()
-			)).thenReturn(Action.UNDEFINED);
+		when(mock.getRulesForUser(disallowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Action.UNDEFINED, new LinkedList<>())
+		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		
@@ -143,15 +134,10 @@ public class AuthorizationHelperTest {
 		AclUser allowed = getUser("allowed", 10, role);
 		AclDestination destination = getDestination("user-id-rule");
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForUserId(
-				allowed.getId(),
-				destination.getId()
-			)).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForUserRank(
-				allowed.getRank(),
-				destination.getId()
-			)).thenReturn(Action.CREATE);
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUser(allowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Action.CREATE, new LinkedList<>())
+		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		
@@ -191,26 +177,22 @@ public class AuthorizationHelperTest {
 		AclUser forbidden = getUser("forbidden", 10, forbiddenRole, disallowedRole);
 		AclDestination destination = getDestination("user-id-rule");
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForUserId(anyString(), anyString())).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForUserRank(anyInt(), anyString())).thenReturn(Action.UNDEFINED);		
-		
-		when(mock.getActionForRoleId(
-				allowedRole.getId(),
-				destination.getId()
-			)).thenReturn(Action.CREATE);
-		when(mock.getActionForRoleId(
-				allowedRole2.getId(),
-				destination.getId()
-			)).thenReturn(Action.UPDATE);
-		when(mock.getActionForRoleId(
-				disallowedRole.getId(),
-				destination.getId()
-			)).thenReturn(Action.UNDEFINED);
-		when(mock.getActionForRoleId(
-				forbiddenRole.getId(), 
-				destination.getId()
-			)).thenReturn(Action.FORBIDDEN);
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUser(allowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Action.UNDEFINED, Arrays.asList(
+					Action.UNDEFINED, Action.CREATE, Action.UNDEFINED, Action.UPDATE
+				)
+			)
+		);
+		when(mock.getRulesForUser(disallowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Action.UNDEFINED, Arrays.asList(Action.UNDEFINED))
+		);
+		when(mock.getRulesForUser(forbidden, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Action.UNDEFINED, Arrays.asList(
+					Action.UNDEFINED, Action.FORBIDDEN
+				)
+			)
+		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		
@@ -252,19 +234,10 @@ public class AuthorizationHelperTest {
 		AclUser user = getUser("allowed", 10, role);
 		AclDestination destination = getDestination("user-id-rule");
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForRoleId(
-				role.getId(),
-				destination.getId()
-			)).thenReturn(roleId);
-		when(mock.getActionForUserRank(
-				user.getRank(),
-				destination.getId()
-			)).thenReturn(userRank);
-		when(mock.getActionForUserId(
-				user.getId(), 
-				destination.getId()
-			)).thenReturn(userId);
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUser(user, destination)).thenReturn(
+			new Rules(userId, userRank, Arrays.asList(roleId))
+		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		assertEquals(isAllowed, helper.isAllowed(user, destination, tested));
@@ -297,11 +270,10 @@ public class AuthorizationHelperTest {
 		AclUser disallowed = getUser("disallowed", 10, disallowedRole);
 		AclDestination destination = getDestination("user-id-rule");
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForUserId(
-				disallowed.getId(),
-				destination.getId()
-			)).thenReturn(Action.READ);
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUser(disallowed, destination)).thenReturn(
+			new Rules(Action.READ, Action.UNDEFINED, new LinkedList<>())
+		);
 				
 		AuthorizationHelper helper = getHelper(mock);
 		helper.throwIfIsNotAllowed(
@@ -317,11 +289,10 @@ public class AuthorizationHelperTest {
 		AclUser allowed = getUser("allowed", 10, role);
 		AclDestination destination = getDestination("user-id-rule");
 		
-		AclRules mock = mock(AclRules.class);
-		when(mock.getActionForUserId(
-				allowed.getId(),
-				destination.getId()
-			)).thenReturn(Action.CREATE);
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUser(allowed, destination)).thenReturn(
+			new Rules(Action.CREATE, Action.UNDEFINED, new LinkedList<>())
+		);
 				
 		AuthorizationHelper helper = getHelper(mock);
 		helper.throwIfIsNotAllowed(
@@ -335,38 +306,16 @@ public class AuthorizationHelperTest {
 	/*** SEPARATOR ***/
 	
 	
-	private AuthorizationHelper getHelper(AclRules rules) {
+	private AuthorizationHelper getHelper(RulesDao rules) {
 		return new AuthorizationHelper(rules, mock(Logger.class));
 	}
 	
 	private AclDestination getDestination(String id) {
-		return new AclDestination() {
-			
-			@Override
-			public String getId() {
-				return id;
-			}
-			
-			@Override
-			public boolean equals(AclDestination destination) {
-				return getId() == destination.getId();
-			}
-		};
+		return ()->{return id;};
 	}
 	
 	private AclRole getRole(String id) {
-		return new AclRole() {
-			
-			@Override
-			public String getId() {
-				return id;
-			}
-			
-			@Override
-			public boolean equals(AclRole role) {
-				return getId() == role.getId();
-			}
-		};
+		return ()->{return id;};
 	}
 	
 	private AclUser getUser(String id, int rank, AclRole... aclRoles) {
@@ -385,11 +334,6 @@ public class AuthorizationHelperTest {
 			@Override
 			public String getId() {
 				return id;
-			}
-			
-			@Override
-			public boolean equals(AclUser user) {
-				return getId() == user.getId();
 			}
 		};
 	}
