@@ -11,6 +11,7 @@ import org.flywaydb.core.internal.exception.FlywaySqlException;
 
 import common.Logger;
 import database.support.ConnectionConsumer;
+import database.support.DoubleConsumer;
 import database.support.FlywayLogger;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.InsertQueryBuilder;
@@ -32,12 +33,6 @@ public abstract class Database {
 		this.connectionString = createConnectionString() + config.schemaName;
 	}
 	
-	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
-		Connection con = DriverManager.getConnection(connectionString, createProperties());
-		consumer.accept(con);
-		con.close();
-	}
-	
 	public boolean createDbAndMigrate() {
 		try {
 			createDb();
@@ -50,6 +45,23 @@ public abstract class Database {
 			return false;
 		}
 		return true;
+	}
+	
+	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
+		/*
+		Connection con = DriverManager.getConnection(connectionString, createProperties());
+		consumer.accept(con);
+		con.close();
+		*/
+		getDoubleConsumer().accept(consumer);
+	}
+	
+	protected DoubleConsumer getDoubleConsumer() {
+		return (consumer)->{
+			Connection con = DriverManager.getConnection(connectionString, createProperties());
+			consumer.accept(con);
+			con.close();
+		};
 	}
 	
 	/*** SEPARATOR ***/
