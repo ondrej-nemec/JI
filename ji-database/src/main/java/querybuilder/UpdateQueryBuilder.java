@@ -8,6 +8,8 @@ public interface UpdateQueryBuilder {
 	
 	UpdateQueryBuilder andWhere(String where);
 	
+	UpdateQueryBuilder orWhere(String where);
+	
 	UpdateQueryBuilder addParameter(String name, String value);
 	
 	String getSql();

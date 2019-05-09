@@ -7,7 +7,7 @@ import database.support.DoubleConsumer;
 
 public abstract class AbstractBuilder {
 
-	private DoubleConsumer consumer;
+	protected DoubleConsumer consumer;
 	
 	public AbstractBuilder(final DoubleConsumer consumer) {
 		this.consumer = consumer;

@@ -11,58 +11,70 @@ import querybuilder.SelectQueryBuilder;
 
 public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBuilder {
 
+	private final String query;
+	
 	public MySqlSelectBuilder(final DoubleConsumer consumer, final String select) {
 		super(consumer);
+		this.query = "SELECT " + select;
+	}
+	
+	private MySqlSelectBuilder(final DoubleConsumer consumer, final String query, final String partQuery) {
+		super(consumer);
+		this.query = query + " " + partQuery;
 	}
 
 	@Override
 	public SelectQueryBuilder from(String table) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "FROM " + table);
 	}
 
 	@Override
 	public SelectQueryBuilder join(String table, Join join, String on) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(
+				this.consumer,
+				query,
+				joinToString(join) +" " + table + " ON " + on
+		);
 	}
 
 	@Override
 	public SelectQueryBuilder where(String where) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "WHERE " + where);
 	}
 
 	@Override
 	public SelectQueryBuilder andWhere(String where) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "AND " + where);
 	}
 
 	@Override
 	public SelectQueryBuilder orWhere(String where) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "OR (" + where + ")");
 	}
 
 	@Override
 	public SelectQueryBuilder orderBy(String orderBy) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "ORDER BY " + orderBy);
 	}
 
 	@Override
 	public SelectQueryBuilder groupBy(String groupBy) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "GROUP BY " + groupBy);
 	}
 
 	@Override
 	public SelectQueryBuilder having(String having) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "HAVING " + having);
 	}
 
 	@Override
 	public SelectQueryBuilder limit(int limit) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "LIMIT " + limit);
 	}
 
 	@Override
 	public SelectQueryBuilder offset(int offset) {
-		throw new NotImplementedYet();
+		return new MySqlSelectBuilder(this.consumer, query, "OFFSET " + offset);
 	}
 
 	@Override
@@ -72,7 +84,7 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 
 	@Override
 	public String getSql() {
-		throw new NotImplementedYet();
+		return query;
 	}
 
 	@Override
@@ -88,6 +100,16 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	@Override
 	public List<DatabaseRow> fetchAll() {
 		throw new NotImplementedYet();
+	}
+	
+	protected String joinToString(final Join join) {
+		switch(join) {
+			case FULL_OUTER_JOIN: throw new RuntimeException("Full Outer Join is not supported by mysql");
+			case INNER_JOIN: return "JOIN";
+			case LEFT_OUTER_JOIN: return "LEFT JOIN";
+			case RIGHT_OUTER_JOIN: return "RIGHT JOIN";
+			default: throw new RuntimeException("Not implemented join: " + join);
+		}
 	}
 	
 }

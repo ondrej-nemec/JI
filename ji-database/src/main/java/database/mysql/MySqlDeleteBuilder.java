@@ -6,19 +6,32 @@ import querybuilder.AbstractBuilder;
 import querybuilder.DeleteQueryBuilder;
 
 public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBuilder {
+	
+	private final String query;
 
 	public MySqlDeleteBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
+		this.query = "DELETE " + table;
+	}
+	
+	private MySqlDeleteBuilder(final DoubleConsumer consumer, final String query, final String queryPart) {
+		super(consumer);
+		this.query = query + " " + queryPart;
 	}
 
 	@Override
 	public DeleteQueryBuilder where(String where) {
-		throw new NotImplementedYet();
+		return new MySqlDeleteBuilder(this.consumer, query, "WHERE " + where);
 	}
 
 	@Override
 	public DeleteQueryBuilder andWhere(String where) {
-		throw new NotImplementedYet();
+		return new MySqlDeleteBuilder(this.consumer, query, "AND " + where);
+	}
+
+	@Override
+	public DeleteQueryBuilder orWhere(String where) {
+		return new MySqlDeleteBuilder(this.consumer, query, "OR (" + where + ")");
 	}
 
 	@Override
@@ -33,7 +46,7 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 
 	@Override
 	public String getSql() {
-		throw new NotImplementedYet();
+		return query;
 	}
 
 }
