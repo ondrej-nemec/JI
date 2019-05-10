@@ -1,5 +1,7 @@
 package querybuilder;
 
+import java.sql.SQLException;
+
 public interface InsertQueryBuilder {
 	
 	InsertQueryBuilder addColumns(String... columns);
@@ -10,6 +12,6 @@ public interface InsertQueryBuilder {
 	
 	String getSql();
 	
-	void execute();
+	int execute() throws SQLException;
 
 }

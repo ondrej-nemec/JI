@@ -85,7 +85,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 				testDbEmpty();
 			});
 		} catch (SQLException | RuntimeException e) {
-			assertEquals("Unknown database 'javainit_test'", e.getMessage());
+			assertEquals("Unknown database 'javainit_testing_test'", e.getMessage());
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.type", "mysql");
 		prop.put("db.pathOrUrl", "//localhost:3306");
 		prop.put("db.externalServer", "1");
-		prop.put("db.schema", "javainit_test");
+		prop.put("db.schema", "javainit_testing_test");
 		prop.put("db.login", "root");
 		prop.put("db.password", "");
 		prop.put("db.pathToMigrations", "testing");

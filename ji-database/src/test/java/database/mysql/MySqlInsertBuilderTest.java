@@ -1,7 +1,6 @@
 package database.mysql;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -25,13 +24,9 @@ public class MySqlInsertBuilderTest {
 				+ " (:value1, :value2)";
 		
 		// TODO add params test
+		System.out.println("TODO insert");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
-	}
-	
-	@Test
-	public void testExecute() {
-		fail();
 	}
 	
 }

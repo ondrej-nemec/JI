@@ -1,9 +1,7 @@
 package database.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
@@ -26,13 +24,9 @@ public class MySqlDeleteBuilderTest {
 				+ " OR (id = :c_id)";
 		
 		// TODO add params test
+		System.out.println("TODO delete");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
-	}
-	
-	@Test
-	public void testExecute() {
-		fail();
 	}
 
 }

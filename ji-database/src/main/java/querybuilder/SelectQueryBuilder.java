@@ -1,5 +1,6 @@
 package querybuilder;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import database.support.DatabaseRow;
@@ -30,10 +31,10 @@ public interface SelectQueryBuilder {
 	
 	String getSql();
 	
-	String fetchSingle();
+	String fetchSingle() throws SQLException;
 	
-	DatabaseRow fetchRow();
+	DatabaseRow fetchRow() throws SQLException;
 	
-	List<DatabaseRow> fetchAll();
+	List<DatabaseRow> fetchAll() throws SQLException;
 	
 }

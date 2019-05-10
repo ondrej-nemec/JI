@@ -15,4 +15,8 @@ public class DatabaseRow {
 		return value;
 	}
 	
+	public void addValue(String key, String value) {
+		values.put(key, value);
+	}
+	
 }

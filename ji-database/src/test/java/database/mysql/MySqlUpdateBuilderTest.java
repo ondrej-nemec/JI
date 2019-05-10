@@ -1,7 +1,6 @@
 package database.mysql;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
@@ -26,13 +25,9 @@ public class MySqlUpdateBuilderTest {
 				+ " OR (name = :actualName2)";
 		
 		// TODO add params test
+		System.out.println("TODO update");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
-	}
-	
-	@Test
-	public void testExecute() {
-		fail();
 	}
 
 }

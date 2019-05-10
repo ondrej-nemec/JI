@@ -1,5 +1,7 @@
 package querybuilder;
 
+import java.sql.SQLException;
+
 public interface DeleteQueryBuilder {
 	
 	DeleteQueryBuilder where(String where);
@@ -12,6 +14,6 @@ public interface DeleteQueryBuilder {
 	
 	String getSql();
 	
-	void execute();
+	int execute() throws SQLException;
 
 }

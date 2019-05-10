@@ -1,5 +1,7 @@
 package querybuilder;
 
+import java.sql.SQLException;
+
 public interface UpdateQueryBuilder {
 	
 	UpdateQueryBuilder set(String update);
@@ -14,5 +16,5 @@ public interface UpdateQueryBuilder {
 	
 	String getSql();
 	
-	void execute();
+	int execute() throws SQLException;
 }

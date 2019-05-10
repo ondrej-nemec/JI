@@ -1,5 +1,7 @@
 package database.mysql;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import common.exceptions.NotImplementedYet;
@@ -12,6 +14,12 @@ import querybuilder.SelectQueryBuilder;
 public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBuilder {
 
 	private final String query;
+	
+	private String single;
+	
+	private DatabaseRow row;
+	
+	private List<DatabaseRow> rows;
 	
 	public MySqlSelectBuilder(final DoubleConsumer consumer, final String select) {
 		super(consumer);
@@ -88,17 +96,24 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	}
 
 	@Override
-	public String fetchSingle() {
+	public String fetchSingle() throws SQLException {
+		/*this.consumer.accept((conn)->{
+			ResultSet res = conn.prepareStatement(query).executeQuery();
+			if (res.next()) {
+				
+			}
+		});
+		return single;*/
 		throw new NotImplementedYet();
 	}
 
 	@Override
-	public DatabaseRow fetchRow() {
+	public DatabaseRow fetchRow() throws SQLException {
 		throw new NotImplementedYet();
 	}
 
 	@Override
-	public List<DatabaseRow> fetchAll() {
+	public List<DatabaseRow> fetchAll() throws SQLException {
 		throw new NotImplementedYet();
 	}
 	

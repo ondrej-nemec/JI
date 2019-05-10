@@ -1,5 +1,7 @@
 package database.mysql;
 
+import java.sql.SQLException;
+
 import common.exceptions.NotImplementedYet;
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
@@ -8,6 +10,8 @@ import querybuilder.UpdateQueryBuilder;
 public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBuilder {
 
 	private final String query;
+	
+	private int returned;
 	
 	public MySqlUpdateBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
@@ -45,8 +49,11 @@ public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBu
 	}
 
 	@Override
-	public void execute() {
-		throw new NotImplementedYet();
+	public int execute() throws SQLException {
+		this.consumer.accept((conn)->{
+			returned = conn.prepareStatement(query).executeUpdate();
+		});
+		return returned;
 	}
 
 	@Override
