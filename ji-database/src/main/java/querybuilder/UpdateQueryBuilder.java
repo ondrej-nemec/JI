@@ -12,7 +12,7 @@ public interface UpdateQueryBuilder {
 	
 	UpdateQueryBuilder orWhere(String where);
 	
-	UpdateQueryBuilder addParameter(String name, String value);
+	UpdateQueryBuilder addParameter(String value);
 	
 	String getSql();
 	

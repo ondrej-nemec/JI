@@ -10,7 +10,7 @@ public interface DeleteQueryBuilder {
 	
 	DeleteQueryBuilder orWhere(String where);
 	
-	DeleteQueryBuilder addParameter(String name, String value);
+	DeleteQueryBuilder addParameter(String value);
 	
 	String getSql();
 	

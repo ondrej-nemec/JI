@@ -1,11 +1,11 @@
 package database.mysql;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import common.exceptions.NotImplementedYet;
 import database.support.DatabaseRow;
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
@@ -16,6 +16,8 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 
 	private final String query;
 	
+	private final List<String> params;
+	
 	private String single;
 	
 	private DatabaseRow row;
@@ -25,16 +27,18 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	public MySqlSelectBuilder(final DoubleConsumer consumer, final String select) {
 		super(consumer);
 		this.query = "SELECT " + select;
+		this.params = new LinkedList<>();
 	}
 	
-	private MySqlSelectBuilder(final DoubleConsumer consumer, final String query, final String partQuery) {
+	private MySqlSelectBuilder(final DoubleConsumer consumer, final String query, final String partQuery, final List<String> params) {
 		super(consumer);
 		this.query = query + " " + partQuery;
+		this.params = params;
 	}
 
 	@Override
 	public SelectQueryBuilder from(String table) {
-		return new MySqlSelectBuilder(this.consumer, query, "FROM " + table);
+		return new MySqlSelectBuilder(this.consumer, query, "FROM " + table, params);
 	}
 
 	@Override
@@ -42,53 +46,55 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 		return new MySqlSelectBuilder(
 				this.consumer,
 				query,
-				joinToString(join) +" " + table + " ON " + on
+				joinToString(join) +" " + table + " ON " + on,
+				params
 		);
 	}
 
 	@Override
 	public SelectQueryBuilder where(String where) {
-		return new MySqlSelectBuilder(this.consumer, query, "WHERE " + where);
+		return new MySqlSelectBuilder(this.consumer, query, "WHERE " + where, params);
 	}
 
 	@Override
 	public SelectQueryBuilder andWhere(String where) {
-		return new MySqlSelectBuilder(this.consumer, query, "AND " + where);
+		return new MySqlSelectBuilder(this.consumer, query, "AND " + where, params);
 	}
 
 	@Override
 	public SelectQueryBuilder orWhere(String where) {
-		return new MySqlSelectBuilder(this.consumer, query, "OR (" + where + ")");
+		return new MySqlSelectBuilder(this.consumer, query, "OR (" + where + ")", params);
 	}
 
 	@Override
 	public SelectQueryBuilder orderBy(String orderBy) {
-		return new MySqlSelectBuilder(this.consumer, query, "ORDER BY " + orderBy);
+		return new MySqlSelectBuilder(this.consumer, query, "ORDER BY " + orderBy, params);
 	}
 
 	@Override
 	public SelectQueryBuilder groupBy(String groupBy) {
-		return new MySqlSelectBuilder(this.consumer, query, "GROUP BY " + groupBy);
+		return new MySqlSelectBuilder(this.consumer, query, "GROUP BY " + groupBy, params);
 	}
 
 	@Override
 	public SelectQueryBuilder having(String having) {
-		return new MySqlSelectBuilder(this.consumer, query, "HAVING " + having);
+		return new MySqlSelectBuilder(this.consumer, query, "HAVING " + having, params);
 	}
 
 	@Override
 	public SelectQueryBuilder limit(int limit) {
-		return new MySqlSelectBuilder(this.consumer, query, "LIMIT " + limit);
+		return new MySqlSelectBuilder(this.consumer, query, "LIMIT " + limit, params);
 	}
 
 	@Override
 	public SelectQueryBuilder offset(int offset) {
-		return new MySqlSelectBuilder(this.consumer, query, "OFFSET " + offset);
+		return new MySqlSelectBuilder(this.consumer, query, "OFFSET " + offset, params);
 	}
 
 	@Override
-	public SelectQueryBuilder addParameter(String name, String value) {
-		throw new NotImplementedYet();
+	public SelectQueryBuilder addParameter(String value) {
+		params.add(value);
+		return this;
 	}
 
 	@Override
@@ -99,7 +105,11 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	@Override
 	public String fetchSingle() throws SQLException {
 		this.consumer.accept((conn)->{
-			ResultSet res = conn.prepareStatement(query).executeQuery();
+			PreparedStatement stat = conn.prepareStatement(query);
+			for (int i = 0; i < params.size(); i++) {
+				stat.setString(i+1, params.get(i));
+			}			
+			ResultSet res  = stat.executeQuery();
 			if (res.next()) {
 				single = res.getString(1);
 			}
@@ -110,7 +120,11 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	@Override
 	public DatabaseRow fetchRow() throws SQLException {
 		this.consumer.accept((conn)->{
-			ResultSet res = conn.prepareStatement(query).executeQuery();
+			PreparedStatement stat = conn.prepareStatement(query);
+			for (int i = 0; i < params.size(); i++) {
+				stat.setString(i+1, params.get(i));
+			}			
+			ResultSet res  = stat.executeQuery();
 			row = new DatabaseRow();
 			if (res.next()) {
 				for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
@@ -127,7 +141,11 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 	@Override
 	public List<DatabaseRow> fetchAll() throws SQLException {
 		this.consumer.accept((conn)->{
-			ResultSet res = conn.prepareStatement(query).executeQuery();
+			PreparedStatement stat = conn.prepareStatement(query);
+			for (int i = 0; i < params.size(); i++) {
+				stat.setString(i+1, params.get(i));
+			}			
+			ResultSet res  = stat.executeQuery();
 			rows = new LinkedList<>();
 			while (res.next()) {
 				DatabaseRow row = new DatabaseRow();

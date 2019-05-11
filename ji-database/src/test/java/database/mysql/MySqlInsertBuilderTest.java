@@ -23,8 +23,6 @@ public class MySqlInsertBuilderTest {
 				+ " VALUES"
 				+ " (:value1, :value2)";
 		
-		// TODO add params test
-		System.out.println("TODO insert");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
 	}

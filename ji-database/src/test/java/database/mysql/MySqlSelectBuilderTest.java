@@ -43,8 +43,6 @@ public class MySqlSelectBuilderTest {
 				+ " LIMIT 0"
 				+ " OFFSET 0";
 		
-		// TODO add params test
-		System.out.println("TODO select");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
 	}

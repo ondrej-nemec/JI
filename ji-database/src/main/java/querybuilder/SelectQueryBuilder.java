@@ -27,7 +27,7 @@ public interface SelectQueryBuilder {
 	
 	SelectQueryBuilder offset(int offset);
 	
-	SelectQueryBuilder addParameter(String name, String value);
+	SelectQueryBuilder addParameter(String value);
 	
 	String getSql();
 	

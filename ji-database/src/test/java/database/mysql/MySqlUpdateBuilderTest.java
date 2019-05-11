@@ -24,8 +24,6 @@ public class MySqlUpdateBuilderTest {
 				+ " AND name = :actualName1"
 				+ " OR (name = :actualName2)";
 		
-		// TODO add params test
-		System.out.println("TODO update");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
 	}

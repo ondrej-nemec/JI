@@ -14,17 +14,15 @@ public class MySqlDeleteBuilderTest {
 		DoubleConsumer mock = mock(DoubleConsumer.class);
 		String sql = new MySqlDeleteBuilder(mock, "table_name")
 					.where("id > 1")
-					.andWhere("id < :id")
-					.orWhere("id = :c_id")
+					.andWhere("id < ?")
+					.orWhere("id = ?")
 					.getSql();
 		
 		String expected = "DELETE FROM table_name"
 				+ " WHERE id > 1"
-				+ " AND id < :id"
-				+ " OR (id = :c_id)";
+				+ " AND id < ?"
+				+ " OR (id = ?)";
 		
-		// TODO add params test
-		System.out.println("TODO delete");
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);
 	}

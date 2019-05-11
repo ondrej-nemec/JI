@@ -1,8 +1,10 @@
 package database.mysql;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
-import common.exceptions.NotImplementedYet;
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
 import querybuilder.InsertQueryBuilder;
@@ -11,37 +13,46 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	private final String query;
 	
+	private final List<String> params;
+	
 	private int returned;
 	
 	public MySqlInsertBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
 		this.query = "INSERT INTO " + table;
+		this.params = new LinkedList<>();
 	}
 
-	private MySqlInsertBuilder(final DoubleConsumer consumer, final String query, final String partQuery) {
+	private MySqlInsertBuilder(final DoubleConsumer consumer, final String query, final String partQuery, final List<String> params) {
 		super(consumer);
 		this.query = query + " " + partQuery;
+		this.params = params;
 	}
 
 	@Override
 	public InsertQueryBuilder addColumns(String... columns) {
-		return new MySqlInsertBuilder(this.consumer, query, getBrackedString(columns));
+		return new MySqlInsertBuilder(this.consumer, query, getBrackedString(columns), params);
 	}
 
 	@Override
 	public InsertQueryBuilder values(String... values) {		
-		return new MySqlInsertBuilder(this.consumer, query, "VALUES " + getBrackedString(values));
+		return new MySqlInsertBuilder(this.consumer, query, "VALUES " + getBrackedString(values), params);
 	}
 
 	@Override
-	public InsertQueryBuilder addParameter(String name, String value) {
-		throw new NotImplementedYet();
+	public InsertQueryBuilder addParameter(String value) {
+		params.add(value);
+		return this;
 	}
 
 	@Override
 	public int execute() throws SQLException {
 		this.consumer.accept((conn)->{
-			returned = conn.prepareStatement(query).executeUpdate();
+			PreparedStatement stat = conn.prepareStatement(query);
+			for (int i = 0; i < params.size(); i++) {
+				stat.setString(i+1, params.get(i));
+			}			
+			returned = stat.executeUpdate();
 		});
 		return returned;
 	}

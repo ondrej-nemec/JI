@@ -8,7 +8,7 @@ public interface InsertQueryBuilder {
 	
 	InsertQueryBuilder values(String... values);
 	
-	InsertQueryBuilder addParameter(String name, String value);
+	InsertQueryBuilder addParameter(String value);
 	
 	String getSql();
 	
