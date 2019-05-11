@@ -21,7 +21,7 @@ INSERT INTO select_table
 INSERT INTO joined_table
 	VALUES
 		(1, "name 1", 1),
-		(2, "name_b", 1),
+		(2, "name_2", 1),
 		(3, "name_b", 2),
 		(4, "name 3", 3),
 		(5, "name 5", 4),

@@ -2,6 +2,7 @@ package database.mysql;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import common.exceptions.NotImplementedYet;
@@ -97,24 +98,49 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 
 	@Override
 	public String fetchSingle() throws SQLException {
-		/*this.consumer.accept((conn)->{
+		this.consumer.accept((conn)->{
 			ResultSet res = conn.prepareStatement(query).executeQuery();
 			if (res.next()) {
-				
+				single = res.getString(1);
 			}
 		});
-		return single;*/
-		throw new NotImplementedYet();
+		return single;
 	}
 
 	@Override
 	public DatabaseRow fetchRow() throws SQLException {
-		throw new NotImplementedYet();
+		this.consumer.accept((conn)->{
+			ResultSet res = conn.prepareStatement(query).executeQuery();
+			row = new DatabaseRow();
+			if (res.next()) {
+				for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
+					row.addValue(
+						res.getMetaData().getColumnLabel(i),
+						res.getString(i)
+					);
+				}
+			}
+		});
+		return row;
 	}
 
 	@Override
 	public List<DatabaseRow> fetchAll() throws SQLException {
-		throw new NotImplementedYet();
+		this.consumer.accept((conn)->{
+			ResultSet res = conn.prepareStatement(query).executeQuery();
+			rows = new LinkedList<>();
+			while (res.next()) {
+				DatabaseRow row = new DatabaseRow();
+				for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
+					row.addValue(
+						res.getMetaData().getColumnLabel(i),
+						res.getString(i)
+					);
+				}
+				rows.add(row);
+			}
+		});
+		return rows;
 	}
 	
 	protected String joinToString(final Join join) {

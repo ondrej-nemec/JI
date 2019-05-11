@@ -147,15 +147,15 @@ public class EndToEndTest {
 	
 	@Test
 	public void testExecuteSelect() throws SQLException {
-		SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.a_name, b.b_name")
+		SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 			   .from("select_table a")
 			   .join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
 			   .where("a.id > 1")
-			   .andWhere("b.name = 'name_b'")
-			   .orWhere("a.name = 'name_a'")
+			   .andWhere("a.name = 'name_a'")
+			   .orWhere("b.name = 'name_b'")
 			   .groupBy("a.id")
 			   .having("a.id < 6")
-			   .orderBy("a.id DESC")
+			   .orderBy("a.id ASC")
 			   .limit(2)
 			   .offset(0);
 		
@@ -163,14 +163,14 @@ public class EndToEndTest {
 		DatabaseRow expectedRow = new DatabaseRow();
 		expectedRow.addValue("a_id", "2");
 		expectedRow.addValue("b_id", "3");
-		expectedRow.addValue("a_name", "name_2");
+		expectedRow.addValue("a_name", "name 2");
 		expectedRow.addValue("b_name", "name_b");
 		
 
 		DatabaseRow expectedRow2 = new DatabaseRow();
 		expectedRow2.addValue("a_id", "4");
 		expectedRow2.addValue("b_id", "5");
-		expectedRow2.addValue("a_name", "name a");
+		expectedRow2.addValue("a_name", "name_a");
 		expectedRow2.addValue("b_name", "name 5");
 		
 		assertEquals(expectedSingle, res.fetchSingle());

@@ -18,7 +18,7 @@ public class MySqlDeleteBuilderTest {
 					.orWhere("id = :c_id")
 					.getSql();
 		
-		String expected = "DELETE table_name"
+		String expected = "DELETE FROM table_name"
 				+ " WHERE id > 1"
 				+ " AND id < :id"
 				+ " OR (id = :c_id)";
