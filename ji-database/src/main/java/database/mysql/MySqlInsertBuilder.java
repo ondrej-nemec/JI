@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
@@ -13,44 +14,44 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	private final String query;
 	
-	private final List<String> params;
+	private final List<String> columns;
+	
+	private final List<String> values;
 	
 	private int returned;
 	
 	public MySqlInsertBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
 		this.query = "INSERT INTO " + table;
-		this.params = new LinkedList<>();
+		this.columns = new LinkedList<>();
+		this.values = new LinkedList<>();
 	}
 
-	private MySqlInsertBuilder(final DoubleConsumer consumer, final String query, final String partQuery, final List<String> params) {
+	private MySqlInsertBuilder(
+			final DoubleConsumer consumer,
+			final String query,
+			final String partQuery, 
+			final List<String> columns,
+			final List<String> values) {
 		super(consumer);
 		this.query = query + " " + partQuery;
-		this.params = params;
+		this.columns = columns;
+		this.values = values;
 	}
 
 	@Override
-	public InsertQueryBuilder addColumns(String... columns) {
-		return new MySqlInsertBuilder(this.consumer, query, getBrackedString(columns), params);
-	}
-
-	@Override
-	public InsertQueryBuilder values(String... values) {		
-		return new MySqlInsertBuilder(this.consumer, query, "VALUES " + getBrackedString(values), params);
-	}
-
-	@Override
-	public InsertQueryBuilder addParameter(String value) {
-		params.add(value);
+	public InsertQueryBuilder addValue(String columnName, String value) {
+		columns.add(columnName);
+		values.add(value);
 		return this;
 	}
 
 	@Override
 	public int execute() throws SQLException {
 		this.consumer.accept((conn)->{
-			PreparedStatement stat = conn.prepareStatement(query);
-			for (int i = 0; i < params.size(); i++) {
-				stat.setString(i+1, params.get(i));
+			PreparedStatement stat = conn.prepareStatement(getSql());
+			for (int i = 0; i < values.size(); i++) {
+				stat.setString(i+1, values.get(i));
 			}			
 			returned = stat.executeUpdate();
 		});
@@ -59,16 +60,25 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	@Override
 	public String getSql() {
-		return query;
+		return query + " " + addColumns() + " " + values();
+	}
+
+
+	private String addColumns() {
+		return getBrackedString(columns.size(), (i)->{return columns.get(i);});
+	}
+
+	private String values() {		
+		return "VALUES " + getBrackedString(values.size(), (i)->{return "?";});
 	}
 	
-	private String getBrackedString(final String... values) {
+	private String getBrackedString(int limit, Function<Integer, String> valueProvider) {
 		String names = "(";
-		for (int i = 0; i < values.length; i++) {
+		for (int i = 0; i < limit; i++) {
 			if (i > 0) {
 				names += ", ";
 			}
-			names += values[i];
+			names += valueProvider.apply(i);
 		}
 		return names + ")";
 	}

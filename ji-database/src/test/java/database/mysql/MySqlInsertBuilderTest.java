@@ -14,14 +14,14 @@ public class MySqlInsertBuilderTest {
 	public void testBuilderViaGetSql() {
 		DoubleConsumer mock = mock(DoubleConsumer.class);
 		String sql = new MySqlInsertBuilder(mock, "table_name")
-					.addColumns("column1", "column2")
-					.values(":value1", ":value2")
+					.addValue("column1", "value1")
+					.addValue("column2", "value2")
 					.getSql();
 		
 		String expected = "INSERT INTO table_name"
 				+ " (column1, column2)"
 				+ " VALUES"
-				+ " (:value1, :value2)";
+				+ " (?, ?)";
 		
 		assertEquals(expected, sql);
 		verifyNoMoreInteractions(mock);

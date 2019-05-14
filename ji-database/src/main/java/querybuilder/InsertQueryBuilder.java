@@ -4,11 +4,7 @@ import java.sql.SQLException;
 
 public interface InsertQueryBuilder {
 	
-	InsertQueryBuilder addColumns(String... columns);
-	
-	InsertQueryBuilder values(String... values);
-	
-	InsertQueryBuilder addParameter(String value);
+	InsertQueryBuilder addValue(String columnName, String value);
 	
 	String getSql();
 	

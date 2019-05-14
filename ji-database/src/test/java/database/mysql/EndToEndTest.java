@@ -133,11 +133,9 @@ public class EndToEndTest {
 	@Test
 	public void testExecuteInsert() throws SQLException {
 		int code = builder.insert("insert_table")
-			   .addColumns("id", "name")
-			   .values("?", "?")
-			   .addParameter("1")
-			   .addParameter("column_name")
-			   .execute();
+				.addValue("id", "1")
+				.addValue("name", "column_name")
+			    .execute();
 		assertEquals(code, 1);
 		
 		database.applyQuery((conn)->{
