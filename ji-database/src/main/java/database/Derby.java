@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import common.Logger;
 import database.mysql.MySqlQueryBuilder;
+import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
 import utils.Terminal;
 import utils.env.DatabaseConfig;
@@ -31,13 +32,13 @@ public class Derby extends Database {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder() {
-		return new MySqlQueryBuilder(getDoubleConsumer());
+	protected void createDb() throws SQLException {
+		applyQuery((conn)->{/* create and close connection - create db schema */});
 	}
 
 	@Override
-	protected void createDb() throws SQLException {
-		applyQuery((conn)->{/* create and close connection - create db schema */});
+	protected QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
+		return new MySqlQueryBuilder(consumer);
 	}
 
 }

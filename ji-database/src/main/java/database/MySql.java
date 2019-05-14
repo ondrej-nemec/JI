@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import common.Logger;
 import database.mysql.MySqlQueryBuilder;
+import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
 import utils.env.DatabaseConfig;
 
@@ -30,11 +31,6 @@ public class MySql extends Database {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder() {
-		return new MySqlQueryBuilder(getDoubleConsumer());
-	}
-
-	@Override
 	protected void createDb() throws SQLException {
 		DriverManager
 		.getConnection(
@@ -42,6 +38,11 @@ public class MySql extends Database {
 				createProperties()
 		).createStatement()
 		.executeUpdate("CREATE DATABASE IF NOT EXISTS " + config.schemaName);
+	}
+
+	@Override
+	protected QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
+		return new MySqlQueryBuilder(consumer);
 	}
 
 }

@@ -47,6 +47,10 @@ public abstract class Database {
 	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
 		getDoubleConsumer().accept(consumer);
 	}
+
+	public QueryBuilder getQueryBuilder() {
+		return getQueryBuilder(getDoubleConsumer());
+	}
 	
 	protected DoubleConsumer getDoubleConsumer() {
 		return (consumer)->{
@@ -64,9 +68,7 @@ public abstract class Database {
 	
 	protected abstract void createDb() throws SQLException;
 
-	public abstract QueryBuilder getQueryBuilder();
-	
-	// TODO	protected abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
+	protected abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
 	
 	/*** SEPARATOR ***/
 	
