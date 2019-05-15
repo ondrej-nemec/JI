@@ -3,17 +3,13 @@ package testing;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 
 import common.Logger;
 import database.Database;
-import database.support.ConnectionConsumer;
-import querybuilder.DeleteQueryBuilder;
+import database.support.DoubleConsumer;
 import querybuilder.InsertQueryBuilder;
-import querybuilder.SelectQueryBuilder;
-import querybuilder.UpdateQueryBuilder;
+import querybuilder.QueryBuilder;
 import testing.entities.Row;
 import testing.entities.Table;
 import utils.env.DatabaseConfig;
@@ -43,8 +39,8 @@ public class DatabaseMock extends Database {
 	}
 	
 	@Override
-	public void applyQuery(ConnectionConsumer consumer) throws SQLException {
-		consumer.accept(connection);
+	protected DoubleConsumer getDoubleConsumer() {
+		return (consumer)->{consumer.accept(connection);};
 	}
 	
 	public Database getNestedDatabase() {
@@ -66,60 +62,40 @@ public class DatabaseMock extends Database {
 		for(Table table : tables) {
 			for(Row row : table.getRows()) {
 				try {
-					Statement st = connection.createStatement();
-					st.executeUpdate(
-							"INSERT INTO " + table.getName() + " " + getInsertString(row.getColumns())
-					);
+					InsertQueryBuilder builder = getQueryBuilder().insert(table.getName());
+					
+					int length = row.getColumns().keySet().size();
+					String[] columns = new String[length];
+					String[] values = new String[length];
+					
+					int i = 0; //TODO jinak zadavat parametry, datove typy resit
+					for (String key : row.getColumns().keySet()) {
+						columns[i] = key;
+						values[i] = "?";
+						builder.addParameter(row.getColumns().get(key));
+						i++;
+					}
+					builder.addColumns(columns).values(values).execute();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}						
 			}
 		}
 	}
-	
-	private String getInsertString(Map<String, String> columns) {
-		String names = "(";
-		String values = "(";
-		boolean first = true;
-		for(String key : columns.keySet()) {
-			if (first) {
-				first = false;
-			} else {
-				names += ", ";
-				values += ", ";
-			}
-			names += key;
-			values += columns.get(key);
-		}
-		names += ")";
-		values += ")";
-		
-		return names + " VALUES " + values;
-	}
 
 	@Override
 	protected void createDb() throws SQLException {
-		nestedDatabase.createDbAndMigrate();
+		// not implemented
+	}
+	
+	@Override
+	public boolean createDbAndMigrate() {
+		return nestedDatabase.createDbAndMigrate();
 	}
 
 	@Override
-	public SelectQueryBuilder getSelectBuilder() {
-		return nestedDatabase.getSelectBuilder();
-	}
-
-	@Override
-	public UpdateQueryBuilder getUpdateBuilder() {
-		return nestedDatabase.getUpdateBuilder();
-	}
-
-	@Override
-	public DeleteQueryBuilder getDeletetBuilder() {
-		return nestedDatabase.getDeletetBuilder();
-	}
-
-	@Override
-	public InsertQueryBuilder getInsertBuilder() {
-		return nestedDatabase.getInsertBuilder();
+	public QueryBuilder getQueryBuilder() {
+		return nestedDatabase.getQueryBuilder();
 	}
 
 }
