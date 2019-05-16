@@ -64,13 +64,13 @@ public class EndToEndTest {
 	}
 	
 	@Test
-	@Ignore("maven not build")
+	@Ignore
 	public void testQueryBuilderInstance() {
 		assertTrue(builder instanceof MySqlQueryBuilder);
 	}	
 	
 	@Test
-	@Ignore("maven not build")
+	@Ignore
 	public void testExecuteUpdate() throws SQLException {
 		int code = builder.update("update_table")
 			   .set("name=?")
@@ -107,7 +107,7 @@ public class EndToEndTest {
 	}
 
 	@Test
-	@Ignore("maven not build")
+	@Ignore
 	public void testExecuteDelete() throws SQLException {
 		int code = builder.delete("delete_table")
 			   .where("id > ?")
@@ -135,7 +135,7 @@ public class EndToEndTest {
 	}
 	
 	@Test
-	@Ignore("maven not build")
+	@Ignore
 	public void testExecuteInsert() throws SQLException {
 		int code = builder.insert("insert_table")
 				.addValue("id", "1")
@@ -158,7 +158,7 @@ public class EndToEndTest {
 	}
 	
 	@Test
-	@Ignore("maven not build")
+	@Ignore
 	public void testExecuteSelect() throws SQLException {
 		SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 			   .from("select_table a")
