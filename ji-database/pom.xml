@@ -14,12 +14,12 @@
   	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
       <artifactId>ji-common</artifactId>
-      <version>8e8fb21cf6</version> <!-- v1.0-common -->
+      <version>v3.1-part2</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-utils</artifactId>
-	    <version>8e8fb21cf6</version> <!-- v1.0-utils -->
+	    <version>v3.1-part2</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
 	<dependency>
@@ -27,12 +27,12 @@
 	    <artifactId>flyway-core</artifactId>
 	    <version>5.2.4</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 	<dependency>
 	    <groupId>mysql</groupId>
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>5.1.47</version>
 		<scope>test</scope>
-	</dependency> -->
+	</dependency>
   </dependencies>
 </project>

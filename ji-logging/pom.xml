@@ -14,12 +14,12 @@
   	<dependency>
 	  <groupId>com.github.ondrej-nemec.javainit</groupId>
       <artifactId>ji-common</artifactId>
-      <version>8e8fb21cf6</version> <!-- v2.0.2-common -->
+      <version>v3.1-part2</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-utils</artifactId>
-	    <version>8e8fb21cf6</version> <!-- v2.0.3-utils -->
+	    <version>v3.1-part2</version>
 	</dependency>
 	<!-- LOF -->
 	<dependency>
