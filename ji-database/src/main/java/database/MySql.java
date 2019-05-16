@@ -41,7 +41,7 @@ public class MySql extends Database {
 	}
 
 	@Override
-	protected QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
+	public QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
 		return new MySqlQueryBuilder(consumer);
 	}
 

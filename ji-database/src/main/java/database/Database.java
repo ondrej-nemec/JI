@@ -65,10 +65,10 @@ public abstract class Database {
 	public abstract void startServer();
 	
 	public abstract void stopServer();
+
+	public abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
 	
 	protected abstract void createDb() throws SQLException;
-
-	protected abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
 	
 	/*** SEPARATOR ***/
 	
