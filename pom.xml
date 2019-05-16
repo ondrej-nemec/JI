@@ -49,6 +49,11 @@
   <modules>
   	<!-- part 1 -->
     <module>ji-common</module>
-
+    
+  	<!-- part 2 -->
+    <module>ji-utils</module> <!-- common -->    
+    <module>ji-translate</module> <!-- common -->
+    <module>ji-acl</module> <!-- common -->
+    
   </modules>
 </project>
