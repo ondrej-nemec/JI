@@ -64,20 +64,13 @@ public class DatabaseMock extends Database {
 				try {
 					InsertQueryBuilder builder = getQueryBuilder().insert(table.getName());
 					
-					int length = row.getColumns().keySet().size();
-					String[] columns = new String[length];
-					String[] values = new String[length];
-					
-					int i = 0; //TODO jinak zadavat parametry, datove typy resit
 					for (String key : row.getColumns().keySet()) {
-						columns[i] = key;
-						values[i] = "?";
-						builder.addParameter(row.getColumns().get(key));
-						i++;
+						builder = builder.addValue(key, row.getColumns().get(key));
 					}
-					builder.addColumns(columns).values(values).execute();
+					
+					builder.execute();
 				} catch (SQLException e) {
-					throw new RuntimeException(e);
+					throw new RuntimeException("SQLException", e);
 				}						
 			}
 		}
@@ -95,7 +88,12 @@ public class DatabaseMock extends Database {
 
 	@Override
 	public QueryBuilder getQueryBuilder() {
-		return nestedDatabase.getQueryBuilder();
+		return nestedDatabase.getQueryBuilder(getDoubleConsumer());
+	}
+
+	@Override
+	public QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
+		return nestedDatabase.getQueryBuilder(consumer);
 	}
 
 }

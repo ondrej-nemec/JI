@@ -57,7 +57,10 @@
     
     <!-- part 3 -->
     <module>ji-database</module> <!-- common, utils -->
-    <module>ji-logging</module> <!-- common, utils -->    
+    <module>ji-logging</module> <!-- common, utils -->
+    
+    <!-- part 4 -->
+    <module>ji-testing</module> <!-- common, utils, logging, database -->
     
   </modules>
 </project>
