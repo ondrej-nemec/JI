@@ -115,7 +115,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.pathToMigrations", "testing");
 		
 		prop.put("log.logFile", "log.txt");
-		prop.put("", "");
+		prop.put("log.type", "null");
 		return prop;
 	}
 
