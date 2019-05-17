@@ -12,16 +12,7 @@ import utils.env.LoggerConfig;
 import utils.enums.AppMode;
 
 public class Env {
-	/*
-	// TODO maybe sometimes
-	public static Env loadFromFile(final AppMode mode, final String path) {
-		return null;
-	}
-	
-	public static Env loadFromProperties(final AppMode mode, final Properties properties) {
-		return null;
-	}
-	*/
+
 	public final AppMode mode;
 	
 	private final Properties properties;
@@ -37,8 +28,6 @@ public class Env {
 		}
 
 		this.properties = prop;
-		
-	//	Logger.setEnvIfNotSetted(this);
 	}
 	
 	public Env(final AppMode mode, final Properties properties) {
@@ -46,7 +35,6 @@ public class Env {
 			throw new RuntimeException("Autoload is not supported as mode for code constructor.");
 		this.mode = mode;
 		this.properties = properties;
-	//	Logger.setEnvIfNotSetted(this);
 	}
 	
 	public String getProperty(final String key) {
@@ -78,6 +66,7 @@ public class Env {
 	public LoggerConfig createLogConfig() {
 		return new LoggerConfig(
 				mode,
+				getProperty("log.type"),
 				getProperty("log.logFile")
 		);
 	}
