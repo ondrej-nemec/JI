@@ -17,26 +17,16 @@ public class Env {
 	
 	private final Properties properties;
 		
-	public Env(final AppMode mode, final String path) throws FileNotFoundException, IOException {
-		Properties prop =  new Properties();
-		
-		if (mode == AppMode.AUTOLOAD) {
-			this.mode = loadProperties(path, prop);
-		} else {
-			this.mode = mode;
-			loadProperties(path, prop, mode);
-		}
-
-		this.properties = prop;
+	public Env(final String path) throws FileNotFoundException, IOException {
+		this.properties = loadProperties(path);
+		this.mode = selectMode(properties.getProperty("app.mode"));
 	}
 	
-	public Env(final AppMode mode, final Properties properties) {
-		if (mode == AppMode.AUTOLOAD)
-			throw new RuntimeException("Autoload is not supported as mode for code constructor.");
-		this.mode = mode;
+	public Env(final Properties properties) {
 		this.properties = properties;
+		this.mode = selectMode(properties.getProperty("app.mode"));
 	}
-	
+
 	public String getProperty(final String key) {
 		switch(key) {
 			case "APPDATA": return generateAppData() + getProp("app.name") + "/";
@@ -81,33 +71,25 @@ public class Env {
 				: System.getenv("APPDATA")
 			 + "/";
 	}
-
-	private String getPropertiesPath(final String path, final AppMode mode) {
-		return path + "/env." + mode.toString().toLowerCase() + ".properties";
-	}
 	
-	private AppMode loadProperties(final String path, final Properties prop) throws IOException {
-		try {
-			loadProperties(path, prop, AppMode.PROD);
-			return AppMode.PROD;
-		} catch(FileNotFoundException e) { /*ignored*/ }
-		try {
-			loadProperties(path, prop, AppMode.DEV);
-			return AppMode.DEV;
-		} catch(FileNotFoundException e) { /*ignored*/ }
-		try {
-			loadProperties(path, prop, AppMode.TEST);
-			return AppMode.TEST;
-		} catch(FileNotFoundException e) { /*ignored*/ }
-		
-		throw new IOException("No properties file was founded.");
-	}
-	
-	private void loadProperties(final String path, final Properties prop, final AppMode mode) throws IOException {
-		String name = getPropertiesPath(path, mode);
-		InputStream is = getClass().getResourceAsStream(name);
+	private Properties loadProperties(final String path) throws IOException {
+		Properties prop = new Properties();
+		InputStream is = getClass().getResourceAsStream(path);
 		if (is == null)
-			throw new FileNotFoundException(name);
+			throw new FileNotFoundException(path);
 		prop.load(is);
+		return prop;
+	}
+	
+	private AppMode selectMode(String mode) {
+		if (mode == null)
+			throw new RuntimeException("App mode is null");
+		switch (mode.toLowerCase()) {
+		case "test": return AppMode.TEST;
+		case "dev": return AppMode.DEV;
+		case "prod": return AppMode.PROD;
+		default:
+			throw new RuntimeException("Unsupported app mode: " + mode);
+		}
 	}
 }
