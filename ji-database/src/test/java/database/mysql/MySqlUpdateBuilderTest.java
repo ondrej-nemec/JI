@@ -14,12 +14,13 @@ public class MySqlUpdateBuilderTest {
 		DoubleConsumer mock = mock(DoubleConsumer.class);
 		String sql = new MySqlUpdateBuilder(null, "table_name")
 					.set("name = :name")
+					.set("value = :value")
 					.where("id = :id")
 					.andWhere("name = :actualName1")
 					.orWhere("name = :actualName2")
 					.getSql();
 		String expected = "UPDATE table_name"
-				+ " SET name = :name"
+				+ " SET name = :name, value = :value"
 				+ " WHERE id = :id"
 				+ " AND name = :actualName1"
 				+ " OR (name = :actualName2)";
