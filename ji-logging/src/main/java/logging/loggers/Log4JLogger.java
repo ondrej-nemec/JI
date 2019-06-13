@@ -30,7 +30,7 @@ public class Log4JLogger implements common.Logger {
 			default: throw new RuntimeException("Unsupported app mode " + config.getAppMode());
 		}
 		Logger.getRootLogger().addAppender(createConsoleAppender(priority));
-		Logger.getRootLogger().addAppender(createFileAppender(priority, config.getPathToLogs()));
+		Logger.getRootLogger().addAppender(createFileAppender(priority, config.getPathToLogs() + "/" + name + ".log"));
 		
 		this.log = Logger.getLogger(name);
 	}
@@ -88,7 +88,7 @@ public class Log4JLogger implements common.Logger {
 	private ConsoleAppender createConsoleAppender(final Priority priority) {
 		//TODO two appenders - err a out
 		ConsoleAppender console = new ConsoleAppender();
-		console.setLayout(new PatternLayout("%p %d{yyyy-MM-dd HH:mm:ss} %c{3}:%L [%t] - %m%n"));
+		console.setLayout(new PatternLayout("%p %d{yyyy-MM-dd HH:mm:ss} %c{3} [%t] - %m%n"));
 		console.setThreshold(priority);
 		console.setTarget(ConsoleAppender.SYSTEM_OUT);
 		console.activateOptions();
@@ -98,7 +98,7 @@ public class Log4JLogger implements common.Logger {
 	private FileAppender createFileAppender(final Priority priority, final String pathToLogs) {
 		FileAppender file = new DailyRollingFileAppender();
 		file.setFile(pathToLogs);
-		file.setLayout(new PatternLayout("%p %d{yyyy-MM-dd HH:mm:ss} %c{3}:%L [%t] - %m%n"));
+		file.setLayout(new PatternLayout("%p %d{yyyy-MM-dd HH:mm:ss} [%t] - %m%n")); // %c{3}:%L - jmeno loggeru:radek
 		file.setThreshold(priority);
 		file.setAppend(true);
 		file.activateOptions();
