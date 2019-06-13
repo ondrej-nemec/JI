@@ -15,22 +15,22 @@
 	<dependency>
 	  <groupId>com.github.ondrej-nemec.javainit</groupId>
       <artifactId>ji-common</artifactId>
-      <version>v3.1.2-part3</version>
+      <version>v3.2.0-part1</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-utils</artifactId>
-	    <version>v3.1.2-part3</version>
+	    <version>v3.2.0-part1</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-database</artifactId>
-	    <version>v3.1.2-part3</version>
+	    <version>v3.2.0-part1</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.github.ondrej-nemec.javainit</groupId>
 	    <artifactId>ji-logging</artifactId>
-	    <version>v3.1.2-part3</version>
+	    <version>v3.2.0-part1</version>
 	</dependency>
   	<!-- https://mvnrepository.com/artifact/junit/junit -->
   	<dependency>

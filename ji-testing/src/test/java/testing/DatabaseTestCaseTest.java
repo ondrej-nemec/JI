@@ -106,6 +106,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	
 	private static Properties getProperties() {
 		Properties prop = new Properties();
+		prop.put("app.mode", "test");
 		prop.put("db.type", "mysql");
 		prop.put("db.pathOrUrl", "//localhost:3306");
 		prop.put("db.externalServer", "1");
