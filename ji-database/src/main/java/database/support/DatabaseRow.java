@@ -3,8 +3,6 @@ package database.support;
 import java.util.HashMap;
 import java.util.Map;
 
-import exceptions.DatabaseException;
-
 public class DatabaseRow {
 
 	private Map<String, String> values;
@@ -14,10 +12,7 @@ public class DatabaseRow {
 	}
 	
 	public String getValue(final String name) {
-		String value = values.get(name);
-		if (value == null)
-			throw new DatabaseException("Value for name '" + name + "' not found.");
-		return value;
+		return values.get(name);
 	}
 	
 	public void addValue(String key, String value) {
