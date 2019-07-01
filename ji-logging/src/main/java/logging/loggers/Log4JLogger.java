@@ -30,7 +30,7 @@ public class Log4JLogger implements common.Logger {
 			default: throw new RuntimeException("Unsupported app mode " + config.getAppMode());
 		}
 		Logger.getRootLogger().addAppender(createConsoleAppender(priority));
-		Logger.getRootLogger().addAppender(createFileAppender(priority, config.getPathToLogs() + "/" + name + ".log"));
+		Logger.getRootLogger().addAppender(createFileAppender(priority, config.getPathToLogs() + "/" + name + "/" + name + ".log"));
 		
 		this.log = Logger.getLogger(name);
 	}
