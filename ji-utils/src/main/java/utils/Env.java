@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,10 +75,12 @@ public class Env {
 	
 	private Properties loadProperties(final String path) throws IOException {
 		Properties prop = new Properties();
-		InputStream is = getClass().getResourceAsStream(path);
-		if (is == null)
+		try(InputStream is = new FileInputStream(path)) {
+			prop.load(is);
+		} catch (Exception e) {
 			throw new FileNotFoundException(path);
-		prop.load(is);
+		}
+		
 		return prop;
 	}
 	

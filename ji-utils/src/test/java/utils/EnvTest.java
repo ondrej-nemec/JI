@@ -18,22 +18,24 @@ import utils.enums.AppMode;
 
 @RunWith(JUnitParamsRunner.class)
 public class EnvTest {
+	
+	private String path = "src/test/resource/env/";
 
 	@Test(expected = IOException.class)
 	public void testConstructorForFilesThrowIfNoFileInDir() throws FileNotFoundException, IOException {
-		new Env("/env/not-existing.properties");
+		new Env(path + "not-existing.properties");
 	}
 	
 	@Test
 	@Parameters
-	public void testConstructorForFilesWithAutoloadModeFindCorrectProperties(final AppMode mode, final String subDir)
+	public void testConstructorForFileFindCorrectProperties(final AppMode mode, final String subDir)
 			throws FileNotFoundException, IOException {
-		Env e = new Env("/env/env." + subDir + ".properties");
+		Env e = new Env(path + "env." + subDir + ".properties");
 		assertEquals(mode, e.mode);
 		assertEquals("value", e.getProperties().getProperty("key"));
 	}
 	
-	public Collection<Object[]> parametersForTestConstructorForFilesWithAutoloadModeFindCorrectProperties() {
+	public Collection<Object[]> parametersForTestConstructorForFileFindCorrectProperties() {
 		return Arrays.asList(
 				new Object[] {AppMode.PROD, "prod"},
 				new Object[] {AppMode.DEV, "dev"},
@@ -42,7 +44,7 @@ public class EnvTest {
 	}
 	
 	@Test(expected=RuntimeException.class)
-	public void testConstructorForCodeThrowsIfModeIsNotSetted() {
+	public void testConstructorForCodeThrowsIfAppModeIsNotSetted() {
 		new Env(new Properties());
 	}
 	
