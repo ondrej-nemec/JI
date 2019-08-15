@@ -1,11 +1,6 @@
-/.project
-
-/.settings
-
-/bin
+/.gradle/
 /bin/
+/.settings
 /.classpath
-
-/target/
-/workspace/*
-/DerbyDB
+.project
+/build

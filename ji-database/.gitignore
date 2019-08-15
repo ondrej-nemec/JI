@@ -1,8 +1,6 @@
-/.project
-
+/.gradle/
+/bin/
 /.settings
-
-/bin
-/.classpath
-
-/target
+.classpath
+.project
+/build

@@ -1,0 +1,18 @@
+// Apply the java-library plugin to add support for Java Library
+apply plugin: 'java-library'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile project(':ji-common')
+	compile project(':ji-logging')
+	compile project(':ji-utils')
+	compile project(':ji-translate')
+	compile project(':ji-acl')
+	compile project(':ji-database')
+	compile project(':ji-testing')
+}
+
