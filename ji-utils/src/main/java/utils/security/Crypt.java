@@ -18,7 +18,7 @@ public class Crypt {
 	
 	private final Key key;
 	
-	public Crypt(String algoritm, String securityKey, String transfomation) throws CryptException {
+	public Crypt(String algoritm, String transfomation, String securityKey) throws CryptException {
 		try {
 			this.cipher = Cipher.getInstance(transfomation);
 			this.key = new SecretKeySpec(securityKey.getBytes("utf-8"), algoritm);
