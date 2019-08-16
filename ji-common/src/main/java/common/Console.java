@@ -10,17 +10,21 @@ public class Console {
 		this.scanner = new Scanner(System.in);
 	}
 	
-	public synchronized void out(final String message) {
+	public synchronized void out(final Object message) {
 		System.out.println(message);
 	}
 	
-	public synchronized void out(final String... messages) {
-		for(String message : messages) {
+	public synchronized void out() {
+		out("");
+	}
+	
+	public synchronized void out(final Object... messages) {
+		for(Object message : messages) {
 			out(message);
 		}
 	}
 	
-	public synchronized void err(final String message) {
+	public synchronized void err(final Object message) {
 		System.err.println(message);
 	}
 	
