@@ -1,0 +1,10 @@
+
+rootProject.name = 'javainit'
+
+include ':ji-common'
+include ':ji-logging'
+include ':ji-utils'
+include ':ji-translate'
+include ':ji-acl'
+include ':ji-database'
+include ':ji-testing'
