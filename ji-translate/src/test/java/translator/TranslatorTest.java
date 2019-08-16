@@ -61,13 +61,13 @@ public class TranslatorTest {
 	@Test
 	public void testTranslateWithVariablesMoreVariablesLogged() {
 		assertEquals(
-					"Variable: var",
-					translator.translate(
-							"test.one.variable",
-							"var",
-							"var2"
-						)
-				);
+			"Variable: var",
+			translator.translate(
+					"test.one.variable",
+					"var",
+					"var2"
+				)
+		);
 		verify(logger).info("More variables given: 2; "
 				+ "{key=test.one.variable, ResourceBundleName=messages, name=default,[var,var2,]}");
 	}
@@ -78,25 +78,25 @@ public class TranslatorTest {
 		if (start != '\u0000' && end != '\u0000')
 			translator.setVariableSeparators(start, end);
 		assertEquals(
-				expectedMessage,
-				translator.translate(
-						key,
-						variables
-					)
-			);
+			expectedMessage,
+			translator.translate(
+					key,
+					variables
+				)
+		);
 	}
 	
 	public Object[] parametersForTestTranslateWithVariableWorks() {
 		return new Object[]{
-				new Object[]{
-					"Variable: var", "test.one.variable", '\u0000', '\u0000', "var"
-				},
-				new Object[]{
-					"Variables: 4, four", "test.two.variables.%%", '\u0000', '\u0000', new Integer(4).toString(), "four"
-				},
-				new Object[]{
-					"Variables: varA, varB", "test.two.variables.<>", '<', '>', "varA", "varB"
-				}
+			new Object[]{
+				"Variable: var", "test.one.variable", '\u0000', '\u0000', "var"
+			},
+			new Object[]{
+				"Variables: 4, four", "test.two.variables.%%", '\u0000', '\u0000', new Integer(4).toString(), "four"
+			},
+			new Object[]{
+				"Variables: varA, varB", "test.two.variables.<>", '<', '>', "varA", "varB"
+			}
 		};
 	}
 		
@@ -114,15 +114,15 @@ public class TranslatorTest {
 	
 	public Object[] parametersForTestTranslateWithCountWorks() {
 		return new Object[] {
-				new Object[]{"Less", -3},
-				new Object[]{"Negative", -1},
-				new Object[]{"Zero value", 0},
-				new Object[]{"Exactly: 1", 1},
-				new Object[]{"Between: 3", 3},
-				new Object[]{"Between: 4", 4},
-				new Object[]{"Separator: 5", 5},
-				new Object[]{"Separator: 6", 6},
-				new Object[]{"More: 9", 9}
+			new Object[]{"Less", -3},
+			new Object[]{"Negative", -1},
+			new Object[]{"Zero value", 0},
+			new Object[]{"Exactly: 1", 1},
+			new Object[]{"Between: 3", 3},
+			new Object[]{"Between: 4", 4},
+			new Object[]{"Separator: 5", 5},
+			new Object[]{"Separator: 6", 6},
+			new Object[]{"More: 9", 9}
 		};
 	}
 }
