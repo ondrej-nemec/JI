@@ -13,14 +13,13 @@ dependencies {
 	compile project(':ji-utils')
 	
 	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
-	compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
-	
-	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
-	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
-	
+	compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'	
 	
 	// https://mvnrepository.com/artifact/junit/junit
 	compile group: 'junit', name: 'junit', version: '4.12'
+	
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
 	
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
