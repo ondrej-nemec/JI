@@ -7,9 +7,15 @@ import java.util.Base64;
 
 public class Hash {
 	
+	private final String algoritm;	
+	
+	public Hash(String algoritm) {
+		this.algoritm = algoritm;
+	}
+
 	public String toHash(String message) throws HashException {
 		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			MessageDigest digest = MessageDigest.getInstance(algoritm);
 			byte[] hash = Base64.getEncoder().encode(
 				digest.digest(
 					message.getBytes(StandardCharsets.UTF_8)
