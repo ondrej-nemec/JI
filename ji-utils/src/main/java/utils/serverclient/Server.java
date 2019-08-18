@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import common.Logger;
 
@@ -29,9 +29,9 @@ public class Server {
     
     private int threadCount = 0;
     
-    private final Function<String, String> serveMessage;
+    private final BiFunction<String, Socket, String> serveMessage;
     
-    public Server(int port, int threadPool, long readTimeout, Function<String, String> serveMessage, Logger logger) throws IOException {
+    public Server(int port, int threadPool, long readTimeout, BiFunction<String, Socket, String> serveMessage, Logger logger) throws IOException {
         this.executor = Executors.newFixedThreadPool(threadPool);
         this.sheduled = Executors.newScheduledThreadPool(1);
         this.logger = logger;
@@ -94,7 +94,7 @@ public class Server {
                 do {
                     message = com.readMessage(br);
                     logger.debug("Receive message: " + message);
-                    com.writeMessage(bw, serveMessage.apply(message));
+                    com.writeMessage(bw, serveMessage.apply(message, clientSocket));
                 } while (!message.equals(Communication.END));
                 com.writeMessage(bw, Communication.END);
             } catch (SocketTimeoutException e) {

@@ -1,8 +1,8 @@
 package utils.serverclient;
 
 import java.io.IOException;
-import java.util.function.Function;
-
+import java.net.Socket;
+import java.util.function.BiFunction;
 import utils.serverclient.Server;
 
 public class ServerTest {
@@ -23,8 +23,8 @@ public class ServerTest {
         
     }
 
-    private static Function<String, String> createFunction() {
-        return (message)-> {
+    private static BiFunction<String, Socket, String> createFunction() {
+        return (message, socket)-> {
             return message;
         };
     }
