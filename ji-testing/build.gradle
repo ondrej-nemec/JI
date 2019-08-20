@@ -23,5 +23,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
 	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
 
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+	
 }
 

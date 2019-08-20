@@ -29,8 +29,9 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	@Before
 	@Override
 	public void before() throws SQLException {
+		getDatabase().createDbAndMigrate();
 		testDbEmptyOrNotExists();
-		super.before();
+		getDbMock().prepare();
 	}
 	
 	@After
@@ -107,6 +108,8 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	private static Properties getProperties() {
 		Properties prop = new Properties();
 		prop.put("app.mode", "test");
+		prop.put("app.timezone", "Europe/Prague");
+		
 		prop.put("db.type", "mysql");
 		prop.put("db.pathOrUrl", "//localhost:3306");
 		prop.put("db.externalServer", "1");
@@ -116,7 +119,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.pathToMigrations", "testing");
 		
 		prop.put("log.logFile", "log.txt");
-		prop.put("log.type", "null");
+		prop.put("log.type", "console");
 		return prop;
 	}
 
