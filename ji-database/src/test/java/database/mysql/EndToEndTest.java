@@ -36,7 +36,8 @@ public class EndToEndTest {
 				"javainit_database_test",
 				"root",
 				"",
-				"migrations"
+				"migrations",
+				"Europe/Prague"
 		);
 		
 		Logger logger = mock(Logger.class);		
