@@ -17,6 +17,8 @@ public class DatabaseConfig {
 	
 	public final boolean runOnExternalServer;
 	
+	public final String timezone;
+	
 	public DatabaseConfig(
 			final String type,
 			final String pathOrUrlToLocation,
@@ -24,7 +26,8 @@ public class DatabaseConfig {
 			final String schemaName,
 			final String login,
 			final String password,
-			final String pathToMigrations) {
+			final String pathToMigrations,
+			final String timezone) {
 		this.type = type;
 		this.pathOrUrlToLocation = pathOrUrlToLocation;
 		this.schemaName = schemaName;
@@ -32,6 +35,7 @@ public class DatabaseConfig {
 		this.password = password;
 		this.pathToMigrations = pathToMigrations;
 		this.runOnExternalServer = runOnExternalServer;
+		this.timezone = timezone;
 	}
 
 }

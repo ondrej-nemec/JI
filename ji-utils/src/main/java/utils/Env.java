@@ -50,7 +50,8 @@ public class Env {
 				getProperty("db.schema"),
 				getProperty("db.login"),
 				getProperty("db.password"),
-				getProperty("db.pathToMigrations")
+				getProperty("db.pathToMigrations"),
+				getProperty("app.timezone")
 		);
 	}
 	
