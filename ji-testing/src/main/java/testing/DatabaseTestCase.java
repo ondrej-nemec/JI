@@ -49,7 +49,11 @@ public abstract class DatabaseTestCase extends TestCase {
 	protected Database getDatabase() {
 		return database;
 	}
-	
+
+	protected DatabaseMock getDbMock() {
+		return database;
+	}
+
 	protected Database getNestedDatabase() {
 		return database.getNestedDatabase();
 	}
