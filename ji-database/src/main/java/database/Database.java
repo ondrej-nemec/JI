@@ -94,12 +94,30 @@ public abstract class Database {
 		props.setProperty("create", "true");
 		props.setProperty("user", config.login);
 		props.setProperty("password", config.password);
-		
+		props.setProperty("serverTimezone", config.timezone);
+
 		return props;
 	}
 	
 	protected String getConnectionString() {
 		return connectionString;
+	}
+	
+	private String createFullConnectionString() {
+		String con = connectionString;
+		Properties p = createProperties();
+		boolean first = true;
+		for(Object property : p.keySet()) {
+			if (first) {
+				first = false;
+				con += "?";
+			} else {
+				con += "&";
+			}
+			con += property +"=" + p.getProperty(property.toString());
+		}
+		
+		return con;
 	}
 	
 	private void migrate() throws FlywaySqlException {
@@ -109,7 +127,7 @@ public abstract class Database {
 		Flyway f  = Flyway
 				.configure()
 				.dataSource(
-					connectionString,
+					createFullConnectionString(), // connectionString,
 					config.login,
 					config.password
 				)
