@@ -14,7 +14,8 @@ public class MySql extends Database {
 	public MySql(final DatabaseConfig config, final Logger logger) {
 		super(config, logger);
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			// Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			logger.warn("MySQL driver could not be registered", e);
 		}
