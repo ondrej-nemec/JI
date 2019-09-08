@@ -76,13 +76,17 @@ public class Env {
 	
 	private Properties loadProperties(final String path) throws IOException {
 		Properties prop = new Properties();
+		
+		try (InputStream is = getClass().getResourceAsStream("/" + path)) {
+			prop.load(is);
+			return prop;
+		} catch (Exception e) {/* ignored */}
 		try(InputStream is = new FileInputStream(path)) {
 			prop.load(is);
-		} catch (Exception e) {
-			throw new FileNotFoundException(path);
-		}
+			return prop;
+		} catch (Exception e) { /* ignored */}
 		
-		return prop;
+		throw new FileNotFoundException(path);
 	}
 	
 	private AppMode selectMode(String mode) {
