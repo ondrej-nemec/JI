@@ -30,5 +30,10 @@ public class Console {
 	
 	public synchronized String in() {
 		return scanner.nextLine();
-	}	
+	}
+	
+	public synchronized void clear() {
+		System.out.print("\033[H\033[2J");  
+		System.out.flush();
+	}
 }
