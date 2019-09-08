@@ -27,15 +27,17 @@ public class Translator {
 	
 	private final Map<String, ResourceBundle> namedMessages;
 	
-	public Translator(ResourceBundle resource, Logger logger) {
-		this.defaultMessages = resource;
-		this.namedMessages = new HashMap<>();
-		this.logger = logger;
+	public Translator(String resource, Logger logger) {
+		this(resource, new HashMap<>(), logger);
 	}
 	
-	public Translator(ResourceBundle resource, Map<String, ResourceBundle> otherMessages, Logger logger) {
-		this.defaultMessages = resource;
-		this.namedMessages = otherMessages;
+	public Translator(String resource, Map<String, String> otherMessages, Logger logger) {
+		this.defaultMessages = ResourceBundle.getBundle(resource);
+		Map<String, ResourceBundle> map = new HashMap<>();
+		otherMessages.forEach((name, res)->{
+			map.put(name, ResourceBundle.getBundle(res));
+		});
+		this.namedMessages = map;
 		this.logger = logger;
 	}
 	

@@ -21,7 +21,7 @@ public class TranslatorTest {
 	
 	public TranslatorTest() {
 		this.logger = mock(Logger.class);
-		translator = new Translator(ResourceBundle.getBundle("messages"), logger);
+		translator = new Translator("messages", logger);
 	}
 	
 	@Test
