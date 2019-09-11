@@ -2,8 +2,9 @@ package translator;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static common.MapInit.*;
 
-import java.util.ResourceBundle;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,89 +16,74 @@ import common.Logger;
 @RunWith(JUnitParamsRunner.class)
 public class TranslatorTest {
 	
-	private Translator translator;
-	
-	private Logger logger;
-	
-	public TranslatorTest() {
-		this.logger = mock(Logger.class);
-		translator = new Translator("messages", logger);
+	@Test
+	@Parameters({"mess-tree", "mess-classpath"})
+	public void testTranslateLoadFilesFromClasspathAndDirTree(String resource) {
+		new Translator(mock(Logger.class), "trans/", resource);
+		assertTrue(true);
 	}
 	
 	@Test
-	public void testTranslateNotExistingKey(){
+	public void testTranslateReturnsKeyIfKeyNotExists(){
+		Translator translator = new Translator(mock(Logger.class), "", "messages");
 		assertEquals("not-existing-key", translator.translate("not-existing-key"));
-		verify(logger).warn("Missing key - {key=not-existing-key, ResourceBundleName=messages, name=default}");
+		assertEquals("not-existing-resource.translate.works", translator.translate("not-existing-resource.translate.works"));
 	}
 	
 	@Test
-	public void testTranslateCountNotExistingCount(){
-		assertEquals("translate.works : 1", translator.translate("translate.works", 1));
-		verify(logger).warn("Missing count: 1; {key=translate.works, ResourceBundleName=messages, name=default,[1,]}");
+	@Parameters(method = "dataTranslateReturnsCorrectKey")
+	public void testTranslateReturnsCorrectKey(String key, String expected) {
+		Translator translator = new Translator(mock(Logger.class), "", "messages", "from");
+		assertEquals(expected, translator.translate(key));
 	}
 	
-	@Test
-	public void testTranslateWorks(){
-		assertEquals(
-				"Translated message",
-				translator.translate("translate.works")
-			);
-	}
-	
-	@Test
-	public void testTranslateFromWorks(){
-		translator.addResource("from", ResourceBundle.getBundle("from"));
-		assertEquals(
-				"Translated message from",
-				translator.translateFrom("from", "translate.from.works")
-			);
-	}
-	
-	@Test(expected = RuntimeException.class)
-	public void testTranslateWithVariableThrowWhenVariableDontExist(){
-		translator.translate("too.many.variables", "var");
-	}
-	
-	@Test
-	public void testTranslateWithVariablesMoreVariablesLogged() {
-		assertEquals(
-			"Variable: var",
-			translator.translate(
-					"test.one.variable",
-					"var",
-					"var2"
-				)
-		);
-		verify(logger).info("More variables given: 2; "
-				+ "{key=test.one.variable, ResourceBundleName=messages, name=default,[var,var2,]}");
+	public Object[] dataTranslateReturnsCorrectKey() {
+		return new Object[] {
+			new Object[] {
+				"translate.works", "Translated message"
+			},
+			new Object[] {
+				"translate-works", "Translated message"
+			},
+			new Object[] {
+				"messages.translate.works", "Translated message"
+			},
+			new Object[] {
+				"from.translate.from.works", "Translated message from"
+			},
+		};
 	}
 	
 	@Test
 	@Parameters
-	public void testTranslateWithVariableWorks(String expectedMessage, String key, char start, char end, String... variables){
-		if (start != '\u0000' && end != '\u0000')
-			translator.setVariableSeparators(start, end);
+	public void testTranslateWithVariableWorks(String expectedMessage, String key, Map<String, String> variables){
+		Translator translator = new Translator(mock(Logger.class), "", "messages");
 		assertEquals(
 			expectedMessage,
 			translator.translate(
-					key,
-					variables
-				)
+				key,
+				variables
+			)
 		);
 	}
 	
 	public Object[] parametersForTestTranslateWithVariableWorks() {
 		return new Object[]{
 			new Object[]{
-				"Variable: var", "test.one.variable", '\u0000', '\u0000', "var"
+				"Variable: var", "test.one.variable", hashMap(t("variable", "var"))
 			},
 			new Object[]{
-				"Variables: 4, four", "test.two.variables.%%", '\u0000', '\u0000', new Integer(4).toString(), "four"
-			},
-			new Object[]{
-				"Variables: varA, varB", "test.two.variables.<>", '<', '>', "varA", "varB"
+				"Variables: 4, four", "test.two.variables", hashMap(t("a", 4), t("b", "four"))
 			}
 		};
+	}
+	
+	/******
+
+	@Test
+	public void testTranslateCountNotExistingCount(){
+		assertEquals("translate.works : 1", translator.translate("translate.works", 1));
+		verify(logger).warn("Missing count: 1; {key=translate.works, ResourceBundleName=messages, name=default,[1,]}");
 	}
 		
 	@Test
@@ -125,4 +111,6 @@ public class TranslatorTest {
 			new Object[]{"More: 9", 9}
 		};
 	}
+	
+	*/
 }
