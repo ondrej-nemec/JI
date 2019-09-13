@@ -77,40 +77,44 @@ public class TranslatorTest {
 			}
 		};
 	}
-	
-	/******
 
 	@Test
 	public void testTranslateCountNotExistingCount(){
-		assertEquals("translate.works : 1", translator.translate("translate.works", 1));
-		verify(logger).warn("Missing count: 1; {key=translate.works, ResourceBundleName=messages, name=default,[1,]}");
-	}
-		
-	@Test
-	@Parameters
-	public void testTranslateWithCountWorks(String expectedMessage, int count){
-		assertEquals(
-			expectedMessage,
-			translator.translate(
-				"test.count",
-				count
-			)
-		);
+		Translator translator = new Translator(mock(Logger.class), "", "messages");
+		assertEquals("Translated message (1)", translator.translate("translate.works", 1));
 	}
 	
-	public Object[] parametersForTestTranslateWithCountWorks() {
-		return new Object[] {
-			new Object[]{"Less", -3},
-			new Object[]{"Negative", -1},
-			new Object[]{"Zero value", 0},
-			new Object[]{"Exactly: 1", 1},
-			new Object[]{"Between: 3", 3},
-			new Object[]{"Between: 4", 4},
-			new Object[]{"Separator: 5", 5},
-			new Object[]{"Separator: 6", 6},
-			new Object[]{"More: 9", 9}
-		};
-	}
-	
-	*/
+    @Test
+    @Parameters
+    public void testTranslateWithCountWorks(String expectedMessage, int count){
+		Translator translator = new Translator(mock(Logger.class), "", "messages");
+    	assertEquals(
+    		expectedMessage,
+    		translator.translate(
+    			"test.count",
+    			count,
+    			hashMap(t("count", count))
+    		)
+    	);
+    }
+    
+    public Object[] parametersForTestTranslateWithCountWorks() {
+    	return new Object[] {
+        	new Object[]{"Lower -20", -20},
+    		new Object[]{"Lower -11", -11},
+    		new Object[]{"Lower -10", -10},
+    		new Object[]{"List 1", 1},
+    		new Object[]{"List 2", 2},
+    		new Object[]{"List 3", 3},
+    		new Object[]{"Sequence -3", -3},
+    		new Object[]{"Sequence -2", -2},
+    		new Object[]{"Sequence -1", -1},
+    		new Object[]{"Higher 11", 11},
+    		new Object[]{"Higher 15", 15},
+    		new Object[]{"Default 9", 9},
+    		new Object[]{"Default 0", 0},
+    		new Object[]{"Five", 5},
+    	};
+    }
+
 }

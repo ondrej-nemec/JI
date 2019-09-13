@@ -10,12 +10,12 @@ import java.util.ResourceBundle;
 
 import common.Implode;
 import common.Logger;
-import common.exceptions.NotImplementedYet;
 
 public class Translator {
 	
-	private final static String VARIABLE_START = "%";
-	private final static String VARIABLE_END = "%";
+	private final static String VARIABLE_SEPARATOR = "%";
+	private final static String COUNT_SEPARATOR = "\\|";
+	private final static String MESSAGES_SEPARATOR = ";";
 	
 	private final Logger logger;
 	
@@ -46,16 +46,20 @@ public class Translator {
 	}
 	
 	/**
-	 * key structure: resource.key
-	 * if "resource" not exists returns resource.key from default
+	 * key structure: <resource>.<key> OR <key>
+	 * if <resource> not exists returns <resource.key> as <key> from default
+	 * if no message for <key> founded, <key> returned 
+	 * message structure: "some text"
 	 */
 	public String translate(String key) {
 		return trans(key);
 	}
 
 	/**
-	 * key structure: resource.key
-	 * if "resource" not exists returns resource.key from default
+	 * key structure: <resource>.<key> OR <key>
+	 * if <resource> not exists returns <resource.key> as <key> from default
+	 * if no message for <key> founded, <key> returned 
+	 * message structure: "text %variable% %another-variable%"
 	 */
 	public String translate(String key, Map<String, String> variables) {
 		String partialMessage = trans(key);
@@ -63,11 +67,31 @@ public class Translator {
 	}
 
 	/**
-	 * key structure: resource.key
-	 * if "resource" not exists returns resource.key from default
+	 * key structure: <resource>.<key> OR <key>
+	 * if <resource> not exists returns <resource.key> as <key> from default
+	 * if no message for <key> founded, <key> returned 
+	 * message structure:
+	 *   [<countResolution>]|"text %variable% %another-variable%";[<countResolution>]|"text %variable% %another-variable%"
+	 *   <countResolution>: m,n - number, I - infinity
+	 *   	n - exactly this number
+	 *      [n,m] - in given list
+	 *      (n,m) - in sequence from n to m exclusive
+	 *      <n,m> - in sequence from n to m inclusive
+	 *      (-I,n) - everything less n
+	 *      (-I,n> - everything less or equals n
+	 *      (m,I) - everything more that m
+	 *      <m,I) - everything more or equals m
+	 *      D - default - used if no other resolution matched, if default missing <key>.count returned 
+	 *    <countCode> reffer to <resource>.<key>.<countCode> - there is final message 
 	 */
-	public String translate(String key, int count, Object... variables) {
-		throw new NotImplementedYet();
+	public String translate(String key, int count, Map<String, String> variables) {
+		String counts = trans(key);
+		String partialMessage = selectMessageWithCount(counts, count);
+		return replaceVariableNamesWithValues(partialMessage, variables);
+	}
+
+	public String translate(String key, int count) {
+		return translate(key, count, new HashMap<>());
 	}
 	
 	/*********** Plain translate ************/
@@ -118,9 +142,78 @@ public class Translator {
 		String message = partialMessage;
 		for (String name : variables.keySet()) {
 			String value = variables.get(name);
-			message = message.replaceAll(VARIABLE_START + name + VARIABLE_END, value);
+			message = message.replaceAll(VARIABLE_SEPARATOR + name + VARIABLE_SEPARATOR, value);
 		}
 		return message;
+	}
+	
+	private String selectMessageWithCount(String all, int count) {
+		try {
+			String[] alls = all.split(MESSAGES_SEPARATOR);
+			String def = all + " (" + count + ")";
+			for (String candidate : alls) {
+				String[] messages = candidate.split(COUNT_SEPARATOR);
+				if (messages[0].equals("D")) {
+					def = messages[1];
+				} else if (countMatch(count, messages[0])) {
+					return messages[1];
+				}
+			}
+			return def;
+		} catch (Exception e) {
+			logger.warn("Problem with parsing message " + all, e);
+			return all;
+		}
+	}
+
+	private boolean countMatch(int count, String string) {
+		try {
+			switch (string.charAt(0)) {
+			case '<':
+			case '(':
+				return countMatch(string, count);
+			case '[': return countMatch(string.replaceAll("\\]|\\[", "").split(","), count);
+			default: return Integer.parseInt(string) == count;
+			}
+		} catch (Exception e) {
+			logger.error("Trying check '" + string + "' for count : " + count, e);
+			return false;
+		}
+	}
+
+	private boolean countMatch(String string, int count) {
+		boolean lowerInclude = string.charAt(0) == '<';
+		boolean higherInclude = string.charAt(string.length() - 1) == '>';
+
+		string = string.replace("I", Integer.MAX_VALUE + "").replaceAll("<|>|\\(|\\)", "");
+		String[] strings = string.split(",");
+		
+		int lower = Integer.parseInt(strings[0]);
+		int higher = Integer.parseInt(strings[1]);
+
+		boolean lowerAllowed;
+		if (lowerInclude) {
+			lowerAllowed = lower <= count;
+		} else {
+			lowerAllowed = lower < count;
+		}
+		boolean higherAllowed;
+		if (higherInclude) {
+			higherAllowed = higher >= count;
+		} else {
+			higherAllowed = higher > count;
+		}
+
+		return lowerAllowed && higherAllowed;
+	}
+
+	private boolean countMatch(String[] split, int count) {
+		for (String integer : split) {
+			if (Integer.parseInt(integer) == count) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
