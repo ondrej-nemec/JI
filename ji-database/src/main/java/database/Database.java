@@ -66,6 +66,11 @@ public abstract class Database {
 	
 	public abstract void stopServer();
 
+	/**
+	 * DO NOT USE public for DatabaseTestCase only
+	 * @param consumer
+	 * @return
+	 */
 	public abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
 	
 	protected abstract void createDb() throws SQLException;
