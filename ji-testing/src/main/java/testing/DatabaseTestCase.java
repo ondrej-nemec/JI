@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.After;
 import org.junit.Before;
 
 import database.Database;
@@ -38,24 +37,20 @@ public abstract class DatabaseTestCase extends TestCase {
 	@Before
 	public void before() throws SQLException {
 		database.createDbAndMigrate();
-		database.prepare();
-	}
-	
-	@After
-	public void after() throws SQLException {
-		database.clean();
+		applyDataSet();
 	}
 	
 	protected Database getDatabase() {
 		return database;
 	}
 
-	protected DatabaseMock getDbMock() {
-		return database;
-	}
-
-	protected Database getNestedDatabase() {
-		return database.getNestedDatabase();
+	/**
+	 * protected for test only
+	 * using without REALLY good reason could make troubles
+	 * @throws SQLException 
+	 */
+	protected void applyDataSet() throws SQLException {
+		database.applyDataSet();
 	}
 
 }

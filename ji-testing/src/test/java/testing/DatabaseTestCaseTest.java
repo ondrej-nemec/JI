@@ -3,6 +3,7 @@ package testing;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -17,13 +18,18 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import common.Logger;
+import database.Database;
 import testing.entities.Row;
 import testing.entities.Table;
 
 public class DatabaseTestCaseTest extends DatabaseTestCase {
 
+	private final Database realDatabase;
+	
 	public DatabaseTestCaseTest() {
 		super(getProperties());
+		this.realDatabase = new Database(env.createDbConfig(), mock(Logger.class));
 	}
 	
 	@Before
@@ -31,13 +37,11 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	public void before() throws SQLException {
 		getDatabase().createDbAndMigrate();
 		testDbEmptyOrNotExists();
-		getDbMock().prepare();
+		applyDataSet();
 	}
 	
 	@After
-	@Override
 	public void after() throws SQLException {
-		super.after();
 		testDbEmpty();
 	}	
 	
@@ -82,7 +86,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	
 	private void testDbEmptyOrNotExists() {
 		try {
-			getNestedDatabase().applyQuery((con)->{
+			realDatabase.applyQuery((con)->{
 				testDbEmpty();
 			});
 		} catch (SQLException | RuntimeException e) {
@@ -91,7 +95,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	}
 	
 	private void testDbEmpty() throws SQLException {
-		getNestedDatabase().applyQuery((con)->{
+		realDatabase.applyQuery((con)->{
 			PreparedStatement stat = con.prepareStatement("select * from dbtc");
 			ResultSet res = stat.executeQuery();
 			assertFalse(res.next());
@@ -117,9 +121,10 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("db.login", "root");
 		prop.put("db.password", "");
 		prop.put("db.pathToMigrations", "testing");
+		prop.put("db.poolSize", "3");
 		
 		prop.put("log.logFile", "log.txt");
-		prop.put("log.type", "console");
+		prop.put("log.type", "null");
 		return prop;
 	}
 
