@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -16,85 +15,78 @@ import database.support.FlywayLogger;
 import querybuilder.QueryBuilder;
 import utils.env.DatabaseConfig;
 
-public abstract class Database {
+public class Database {
 	
-	protected final DatabaseConfig config;
+	private final DatabaseConfig config;
 	
-	protected final Logger logger;
+	private final Logger logger;
 	
-	private String connectionString;
+	private final DatabaseInstance instance;
+	
+	protected final ConnectionPool pool;
 
-	public Database(final DatabaseConfig config, final Logger logger) {
+	public Database(DatabaseConfig config, Logger logger) {
+		this(config, false, logger);
+	}
+
+	protected Database(DatabaseConfig config, boolean isTemp, Logger logger) {
 		this.config = config;
 		this.logger = logger;
-		this.connectionString = createConnectionString() + config.schemaName;
+		this.pool = new ConnectionPool(createSchemaConnectionString(), createProperties(), config.poolSize, isTemp);
+		this.instance = createInstance(config.schemaName, logger);
 	}
 	
-	public boolean createDbAndMigrate() {
-		try {
-			createDb();
-			logger.info("DB schema was created");
-
-			migrate();
-			logger.info("All migrations were applied");
-		} catch (SQLException | FlywaySqlException e) {
-			logger.fatal("Create db and migrante fail", e);
-			return false;
+	private DatabaseInstance createInstance(String name, Logger logger) {
+		switch (config.type) {
+		case "derby":
+			return new Derby(getDoubleConsumer(), logger);
+		case "mysql":
+			return new MySql(createDatabaseConnectionString(), createProperties(), name, logger);
+		default:
+			throw new RuntimeException("Unsupported type " + config.type);
 		}
-		return true;
+	}
+	
+	/************ API ***********/
+	
+	public void startServer() {
+		instance.startServer();
+	}
+	
+	public void stopServer() {
+		instance.stopServer();
 	}
 	
 	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
 		getDoubleConsumer().accept(consumer);
 	}
 
+	//TODO optimalize
 	public QueryBuilder getQueryBuilder() {
-		return getQueryBuilder(getDoubleConsumer());
+		return instance.getQueryBuilder(getDoubleConsumer());
 	}
+	
+	/************* CONNECTION **************/
 	
 	protected DoubleConsumer getDoubleConsumer() {
 		return (consumer)->{
-			Connection con = DriverManager.getConnection(connectionString, createProperties());
+			Connection con = pool.getConnection();
 			consumer.accept(con);
-			con.close();
+			pool.returnConnection(con);
 		};
 	}
 	
-	/*** SEPARATOR ***/
+	/********* CONNECTION STRING **********/
 	
-	public abstract void startServer();
-	
-	public abstract void stopServer();
-
-	/**
-	 * DO NOT USE public for DatabaseTestCase only
-	 * @param consumer
-	 * @return
-	 */
-	public abstract QueryBuilder getQueryBuilder(DoubleConsumer consumer);
-	
-	protected abstract void createDb() throws SQLException;
-	
-	/*** SEPARATOR ***/
-	
-	public static Database getDatabase(final DatabaseConfig config, final Logger logger) {
-		switch (config.type) {
-		case "derby":
-			return new Derby(config, logger);
-		case "mysql":
-			return new MySql(config, logger);
-		default:
-			return null;
-		}		
-	}
-
-	/*** SEPARATOR ***/
-	
-	protected String createConnectionString() {
+	private String createDatabaseConnectionString() {
 		return "jdbc:" + config.type + ":" + config.pathOrUrlToLocation + "/";
 	}
 	
-	protected Properties createProperties() {
+	private String createSchemaConnectionString() {
+		return createDatabaseConnectionString() + config.schemaName;
+	}
+	
+	private Properties createProperties() {
 		Properties props = new Properties();
 		props.setProperty("create", "true");
 		props.setProperty("user", config.login);
@@ -104,12 +96,9 @@ public abstract class Database {
 		return props;
 	}
 	
-	protected String getConnectionString() {
-		return connectionString;
-	}
-	
+	// for flyway migrations
 	private String createFullConnectionString() {
-		String con = connectionString;
+		String con = createSchemaConnectionString();
 		Properties p = createProperties();
 		boolean first = true;
 		for(Object property : p.keySet()) {
@@ -123,6 +112,22 @@ public abstract class Database {
 		}
 		
 		return con;
+	}
+	
+	/********* Migration ****************/
+	
+	public boolean createDbAndMigrate() {
+		try {
+			instance.createDb();
+			logger.info("DB schema was created");
+
+			migrate();
+			logger.info("All migrations were applied");
+		} catch (SQLException | FlywaySqlException e) {
+			logger.fatal("Create db and migrante fail", e);
+			return false;
+		}
+		return true;
 	}
 	
 	private void migrate() throws FlywaySqlException {
@@ -140,4 +145,5 @@ public abstract class Database {
 				.load();
 		f.migrate();
 	}
+	
 }

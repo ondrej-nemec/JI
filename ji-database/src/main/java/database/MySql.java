@@ -2,22 +2,32 @@ package database;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import common.Logger;
 import database.mysql.MySqlQueryBuilder;
 import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
-import utils.env.DatabaseConfig;
 
-public class MySql extends Database {
+public class MySql implements DatabaseInstance {
+	
+	private final Logger logger;
+	
+	private final String connectionString;
+	
+	private final Properties property;
+	
+	private final String name;
 
-	public MySql(final DatabaseConfig config, final Logger logger) {
-		super(config, logger);
+	public MySql(String connectionString, Properties property, String name, final Logger logger) {
+		this.logger = logger;
+		this.connectionString = connectionString;
+		this.property = property;
+		this.name = name;
 		try {
-			// Class.forName("com.mysql.jdbc.Driver");
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			logger.warn("MySQL driver could not be registered", e);
+			this.logger.warn("MySQL driver could not be registered", e);
 		}
 	}
 
@@ -32,13 +42,11 @@ public class MySql extends Database {
 	}
 
 	@Override
-	protected void createDb() throws SQLException {
+	public void createDb() throws SQLException {
 		DriverManager
-		.getConnection(
-				createConnectionString(),
-				createProperties()
-		).createStatement()
-		.executeUpdate("CREATE DATABASE IF NOT EXISTS " + config.schemaName);
+    		.getConnection(connectionString, property)
+    		.createStatement()
+    		.executeUpdate("CREATE DATABASE IF NOT EXISTS " + name);
 	}
 
 	@Override

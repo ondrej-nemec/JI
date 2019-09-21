@@ -19,6 +19,8 @@ public class DatabaseConfig {
 	
 	public final String timezone;
 	
+	public final int poolSize;
+	
 	public DatabaseConfig(
 			final String type,
 			final String pathOrUrlToLocation,
@@ -27,7 +29,8 @@ public class DatabaseConfig {
 			final String login,
 			final String password,
 			final String pathToMigrations,
-			final String timezone) {
+			final String timezone,
+			final int poolSize) {
 		this.type = type;
 		this.pathOrUrlToLocation = pathOrUrlToLocation;
 		this.schemaName = schemaName;
@@ -36,6 +39,7 @@ public class DatabaseConfig {
 		this.pathToMigrations = pathToMigrations;
 		this.runOnExternalServer = runOnExternalServer;
 		this.timezone = timezone;
+		this.poolSize = poolSize;
 	}
 
 }

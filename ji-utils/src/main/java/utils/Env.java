@@ -51,7 +51,8 @@ public class Env {
 				getProperty("db.login"),
 				getProperty("db.password"),
 				getProperty("db.pathToMigrations"),
-				getProperty("app.timezone")
+				getProperty("app.timezone"),
+				Integer.parseInt(getProperty("db.poolSize"))
 		);
 	}
 	

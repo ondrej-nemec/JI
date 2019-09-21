@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.Logger;
-import database.MySql;
+import database.Database;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.QueryBuilder;
@@ -25,7 +25,7 @@ public class EndToEndTest {
 	
 	private QueryBuilder builder;
 	
-	private MySql database;
+	private Database database;
 
 	@Before
 	public void before() {
@@ -37,11 +37,12 @@ public class EndToEndTest {
 				"root",
 				"",
 				"migrations",
-				"Europe/Prague"
+				"Europe/Prague",
+				5
 		);
 		
 		Logger logger = mock(Logger.class);		
-		this.database = new MySql(config, logger);
+		this.database = new Database(config, logger);
 		database.createDbAndMigrate();
 		
 		this.builder = database.getQueryBuilder();
