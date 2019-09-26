@@ -5,7 +5,7 @@ import java.util.List;
 
 import database.support.DatabaseRow;
 
-public interface SelectQueryBuilder {
+public interface SelectQueryBuilder extends Parameters<SelectQueryBuilder> {
 
 	SelectQueryBuilder from(String table);
 	
@@ -26,10 +26,6 @@ public interface SelectQueryBuilder {
 	SelectQueryBuilder limit(int limit);
 	
 	SelectQueryBuilder offset(int offset);
-	
-	SelectQueryBuilder addParameter(String value);
-	
-	String getSql();
 	
 	String fetchSingle() throws SQLException;
 	

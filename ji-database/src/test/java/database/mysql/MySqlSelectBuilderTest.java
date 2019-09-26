@@ -11,6 +11,7 @@ import database.support.DoubleConsumer;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import querybuilder.Join;
+import querybuilder.SelectQueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class MySqlSelectBuilderTest {
@@ -18,20 +19,34 @@ public class MySqlSelectBuilderTest {
 	@Test
 	public void testBuilderViaGetSql() {
 		DoubleConsumer mock = mock(DoubleConsumer.class);
-		String sql = new MySqlSelectBuilder(mock, "a.id, a.name, a.FK_id")
+		SelectQueryBuilder builder = new MySqlSelectBuilder(mock, "a.id, a.name, a.FK_id")
 					.from("table_name a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
 					.where("b.id = 1")
-					.andWhere("b.name = 'name'")
-					.orWhere("b.name = 'nname'")
+					.andWhere("b.name = %name")
+					.addParameter("%name", "name")
+					.orWhere("b.name = %nname")
+					.addParameter("%nname", "nname")
 					.groupBy("a.id")
 					.orderBy("a.id DESC")
-					.having("a.id > 10")
+					.having("a.id > %id")
+					.addParameter("%id", 10)
 					.limit(0)
-					.offset(0)
-					.getSql();
+					.offset(0);
 		
 		String expected = "SELECT a.id, a.name, a.FK_id"
+				+ " FROM table_name a"
+				+ " JOIN joined_table b ON a.id = b.id"
+				+ " WHERE b.id = 1"
+				+ " AND b.name = %name"
+				+ " OR (b.name = %nname)"
+				+ " GROUP BY a.id"
+				+ " ORDER BY a.id DESC"
+				+ " HAVING a.id > %id"
+				+ " LIMIT 0"
+				+ " OFFSET 0";
+		
+		String created = "SELECT a.id, a.name, a.FK_id"
 				+ " FROM table_name a"
 				+ " JOIN joined_table b ON a.id = b.id"
 				+ " WHERE b.id = 1"
@@ -43,7 +58,8 @@ public class MySqlSelectBuilderTest {
 				+ " LIMIT 0"
 				+ " OFFSET 0";
 		
-		assertEquals(expected, sql);
+		assertEquals(expected, builder.getSql());
+		assertEquals(created, builder.createSql());
 		verifyNoMoreInteractions(mock);
 	}
 	

@@ -1,10 +1,9 @@
 package database.mysql;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Function;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
@@ -14,73 +13,80 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	private final String query;
 	
-	private final List<String> columns;
-	
-	private final List<String> values;
+	private final Map<String, String> params;
 	
 	private int returned;
 	
 	public MySqlInsertBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
 		this.query = "INSERT INTO " + table;
-		this.columns = new LinkedList<>();
-		this.values = new LinkedList<>();
+		this.params = new HashMap<>();
 	}
 
 	private MySqlInsertBuilder(
 			final DoubleConsumer consumer,
 			final String query,
 			final String partQuery, 
-			final List<String> columns,
-			final List<String> values) {
+			final Map<String, String> params) {
 		super(consumer);
 		this.query = query + " " + partQuery;
-		this.columns = columns;
-		this.values = values;
+		this.params = params;
 	}
 
 	@Override
 	public InsertQueryBuilder addValue(String columnName, String value) {
-		columns.add(columnName);
-		values.add(value);
+		params.put(columnName, String.format("'%s'", value));
+		return this;
+	}
+
+	@Override
+	public InsertQueryBuilder addValue(String columnName, boolean value) {
+		params.put(columnName, Boolean.toString(value));
+		return this;
+	}
+
+	@Override
+	public InsertQueryBuilder addValue(String columnName, int value) {
+		params.put(columnName, Integer.toString(value));
+		return this;
+	}
+
+	@Override
+	public InsertQueryBuilder addValue(String columnName, double value) {
+		params.put(columnName, Double.toString(value));
 		return this;
 	}
 
 	@Override
 	public int execute() throws SQLException {
 		this.consumer.accept((conn)->{
-			PreparedStatement stat = conn.prepareStatement(getSql());
-			for (int i = 0; i < values.size(); i++) {
-				stat.setString(i+1, values.get(i));
-			}			
-			returned = stat.executeUpdate();
+			Statement stat = conn.createStatement();
+			returned = stat.executeUpdate(getSql());
+			stat.close();
 		});
 		return returned;
 	}
 
 	@Override
 	public String getSql() {
-		return query + " " + addColumns() + " " + values();
-	}
-
-
-	private String addColumns() {
-		return getBrackedString(columns.size(), (i)->{return columns.get(i);});
-	}
-
-	private String values() {		
-		return "VALUES " + getBrackedString(values.size(), (i)->{return "?";});
-	}
-	
-	private String getBrackedString(int limit, Function<Integer, String> valueProvider) {
-		String names = "(";
-		for (int i = 0; i < limit; i++) {
-			if (i > 0) {
-				names += ", ";
+		String columns = "(";
+		String values = "VALUES (";
+		
+		boolean first = true;
+		for (String name : params.keySet()) {
+			if (first) {
+				first = false;
+			} else {
+				columns += ", ";
+				values += ", ";
 			}
-			names += valueProvider.apply(i);
+			columns += name;
+			values += params.get(name);
 		}
-		return names + ")";
+		
+		columns += ")";
+		values += ")";
+		return query + " " + columns + " " + values;
 	}
-	
+
 }

@@ -1,9 +1,9 @@
 package database.mysql;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
@@ -17,14 +17,14 @@ public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBu
 	
 	private final String where;
 	
-	private final List<String> params;
+	private final Map<String, String> params;
 	
 	private int returned;
 	
 	public MySqlUpdateBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
 		this.update = "UPDATE " + table;
-		this.params = new LinkedList<>();
+		this.params = new HashMap<>();
 		this.set = "";
 		this.where = "";
 	}
@@ -34,7 +34,7 @@ public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBu
 			final String update,
 			final String set,
 			final String where,
-			final List<String> params) {
+			final Map<String, String> params) {
 		super(consumer);
 		this.update = update;
 		this.set = set;
@@ -68,19 +68,35 @@ public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBu
 	}
 
 	@Override
-	public UpdateQueryBuilder addParameter(String value) {
-		params.add(value);
+	public UpdateQueryBuilder addParameter(String name, boolean value) {
+		params.put(name, value ? "1" : "0");
+		return this;
+	}
+
+	@Override
+	public UpdateQueryBuilder addParameter(String name, int value) {
+		params.put(name, Integer.toString(value));
+		return this;
+	}
+
+	@Override
+	public UpdateQueryBuilder addParameter(String name, double value) {
+		params.put(name, Double.toString(value));
+		return this;
+	}
+
+	@Override
+	public UpdateQueryBuilder addParameter(String name, String value) {
+		params.put(name, String.format("'%s'", value));
 		return this;
 	}
 
 	@Override
 	public int execute() throws SQLException {
 		this.consumer.accept((conn)->{
-			PreparedStatement stat = conn.prepareStatement(getSql());
-			for (int i = 0; i < params.size(); i++) {
-				stat.setString(i+1, params.get(i));
-			}			
-			returned = stat.executeUpdate();
+			Statement stat = conn.createStatement();
+			returned = stat.executeUpdate(createSql());
+			stat.close();
 		});
 		return returned;
 	}
@@ -88,6 +104,16 @@ public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBu
 	@Override
 	public String getSql() {
 		return update + " " + set + " " + where;
+	}
+
+	@Override
+	public String createSql() {
+		String query = getSql();
+		for (String name : params.keySet()) {
+			String value = params.get(name);
+			query = query.replaceAll(name, value);
+		}
+		return query;
 	}
 
 }

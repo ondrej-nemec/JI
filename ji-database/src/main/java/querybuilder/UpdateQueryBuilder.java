@@ -2,7 +2,7 @@ package querybuilder;
 
 import java.sql.SQLException;
 
-public interface UpdateQueryBuilder {
+public interface UpdateQueryBuilder extends Parameters<UpdateQueryBuilder> {
 	
 	UpdateQueryBuilder set(String update);
 	
@@ -11,10 +11,6 @@ public interface UpdateQueryBuilder {
 	UpdateQueryBuilder andWhere(String where);
 	
 	UpdateQueryBuilder orWhere(String where);
-	
-	UpdateQueryBuilder addParameter(String value);
-	
-	String getSql();
 	
 	int execute() throws SQLException;
 }

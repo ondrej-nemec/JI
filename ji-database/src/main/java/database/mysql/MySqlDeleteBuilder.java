@@ -1,9 +1,9 @@
 package database.mysql;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
@@ -13,17 +13,21 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 	
 	private final String query;
 	
-	private final List<String> params;
+	private final Map<String, String> params;
 	
 	private int returned;
 	
 	public MySqlDeleteBuilder(final DoubleConsumer consumer, final String table) {
 		super(consumer);
 		this.query = "DELETE FROM " + table;
-		this.params = new LinkedList<>();
+		this.params = new HashMap<>();
 	}
 	
-	private MySqlDeleteBuilder(final DoubleConsumer consumer, final String query, final String queryPart, final List<String> params) {
+	private MySqlDeleteBuilder(
+			final DoubleConsumer consumer,
+			final String query, 
+			final String queryPart,
+			final Map<String, String> params) {
 		super(consumer);
 		this.query = query + " " + queryPart;
 		this.params = params;
@@ -45,25 +49,51 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 	}
 
 	@Override
-	public DeleteQueryBuilder addParameter(String value) {
-		params.add(value);
+	public DeleteQueryBuilder addParameter(String name, boolean value) {
+		params.put(name, value ? "1" : "0");
+		return this;
+	}
+
+	@Override
+	public DeleteQueryBuilder addParameter(String name, int value) {
+		params.put(name, Integer.toString(value));
+		return this;
+	}
+
+	@Override
+	public DeleteQueryBuilder addParameter(String name, double value) {
+		params.put(name, Double.toString(value));
+		return this;
+	}
+
+	@Override
+	public DeleteQueryBuilder addParameter(String name, String value) {
+		params.put(name, String.format("'%s'", value));
 		return this;
 	}
 
 	@Override
 	public int execute() throws SQLException {
 		this.consumer.accept((conn)->{
-			PreparedStatement stat = conn.prepareStatement(query);
-			for (int i = 0; i < params.size(); i++) {
-				stat.setString(i+1, params.get(i));
-			}			
-			returned = stat.executeUpdate();
+			Statement stat = conn.createStatement();
+			returned = stat.executeUpdate(createSql());
+			stat.close();
 		});
 		return returned;
 	}
 
 	@Override
 	public String getSql() {
+		return query;
+	}
+
+	@Override
+	public String createSql() {
+		String query = getSql();
+		for (String name : params.keySet()) {
+			String value = params.get(name);
+			query = query.replaceAll(name, value);
+		}
 		return query;
 	}
 

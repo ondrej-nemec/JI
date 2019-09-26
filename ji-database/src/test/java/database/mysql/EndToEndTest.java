@@ -72,14 +72,14 @@ public class EndToEndTest {
 	@Test
 	public void testExecuteUpdate() throws SQLException {
 		int code = builder.update("update_table")
-			   .set("name=?")
-			   .where("id > ?")
-			   .andWhere("name=?")
-			   .orWhere("name=?")
-			   .addParameter("setted name")
-			   .addParameter("1")
-			   .addParameter("set it")
-			   .addParameter("this too")
+			   .set("name=%set")
+			   .where("id > %id")
+			   .andWhere("name=%whereName")
+			   .orWhere("name=%orName")
+			   .addParameter("%set", "setted name")
+			   .addParameter("%id", 1)
+			   .addParameter("%whereName", "set it")
+			   .addParameter("%orName", "this too")
 			   .execute();
 		assertEquals(code, 2);
 		
@@ -108,12 +108,12 @@ public class EndToEndTest {
 	@Test
 	public void testExecuteDelete() throws SQLException {
 		int code = builder.delete("delete_table")
-			   .where("id > ?")
-			   .andWhere("name=?")
-			   .orWhere("name=?")
-			   .addParameter("1")
-			   .addParameter("delete this")
-			   .addParameter("this too")
+			   .where("id > %id")
+			   .andWhere("name=%whereName")
+			   .orWhere("name=%orWhere")
+			   .addParameter("%id", 1)
+			   .addParameter("%whereName", "delete this")
+			   .addParameter("%orWhere", "this too")
 			   .execute();
 		assertEquals(code, 2);
 		
@@ -159,18 +159,18 @@ public class EndToEndTest {
 		SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 			   .from("select_table a")
 			   .join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
-			   .where("a.id > ?")
-			   .andWhere("a.name = ?")
-			   .orWhere("b.name = ?")
+			   .where("a.id > %id")
+			   .andWhere("a.name = %a_name")
+			   .orWhere("b.name = %b_name")
 			   .groupBy("a.id")
-			   .having("a.id < ?")
+			   .having("a.id < %a_id")
 			   .orderBy("a.id ASC")
 			   .limit(2)
 			   .offset(0)
-			   .addParameter("1")
-			   .addParameter("name_a")
-			   .addParameter("name_b")
-			   .addParameter("6");
+			   .addParameter("%id", 1)
+			   .addParameter("%a_name", "name_a")
+			   .addParameter("%b_name", "name_b")
+			   .addParameter("%a_id", 6);
 		
 		String expectedSingle = "2";
 		DatabaseRow expectedRow = new DatabaseRow();

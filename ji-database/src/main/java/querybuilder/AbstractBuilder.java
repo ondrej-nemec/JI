@@ -14,7 +14,7 @@ public abstract class AbstractBuilder {
 	}
 	
 	public abstract String getSql();
-	
+
 	protected void applyQuery(ConnectionConsumer conConsumer) throws SQLException {
 		consumer.accept(conConsumer);
 	}
