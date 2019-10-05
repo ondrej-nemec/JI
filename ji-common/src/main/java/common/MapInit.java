@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import common.tuple.Tuple2;
+import common.structures.Tuple2;
 
 /**
  * For quick initialization use:

@@ -1,4 +1,4 @@
-package common;
+package common.structures;
 
 public interface ThrowingConsumer<T, E extends Throwable> {
 

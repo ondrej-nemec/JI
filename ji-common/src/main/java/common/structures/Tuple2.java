@@ -1,4 +1,4 @@
-package common.tuple;
+package common.structures;
 
 public class Tuple2<F, S> {
 

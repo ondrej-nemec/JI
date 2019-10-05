@@ -2,7 +2,7 @@ package database.support;
 
 import java.sql.SQLException;
 
-import common.ThrowingConsumer;
+import common.structures.ThrowingConsumer;
 
 public interface DoubleConsumer extends ThrowingConsumer<ConnectionConsumer, SQLException> {
 
