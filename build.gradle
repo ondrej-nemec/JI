@@ -12,6 +12,7 @@ dependencies {
 	compile project(':ji-utils')
 	compile project(':ji-translate')
 	compile project(':ji-acl')
+	compile project(':ji-communication')
 	compile project(':ji-database')
 	compile project(':ji-testing')
 }
