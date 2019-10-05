@@ -7,7 +7,8 @@ public enum Method {
 	POST("POST"),
 	GET("GET"),
 	PUT("PUT"),
-	DELETE("DELETE");
+	DELETE("DELETE"),
+	PATCH("PATCH");
 	
 	private final String method;
 	
@@ -28,6 +29,7 @@ public enum Method {
 		case "get": return Method.GET;
 		case "put": return Method.PUT;
 		case "delete": return Method.DELETE;
+		case "patch": return Method.PATCH;
 		default: throw new LogicException("Unsupported method: " + method);
 		}
 	}
