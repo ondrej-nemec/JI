@@ -6,10 +6,3 @@
 Package supplyes common.
 
 ## Contain:
-* Common classes
-* Utils
-* Access control list
-* Translator
-* Logging
-* Database
-* Database tests
