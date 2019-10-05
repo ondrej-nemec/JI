@@ -25,5 +25,10 @@ public class RestAPIResponse {
 	public String getContent() {
 		return content;
 	}
+	
+	@Override
+	public String toString() {
+		return code + " " + message + "\r\n" + content;
+	}
 
 }
