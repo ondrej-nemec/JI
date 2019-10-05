@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>REST API test</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<h1>Forms</h1>
+
+	<h2>GET</h2>
+	<form action="http://localhost:10123/aaa/bbb" method="GET">
+		<input type="hidden" name="hidden1" value="hiden_value">
+		<input type="text" name="text1">
+		<input type="submit" name="submit1" value="Send">
+	</form>
+	<br>
+	<button id="get">Send asynchroniously</button>
+
+	<h2>POST</h2>
+	<form action="http://localhost:10123/aaa/bbb" method="POST">
+		<input type="hidden" name="hidden2" value="hiden_value">
+		<input type="text" name="text2">
+		<input type="submit" name="submit2" value="Send">
+	</form>
+	<br>
+	<button id="post">Send asynchroniously</button>
+
+	<h2>PUT</h2>
+	<button id="put">Send asynchroniously</button>
+
+	<h2>DELETE</h2>
+	<button id="delete">Send asynchroniously</button>
+
+
+	<script type="text/javascript">
+
+		$('button').each(function(index) {
+			var method = $( this ).attr('id');
+			$(this).click(function() {
+				$.ajax({
+				  url: "http://localhost:10123/aaa/bbb",
+				  type: method,
+				  // data only for post
+				  data: { 
+				    text: method, 
+				    hidden: "ajax"
+				  },
+				  success: function(response) {
+				     console.log(response);
+				  },
+				  error: function(xhr) {
+				  	console.log(xhr);
+				    // alert(xhr);
+				  }
+				});
+			});
+		});
+
+		
+	</script>
+
+</body>
+</html>
