@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 
 import common.Console;
 import common.Os;
+import logging.LoggerConfig;
 import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
-import utils.env.LoggerConfig;
 
 public class NativeLoggerProvider {
 	

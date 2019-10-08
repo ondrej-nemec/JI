@@ -1,31 +1,32 @@
-package utils.env;
-
-import utils.enums.AppMode;
+package logging;
 
 public class LoggerConfig {
 	
-	private final AppMode appMode;
-	
 	private final String pathToLogs;
 	
-	private final String loggerType;
+	private final LoggerType type;
+	
+	// private final LoggerMedium medias;
 
-	public LoggerConfig(AppMode appMode, String loggerType, String pathToLogs) {
-		this.appMode = appMode;
+	private final LogLevel minLogLevel;
+	
+	public LoggerConfig(String pathToLogs, LoggerType type, LogLevel minLogLevel) {
+		super();
 		this.pathToLogs = pathToLogs;
-		this.loggerType = loggerType;
-	}
-
-	public AppMode getAppMode() {
-		return appMode;
+		this.type = type;
+		this.minLogLevel = minLogLevel;
 	}
 
 	public String getPathToLogs() {
 		return pathToLogs;
 	}
 
-	public String getLoggerType() {
-		return loggerType;
-	};	
+	public LoggerType getType() {
+		return type;
+	}
+
+	public LogLevel getMinLogLevel() {
+		return minLogLevel;
+	}
 
 }

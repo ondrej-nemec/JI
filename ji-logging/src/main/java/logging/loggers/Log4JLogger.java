@@ -8,7 +8,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Priority;
 
-import utils.env.LoggerConfig;
+import logging.LogLevel;
+import logging.LoggerConfig;
 
 public class Log4JLogger implements common.Logger {
 	
@@ -16,19 +17,9 @@ public class Log4JLogger implements common.Logger {
 	
 	public Log4JLogger(final String name, final LoggerConfig config) {
 		Logger.getRootLogger().getLoggerRepository().resetConfiguration();
-		Priority priority = null;
-		switch (config.getAppMode()) {
-			case TEST:
-				priority = Level.OFF;
-				break;
-			case DEV:
-				priority = Level.ALL;
-				break;
-			case PROD:
-				priority = Level.INFO;
-				break;
-			default: throw new RuntimeException("Unsupported app mode " + config.getAppMode());
-		}
+		Priority priority = levelToPriority(config.getMinLogLevel());
+		
+		// TODO switch medium
 		Logger.getRootLogger().addAppender(createConsoleAppender(priority));
 		Logger.getRootLogger().addAppender(createFileAppender(priority, config.getPathToLogs() + "/" + name + "/" + name + ".log"));
 		
@@ -85,6 +76,8 @@ public class Log4JLogger implements common.Logger {
 		log.fatal(message, t);
 	}
 	
+	/************* APPENDERS **********************/
+	
 	private ConsoleAppender createConsoleAppender(final Priority priority) {
 		//TODO two appenders - err a out
 		ConsoleAppender console = new ConsoleAppender();
@@ -112,4 +105,18 @@ public class Log4JLogger implements common.Logger {
 		return email;
 	}
 */
+	
+	/****************************************************/
+
+	private Priority levelToPriority(LogLevel minLogLevel) {
+		switch (minLogLevel) {
+    		case NO_LOG: return Level.OFF;
+    		case FATAL: return Level.FATAL;
+    		case ERROR: return Level.ERROR;
+    		case WARNING: return Level.WARN;
+    		case INFO: return Level.INFO;
+    		case DEBUG: return Level.DEBUG;
+    		default: return Level.ALL;
+		}
+	}
 }
