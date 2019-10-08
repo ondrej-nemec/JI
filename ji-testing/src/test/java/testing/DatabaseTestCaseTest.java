@@ -28,7 +28,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	private final Database realDatabase;
 	
 	public DatabaseTestCaseTest() {
-		super(getProperties());
+		super(getProperties(), mock(Logger.class));
 		this.realDatabase = new Database(env.createDbConfig(), mock(Logger.class));
 	}
 	

@@ -6,29 +6,29 @@ import java.util.Properties;
 
 import org.junit.Before;
 
+import common.Logger;
 import database.Database;
-import logging.LoggerFactory;
 import testing.entities.Table;
 
 public abstract class DatabaseTestCase extends TestCase {
 
 	private final DatabaseMock database;
 
-	public DatabaseTestCase(final Properties properties) {
+	public DatabaseTestCase(final Properties properties, Logger logger) {
 		super(properties);
 		this.database = new DatabaseMock(
 				env.createDbConfig(),
 				getDataSet(),
-				new LoggerFactory(env.createLogConfig()).getLogger(DatabaseMock.class)
+				logger
 		);
 	}
 
-	public DatabaseTestCase(final String propertiesPath) {
+	public DatabaseTestCase(final String propertiesPath, Logger logger) {
 		super(propertiesPath);
 		this.database = new DatabaseMock(
 				env.createDbConfig(),
-				getDataSet(), 
-				new LoggerFactory(env.createLogConfig()).getLogger(DatabaseMock.class)
+				getDataSet(),
+				logger
 		);
 	}	
 
