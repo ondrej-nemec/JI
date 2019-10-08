@@ -9,7 +9,6 @@ import java.util.Properties;
 import common.Os;
 import common.emuns.SupportedOs;
 import utils.env.DatabaseConfig;
-import utils.env.LoggerConfig;
 import utils.enums.AppMode;
 
 public class Env {
@@ -55,7 +54,7 @@ public class Env {
 				Integer.parseInt(getProperty("db.poolSize"))
 		);
 	}
-	
+	/*
 	public LoggerConfig createLogConfig() {
 		return new LoggerConfig(
 				mode,
@@ -63,7 +62,7 @@ public class Env {
 				getProperty("log.logFile")
 		);
 	}
-	
+	*/
 	protected Properties getProperties() {
 		return properties;
 	}
