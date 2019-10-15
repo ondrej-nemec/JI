@@ -32,6 +32,11 @@ public class Console {
 		return scanner.nextLine();
 	}
 	
+	public synchronized String in(String query) {
+		out(query);
+		return in();
+	}
+	
 	public synchronized void clear() {
 		System.out.print("\033[H\033[2J");  
 		System.out.flush();
