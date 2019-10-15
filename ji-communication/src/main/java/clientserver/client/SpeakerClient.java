@@ -19,7 +19,7 @@ private final Logger logger;
     private BufferedWriter bw;
     private Socket socket;
     
-    public SpeakerClient(String ip, int port, int connectionTimeout, int readTimeout, Logger logger) throws UnknownHostException, IOException {
+    public SpeakerClient(String ip, int port, int connectionTimeout, int readTimeout, String charset, Logger logger) throws UnknownHostException, IOException {
         this.logger = logger;
         
         this.socket = new Socket(ip, port);
@@ -27,8 +27,8 @@ private final Logger logger;
         
         logger.info("Client running");
         
-        this.br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        this.br = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+        this.bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
         logger.info("Connected to server");
     }
     

@@ -18,6 +18,7 @@ public class ClientTest {
 					10123,
 					10000,
 					60000,
+					"UTF-8",
 					new LoggerImpl()
 			);
 			
@@ -35,7 +36,7 @@ public class ClientTest {
 		/***************************************/
 		
 		RestApiClient client = new RestApiClient(
-			"http://" + ip + ":" + 10123 + "/server",
+			"http://" + ip + ":" + 10123 + "/server", "UTF-8",
 			new LoggerImpl()
 		);
 		

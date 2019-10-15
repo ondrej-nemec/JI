@@ -18,9 +18,9 @@ public class ServerTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 60000, apiResponse(), new LoggerImpl());
+			Server server = Server.create(10123, 5, 60000, apiResponse(), "UTF-8",  new LoggerImpl());
 			/*/
-			Server server = Server.create(10123, 5, 60000, speakerFunction(), new LoggerImpl());
+			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/
 			
 			server.start();

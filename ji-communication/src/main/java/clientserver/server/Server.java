@@ -27,6 +27,9 @@ public class Server {
     private final ScheduledExecutorService sheduled;
     
     private int threadCount = 0;
+    private final int maxThread;
+    
+    private final String charset;
     
     private final ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> servant;
     
@@ -34,16 +37,18 @@ public class Server {
     		int threadPool,
     		long readTimeout,
     		CreateRestAPIResponce response,
+    		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, readTimeout, new RestAPI(response, logger), logger);
+    	return new Server(port, threadPool, readTimeout, new RestAPI(response, logger), charset, logger);
     }
     
     public static Server create(int port,
     		int threadPool,
     		long readTimeout,
     		Function<String, String> response,
+    		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), logger);
+    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), charset, logger);
     }
     
     protected Server(
@@ -51,11 +56,14 @@ public class Server {
     		int threadPool,
     		long readTimeout,
     		ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> servant,
+    		String charset,
     		Logger logger) throws IOException {
         this.executor = Executors.newFixedThreadPool(threadPool);
         this.sheduled = Executors.newScheduledThreadPool(1);
         this.logger = logger;
         this.servant = servant;
+        this.charset = charset;
+        this.maxThread = threadPool;
         
         this.serverSocket = new ServerSocket(port);
         serverSocket.setSoTimeout((int)readTimeout);
@@ -82,10 +90,11 @@ public class Server {
     private Runnable getClientChacker() {
         return ()->{
             try {
-                logger.info("Waiting for client...");
+            	logger.info(String.format("Waiting for client(%d/%d)...", threadCount, maxThread));
                 executor.execute(
                     serveToClient(
-                        serverSocket.accept() // accept is blocking
+                        serverSocket.accept(), // accept is blocking
+                        charset
                     )
                 );
             } catch (SocketTimeoutException e) {
@@ -98,7 +107,7 @@ public class Server {
     
     /*************************/
     
-    private Runnable serveToClient(Socket clientSocket) {
+    private Runnable serveToClient(Socket clientSocket, String charset) {
         return ()->{
             threadCount++;
             
@@ -106,15 +115,16 @@ public class Server {
                 "Client " + threadCount + " connected - " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()
             );
             
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), charset));
+            		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), charset));) {
             	servant.accept(br, bw);
             } catch (SocketTimeoutException e) {
                 logger.warn("Connection closed - reading timeout");
             } catch (IOException e) {
                 logger.fatal("Reading from socket", e);
-            }
-            threadCount--;
+            } finally {
+				threadCount--;
+			}
             
             logger.info(
                 "Client " + threadCount + " disconnected - " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()

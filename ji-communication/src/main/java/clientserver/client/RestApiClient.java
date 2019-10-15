@@ -17,9 +17,12 @@ public class RestApiClient {
 	
 	private final Logger logger;
 	
-	public RestApiClient(String serverUrl, Logger logger) {
+	private final String charset;
+	
+	public RestApiClient(String serverUrl, String charset, Logger logger) {
 		this.serverUrl = serverUrl;
 		this.logger = logger;
+		this.charset = charset;
 	}
 	
 	public RestAPIResponse get(String uri, Properties header, Properties params) throws IOException {
@@ -57,7 +60,7 @@ public class RestApiClient {
 		logger.debug("Response code: " + responseCode);
 		logger.debug("Response message: " + resposeMessage);
 				
-		try (BufferedReader br  = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+		try (BufferedReader br  = new BufferedReader(new InputStreamReader(con.getInputStream(), charset))) {
 			String inputLine;
 			while ((inputLine = br.readLine()) != null) {
 				response.append(inputLine);
