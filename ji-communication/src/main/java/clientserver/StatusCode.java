@@ -2,6 +2,7 @@ package clientserver;
 
 public enum StatusCode {
 	
+	CONTINUE(100, "CONTINUE"),
 	OK(200, "OK");
 	
 	private final String description;
