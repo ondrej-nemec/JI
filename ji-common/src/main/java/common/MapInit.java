@@ -41,9 +41,12 @@ public class MapInit<K, V> {
 	}
 
 	@SafeVarargs
-	public static Map<Object, Object> properties(Tuple2<Object, Object>... kvs) {
-		MapInit<Object, Object> init = new MapInit<>();
-		return init.map(new Properties(), kvs);
+	public static Properties properties(Tuple2<?, ?>... kvs) {
+		Properties prop = new Properties();
+		for (Tuple2<?, ?> tuple : kvs) {
+			prop.put(tuple._1(), tuple._2());
+		}
+		return prop;
 	}
 	
 }
