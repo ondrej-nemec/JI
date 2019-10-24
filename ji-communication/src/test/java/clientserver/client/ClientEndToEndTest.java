@@ -6,7 +6,7 @@ import java.util.Properties;
 import clientserver.LoggerImpl;
 import common.Console;
 
-public class ClientTest {
+public class ClientEndToEndTest {
 	
 	private static final Console console = new Console();
 	private static String ip = "127.0.0.1";

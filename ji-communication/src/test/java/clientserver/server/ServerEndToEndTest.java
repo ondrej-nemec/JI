@@ -11,7 +11,7 @@ import clientserver.Method;
 import clientserver.StatusCode;
 import common.Console;
 
-public class ServerTest {
+public class ServerEndToEndTest {
 	
 	public final static Console console = new Console();
 
