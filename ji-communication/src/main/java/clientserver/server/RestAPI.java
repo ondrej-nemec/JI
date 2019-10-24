@@ -1,8 +1,11 @@
 package clientserver.server;
 
+import static common.MapInit.*;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import clientserver.Method;
@@ -11,10 +14,27 @@ import common.structures.ThrowingBiConsumer;
 
 public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> {
 	
-	private final static String METHOD = "method";
-	private final static String PROTOCOL = "protocol";
-	private final static String URL = "url";
-	private final static String FULL_URL = "full-url";
+	protected final static String METHOD = "method";
+	protected final static String PROTOCOL = "protocol";
+	protected final static String URL = "url";
+	protected final static String FULL_URL = "full-url";
+	
+	private final static Map<String, String> ESCAPE = 
+			//TODO
+			hashMap(
+					t("%3F", "?"),
+					t("%2F", "/"),
+					t("%5C", "\\\\"), // escaped \
+					t("%3A", ":"),
+					t("\\+", " "), // escaped +
+					t("%3D", "="),
+					t("%26", "&"),
+					t("%25", "%")/*,
+					t("", "\""),
+					t("", "'"),
+					t("", "+"),
+					t("", "*")*/
+			);
 	
 	private final Logger logger;
 
@@ -80,7 +100,8 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
         parsePayload(params, payload.toString());
 	}
 
-	private void parseFirst(Properties request, Properties params, String first) {
+	/** protected for test only */
+	protected void parseFirst(Properties request, Properties params, String first) {
 		String[] methods = first.split(" ");
 		if (methods.length != 3) {
 			logger.warn("Invalid request: " + first);
@@ -98,16 +119,26 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 		request.put(PROTOCOL, methods[2]);
 	}
 
-	private void parseHeaderLine(String line, Properties header) {
+	/** protected for test only */
+	protected void parseHeaderLine(String line, Properties header) {
+		if (line.isEmpty()) {
+			return;
+		}
 		String[] property = line.split(": ", 2);
-    	if (property.length == 2) {
+    	if (property.length == 2 && ! property[0].isEmpty()) {
     		header.put(property[0], property[1]);
+    	} else if (property.length == 1){
+    		header.put(property[0], "");
     	} else {
-    		logger.warn("Invalid line " + line);
+    		logger.warn("Invalid header line " + line);
     	}
 	}
 
-	private void parsePayload(Properties prop, String payload) {
+	/** protected for test only */
+	protected void parsePayload(Properties prop, String payload) {
+		if (payload.isEmpty()) {
+			return;
+		}
 		String[] params = payload.split("\\&");
 		for (String param : params) {
 			String[] keyValue = param.split("=");
@@ -119,6 +150,14 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 	    		logger.warn("Invalid param " + param);
 	    	}
 		}
+	}
+	
+	/** protected for test only */
+	protected String unEscapeText(String text) {
+		for (String key : ESCAPE.keySet()) {
+			text = text.replaceAll(key, ESCAPE.get(key));
+		}
+		return text;
 	}
 
 }
