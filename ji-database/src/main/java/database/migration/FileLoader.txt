@@ -1,0 +1,140 @@
+package test.loader;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Properties;
+
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+
+import testLoader.Printer;
+
+public class FileLoader {
+	
+	/*
+	 * mimi classpath - bez package, bez path
+	 */
+	
+	private boolean external;
+	
+	public void loadResources(String folder) throws 
+				IOException,
+				InstantiationException,
+				IllegalAccessException,
+				ClassNotFoundException {
+		File dir = getFiles(folder);
+		Properties loadedFiles = new Properties();
+		
+		// get files
+		File[] files = dir.listFiles();
+		
+		// filter files and compile
+		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		for (File file : files) {
+			addResource(file, loadedFiles, compiler);
+		}
+		
+		// load *.class files to class loader
+		URL[] urls = new URL[]{dir.toURI().toURL()};
+		try (URLClassLoader loader = new URLClassLoader(urls);) {
+			migrate(loadedFiles, loader, folder);
+		}
+	}
+	
+	private void addResource(File file, Properties loadedFiles, JavaCompiler compiler) {
+		String name = justName(file.getName());
+		String type = getExcension(file.getName());
+		loadedFiles.put(name, type);
+		
+		switch (type) {
+			case "sql": break;
+			case "class": break;
+			case "java":
+				compiler.run(null, null, null, file.getPath()); // streamy, kam se zapisuje
+				break;
+			default: break;
+		}
+	}
+	
+	/**************/
+	
+	private void migrate(Properties prop, ClassLoader loader, String path) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		for (Object name : prop.keySet()) {
+			String type = prop.getProperty(name.toString()).toString();
+			switch (type) {
+			case "sql": 
+				migrate(name.toString());
+				break;
+			case "class":
+			case "java":
+				migrate(loader, name.toString(), external ? "" : path + ".");
+				break;
+			default: break;
+			}
+		}
+	}
+	
+	private void migrate(String fileName) {
+		// TODO
+	}
+	
+	private void migrate(ClassLoader loader, String name, String path) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Printer p = (Printer)loader.loadClass(path + name).newInstance();
+		p.print(p.getClass() + " working");
+	}
+	
+	/**************/
+	
+	private File getFiles(String folder) throws IOException {
+		try {
+			File file = getResourceFolderFiles(folder);
+			if (file.listFiles() != null) {
+				external = false;
+				return file;
+			}
+		} catch (Exception e) { /* ignored */ }
+		
+		try {
+			File file = getFolderFiles(folder);
+			if (file.listFiles() != null) {
+				external = true;
+				return file;
+			}
+		} catch (Exception e) { /* ignored */ }
+		
+		throw new IOException("No folder founded: " + folder);
+	}
+	
+	private File getResourceFolderFiles(String folder) {
+	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+	    URL url = loader.getResource(folder);
+	    String path = url.getPath();
+	    return new File(path);
+	}
+	
+	private File getFolderFiles(String folder) {
+		return new File(folder);
+	}
+	
+	/*************/
+	
+	private String getExcension(String fileName) {
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+		   return fileName.substring(i+1);
+		}
+		return "";
+	}
+	
+	private String justName(String fileName) {
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+		   return fileName.substring(0, i);
+		}
+		return fileName;
+		// return fileName.replace("/", ".");
+	}
+
+}
