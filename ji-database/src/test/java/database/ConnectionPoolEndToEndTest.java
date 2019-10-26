@@ -1,4 +1,4 @@
-package querybuilder.mysql;
+package database;
 
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
@@ -8,7 +8,7 @@ import common.Logger;
 import database.Database;
 import utils.env.DatabaseConfig;
 
-public class DbPoolTest {
+public class ConnectionPoolEndToEndTest {
 
 	public static void main(String[] args) {
 		DatabaseConfig config = new DatabaseConfig(
