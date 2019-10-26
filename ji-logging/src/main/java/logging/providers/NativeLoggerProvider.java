@@ -9,7 +9,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import common.Console;
-import common.Os;
+import common.OperationSystem;
 import logging.LoggerConfig;
 import text.BufferedWriterFactory;
 import text.plaintext.PlainTextCreator;
@@ -91,7 +91,7 @@ public class NativeLoggerProvider {
 				+ record.getSourceClassName() + " : "
 				+ record.getSourceMethodName() + " : "
 				+ record.getParameters();
-		result += Os.getNewLine();		
+		result += OperationSystem.NEW_LINE;
 		return result + record.getLevel() + ": " + record.getMessage();
 	}
 }

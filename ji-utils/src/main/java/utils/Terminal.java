@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
-import common.Os;
 import common.Logger;
+import common.OperationSystem;
 import text.BufferedReaderFactory;
 import text.plaintext.PlainTextLoader;
 
@@ -19,11 +19,11 @@ public class Terminal {
 	}
 	
 	public int runFile(final Consumer<String> stdOut, final Consumer<String> stdErr, final String fileName) {
-		return run(stdOut, stdErr, fileName + Os.getCliExtention());
+		return run(stdOut, stdErr, fileName + OperationSystem.CLI_EXTENSION);
 	}
 	
 	public int runCommand(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
-		return run(stdOut, stdErr, Os.getPreCommand() + command);
+		return run(stdOut, stdErr, OperationSystem.PRE_COMMAND + command);
 	}
 	
 	private int run(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {

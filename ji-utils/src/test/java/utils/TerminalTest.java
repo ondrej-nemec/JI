@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
-import common.Os;
+import common.OperationSystem;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -19,13 +19,13 @@ public class TerminalTest {
 	
 	private String path =
 			"src" +
-			Os.getPathSeparator() +
+			OperationSystem.PATH_SEPARATOR +
 			"test" +
-			Os.getPathSeparator() +
-			"resource" +
-			Os.getPathSeparator() +
+			OperationSystem.PATH_SEPARATOR +
+			"resources" +
+			OperationSystem.PATH_SEPARATOR +
 			"terminal" +
-			Os.getPathSeparator();
+			OperationSystem.PATH_SEPARATOR;
 	
 	private String stdErr = "";
 	
