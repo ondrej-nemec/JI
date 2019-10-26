@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import common.Logger;
 import database.Database;
+import database.DatabaseConfig;
 import testing.entities.Row;
 import testing.entities.Table;
 
@@ -29,7 +30,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	
 	public DatabaseTestCaseTest() {
 		super(getProperties(), mock(Logger.class));
-		this.realDatabase = new Database(env.createDbConfig(), mock(Logger.class));
+		this.realDatabase = new Database(createConfig(), mock(Logger.class));
 	}
 	
 	@Before
@@ -126,6 +127,21 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		prop.put("log.logFile", "log.txt");
 		prop.put("log.type", "null");
 		return prop;
+	}
+
+	@Override
+	protected DatabaseConfig createConfig() {
+		return new DatabaseConfig(
+				env.getProperty("db.type"),
+				env.getProperty("db.pathOrUrl"),
+				env.getProperty("db.externalServer").equals("1") ? true : false,
+				env.getProperty("db.schema"),
+				env.getProperty("db.login"),
+				env.getProperty("db.password"),
+				env.getProperty("db.pathToMigrations"),
+				env.getProperty("app.timezone"),
+				Integer.parseInt(env.getProperty("db.poolSize"))
+		);
 	}
 
 }

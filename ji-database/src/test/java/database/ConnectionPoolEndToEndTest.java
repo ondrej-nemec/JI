@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 
 import common.Logger;
 import database.Database;
-import utils.env.DatabaseConfig;
 
 public class ConnectionPoolEndToEndTest {
 

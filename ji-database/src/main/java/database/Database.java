@@ -13,7 +13,6 @@ import database.support.ConnectionConsumer;
 import database.support.DoubleConsumer;
 import database.support.FlywayLogger;
 import database.support.QueryBuilderConsumer;
-import utils.env.DatabaseConfig;
 
 public class Database {
 	

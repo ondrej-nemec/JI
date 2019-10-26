@@ -15,10 +15,10 @@ import org.junit.Test;
 
 import common.Logger;
 import database.Database;
+import database.DatabaseConfig;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
-import utils.env.DatabaseConfig;
 
 public class EndToEndTest {
 	

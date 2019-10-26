@@ -6,11 +6,11 @@ import java.util.List;
 
 import common.Logger;
 import database.Database;
+import database.DatabaseConfig;
 import database.support.DoubleConsumer;
 import querybuilder.InsertQueryBuilder;
 import testing.entities.Row;
 import testing.entities.Table;
-import utils.env.DatabaseConfig;
 
 public class DatabaseMock extends Database {
 	

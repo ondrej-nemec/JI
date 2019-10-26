@@ -1,4 +1,4 @@
-package utils.env;
+package database;
 
 
 public class DatabaseConfig {

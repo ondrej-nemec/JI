@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import utils.env.DatabaseConfig;
 import utils.enums.AppMode;
 
 public class Env {
@@ -30,47 +29,12 @@ public class Env {
 		if (property == null)
 			throw new RuntimeException("Property was not found. Key: " + key + ", in " + mode + " mode.");
 		return property;		
-		/*
-		switch(key) {
-			case "APPDATA": return generateAppData() + getProp("app.name") + "/";
-			default: return getProp(key);
-		}
-		*/
 	}
-	
-	public DatabaseConfig createDbConfig() {
-		return new DatabaseConfig(
-				getProperty("db.type"),
-				getProperty("db.pathOrUrl"),
-				getProperty("db.externalServer").equals("1") ? true : false,
-				getProperty("db.schema"),
-				getProperty("db.login"),
-				getProperty("db.password"),
-				getProperty("db.pathToMigrations"),
-				getProperty("app.timezone"),
-				Integer.parseInt(getProperty("db.poolSize"))
-		);
-	}
-	/*
-	public LoggerConfig createLogConfig() {
-		return new LoggerConfig(
-				mode,
-				getProperty("log.type"),
-				getProperty("log.logFile")
-		);
-	}
-	*/
+
 	protected Properties getProperties() {
 		return properties;
 	}
-/*	
-	private String generateAppData() {
-		return Os.getOs() == SupportedOs.LINUX
-				? System.getenv("HOME")
-				: System.getenv("APPDATA")
-			 + "/";
-	}
-*/
+
 	private Properties loadProperties(final String path) throws IOException {
 		Properties prop = new Properties();
 		
