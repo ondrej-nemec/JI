@@ -7,7 +7,7 @@ import java.util.Properties;
 import java.util.function.Function;
 
 import clientserver.LoggerImpl;
-import clientserver.Method;
+import clientserver.HttpMethod;
 import clientserver.StatusCode;
 import common.Console;
 
@@ -60,7 +60,7 @@ public class ServerEndToEndTest {
 			}
 			
 			@Override
-			public void accept(Method method, String url, String fullUrl, String protocol, Properties header,
+			public void accept(HttpMethod method, String url, String fullUrl, String protocol, Properties header,
 					Properties params) {
 				// not implemented
 			}

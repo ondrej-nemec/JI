@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
-import clientserver.Method;
+import clientserver.HttpMethod;
 import common.Logger;
 
 public class RestApiClient {
@@ -26,22 +26,22 @@ public class RestApiClient {
 	}
 	
 	public RestAPIResponse get(String uri, Properties header, Properties params) throws IOException {
-		return send(uri, Method.GET, header, params);
+		return send(uri, HttpMethod.GET, header, params);
 	}
 	
 	public RestAPIResponse post(String uri, Properties header, Properties params) throws IOException {
-		return send(uri, Method.POST, header, params);
+		return send(uri, HttpMethod.POST, header, params);
 	}
 	
 	public RestAPIResponse put(String uri, Properties header, Properties params) throws IOException {
-		return send(uri, Method.PUT, header, params);
+		return send(uri, HttpMethod.PUT, header, params);
 	}
 	
 	public RestAPIResponse delete(String uri, Properties header, Properties params) throws IOException {
-		return send(uri, Method.DELETE, header, params);
+		return send(uri, HttpMethod.DELETE, header, params);
 	}
 	
-	private RestAPIResponse send(String uri, Method method, Properties header, Properties params) throws IOException {
+	private RestAPIResponse send(String uri, HttpMethod method, Properties header, Properties params) throws IOException {
 		String url = createUrl(serverUrl, uri, method, params);		
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -69,8 +69,8 @@ public class RestApiClient {
 		return new RestAPIResponse(responseCode, resposeMessage, response.toString());
 	}
 
-	private void addParams(Method method, Properties params, HttpURLConnection con) throws IOException {
-		if (!Method.GET.equals(method)) {
+	private void addParams(HttpMethod method, Properties params, HttpURLConnection con) throws IOException {
+		if (!HttpMethod.GET.equals(method)) {
 			con.setDoOutput(true);
 			try (OutputStream os = con.getOutputStream();) {
 				StringBuilder b = new StringBuilder();
@@ -84,8 +84,8 @@ public class RestApiClient {
 		}
 	}
 
-	private String createUrl(String server, String uri, Method method, Properties params) {
-		if (Method.GET.equals(method)) {
+	private String createUrl(String server, String uri, HttpMethod method, Properties params) {
+		if (HttpMethod.GET.equals(method)) {
 			StringBuilder b = new StringBuilder();
 			params.forEach((name, value)->{
 				if (b.toString().isEmpty()) {

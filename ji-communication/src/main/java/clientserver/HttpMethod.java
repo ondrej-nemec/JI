@@ -1,6 +1,6 @@
 package clientserver;
 
-public enum Method {
+public enum HttpMethod {
 
 	POST("POST"),
 	GET("GET"),
@@ -10,7 +10,7 @@ public enum Method {
 	
 	private final String method;
 	
-	private Method(String method) {
+	private HttpMethod(String method) {
 		this.method = method;
 	}
 	

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-import clientserver.Method;
+import clientserver.HttpMethod;
 import common.Logger;
 import common.structures.ThrowingBiConsumer;
 
@@ -54,7 +54,7 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 		
 		logger.debug("Request: " + request);
 		response.accept(
-				Method.valueOf(request.getProperty(METHOD).toUpperCase()),
+				HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
 				request.getProperty(URL),
 				request.getProperty(FULL_URL),
 				request.getProperty(PROTOCOL),
