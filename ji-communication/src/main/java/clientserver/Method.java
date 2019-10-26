@@ -1,7 +1,5 @@
 package clientserver;
 
-import common.exceptions.LogicException;
-
 public enum Method {
 
 	POST("POST"),
@@ -20,18 +18,4 @@ public enum Method {
 	public String toString() {
 		return method;
 	}
-	
-	public static Method fromString(String method) {
-		if (method == null)
-			throw new LogicException("Method could not be null");
-		switch (method.toLowerCase()) {
-		case "post": return Method.POST;
-		case "get": return Method.GET;
-		case "put": return Method.PUT;
-		case "delete": return Method.DELETE;
-		case "patch": return Method.PATCH;
-		default: throw new LogicException("Unsupported method: " + method);
-		}
-	}
-	
 }

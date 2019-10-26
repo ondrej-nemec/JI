@@ -54,7 +54,7 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 		
 		logger.debug("Request: " + request);
 		response.accept(
-				Method.fromString(request.getProperty(METHOD)),
+				Method.valueOf(request.getProperty(METHOD).toUpperCase()),
 				request.getProperty(URL),
 				request.getProperty(FULL_URL),
 				request.getProperty(PROTOCOL),
