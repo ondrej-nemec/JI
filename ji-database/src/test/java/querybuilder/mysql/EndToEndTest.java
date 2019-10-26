@@ -1,4 +1,4 @@
-package database.mysql;
+package querybuilder.mysql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,13 +17,10 @@ import common.Logger;
 import database.Database;
 import database.support.DatabaseRow;
 import querybuilder.Join;
-import querybuilder.QueryBuilder;
 import querybuilder.SelectQueryBuilder;
 import utils.env.DatabaseConfig;
 
 public class EndToEndTest {
-	
-	private QueryBuilder builder;
 	
 	private Database database;
 
@@ -44,8 +41,6 @@ public class EndToEndTest {
 		Logger logger = mock(Logger.class);		
 		this.database = new Database(config, logger);
 		database.createDbAndMigrate();
-		
-		this.builder = database.getQueryBuilder();
 	}
 	
 	@After
@@ -65,23 +60,27 @@ public class EndToEndTest {
 	}
 	
 	@Test
-	public void testQueryBuilderInstance() {
-		assertTrue(builder instanceof MySqlQueryBuilder);
+	public void testQueryBuilderInstance() throws SQLException {
+		database.applyBuilder((builder) -> {
+			assertTrue(builder instanceof MySqlQueryBuilder);
+		});
 	}	
 	
 	@Test
 	public void testExecuteUpdate() throws SQLException {
-		int code = builder.update("update_table")
-			   .set("name=%set")
-			   .where("id > %id")
-			   .andWhere("name=%whereName")
-			   .orWhere("name=%orName")
-			   .addParameter("%set", "setted name")
-			   .addParameter("%id", 1)
-			   .addParameter("%whereName", "set it")
-			   .addParameter("%orName", "this too")
-			   .execute();
-		assertEquals(code, 2);
+		database.applyBuilder((builder) -> {
+			int code = builder.update("update_table")
+				   .set("name=%set")
+				   .where("id > %id")
+				   .andWhere("name=%whereName")
+				   .orWhere("name=%orName")
+				   .addParameter("%set", "setted name")
+				   .addParameter("%id", 1)
+				   .addParameter("%whereName", "set it")
+				   .addParameter("%orName", "this too")
+				   .execute();
+			assertEquals(code, 2);
+		});
 		
 		database.applyQuery((conn)->{
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM update_table");
@@ -107,7 +106,8 @@ public class EndToEndTest {
 
 	@Test
 	public void testExecuteDelete() throws SQLException {
-		int code = builder.delete("delete_table")
+		database.applyBuilder((builder) -> {
+			int code = builder.delete("delete_table")
 			   .where("id > %id")
 			   .andWhere("name=%whereName")
 			   .orWhere("name=%orWhere")
@@ -115,7 +115,8 @@ public class EndToEndTest {
 			   .addParameter("%whereName", "delete this")
 			   .addParameter("%orWhere", "this too")
 			   .execute();
-		assertEquals(code, 2);
+			assertEquals(code, 2);
+		});
 		
 		database.applyQuery((conn)->{
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM delete_table");
@@ -134,11 +135,13 @@ public class EndToEndTest {
 	
 	@Test
 	public void testExecuteInsert() throws SQLException {
-		int code = builder.insert("insert_table")
+		database.applyBuilder((builder) -> {
+			int code = builder.insert("insert_table")
 				.addValue("id", "1")
 				.addValue("name", "column_name")
 			    .execute();
-		assertEquals(code, 1);
+			assertEquals(code, 1);
+		});
 		
 		database.applyQuery((conn)->{
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM insert_table");
@@ -156,7 +159,8 @@ public class EndToEndTest {
 	
 	@Test
 	public void testExecuteSelect() throws SQLException {
-		SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
+		database.applyBuilder((builder) -> {
+			SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 			   .from("select_table a")
 			   .join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
 			   .where("a.id > %id")
@@ -172,26 +176,27 @@ public class EndToEndTest {
 			   .addParameter("%b_name", "name_b")
 			   .addParameter("%a_id", 6);
 		
-		String expectedSingle = "2";
-		DatabaseRow expectedRow = new DatabaseRow();
-		expectedRow.addValue("a_id", "2");
-		expectedRow.addValue("b_id", "3");
-		expectedRow.addValue("a_name", "name 2");
-		expectedRow.addValue("b_name", "name_b");
-		
-
-		DatabaseRow expectedRow2 = new DatabaseRow();
-		expectedRow2.addValue("a_id", "4");
-		expectedRow2.addValue("b_id", "5");
-		expectedRow2.addValue("a_name", "name_a");
-		expectedRow2.addValue("b_name", "name 5");
-		
-		assertEquals(expectedSingle, res.fetchSingle());
-		assertEquals(expectedRow, res.fetchRow());
-		assertEquals(
-				Arrays.asList(expectedRow, expectedRow2),
-				res.fetchAll()
-		);
+    		String expectedSingle = "2";
+    		DatabaseRow expectedRow = new DatabaseRow();
+    		expectedRow.addValue("a_id", "2");
+    		expectedRow.addValue("b_id", "3");
+    		expectedRow.addValue("a_name", "name 2");
+    		expectedRow.addValue("b_name", "name_b");
+    		
+    
+    		DatabaseRow expectedRow2 = new DatabaseRow();
+    		expectedRow2.addValue("a_id", "4");
+    		expectedRow2.addValue("b_id", "5");
+    		expectedRow2.addValue("a_name", "name_a");
+    		expectedRow2.addValue("b_name", "name 5");
+    		
+    		assertEquals(expectedSingle, res.fetchSingle());
+    		assertEquals(expectedRow, res.fetchRow());
+    		assertEquals(
+    				Arrays.asList(expectedRow, expectedRow2),
+    				res.fetchAll()
+    		);
+		});		
 	}
 	
 }

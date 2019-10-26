@@ -1,13 +1,13 @@
 package database;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import common.Logger;
-import database.mysql.MySqlQueryBuilder;
-import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
+import querybuilder.mysql.MySqlQueryBuilder;
 
 public class MySql implements DatabaseInstance {
 	
@@ -50,8 +50,8 @@ public class MySql implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
-		return new MySqlQueryBuilder(consumer);
+	public QueryBuilder getQueryBuilder(Connection connection) {
+		return new MySqlQueryBuilder(connection);
 	}
 
 }

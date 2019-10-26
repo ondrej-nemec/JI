@@ -1,18 +1,19 @@
-package database.mysql;
+package querybuilder.mysql;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.sql.Connection;
+
 import org.junit.Test;
 
-import database.support.DoubleConsumer;
 import querybuilder.DeleteQueryBuilder;
 
 public class MySqlDeleteBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
-		DoubleConsumer mock = mock(DoubleConsumer.class);
+		Connection mock = mock(Connection.class);
 		DeleteQueryBuilder builder = new MySqlDeleteBuilder(mock, "table_name")
 					.where("id > 1")
 					.andWhere("id < %id")

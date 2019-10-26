@@ -1,8 +1,8 @@
 package database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
-import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
 
 public interface DatabaseInstance {
@@ -13,6 +13,6 @@ public interface DatabaseInstance {
 	
 	void createDb() throws SQLException;
 	
-	QueryBuilder getQueryBuilder(DoubleConsumer consumer);
+	QueryBuilder getQueryBuilder(Connection connection);
 
 }

@@ -1,13 +1,14 @@
-package database.mysql;
+package querybuilder.mysql;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.sql.Connection;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import database.support.DoubleConsumer;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import querybuilder.Join;
@@ -18,7 +19,7 @@ public class MySqlSelectBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
-		DoubleConsumer mock = mock(DoubleConsumer.class);
+		Connection mock = mock(Connection.class);
 		SelectQueryBuilder builder = new MySqlSelectBuilder(mock, "a.id, a.name, a.FK_id")
 					.from("table_name a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")

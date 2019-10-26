@@ -12,7 +12,7 @@ import testing.entities.Table;
 
 public abstract class DatabaseTestCase extends TestCase {
 
-	private final DatabaseMock database;
+	protected final DatabaseMock database;
 
 	public DatabaseTestCase(final Properties properties, Logger logger) {
 		super(properties);

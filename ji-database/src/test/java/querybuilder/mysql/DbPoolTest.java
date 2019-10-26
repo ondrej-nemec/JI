@@ -1,4 +1,4 @@
-package database.mysql;
+package querybuilder.mysql;
 
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;

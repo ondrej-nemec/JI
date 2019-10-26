@@ -1,13 +1,13 @@
 package querybuilder;
 
-import database.support.DoubleConsumer;
+import java.sql.Connection;
 
 public abstract class QueryBuilder {
 
-	protected DoubleConsumer consumer;
+	protected Connection connection;
 	
-	public QueryBuilder(final DoubleConsumer consumer) {
-		this.consumer = consumer;
+	public QueryBuilder(final Connection connection) {
+		this.connection = connection;
 	}
 	
 	public abstract DeleteQueryBuilder delete(String table);

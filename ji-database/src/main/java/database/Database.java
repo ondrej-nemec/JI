@@ -12,7 +12,7 @@ import common.Logger;
 import database.support.ConnectionConsumer;
 import database.support.DoubleConsumer;
 import database.support.FlywayLogger;
-import querybuilder.QueryBuilder;
+import database.support.QueryBuilderConsumer;
 import utils.env.DatabaseConfig;
 
 public class Database {
@@ -21,7 +21,7 @@ public class Database {
 	
 	private final Logger logger;
 	
-	private final DatabaseInstance instance;
+	protected final DatabaseInstance instance;
 	
 	protected final ConnectionPool pool;
 
@@ -32,7 +32,7 @@ public class Database {
 	protected Database(DatabaseConfig config, boolean isTemp, Logger logger) {
 		this.config = config;
 		this.logger = logger;
-		this.pool = new ConnectionPool(createSchemaConnectionString(), createProperties(), config.poolSize, isTemp);
+		this.pool = new ConnectionPool(createSchemaConnectionString(), createProperties(), config.poolSize, logger, isTemp);
 		this.instance = createInstance(config.schemaName, logger);
 	}
 	
@@ -60,13 +60,14 @@ public class Database {
 	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
 		getDoubleConsumer().accept(consumer);
 	}
-
-	//TODO optimalize
-	public QueryBuilder getQueryBuilder() {
-		return instance.getQueryBuilder(getDoubleConsumer());
-	}
 	
-	/************* CONNECTION **************/
+	public void applyBuilder(final QueryBuilderConsumer consumer) throws SQLException {
+		getDoubleConsumer().accept((con)->{
+			consumer.accept(instance.getQueryBuilder(con));
+		});
+	}
+
+	/***************************/
 	
 	protected DoubleConsumer getDoubleConsumer() {
 		return (consumer)->{

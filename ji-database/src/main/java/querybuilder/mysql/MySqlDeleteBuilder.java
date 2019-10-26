@@ -1,11 +1,11 @@
-package database.mysql;
+package querybuilder.mysql;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
 import querybuilder.DeleteQueryBuilder;
 
@@ -17,35 +17,35 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 	
 	private int returned;
 	
-	public MySqlDeleteBuilder(final DoubleConsumer consumer, final String table) {
-		super(consumer);
+	public MySqlDeleteBuilder(final Connection connection, final String table) {
+		super(connection);
 		this.query = "DELETE FROM " + table;
 		this.params = new HashMap<>();
 	}
 	
 	private MySqlDeleteBuilder(
-			final DoubleConsumer consumer,
+			final Connection connection,
 			final String query, 
 			final String queryPart,
 			final Map<String, String> params) {
-		super(consumer);
+		super(connection);
 		this.query = query + " " + queryPart;
 		this.params = params;
 	}
 
 	@Override
 	public DeleteQueryBuilder where(String where) {
-		return new MySqlDeleteBuilder(this.consumer, query, "WHERE " + where, params);
+		return new MySqlDeleteBuilder(this.connection, query, "WHERE " + where, params);
 	}
 
 	@Override
 	public DeleteQueryBuilder andWhere(String where) {
-		return new MySqlDeleteBuilder(this.consumer, query, "AND " + where, params);
+		return new MySqlDeleteBuilder(this.connection, query, "AND " + where, params);
 	}
 
 	@Override
 	public DeleteQueryBuilder orWhere(String where) {
-		return new MySqlDeleteBuilder(this.consumer, query, "OR (" + where + ")", params);
+		return new MySqlDeleteBuilder(this.connection, query, "OR (" + where + ")", params);
 	}
 
 	@Override
@@ -74,11 +74,9 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 
 	@Override
 	public int execute() throws SQLException {
-		this.consumer.accept((conn)->{
-			Statement stat = conn.createStatement();
-			returned = stat.executeUpdate(createSql());
-			stat.close();
-		});
+		Statement stat = connection.createStatement();
+		returned = stat.executeUpdate(createSql());
+		stat.close();
 		return returned;
 	}
 

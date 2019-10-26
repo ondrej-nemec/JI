@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import common.Logger;
+
 public class ConnectionPool {
 	
 	private final static int WAIT_TIME = 30;
@@ -21,16 +23,20 @@ public class ConnectionPool {
 	
 	private final Properties prop;
 	
-	public ConnectionPool(String connectionString, Properties prop, int size, boolean temp) {
+	private final Logger logger;
+	
+	public ConnectionPool(String connectionString, Properties prop, int size, Logger logger, boolean temp) {
 		this.size = size;
 		this.isTemp = temp;
 		this.prop = prop;
 		this.connectionString = connectionString;
 		this.pool = new HashMap<>();
+		this.logger = logger;
 	}
 	
 	public Connection getConnection() throws SQLException {		
 		while (pool.size() >= size) {
+			logger.debug("Connection pool is busy, waiting.");
 			try {Thread.sleep(WAIT_TIME);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		

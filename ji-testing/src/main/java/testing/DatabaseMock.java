@@ -30,20 +30,14 @@ public class DatabaseMock extends Database {
 	}
 
 	public void applyDataSet() throws SQLException {
-		applyQuery((connection)->{
+		applyBuilder((querybuilder)->{
 			for(Table table : tables) {
 				for(Row row : table.getRows()) {
-					try {
-						InsertQueryBuilder builder = getQueryBuilder().insert(table.getName());
-						
-						for (String key : row.getColumns().keySet()) {
-							builder = builder.addValue(key, row.getColumns().get(key));
-						}
-						
-						builder.execute();
-					} catch (SQLException e) {
-						throw new RuntimeException("SQLException", e);
-					}
+					InsertQueryBuilder builder = querybuilder.insert(table.getName());
+    				for (String key : row.getColumns().keySet()) {
+    					builder = builder.addValue(key, row.getColumns().get(key));
+    				}
+    				builder.execute();
 				}
 			}
 		});

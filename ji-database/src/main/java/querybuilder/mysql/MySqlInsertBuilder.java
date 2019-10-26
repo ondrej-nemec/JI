@@ -1,11 +1,11 @@
-package database.mysql;
+package querybuilder.mysql;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import database.support.DoubleConsumer;
 import querybuilder.AbstractBuilder;
 import querybuilder.InsertQueryBuilder;
 
@@ -17,18 +17,18 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 	
 	private int returned;
 	
-	public MySqlInsertBuilder(final DoubleConsumer consumer, final String table) {
-		super(consumer);
+	public MySqlInsertBuilder(final Connection connection, final String table) {
+		super(connection);
 		this.query = "INSERT INTO " + table;
 		this.params = new HashMap<>();
 	}
 
 	private MySqlInsertBuilder(
-			final DoubleConsumer consumer,
+			final Connection connection,
 			final String query,
 			final String partQuery, 
 			final Map<String, String> params) {
-		super(consumer);
+		super(connection);
 		this.query = query + " " + partQuery;
 		this.params = params;
 	}
@@ -59,11 +59,9 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	@Override
 	public int execute() throws SQLException {
-		this.consumer.accept((conn)->{
-			Statement stat = conn.createStatement();
-			returned = stat.executeUpdate(getSql());
-			stat.close();
-		});
+		Statement stat = connection.createStatement();
+		returned = stat.executeUpdate(getSql());
+		stat.close();
 		return returned;
 	}
 

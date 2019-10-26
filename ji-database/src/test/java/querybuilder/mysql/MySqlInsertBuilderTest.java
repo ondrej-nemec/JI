@@ -1,19 +1,20 @@
-package database.mysql;
+package querybuilder.mysql;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.sql.Connection;
+
 import org.junit.Test;
 
-import database.support.DoubleConsumer;
 import querybuilder.InsertQueryBuilder;
 
 public class MySqlInsertBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
-		DoubleConsumer mock = mock(DoubleConsumer.class);
+		Connection mock = mock(Connection.class);
 		InsertQueryBuilder builder = new MySqlInsertBuilder(mock, "table_name")
 					.addValue("column1", "value1")
 					.addValue("column2", 1);

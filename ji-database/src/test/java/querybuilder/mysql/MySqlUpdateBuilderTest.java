@@ -1,4 +1,4 @@
-package database.mysql;
+package querybuilder.mysql;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;

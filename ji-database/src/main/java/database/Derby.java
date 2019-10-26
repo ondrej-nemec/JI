@@ -1,11 +1,12 @@
 package database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import common.Logger;
-import database.mysql.MySqlQueryBuilder;
 import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
+import querybuilder.mysql.MySqlQueryBuilder;
 import utils.Terminal;
 
 public class Derby implements DatabaseInstance {
@@ -43,8 +44,8 @@ public class Derby implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder(DoubleConsumer consumer) {
-		return new MySqlQueryBuilder(consumer);
+	public QueryBuilder getQueryBuilder(Connection connection) {
+		return new MySqlQueryBuilder(connection);
 	}
 
 }
