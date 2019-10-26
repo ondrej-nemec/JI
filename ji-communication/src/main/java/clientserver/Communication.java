@@ -26,7 +26,7 @@ public class Communication {
             bw.write(message);
             bw.write(NEW_LINE);
         }
-        bw.write(NEW_LINE);
+       // bw.write(NEW_LINE); // is it nessesery ??
         bw.flush();
     }
 	
