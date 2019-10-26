@@ -1,4 +1,4 @@
-package database.migration;
+package migration;
 
 import querybuilder.QueryBuilder;
 
