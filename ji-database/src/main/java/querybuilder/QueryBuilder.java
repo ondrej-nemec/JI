@@ -18,4 +18,26 @@ public abstract class QueryBuilder {
 	
 	public abstract SelectQueryBuilder select(String select);
 	
+	/***********************/
+	
+	public abstract ExecuteQueryBuilder deleteTable(String table);
+	
+	public abstract CreateTableQueryTable createTable(String name);
+	
+	public abstract AlterTableQueryBuilder alterTable(String name);
+	
+	/***********************/
+	
+	public abstract ExecuteQueryBuilder deleteView(String table);
+	
+	public abstract CreateViewQueryTable createView(String name);
+	
+	public abstract CreateViewQueryTable alterView(String name);
+	
+	/***********************/
+	
+	public abstract ExecuteQueryBuilder createIndex(String name, String table, String... colums);
+	
+	public abstract ExecuteQueryBuilder deleteIndex(String name, String table);
+
 }
