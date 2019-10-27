@@ -6,46 +6,38 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import querybuilder.AbstractBuilder;
 import querybuilder.DeleteQueryBuilder;
 
-public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBuilder {
+public class MySqlDeleteBuilder implements DeleteQueryBuilder {
 	
-	private final String query;
+	private final StringBuilder query;
 	
 	private final Map<String, String> params;
 	
-	private int returned;
+	private final Connection connection;
 	
 	public MySqlDeleteBuilder(final Connection connection, final String table) {
-		super(connection);
-		this.query = "DELETE FROM " + table;
+		this.connection = connection;
+		this.query = new StringBuilder("DELETE FROM " + table);
 		this.params = new HashMap<>();
-	}
-	
-	private MySqlDeleteBuilder(
-			final Connection connection,
-			final String query, 
-			final String queryPart,
-			final Map<String, String> params) {
-		super(connection);
-		this.query = query + " " + queryPart;
-		this.params = params;
 	}
 
 	@Override
 	public DeleteQueryBuilder where(String where) {
-		return new MySqlDeleteBuilder(this.connection, query, "WHERE " + where, params);
+		query.append(" WHERE " + where);
+		return this;
 	}
 
 	@Override
 	public DeleteQueryBuilder andWhere(String where) {
-		return new MySqlDeleteBuilder(this.connection, query, "AND " + where, params);
+		query.append(" AND " + where);
+		return this;
 	}
 
 	@Override
 	public DeleteQueryBuilder orWhere(String where) {
-		return new MySqlDeleteBuilder(this.connection, query, "OR (" + where + ")", params);
+		query.append(" OR (" + where + ")");
+		return this;
 	}
 
 	@Override
@@ -74,15 +66,14 @@ public class MySqlDeleteBuilder extends AbstractBuilder implements DeleteQueryBu
 
 	@Override
 	public int execute() throws SQLException {
-		Statement stat = connection.createStatement();
-		returned = stat.executeUpdate(createSql());
-		stat.close();
-		return returned;
+		try (Statement stat = connection.createStatement();) {
+			return stat.executeUpdate(createSql());
+		}
 	}
 
 	@Override
 	public String getSql() {
-		return query;
+		return query.toString();
 	}
 
 	@Override

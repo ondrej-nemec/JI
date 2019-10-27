@@ -15,12 +15,12 @@ public interface Parameters<B> {
 	}
 	
 	/**
-	 * @return SQL string with auxiliary names for variables
+	 * @return SQL string where are auxiliary names for variables
 	 */
 	String getSql();
 	
 	/**
-	 * @return SQL string with auxiliary names replaced with values
+	 * @return SQL string where auxiliary names are replaced with values
 	 */
 	String createSql();
 

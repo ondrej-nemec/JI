@@ -6,31 +6,20 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import querybuilder.AbstractBuilder;
 import querybuilder.InsertQueryBuilder;
 
-public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBuilder {
+public class MySqlInsertBuilder implements InsertQueryBuilder {
 
 	private final String query;
 	
 	private final Map<String, String> params;
 	
-	private int returned;
+	private final Connection connection;
 	
 	public MySqlInsertBuilder(final Connection connection, final String table) {
-		super(connection);
+		this.connection = connection;
 		this.query = "INSERT INTO " + table;
 		this.params = new HashMap<>();
-	}
-
-	private MySqlInsertBuilder(
-			final Connection connection,
-			final String query,
-			final String partQuery, 
-			final Map<String, String> params) {
-		super(connection);
-		this.query = query + " " + partQuery;
-		this.params = params;
 	}
 
 	@Override
@@ -59,10 +48,9 @@ public class MySqlInsertBuilder extends AbstractBuilder implements InsertQueryBu
 
 	@Override
 	public int execute() throws SQLException {
-		Statement stat = connection.createStatement();
-		returned = stat.executeUpdate(getSql());
-		stat.close();
-		return returned;
+		try (Statement stat = connection.createStatement();) {
+			return stat.executeUpdate(getSql());
+		}
 	}
 
 	@Override

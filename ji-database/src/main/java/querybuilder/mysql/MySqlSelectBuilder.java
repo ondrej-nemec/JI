@@ -10,91 +10,81 @@ import java.util.List;
 import java.util.Map;
 
 import database.support.DatabaseRow;
-import querybuilder.AbstractBuilder;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 
-public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBuilder {
+public class MySqlSelectBuilder implements SelectQueryBuilder {
 
-	private final String query;
+	private final StringBuilder query;
 	
 	private final Map<String, String> params;
 	
-	private String single;
-	
-	private DatabaseRow row;
-	
-	private List<DatabaseRow> rows;
+	private final Connection connection;
 	
 	public MySqlSelectBuilder(final Connection connection, final String select) {
-		super(connection);
-		this.query = "SELECT " + select;
+		this.connection = connection;
+		this.query = new StringBuilder("SELECT " + select);
 		this.params = new HashMap<>();
-	}
-	
-	private MySqlSelectBuilder(
-			final Connection connection,
-			final String query,
-			final String partQuery,
-			final Map<String, String> params) {
-		super(connection);
-		this.query = query + " " + partQuery;
-		this.params = params;
 	}
 
 	@Override
 	public SelectQueryBuilder from(String table) {
-		return new MySqlSelectBuilder(this.connection, query, "FROM " + table, params);
+		query.append(" FROM " + table);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder join(String table, Join join, String on) {
-		return new MySqlSelectBuilder(
-				this.connection,
-				query,
-				joinToString(join) +" " + table + " ON " + on,
-				params
-		);
+		query.append(" " + joinToString(join) +" " + table + " ON " + on);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder where(String where) {
-		return new MySqlSelectBuilder(this.connection, query, "WHERE " + where, params);
+		query.append(" WHERE " + where);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder andWhere(String where) {
-		return new MySqlSelectBuilder(this.connection, query, "AND " + where, params);
+		query.append(" AND " + where);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder orWhere(String where) {
-		return new MySqlSelectBuilder(this.connection, query, "OR (" + where + ")", params);
+		query.append(" OR (" + where + ")");
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder orderBy(String orderBy) {
-		return new MySqlSelectBuilder(this.connection, query, "ORDER BY " + orderBy, params);
+		query.append(" ORDER BY " + orderBy);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder groupBy(String groupBy) {
-		return new MySqlSelectBuilder(this.connection, query, "GROUP BY " + groupBy, params);
+		query.append(" GROUP BY " + groupBy);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder having(String having) {
-		return new MySqlSelectBuilder(this.connection, query, "HAVING " + having, params);
+		query.append(" HAVING " + having);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder limit(int limit) {
-		return new MySqlSelectBuilder(this.connection, query, "LIMIT " + limit, params);
+		query.append(" LIMIT " + limit);
+		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder offset(int offset) {
-		return new MySqlSelectBuilder(this.connection, query, "OFFSET " + offset, params);
+		query.append(" OFFSET " + offset);
+		return this;
 	}
 
 	@Override
@@ -123,7 +113,7 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 
 	@Override
 	public String getSql() {
-		return query;
+		return query.toString();
 	}
 
 	@Override
@@ -138,49 +128,47 @@ public class MySqlSelectBuilder extends AbstractBuilder implements SelectQueryBu
 
 	@Override
 	public String fetchSingle() throws SQLException {
-		Statement stat = connection.createStatement();
-		ResultSet res  = stat.executeQuery(createSql());
-		if (res.next()) {
-			single = res.getString(1);
+		try (Statement stat = connection.createStatement(); ResultSet res  = stat.executeQuery(createSql());) {
+			String result = null;
+			if (res.next()) {
+				result = res.getString(1);
+    		}
+    		return result;
 		}
-		stat.close();
-		return single;
-	}
+	 }
 
 	@Override
 	public DatabaseRow fetchRow() throws SQLException {
-		Statement stat = connection.createStatement();
-		ResultSet res  = stat.executeQuery(createSql());
-		row = new DatabaseRow();
-		if (res.next()) {
-			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
-				row.addValue(
-					res.getMetaData().getColumnLabel(i),
-					res.getString(i)
-				);
-			}
+		try (Statement stat = connection.createStatement(); ResultSet res  = stat.executeQuery(createSql());) {
+			DatabaseRow row = new DatabaseRow();
+    		if (res.next()) {
+    			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
+    				row.addValue(
+    					res.getMetaData().getColumnLabel(i),
+    					res.getString(i)
+    				);
+    			}
+    		}
+    		return row;
 		}
-		stat.close();
-		return row;
 	}
 
 	@Override
 	public List<DatabaseRow> fetchAll() throws SQLException {
-		Statement stat = connection.createStatement();
-		ResultSet res  = stat.executeQuery(createSql());
-		rows = new LinkedList<>();
-		while (res.next()) {
-			DatabaseRow row = new DatabaseRow();
-			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
-				row.addValue(
-					res.getMetaData().getColumnLabel(i),
-					res.getString(i)
-				);
-			}
-			rows.add(row);
+		try (Statement stat = connection.createStatement(); ResultSet res  = stat.executeQuery(createSql());) {
+			List<DatabaseRow> rows = new LinkedList<>();
+    		while (res.next()) {
+    			DatabaseRow row = new DatabaseRow();
+    			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
+    				row.addValue(
+    					res.getMetaData().getColumnLabel(i),
+    					res.getString(i)
+    				);
+    			}
+    			rows.add(row);
+    		}		
+    		return rows;
 		}
-		stat.close();		
-		return rows;
 	}
 	
 	protected String joinToString(final Join join) {

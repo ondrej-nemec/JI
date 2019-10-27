@@ -6,65 +6,51 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import querybuilder.AbstractBuilder;
 import querybuilder.UpdateQueryBuilder;
 
-public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBuilder {
+public class MySqlUpdateBuilder implements UpdateQueryBuilder {
 
 	private final String update;
 	
-	private final String set;
-	
-	private final String where;
+	private final StringBuilder set;
 	
 	private final Map<String, String> params;
 	
-	private int returned;
+	private final Connection connection;
 	
 	public MySqlUpdateBuilder(final Connection connection, final String table) {
-		super(connection);
+		this.connection = connection;
 		this.update = "UPDATE " + table;
+		this.set = new StringBuilder();
 		this.params = new HashMap<>();
-		this.set = "";
-		this.where = "";
-	}
-
-	private MySqlUpdateBuilder(
-			final Connection connection,
-			final String update,
-			final String set,
-			final String where,
-			final Map<String, String> params) {
-		super(connection);
-		this.update = update;
-		this.set = set;
-		this.where = where;
-		this.params = params;
 	}
 
 	@Override
 	public UpdateQueryBuilder set(String set) {
-		if (this.set.equals("")) {
-			set = "SET " + set;
+		if (this.set.toString().isEmpty()) {
+			this.set.append(" SET " + set);
 		} else {
-			set = this.set + ", " + set;
+			this.set.append(", " + set);
 		}
-		return new MySqlUpdateBuilder(this.connection, update, set, where, params);
+		return this;
 	}
 
 	@Override
 	public UpdateQueryBuilder where(String where) {
-		return new MySqlUpdateBuilder(this.connection, update, set, "WHERE " + where, params);
+		set.append(" WHERE " + where);
+		return this;
 	}
 
 	@Override
 	public UpdateQueryBuilder andWhere(String where) {
-		return new MySqlUpdateBuilder(this.connection, update, set, this.where + " AND " + where, params);
+		set.append(" AND " + where);
+		return this;
 	}
 
 	@Override
 	public UpdateQueryBuilder orWhere(String where) {
-		return new MySqlUpdateBuilder(this.connection, update, set, this.where + " OR (" + where + ")", params);
+		set.append( " OR (" + where + ")");
+		return this;
 	}
 
 	@Override
@@ -93,15 +79,14 @@ public class MySqlUpdateBuilder extends AbstractBuilder implements UpdateQueryBu
 
 	@Override
 	public int execute() throws SQLException {
-		Statement stat = connection.createStatement();
-		returned = stat.executeUpdate(createSql());
-		stat.close();
-		return returned;
+		try (Statement stat = connection.createStatement();) {
+			return stat.executeUpdate(createSql());
+		}
 	}
 
 	@Override
 	public String getSql() {
-		return update + " " + set + " " + where;
+		return update + set;
 	}
 
 	@Override
