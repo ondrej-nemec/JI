@@ -17,4 +17,6 @@ public interface AlterTableQueryBuilder {
 	AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type);
 	
 	void execute();
+	
+	String getSql();
 }

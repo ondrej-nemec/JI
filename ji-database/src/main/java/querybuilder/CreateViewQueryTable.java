@@ -1,6 +1,6 @@
 package querybuilder;
 
-public interface CreateViewQueryTable {
+public interface CreateViewQueryTable extends Parameters<CreateViewQueryTable> {
 	
 	CreateViewQueryTable select(String param);
 
@@ -25,5 +25,7 @@ public interface CreateViewQueryTable {
 	CreateViewQueryTable offset(int offset);
 	
 	void execute();
+	
+	String getSql();
 	
 }

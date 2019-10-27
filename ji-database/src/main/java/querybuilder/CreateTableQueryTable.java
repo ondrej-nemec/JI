@@ -10,4 +10,6 @@ public interface CreateTableQueryTable {
 	
 	void execute();
 	
+	String getSql();
+	
 }
