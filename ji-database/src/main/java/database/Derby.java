@@ -13,28 +13,29 @@ public class Derby implements DatabaseInstance {
 
 	private final Terminal terminal;
 	
-	private Logger logger;
+	private final Logger logger;
 	
-	private String pathToServer;
+	private final String pathToServer;
 	
 	private final DoubleConsumer consumer;
 	
-	public Derby(final DoubleConsumer consumer, final Logger logger) {
+	public Derby(final String pathToServer, final DoubleConsumer consumer, final Logger logger) {
 		this.terminal = new Terminal(logger);
 		this.logger = logger;
 		this.consumer = consumer;
+		this.pathToServer = pathToServer;
 	}
 
 	@Override
 	public void startServer() { //TODO only if not on external server
 	//	System.getProperties().setProperty("derby.system.home", config.pathOrUrlToLocation);
-		terminal.runFile((a)->{}, (a)->{}, pathToServer + "/startNetworkServer");
+		terminal.runFile(pathToServer + "/startNetworkServer");
 		logger.info("Derby has been started");
 	}
 
 	@Override
 	public void stopServer() { //TODO only if not on external server
-		terminal.runFile((a)->{}, (a)->{}, pathToServer + "/stopNetworkServer");
+		terminal.runFile(pathToServer + "/stopNetworkServer");
 		logger.info("Derby has been shutdowned");
 	}
 
