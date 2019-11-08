@@ -22,8 +22,33 @@ public class Terminal {
 		return run(stdOut, stdErr, fileName + OperationSystem.CLI_EXTENSION);
 	}
 	
+	/**
+	 * Asynchronious
+	 * @param command
+	 */
+	public void runFile(final String fileName) {
+		run(fileName + OperationSystem.CLI_EXTENSION);
+	}
+	
 	public int runCommand(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
 		return run(stdOut, stdErr, OperationSystem.PRE_COMMAND + command);
+	}
+	
+	/**
+	 * Asynchronious
+	 * @param command
+	 */
+	public void runCommand(final String command) {
+		run(OperationSystem.PRE_COMMAND + command);
+	}
+	
+	private void run(final String command) {
+		try {
+			Runtime.getRuntime().exec(command);
+			logger.debug("Command: " + command + " was started");
+		}catch (IOException e) {
+			logger.error("Command could not run: " + command, e);
+		}
 	}
 	
 	private int run(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
