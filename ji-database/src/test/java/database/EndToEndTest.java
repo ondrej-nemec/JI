@@ -1,17 +1,25 @@
-package querybuilder.mysql;
+package database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import common.Logger;
 import database.Database;
@@ -19,17 +27,51 @@ import database.DatabaseConfig;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
+import querybuilder.mysql.MySqlQueryBuilder;
+import text.BufferedReaderFactory;
 
+@RunWith(Parameterized.class)
 public class EndToEndTest {
 	
+	private final String type;
+	
+	private final String pathToDb;
+	
+	private final boolean isExternalServer;
+
+	public EndToEndTest(String type, String pathToDb, boolean isExternalServer) {
+		super();
+		this.type = type;
+		this.pathToDb = pathToDb;
+		this.isExternalServer = isExternalServer;
+	}
+
+	@Parameters
+	public static Collection<Object[]> parameters() {
+		List<Object[]> result = new LinkedList<>();
+		result.add(new Object[] {
+				"mysql",
+				"//localhost",
+				true
+		});
+		result.add(new Object[] {
+				"derby",
+				"C:/software/DerbyDB/bin",
+				false
+		});
+		return result;
+	}
+	
+	/***************************************/
+
 	private Database database;
 
 	@Before
-	public void before() {
+	public void before() throws SQLException, IOException {		
 		DatabaseConfig config = new DatabaseConfig(
-				"mysql",
-				"//localhost",
-				true,
+				type,
+				pathToDb,
+				isExternalServer,
 				"javainit_database_test",
 				"root",
 				"",
@@ -38,25 +80,59 @@ public class EndToEndTest {
 				5
 		);
 		
-		Logger logger = mock(Logger.class);		
+		Logger logger = mock(Logger.class);
 		this.database = new Database(config, logger);
-		database.createDbAndMigrate();
+		if (!isExternalServer) {
+			database.startServer();
+		}
+		database.createDbIfNotExists();
+		loadMigrations(config);
+	}
+	
+	private void loadMigrations(DatabaseConfig config) throws SQLException, IOException {
+		String[] files = new String[] {"V1__update", "V2__insert", "V3__delete", "V4__select"};
+		for (String file : files) {
+			String migration = "/migrations/" + config.type + "/" + file + ".sql";
+			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(migration))) {
+				StringBuilder sql = new StringBuilder();
+				String line = br.readLine();
+				while (line != null) {
+					sql.append(line);
+					line = br.readLine();
+				}
+				database.applyQuery((conn)->{
+					Statement stat = conn.createStatement();
+					String[] batches = sql.toString().split(";");
+					for (String batch : batches) {
+						stat.addBatch(batch);
+					}
+					stat.executeBatch();
+				});
+			}
+		}
 	}
 	
 	@After
 	public void after() throws SQLException {
-		database.applyQuery((conn)->{
-			Statement stat = conn.createStatement();
-			
-			stat.executeUpdate(
-				"DROP TABLE update_table,"
-				+ " delete_table,"
-				+ " insert_table,"
-				+ " select_table,"
-				+ " joined_table,"
-				+ " flyway_schema_history"
-			);
-		});
+		try {
+			database.applyQuery((conn)->{
+				Statement stat = conn.createStatement();
+				String[] tables = new String [] {
+						"update_table",
+						"delete_table",
+						"insert_table",
+						"select_table",
+						"joined_table",
+				};
+				for (String table : tables) {
+					stat.executeUpdate("DROP TABLE " + table);
+				}
+			});
+		} finally {
+			if (!isExternalServer) {
+    			database.stopServer();
+    		}
+		}
 	}
 	
 	@Test
