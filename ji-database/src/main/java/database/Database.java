@@ -34,11 +34,19 @@ public class Database {
 		this.pool = new ConnectionPool(createSchemaConnectionString(), createProperties(), config.poolSize, logger, isTemp);
 		this.instance = createInstance(config.schemaName, logger);
 	}
+
+
+	protected Database(DatabaseConfig config, DatabaseInstance instance, ConnectionPool pool, Logger logger) {
+		this.config = config;
+		this.logger = logger;
+		this.instance = instance;
+		this.pool = pool;
+	}
 	
 	private DatabaseInstance createInstance(String name, Logger logger) {
 		switch (config.type) {
 		case "derby":
-			return new Derby(getDoubleConsumer(), logger);
+			return new Derby(config.pathOrUrlToLocation, getDoubleConsumer(), logger);
 		case "mysql":
 			return new MySql(createDatabaseConnectionString(), createProperties(), name, logger);
 		default:
@@ -88,11 +96,11 @@ public class Database {
 	
 	private Properties createProperties() {
 		Properties props = new Properties();
-		props.setProperty("create", "true");
 		props.setProperty("user", config.login);
 		props.setProperty("password", config.password);
 		props.setProperty("serverTimezone", config.timezone);
-
+		props.setProperty("create", "true");
+		props.setProperty("allowMultiQueries", "true");
 		return props;
 	}
 	
@@ -118,9 +126,7 @@ public class Database {
 	
 	public boolean createDbAndMigrate() {
 		try {
-			instance.createDb();
-			logger.info("DB schema was created");
-
+			createDbIfNotExists();
 			migrate();
 			logger.info("All migrations were applied");
 		} catch (SQLException | FlywaySqlException e) {
@@ -128,6 +134,11 @@ public class Database {
 			return false;
 		}
 		return true;
+	}
+	
+	public void createDbIfNotExists() throws SQLException {
+		instance.createDb();
+		logger.info("DB schema was created");
 	}
 	
 	private void migrate() throws FlywaySqlException {
