@@ -2,35 +2,28 @@ package migration;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static common.MapInit.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import common.DateTime;
 import common.Logger;
 import common.MapInit;
 import common.OperationSystem;
-import database.support.DatabaseRow;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import querybuilder.CreateTableQueryTable;
-import querybuilder.CreateViewQueryTable;
 import querybuilder.InsertQueryBuilder;
 import querybuilder.QueryBuilder;
 import querybuilder.SelectQueryBuilder;
@@ -299,10 +292,88 @@ public class MigrationToolTest {
 		verifyNoMoreInteractions(con);
 		verifyNoMoreInteractions(builder);
 	}
+	
+	@Test
+	public void testDoTransactionDoNotWriteAllwaysMigrationToMigrationTable() throws Exception {
+		Connection con = mock(Connection.class);
+		
+		InsertQueryBuilder insert = mock(InsertQueryBuilder.class);
+		when(insert.addValue(anyString(), anyString())).thenReturn(insert);
+		
+		QueryBuilder builder = mock(QueryBuilder.class);
+		when(builder.insert(migrationTable)).thenReturn(insert);
+		
+		MigrationTool tool = new MigrationTool(builder, "", Mockito.mock(Logger.class));
+		try {
+			tool.doTransaction(
+					con,
+					"ALLWAYS_1__Migration",
+					Arrays.asList("first"),
+					MapInit.hashMap(MapInit.t("ALLWAYS_1__Migration", "java")),
+					false,
+					"migration.transaction",
+					getClass().getClassLoader()
+				);
+		} catch (SQLException ignored) {}
+		
+		verify(con).setAutoCommit(false);
+		verify(con).commit();
+		verify(builder).createView("viewName");
+		
+		verifyNoMoreInteractions(insert);
+		verifyNoMoreInteractions(con);
+		verifyNoMoreInteractions(builder);
+	}
 
 	@Test
-	public void testDoMigration() {
-		fail("Not finished");
-		// revert, allways
+	public void testDoMigration() throws Exception {
+		Statement stat = mock(Statement.class);
+		Connection con = mock(Connection.class);
+		when(con.createStatement()).thenReturn(stat);
+		
+		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
+		when(select.from(migrationTable)).thenReturn(select);
+		when(select.fetchAll(any())).thenReturn(Arrays.asList());
+		
+		QueryBuilder builder = mock(QueryBuilder.class);
+		when(builder.select(anyString())).thenReturn(select);
+		when(builder.getConnection()).thenReturn(con);
+		
+		MigrationTool tool = new MigrationTool(builder, "migration/doMigrations", Mockito.mock(Logger.class));
+		
+		tool.doMigrations(
+				new File("migration/doMigrations"),
+				MapInit.hashMap(MapInit.t("V1__first", "java"), MapInit.t("V2__second", "sql")),
+				"migration/doMigrations",
+				false
+		);
+		verify(stat, times(1)).addBatch(anyString());
+		verify(stat, times(1)).executeBatch();
+		verify(con, times(2)).setAutoCommit(false);
+		verify(con, times(2)).commit();
+		verify(builder, times(1)).select("a");
+		verifyNoMoreInteractions(stat);
+		verifyNoMoreInteractions(con);
+		verifyNoMoreInteractions(select);
+		verifyNoMoreInteractions(builder);
 	}
+	
+	@Test
+	@Parameters(method = "dataLoadContentWorksWithDirTreeAndClasspath")
+	public void testLoadContentWorksWithDirTreeAndClasspath(String file, String content, boolean external) throws IOException {
+		MigrationTool tool = new MigrationTool(mock(QueryBuilder.class), "", Mockito.mock(Logger.class));
+		assertEquals(content, tool.loadContent(file, false, external));
+	}
+	
+	public Object[] dataLoadContentWorksWithDirTreeAndClasspath() {
+		return new Object[] {
+			new Object[] {
+				"migration/content/classpath.sql", "classpath", false
+			},
+			new Object[] {
+				"test/migration/dir-tree.sql", "dir-tree", true
+			}
+		};
+	}
+	
 }

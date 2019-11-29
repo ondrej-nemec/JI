@@ -19,16 +19,16 @@ import javax.tools.ToolProvider;
 import common.DateTime;
 import common.FileExtension;
 import common.Logger;
-import common.exceptions.NotImplementedYet;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.QueryBuilder;
-import querybuilder.SelectQueryBuilder;
 import text.BufferedReaderFactory;
 
 public class MigrationTool {
 	
 	private final static String NAME_SEPARATOR = "__";
+	
+	private final static String ALLWAYS_ID = "ALLWAYS";
 	
 	private boolean external = false;
 	
@@ -39,21 +39,6 @@ public class MigrationTool {
 	private final String folder;
 	
 	private final String migrationTable;
-	
-	/*
-	 * 1 - nahrat jmena souboru do mapy - klic je jmeno, hodnota zvoleny "migrator" -> sql/class
-	 *   - !! java soubory nepridavat -> ? prvni kompilace
-	 *   - !! sesortovat podle id
-	 *   - otestovat, zda muze byt pouzito jako id
-	 *   - viz loadResources
-	 * 2 - kontrola existence záznamù migrace (tabulka), pøípadnì její vytvoøení
-	 *   - nejspíš select nad ní, a vrácení listu záznamu, pokud se bude vytváøet, tak prázdný seznam
-	 * 3 - projiti seznamu souboru, pokud jmeno neni v seznamu zaznamu, zkontrolovat, ze neni dalsi zaznam a provest
-	 *   - zapsat soubor do zaznamu migrace
-	 *   - pro provadeni migrace a zapsani do zaznamu migraci pouzit transakci
-	 * 
-	 *  v sql souborech bude moznost dat oddelovac - pro foward a revert cast
-	 */
 	
 	public MigrationTool(QueryBuilder builder, String folder, Logger logger) {
 		this(builder, folder, "migrations", logger);
@@ -140,9 +125,7 @@ public class MigrationTool {
 	
 	/******** MIGRATION *********/
 
-	private void doMigrations(File dir, Map<String, String> files, String path, boolean revert) throws Exception {
-		throw new NotImplementedYet();
-		/*
+	protected void doMigrations(File dir, Map<String, String> files, String path, boolean revert) throws Exception {
 		// prevork
 		List<String> ids = migratedIds();
 		URL[] urls = new URL[]{dir.toURI().toURL()};
@@ -155,7 +138,6 @@ public class MigrationTool {
 				);
 			}
 		}
-		*/
 	}
 	
 	/* only for foward and only once */
@@ -184,7 +166,7 @@ public class MigrationTool {
 			boolean revert, String path, ClassLoader loader) throws Exception {
 		try {
 			con.setAutoCommit(false);
-			transaction(key, migrationsInDb, files, revert, path, loader);
+			transaction(key, migrationsInDb, files, revert, path, loader, external);
 			con.commit();
 		} catch (Exception e) {
 			con.rollback();
@@ -194,9 +176,10 @@ public class MigrationTool {
 	
 	/*********************/
 	
+	/* only for foward */
 	private void transaction(
 			Object key, List<String> ids, Map<String, String> files,
-			boolean revert, String path, ClassLoader loader
+			boolean revert, String path, ClassLoader loader, boolean external
 		) throws Exception {
 		if (ids.contains(key)) {
 			return;
@@ -205,7 +188,7 @@ public class MigrationTool {
 		String name = key.toString();
 		switch (type) {
 			case "sql": 
-				migrate(name, builder, revert);
+				migrate(path + "/" + name + ".sql", builder, revert, external);
 				break;
 			case "class":
 			case "java":
@@ -214,12 +197,14 @@ public class MigrationTool {
 			default: break;
 		}
 		String[] names = parseName(name);
-		builder
+		if (!names[0].contains(ALLWAYS_ID)) {
+			builder
 			.insert(migrationTable)
 			.addValue("id", names[0])
 			.addValue("Description", names[1])
 			.addValue("DateTime", DateTime.format("YYYY-mm-dd H:m:s"))
 			.execute();
+		}
 	}
 	
 	private String[] parseName(String name) {
@@ -251,9 +236,9 @@ public class MigrationTool {
 	/**
 	 * execute content of sql file
 	 */
-	private void migrate(String name, QueryBuilder builder, boolean revert) throws SQLException, IOException {
+	private void migrate(String name, QueryBuilder builder, boolean revert, boolean external) throws SQLException, IOException {
 		Statement stat = builder.getConnection().createStatement();
-		String[] batches = loadContent(name, revert).split(";");
+		String[] batches = loadContent(name, revert, external).split(";");
 		for (String batch : batches) {
 			stat.addBatch(batch);
 		}
@@ -263,27 +248,37 @@ public class MigrationTool {
 	/**
 	 * Load content of sql file depending on @param revert
 	 */
-	private String loadContent(String file, boolean revert) throws IOException {
-		try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(file))) {
-			StringBuilder sql = new StringBuilder();
-			String line = br.readLine();
-			while (line != null) {
-				sql.append(line);
-				line = br.readLine();
+	protected String loadContent(String file, boolean revert, boolean external) throws IOException {
+		if (external) {
+			try (BufferedReader br = BufferedReaderFactory.buffer(file)) {
+				return loadContent(br, revert, file);
 			}
-			
-			String[] mig = sql.toString().split("--- REVERT ---");
-			if (revert && mig.length > 1) {
-				return mig[1];
-			} else if (revert && mig.length < 2) {
-				throw new RuntimeException(String.format("Migration %s has not revert part", file));
-			} else if (!revert && mig.length == 1) {
-				return sql.toString();
-			} else if (!revert && mig.length > 1) {
-				return mig[0];
+		} else {
+			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream("/" + file))) {
+				return loadContent(br, revert, file);
 			}
-			return sql.toString();
 		}
+	}
+	
+	private String loadContent(BufferedReader br, boolean revert, String file) throws IOException {
+		StringBuilder sql = new StringBuilder();
+		String line = br.readLine();
+		while (line != null) {
+			sql.append(line);
+			line = br.readLine();
+		}
+		
+		String[] mig = sql.toString().split("--- REVERT ---");
+		if (revert && mig.length > 1) {
+			return mig[1];
+		} else if (revert && mig.length < 2) {
+			throw new RuntimeException(String.format("Migration %s has not revert part", file));
+		} else if (!revert && mig.length == 1) {
+			return sql.toString();
+		} else if (!revert && mig.length > 1) {
+			return mig[0];
+		}
+		return sql.toString();
 	}
 	
 }
