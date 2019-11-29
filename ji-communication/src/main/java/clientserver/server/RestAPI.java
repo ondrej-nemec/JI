@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import clientserver.HttpMethod;
+import clientserver.server.restapi.CreateRestAPIResponce;
+import clientserver.server.restapi.RestApiResponse;
 import common.Logger;
 import common.structures.ThrowingBiConsumer;
 
@@ -38,11 +40,11 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 	
 	private final Logger logger;
 
-	private final CreateRestAPIResponce response;
+	private final CreateRestAPIResponce createResponce;
 	
 	public RestAPI(CreateRestAPIResponce response, Logger logger) {
 		this.logger = logger;
-		this.response = response;
+		this.createResponce = response;
 	}
 	
 	@Override
@@ -53,7 +55,7 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 		parseRequest(request, header, params, br);
 		
 		logger.debug("Request: " + request);
-		response.accept(
+		RestApiResponse response = createResponce.accept(
 				HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
 				request.getProperty(URL),
 				request.getProperty(FULL_URL),
@@ -70,11 +72,15 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
         bw.write(code);
         bw.newLine();
 		// write heared
-		response.writeHeade(bw);
+        for (String headerLine : response.getHeader()) {
+        	bw.write(headerLine);
+        	bw.newLine();
+        }
 		// end of header
         bw.newLine();
 		// write context
-		response.writeContent(bw);
+        bw.write(response.getMessage());
+        bw.newLine();
 		bw.flush();
 	}
 	

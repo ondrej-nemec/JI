@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import clientserver.server.restapi.CreateRestAPIResponce;
 import common.Logger;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
