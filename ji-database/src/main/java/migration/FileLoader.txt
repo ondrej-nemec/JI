@@ -80,6 +80,29 @@ public class FileLoader {
 		// TODO
 	}
 	
+	private void loadMigrations(DatabaseConfig config) throws SQLException, IOException {
+		String[] files = new String[] {"V1__update", "V2__insert", "V3__delete", "V4__select"};
+		for (String file : files) {
+			String migration = "/migrations/" + config.type + "/" + file + ".sql";
+			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(migration))) {
+				StringBuilder sql = new StringBuilder();
+				String line = br.readLine();
+				while (line != null) {
+					sql.append(line);
+					line = br.readLine();
+				}
+				database.applyQuery((conn)->{
+					Statement stat = conn.createStatement();
+					String[] batches = sql.toString().split(";");
+					for (String batch : batches) {
+						stat.addBatch(batch);
+					}
+					stat.executeBatch();
+				});
+			}
+		}
+	}
+	
 	private void migrate(ClassLoader loader, String name, String path) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Printer p = (Printer)loader.loadClass(path + name).newInstance();
 		p.print(p.getClass() + " working");

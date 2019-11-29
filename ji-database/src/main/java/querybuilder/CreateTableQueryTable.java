@@ -1,5 +1,7 @@
 package querybuilder;
 
+import java.sql.SQLException;
+
 public interface CreateTableQueryTable {
 
 	CreateTableQueryTable addColumn(String name, ColumnType type, ColumnSetting... settings);
@@ -8,7 +10,7 @@ public interface CreateTableQueryTable {
 	
 	CreateTableQueryTable addForeingKey(String column, String referedTable, String referedColumn);
 	
-	void execute();
+	void execute() throws SQLException;
 	
 	String getSql();
 	

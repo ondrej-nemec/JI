@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import database.support.DatabaseRow;
 import querybuilder.Join;
@@ -169,6 +171,28 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
     		}		
     		return rows;
 		}
+	}
+/*
+	@Override
+	public void fetchAll(Consumer<DatabaseRow> consumer) throws SQLException {
+		try (Statement stat = connection.createStatement(); ResultSet res  = stat.executeQuery(createSql());) {
+			while (res.next()) {
+    			DatabaseRow row = new DatabaseRow();
+    			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
+    				row.addValue(
+    					res.getMetaData().getColumnLabel(i),
+    					res.getString(i)
+    				);
+    			}
+    			consumer.accept(row);
+    		}
+		}
+	}
+*/
+	@Override
+	public List<String> fetchAll(Function<DatabaseRow, String> function) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	protected String joinToString(final Join join) {

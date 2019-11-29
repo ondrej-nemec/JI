@@ -41,7 +41,7 @@ public class ConnectionPool {
 		}
 		
 		Connection c = DriverManager.getConnection(connectionString, prop);
-		c.setAutoCommit(!isTemp);
+		c.setAutoCommit(!isTemp); //TODO another way for transaction???
 		pool.put(c.hashCode(), c);
 		return c;
 	}

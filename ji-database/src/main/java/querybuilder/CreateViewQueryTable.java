@@ -1,5 +1,7 @@
 package querybuilder;
 
+import java.sql.SQLException;
+
 public interface CreateViewQueryTable extends Parameters<CreateViewQueryTable> {
 	
 	CreateViewQueryTable select(String param);
@@ -24,7 +26,7 @@ public interface CreateViewQueryTable extends Parameters<CreateViewQueryTable> {
 	
 	CreateViewQueryTable offset(int offset);
 	
-	void execute();
+	void execute() throws SQLException;
 	
 	String getSql();
 	

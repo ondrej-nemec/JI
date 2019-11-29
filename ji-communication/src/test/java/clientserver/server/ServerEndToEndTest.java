@@ -1,7 +1,7 @@
 package clientserver.server;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
 import java.util.function.Function;
@@ -9,6 +9,8 @@ import java.util.function.Function;
 import clientserver.LoggerImpl;
 import clientserver.HttpMethod;
 import clientserver.StatusCode;
+import clientserver.server.restapi.CreateRestAPIResponce;
+import clientserver.server.restapi.RestApiResponse;
 import common.Console;
 
 public class ServerEndToEndTest {
@@ -36,34 +38,18 @@ public class ServerEndToEndTest {
 	
 	protected static CreateRestAPIResponce apiResponse() {
 		return new CreateRestAPIResponce() {
-			
+
 			@Override
-			public void writeHeade(BufferedWriter bw) throws IOException {
-				bw.write("Access-Control-Allow-Origin: *");
-		        bw.newLine();
-		        bw.write("Content-Type: text/html; charset=utf-8");
-		        bw.newLine();				
-			}
-			
-			@Override
-			public void writeContent(BufferedWriter bw) throws IOException {
+			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
+					Properties header, Properties params) throws IOException {
 				Date today = new Date();
-		    	bw.write("<html> <head></head><body><h1>Time</h1>");
-		        bw.write(today.toString());
-		        bw.write("</body></html>");
-		        bw.newLine();
+				return new RestApiResponse(
+					StatusCode.OK,
+					Arrays.asList("Access-Control-Allow-Origin: *", "Content-Type: text/html; charset=utf-8"),
+					String.format("<html> <head></head><body><h1>Time</h1>%s</body></html>", today.toString())
+				);
 			}
-			
-			@Override
-			public StatusCode getStatusCode() {
-				return StatusCode.OK;
-			}
-			
-			@Override
-			public void accept(HttpMethod method, String url, String fullUrl, String protocol, Properties header,
-					Properties params) {
-				// not implemented
-			}
+
 		};
 	}
 	

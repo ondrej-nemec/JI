@@ -2,6 +2,7 @@ package querybuilder;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Function;
 
 import database.support.DatabaseRow;
 
@@ -33,4 +34,6 @@ public interface SelectQueryBuilder extends Parameters<SelectQueryBuilder> {
 	
 	List<DatabaseRow> fetchAll() throws SQLException;
 	
+	List<String> fetchAll(Function<DatabaseRow, String> function) throws SQLException;
+
 }

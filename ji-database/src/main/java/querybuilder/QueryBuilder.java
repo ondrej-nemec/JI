@@ -10,6 +10,12 @@ public abstract class QueryBuilder {
 		this.connection = connection;
 	}
 	
+	public Connection getConnection() {
+		return connection;
+	}
+	
+	/***********************/
+	
 	public abstract DeleteQueryBuilder delete(String table);
 	
 	public abstract InsertQueryBuilder insert(String table);

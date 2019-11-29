@@ -1,5 +1,7 @@
 package querybuilder;
 
+import java.sql.SQLException;
+
 public interface AlterTableQueryBuilder {
 
 	AlterTableQueryBuilder addColumn(String name, ColumnType type, ColumnSetting... settings);
@@ -16,7 +18,7 @@ public interface AlterTableQueryBuilder {
 	
 	AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type);
 	
-	void execute();
+	void execute() throws SQLException;
 	
 	String getSql();
 }
