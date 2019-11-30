@@ -45,6 +45,7 @@ public class MigrationToolEndToEndTest {
 	@Test
 	@Parameters(method = "dataMigrateMakeMigrations")
 	public void testMigrateMakeMigrations(String folder) throws Exception {
+		fail("Not finished");
 		Connection c = createConnection();
 		c.setAutoCommit(false);
 		
