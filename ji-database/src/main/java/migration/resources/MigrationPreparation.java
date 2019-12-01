@@ -1,19 +1,58 @@
 package migration.resources;
 
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
-import common.exceptions.NotImplementedYet;
+import migration.MigrationException;
+import querybuilder.ColumnSetting;
+import querybuilder.ColumnType;
 import querybuilder.QueryBuilder;
 
 public class MigrationPreparation {
-
-	public List<String> getFilesToMigrate(List<String> loadedFiles, boolean isRevert, QueryBuilder builder) {
-		throw new NotImplementedYet();
+	
+	private final String migrationTable;
+	
+	public MigrationPreparation(String migrationTable) {
+		this.migrationTable = migrationTable;
 	}
-	// nacte z db probehnute migrace, pripadne vytvory tabulku
-	// pro revert vrati probehnute migrace ??
-	/*
-	try {
+
+	public List<String> getFilesToMigrate(List<String> loadedFiles, boolean isRevert, QueryBuilder builder) throws SQLException, MigrationException {
+		// validace
+		List<String> migrated = selectMigrations(builder);
+		if (migrated.size() > loadedFiles.size()) {
+			throw new MigrationException();
+		}
+		
+		int indexOfLastMigrated = indexOfLastMigrated(loadedFiles, migrated);
+		// no migration in db - no to revert, all for migrate
+		if (indexOfLastMigrated == -1) {
+			return (isRevert ? new LinkedList<>() : loadedFiles);
+		}
+		// all migrated - no for migrate, all for revert
+		if (indexOfLastMigrated + 1 == loadedFiles.size()) {
+			return (isRevert ? loadedFiles : new LinkedList<>());
+		}
+		if (isRevert) {
+			return loadedFiles.subList(0, indexOfLastMigrated + 1);
+		} else {
+			return loadedFiles.subList(indexOfLastMigrated + 1, loadedFiles.size());
+		}
+	}
+	
+	private int indexOfLastMigrated(List<String> loadedFiles, List<String> migrated) throws MigrationException {
+		int index = -1;
+		for (int i = 0; i < migrated.size(); i++) {
+			if (!migrated.get(i).equals(loadedFiles.get(i))) {
+				throw new MigrationException();
+			}
+			index++;
+		}
+		return index;
+	}
+	
+	private List<String> selectMigrations(QueryBuilder builder) throws SQLException {
+		try {
 			return builder
 				.select("id")
 				.from(migrationTable)
@@ -29,9 +68,6 @@ public class MigrationPreparation {
 				.execute();
 		}
 		return new LinkedList<>();
-	*/
-	
-	// projde ziskane migrace a porovna se soubory - kontrola "diry" v migracich
-	// vrati seznam neprobehnutych migraci
-	
+	}
+
 }

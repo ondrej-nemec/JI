@@ -15,7 +15,6 @@ public class SqlMigration implements SingleMigration {
 	private final boolean isInclasspath;
 	
 	public SqlMigration(String path, boolean isRevert, boolean isInclasspath) {
-		super();
 		this.path = path;
 		this.isRevert = isRevert;
 		this.isInclasspath = isInclasspath;

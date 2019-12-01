@@ -4,8 +4,12 @@ import common.exceptions.NotImplementedYet;
 import querybuilder.QueryBuilder;
 
 public class SingleMigrationTool {
+	
+	public SingleMigrationTool() {
+		// TODO Auto-generated constructor stub
+	}
 
-	public void transaction(String name, QueryBuilder builder) {
+	public void transaction(String name, QueryBuilder builder, boolean isRevert) {
 		// name je i s priponou - extract zde
 		throw new NotImplementedYet();
 	}
