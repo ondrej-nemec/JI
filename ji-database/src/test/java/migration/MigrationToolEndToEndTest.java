@@ -46,7 +46,7 @@ public class MigrationToolEndToEndTest {
 	@Parameters(method = "dataMigrateMakeMigrations")
 	public void testMigrateMakeMigrations(String folder) throws Exception {
 		fail("Not finished");
-		Connection c = createConnection();
+	/*	Connection c = createConnection();
 		c.setAutoCommit(false);
 		
 		MySqlQueryBuilder queryBuilder = new MySqlQueryBuilder(c);
@@ -59,7 +59,7 @@ public class MigrationToolEndToEndTest {
 		testStates(c, false);
 		
 		c.rollback();
-		c.close();
+		c.close();*/
 	}
 	
 	private void testStates(Connection c, boolean exists) throws SQLException {
@@ -88,11 +88,11 @@ public class MigrationToolEndToEndTest {
 	
 	@Test(expected = IOException.class)
 	public void testMigrateThrowsIfNotExistingFolderGiven() throws Exception {
-		try (Connection c = createConnection()) {
+	/*	try (Connection c = createConnection()) {
 			MySqlQueryBuilder queryBuilder = new MySqlQueryBuilder(c);
 			MigrationTool tool = new MigrationTool(queryBuilder, "not-existing-folder", Mockito.mock(Logger.class));
 			tool.migrate();
-		}
+		}*/
 	}
 	
 	private Connection createConnection() throws SQLException {

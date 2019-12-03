@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import querybuilder.QueryBuilder;
 import text.BufferedReaderFactory;
+import text.BufferedWriterFactory;
 
 public class SqlMigration implements SingleMigration {
 
