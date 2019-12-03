@@ -78,7 +78,12 @@ public class Server {
     
     public void stop() throws InterruptedException {
         sheduled.shutdown();
-        wait();
+        logger.info("Server stopped");
+    }
+    
+    public void stop(long await, TimeUnit timeunit) throws InterruptedException {
+        sheduled.shutdown();
+        sheduled.awaitTermination(await, timeunit);
         logger.info("Server stopped");
     }
     
