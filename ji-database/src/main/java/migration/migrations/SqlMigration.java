@@ -2,10 +2,10 @@ package migration.migrations;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Statement;
 
 import querybuilder.QueryBuilder;
 import text.BufferedReaderFactory;
-import text.BufferedWriterFactory;
 
 public class SqlMigration implements SingleMigration {
 
@@ -23,25 +23,22 @@ public class SqlMigration implements SingleMigration {
 
 	@Override
 	public void migrate(String name, QueryBuilder builder) throws Exception {
-	/*	Statement stat = builder.getConnection().createStatement();
-		String[] batches = loadContent(name, revert, inClasspath).split(";");
+		String[] batches = loadContent(path + "/" + name, isRevert, isInclasspath).split(";");
+		Statement stat = builder.getConnection().createStatement();
 		for (String batch : batches) {
 			stat.addBatch(batch);
 		}
-		stat.executeBatch();*/
+		stat.executeBatch();
 	}
-	
-	/**
-	 * Load content of sql file depending on @param revert
-	 */
-	private String loadContent(String file, boolean revert, boolean external) throws IOException {
-		if (external) {
-			try (BufferedReader br = BufferedReaderFactory.buffer(file)) {
-				return loadContent(br, revert, file);
+
+	private String loadContent(String file, boolean isRevert, boolean isInclasspath) throws IOException {
+		if (isInclasspath) {
+			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream("/" + file))) {
+				return loadContent(br, isRevert, file);
 			}
 		} else {
-			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream("/" + file))) {
-				return loadContent(br, revert, file);
+			try (BufferedReader br = BufferedReaderFactory.buffer(file)) {
+				return loadContent(br, isRevert, file);
 			}
 		}
 	}
