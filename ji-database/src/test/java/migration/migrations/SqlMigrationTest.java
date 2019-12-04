@@ -34,8 +34,8 @@ public class SqlMigrationTest {
 		SqlMigration m = new SqlMigration(path, isRevert, isInclasspath);
 		m.migrate("Sql.sql", builder);
 		
-		verify(stat, times(1)).addBatch(selectText + "1");
-		verify(stat, times(1)).addBatch(selectText + "2");
+		verify(stat, times(1)).addBatch("select '" + selectText + "1'");
+		verify(stat, times(1)).addBatch("select '" + selectText + "2'");
 		verify(stat, times(1)).executeBatch();
 		verifyNoMoreInteractions(stat);
 		
