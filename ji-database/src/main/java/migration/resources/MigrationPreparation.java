@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import common.FileExtension;
 import migration.MigrationException;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
@@ -12,6 +13,8 @@ import querybuilder.QueryBuilder;
 public class MigrationPreparation {
 	
 	private final String migrationTable;
+	
+	private final String ID_SEPARATOR = "__";
 	
 	public MigrationPreparation(String migrationTable) {
 		this.migrationTable = migrationTable;
@@ -43,7 +46,8 @@ public class MigrationPreparation {
 	private int indexOfLastMigrated(List<String> loadedFiles, List<String> migrated) throws MigrationException {
 		int index = -1;
 		for (int i = 0; i < migrated.size(); i++) {
-			if (!migrated.get(i).equals(loadedFiles.get(i))) {
+			String fileId = new FileExtension(loadedFiles.get(i)).getName().split(ID_SEPARATOR)[0];
+			if (!migrated.get(i).equals(fileId)) {
 				throw new MigrationException();
 			}
 			index++;

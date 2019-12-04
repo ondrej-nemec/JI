@@ -30,13 +30,13 @@ public class MigrationPreparationTest {
 	public void testGetFilesToMigrateThrowIfMigrationGape() throws SQLException, MigrationException {
 		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
-		when(select.fetchAll(any())).thenReturn(Arrays.asList("Second.sql"));
+		when(select.fetchAll(any())).thenReturn(Arrays.asList("Second"));
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.select("id")).thenReturn(select);
 		
 		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE);
-		prep.getFilesToMigrate(Arrays.asList("First.java", "Second.sql"), false, builder);
+		prep.getFilesToMigrate(Arrays.asList("First__migration.java", "Second__migration.sql"), false, builder);
 		
 		verify(select, times(1)).from(MIGRATION_TABLE);
 		verify(select, times(1)).fetchAll(any());
@@ -59,24 +59,24 @@ public class MigrationPreparationTest {
 	}
 	
 	public Object[] dataGetFilesToMigrate( ) throws SQLException {
-		List<String> loadedFiles = Arrays.asList("First.java", "Second.sql");
+		List<String> loadedFiles = Arrays.asList("First__migration.java", "Second__migration.sql");
 		return new Object[] {
-			new Object[] {Arrays.asList("First.java", "Second.sql"), loadedFiles, false, builderCreateTable()},
-			new Object[] {Arrays.asList("First.java", "Second.sql"), loadedFiles, false, builderNotCreate()},
+			new Object[] {Arrays.asList("First__migration.java", "Second__migration.sql"), loadedFiles, false, builderCreateTable()},
+			new Object[] {Arrays.asList("First__migration.java", "Second__migration.sql"), loadedFiles, false, builderNotCreate()},
 			new Object[] {new LinkedList<>(), loadedFiles, false, builderAllMigrated()},
-			new Object[] {Arrays.asList("Second.sql"), loadedFiles, false, builderPartMigrated()},
+			new Object[] {Arrays.asList("Second__migration.sql"), loadedFiles, false, builderPartMigrated()},
 
 			new Object[] {new LinkedList<>(), loadedFiles, true, builderCreateTable()},
 			new Object[] {new LinkedList<>(), loadedFiles, true, builderNotCreate()},
-			new Object[] {Arrays.asList("First.java", "Second.sql"), loadedFiles, true, builderAllMigrated()},
-			new Object[] {Arrays.asList("First.java"), loadedFiles, true, builderPartMigrated()},
+			new Object[] {Arrays.asList("First__migration.java", "Second__migration.sql"), loadedFiles, true, builderAllMigrated()},
+			new Object[] {Arrays.asList("First__migration.java"), loadedFiles, true, builderPartMigrated()},
 		};
 	}
 
 	private Tuple2<QueryBuilder, Callable<Void>> builderPartMigrated() throws SQLException {
 		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
-		when(select.fetchAll(any())).thenReturn(Arrays.asList("First.java"));
+		when(select.fetchAll(any())).thenReturn(Arrays.asList("First"));
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.select("id")).thenReturn(select);
@@ -96,7 +96,7 @@ public class MigrationPreparationTest {
 	private Tuple2<QueryBuilder, Callable<Void>> builderAllMigrated() throws SQLException {
 		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
-		when(select.fetchAll(any())).thenReturn(Arrays.asList("First.java", "Second.sql"));
+		when(select.fetchAll(any())).thenReturn(Arrays.asList("First", "Second"));
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.select("id")).thenReturn(select);
