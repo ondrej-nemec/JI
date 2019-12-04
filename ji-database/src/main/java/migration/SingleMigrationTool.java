@@ -8,6 +8,7 @@ import common.FileExtension;
 import common.Logger;
 import migration.migrations.JavaMigration;
 import migration.migrations.SqlMigration;
+import migration.resources.IdSeparator;
 import querybuilder.QueryBuilder;
 
 public class SingleMigrationTool {

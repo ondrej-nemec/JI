@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import migration.IdSeparator;
 import migration.MigrationException;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
