@@ -13,8 +13,11 @@ public class MigrationPreparation {
 	
 	private final String migrationTable;
 	
-	public MigrationPreparation(String migrationTable) {
+	private final String separator;
+	
+	public MigrationPreparation(String migrationTable, String idSeparator) {
 		this.migrationTable = migrationTable;
+		this.separator = idSeparator;
 	}
 
 	public List<String> getFilesToMigrate(List<String> loadedFiles, boolean isRevert, QueryBuilder builder) throws SQLException, MigrationException {
@@ -43,7 +46,7 @@ public class MigrationPreparation {
 	private int indexOfLastMigrated(List<String> loadedFiles, List<String> migrated) throws MigrationException {
 		int index = -1;
 		for (int i = 0; i < migrated.size(); i++) {
-			String fileId = new IdSeparator(loadedFiles.get(1)).getId();
+			String fileId = new IdSeparator(loadedFiles.get(1), separator).getId();
 			if (!migrated.get(i).equals(fileId)) {
 				throw new MigrationException();
 			}

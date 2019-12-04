@@ -25,6 +25,7 @@ import querybuilder.SelectQueryBuilder;
 public class MigrationPreparationTest {
 
 	private static final String MIGRATION_TABLE = "migration";
+	private static final String SEPARATOR = "__";
 
 	@Test(expected = MigrationException.class)
 	public void testGetFilesToMigrateThrowIfMigrationGape() throws SQLException, MigrationException {
@@ -35,7 +36,7 @@ public class MigrationPreparationTest {
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.select("id")).thenReturn(select);
 		
-		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE);
+		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE, SEPARATOR);
 		prep.getFilesToMigrate(Arrays.asList("First__migration.java", "Second__migration.sql"), false, builder);
 		
 		verify(select, times(1)).from(MIGRATION_TABLE);
@@ -53,7 +54,7 @@ public class MigrationPreparationTest {
 			List<String> loadedFiles,
 			boolean isRevert,
 			Tuple2<QueryBuilder, Callable<Void>> build) throws Exception {
-		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE);
+		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE, SEPARATOR);
 		assertEquals(result, prep.getFilesToMigrate(loadedFiles, isRevert, build._1()));
 		build._2().call();
 	}

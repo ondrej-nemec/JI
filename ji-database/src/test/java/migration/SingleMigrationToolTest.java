@@ -19,6 +19,10 @@ import querybuilder.QueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class SingleMigrationToolTest {
+	
+	private final static String MIGRATION_TABLE = "migrations";
+	private final static String ALLWAYS_ID = "ALLWAYS";
+	private static final String SEPARATOR = "__";
 
 	@Test
 	@Parameters(method = "dataTransactionWithWorkingMigration")
@@ -35,13 +39,13 @@ public class SingleMigrationToolTest {
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.getConnection()).thenReturn(con);
-		when(builder.insert("migrations")).thenReturn(insert);
-		when(builder.delete("migrations")).thenReturn(delete);
+		when(builder.insert(MIGRATION_TABLE)).thenReturn(insert);
+		when(builder.delete(MIGRATION_TABLE)).thenReturn(delete);
 		
 		SqlMigration sql = mock(SqlMigration.class);
 		JavaMigration java = mock(JavaMigration.class);
 		
-		SingleMigrationTool tool = new SingleMigrationTool(java, sql, mock(Logger.class));
+		SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, mock(Logger.class));
 		tool.transaction(name + "." + extension, builder, isRevert);
 		if (!isRevert) {
     		verify(insert, times(3)).addValue(any(), any());
@@ -55,8 +59,8 @@ public class SingleMigrationToolTest {
     	verifyNoMoreInteractions(delete);
 		
 		verify(builder, times(1)).getConnection();
-		verify(builder, times(isRevert ? 1 : 0)).delete("migrations");
-		verify(builder, times(isRevert ? 0 : 1)).insert("migrations");
+		verify(builder, times(isRevert ? 1 : 0)).delete(MIGRATION_TABLE);
+		verify(builder, times(isRevert ? 0 : 1)).insert(MIGRATION_TABLE);
 		verifyNoMoreInteractions(builder);
 		
 		verify(sql, times(sqlCount)).migrate(name + ".sql", builder);
@@ -87,7 +91,7 @@ public class SingleMigrationToolTest {
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.getConnection()).thenReturn(con);
 		
-		SingleMigrationTool tool = new SingleMigrationTool(null, null, mock(Logger.class)); // java, sql null for throwing exceptin
+		SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, null, null, mock(Logger.class)); // java, sql null for throwing exceptin
 		try {
 			tool.transaction(file, builder, isRevert);
 			fail("NullPointerException required");
@@ -122,7 +126,7 @@ public class SingleMigrationToolTest {
 		SqlMigration sql = mock(SqlMigration.class);
 		JavaMigration java = mock(JavaMigration.class);
 		
-		SingleMigrationTool tool = new SingleMigrationTool(java, sql, mock(Logger.class));
+		SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, mock(Logger.class));
 		tool.transaction("ALLWAYS_1__desc.java", builder, false);
 		tool.transaction("ALLWAYS_1__desc.sql", builder, false);
 		

@@ -13,20 +13,27 @@ import querybuilder.QueryBuilder;
 
 public class SingleMigrationTool {
 	
-	private final static String ALLWAIS_ID = "ALLWAYS";
+	private final String allwaysId;
 	
-	private final String migrationTable = "migrations";
+	private final String migrationTable;
+	
+	private final String separator;
 	
 	private final Logger logger;
 	
 	private final SqlMigration sql;
 	
 	private final JavaMigration java;
-	
-	public SingleMigrationTool(JavaMigration java, SqlMigration sql, Logger logger) {
+		
+	public SingleMigrationTool(
+			String migrationTable, String allwaysId, String separator,
+			JavaMigration java, SqlMigration sql, Logger logger) {
 		this.logger = logger;
+		this.migrationTable = migrationTable;
 		this.java = java;
 		this.sql = sql;
+		this.allwaysId = allwaysId;
+		this.separator = separator;
 	}
 
 	public void transaction(String file, QueryBuilder builder, boolean isRevert) throws Exception {
@@ -43,8 +50,8 @@ public class SingleMigrationTool {
 				java.migrate(ex.getName(), builder);
 				break;
 			}
-			IdSeparator id = new IdSeparator(ex.getName());
-			if (!id.getId().contains(ALLWAIS_ID)) {
+			IdSeparator id = new IdSeparator(ex.getName(), separator);
+			if (!id.getId().contains(allwaysId)) {
 				idToDb(id.getId(), id.getDesc(), builder, isRevert);
 			}
 			con.commit();

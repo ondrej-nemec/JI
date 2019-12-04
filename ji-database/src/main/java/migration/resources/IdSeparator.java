@@ -4,17 +4,15 @@ import common.FileExtension;
 
 public class IdSeparator {
 	
-	private static final String ID_SEPARATOR = "__";
-	
 	private final String id;
 	
 	private final String desc;
 	
-	public IdSeparator(String name) {
-		if (!name.contains(ID_SEPARATOR)) {
+	public IdSeparator(String name, String separator) {
+		if (!name.contains(separator)) {
 			throw new RuntimeException("File name is in incorrect format: " + name);
 		}
-		String[] aux = new FileExtension(name).getName().split(ID_SEPARATOR);
+		String[] aux = new FileExtension(name).getName().split(separator);
 		if (aux.length != 2) {
 			throw new RuntimeException("File name is in incorrect format: " + name);
 		}
