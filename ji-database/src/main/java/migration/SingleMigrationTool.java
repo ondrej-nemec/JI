@@ -1,61 +1,70 @@
 package migration;
 
-import common.exceptions.NotImplementedYet;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import common.DateTime;
+import common.FileExtension;
+import common.Logger;
+import migration.migrations.JavaMigration;
+import migration.migrations.SqlMigration;
 import querybuilder.QueryBuilder;
 
 public class SingleMigrationTool {
 	
-	public SingleMigrationTool() {
-		// TODO Auto-generated constructor stub
+	private final static String ALLWAIS_ID = "ALLWAYS";
+	
+	private final String migrationTable = "migrations";
+	
+	private final Logger logger;
+	
+	private final SqlMigration sql;
+	
+	private final JavaMigration java;
+	
+	public SingleMigrationTool(JavaMigration java, SqlMigration sql, Logger logger) {
+		this.logger = logger;
+		this.java = java;
+		this.sql = sql;
 	}
 
-	public void transaction(String name, QueryBuilder builder, boolean isRevert) {
-		// name je i s priponou - extract zde
-		throw new NotImplementedYet();
+	public void transaction(String file, QueryBuilder builder, boolean isRevert) throws Exception {
+		Connection con = builder.getConnection();
+		try {
+			con.setAutoCommit(false);
+			FileExtension ex = new FileExtension(file);
+			switch (ex.getExtension()) {
+			case "sql":
+				sql.migrate(ex.getName() + ".sql", builder);
+				break;
+			case "class":
+			case "java":
+				java.migrate(ex.getName(), builder);
+				break;
+			}
+			IdSeparator id = new IdSeparator(ex.getName());
+			if (!id.getId().contains(ALLWAIS_ID)) {
+				idToDb(id.getId(), id.getDesc(), builder, isRevert);
+			}
+			con.commit();
+		} catch (Exception e) {
+			con.rollback();
+			throw e;
+		}
 	}
-	// pro dany soubor zacne transakci, vybere spravny zpusob migrace a transakci spravne ukonci
-	// opacne - transakce, zpusob odmigrace, smazani zaznamu, ukonceni transakce
-	// foward / revert dulezite jen pro insert/delete
-	/*
-	try {
-		con.setAutoCommit(false);
-		String type = files.get(key.toString()).toString();
-    	String name = key.toString();
-    	switch (type) {
-    		case "sql": 
-    			migrate(path + "/" + name + ".sql", builder, revert, external);
-    			break;
-    		case "class":
-    		case "java":
-    			migrate(name, loader, external ? "" : path + ".", revert);
-    			break;
-    		default: break;
-    	}
-    	String[] names = parseName(name);
-    	if (!names[0].contains(ALLWAYS_ID)) {
-    		builder
+	
+	private void idToDb(String id, String description, QueryBuilder builder, boolean isRevert) throws SQLException {
+		if (isRevert) {
+			logger.warn("Migration reverted: " + id);
+			builder.delete(migrationTable).where("id = :id").addParameter("id", id).execute();
+		} else {
+			builder
     		.insert(migrationTable)
-    		.addValue("id", names[0])
-    		.addValue("Description", names[1])
+    		.addValue("id", id)
+    		.addValue("Description", description)
     		.addValue("DateTime", DateTime.format("YYYY-mm-dd H:m:s"))
     		.execute();
-    	}
-		con.commit();
-	} catch (Exception e) {
-		con.rollback();
-		throw e;
-	}
-	*/
-	/*
-	private String[] parseName(String name) {
-		if (!name.contains(NAME_SEPARATOR)) {
-			throw new RuntimeException("File name is in incorrect format: " + name);
-		}		
-		String[] names = name.split(NAME_SEPARATOR);
-		if (names.length != 2) {
-			throw new RuntimeException("File name is in incorrect format: " + name);
 		}
-		return names;
 	}
-	*/
+
 }
