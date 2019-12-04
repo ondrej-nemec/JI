@@ -99,6 +99,6 @@ public class RestApiClient {
 			});
 			return b.toString();
 		}
-		return server;
+		return server + uri;
 	}
 }
