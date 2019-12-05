@@ -30,6 +30,9 @@ public class Server {
     private int threadCount = 0;
     private final int maxThread;
     
+    private boolean isPaused = false;
+    private final long readTimeOut;
+    
     private final String charset;
     
     private final ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> servant;
@@ -65,6 +68,7 @@ public class Server {
         this.servant = servant;
         this.charset = charset;
         this.maxThread = threadPool;
+        this.readTimeOut = readTimeout;
         
         this.serverSocket = new ServerSocket(port);
         serverSocket.setSoTimeout((int)readTimeout);
@@ -76,14 +80,20 @@ public class Server {
         logger.info("Server running");
     }
     
-    public void stop() throws InterruptedException {
-        sheduled.shutdown();
-        logger.info("Server stopped");
+    public void pause(boolean isPaused) {
+    	this.isPaused = isPaused;
     }
     
-    public void stop(long await, TimeUnit timeunit) throws InterruptedException {
+    public void stop() throws InterruptedException {
+    	stop(1, TimeUnit.SECONDS);
+    }
+    
+    public void stop(long timeout, TimeUnit unit) throws InterruptedException {
+    	logger.info("Stopping server");
+    	executor.shutdown();
+        executor.awaitTermination(timeout, unit);
         sheduled.shutdown();
-        sheduled.awaitTermination(await, timeunit);
+        sheduled.awaitTermination(timeout, unit);
         logger.info("Server stopped");
     }
     
@@ -95,6 +105,15 @@ public class Server {
     
     private Runnable getClientChacker() {
         return ()->{
+        	if (isPaused) {
+        		logger.info(String.format("Server is paused, clients(%d/%d)...", threadCount, maxThread));
+        		try {
+					Thread.sleep(readTimeOut);
+				} catch (InterruptedException e) {
+					logger.debug("Sleep", e);
+				}
+        		return;
+        	}
             try {
             	logger.info(String.format("Waiting for client(%d/%d)...", threadCount, maxThread));
                 executor.execute(
@@ -104,7 +123,7 @@ public class Server {
                     )
                 );
             } catch (SocketTimeoutException e) {
-                logger.warn("Connection closed - reading timeout");
+                logger.warn("Connection closed - reading timeout: " + readTimeOut);
             } catch (IOException e) {
                 logger.fatal("Preparing sockets", e);
             }

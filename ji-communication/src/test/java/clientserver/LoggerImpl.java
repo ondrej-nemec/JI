@@ -1,67 +1,71 @@
 package clientserver;
 
+import common.DateTime;
 import common.Logger;
 
 public class LoggerImpl implements Logger {
 
-    @Override
-    public void info(Object message) {
-        System.out.println("INFO: " + message);
-    }
+    public void print(String severity, Object message) {
+		System.out.println(DateTime.format("yyyy-mm-dd H:mm:ss") + " " + severity + " " + message.toString());
+	}
+	
+	public void print(String severity, Object message, Throwable t) {
+		/*
+		print(severity, message.toString() + ", " + t.getMessage());
+		/*/
+		print(severity, message.toString());
+		t.printStackTrace();
+		//*/
+	}
 
-    @Override
-    public void fatal(Object message, Throwable t) {
-        System.out.println("FATAL: " + message + ", " + t.getMessage());
-    }
-
-    @Override
-    public void warn(Object message) {
-        System.out.println("WARN: " + message);
-    }
-    
-    public void log(String message) {
-        System.out.println("---> " + message);
-    }
-
-    @Override
-    public void debug(Object message) {
-        System.out.println("DEBUG: " + message);
-    }
+	@Override
+	public void debug(Object message) {
+		print("DEBUG", message);
+	}
 
 	@Override
 	public void debug(Object message, Throwable t) {
-		// TODO Auto-generated method stub
-		
+		print("DEBUG", message, t);
+	}
+
+	@Override
+	public void info(Object message) {
+		print("INFO", message);
 	}
 
 	@Override
 	public void info(Object message, Throwable t) {
-		// TODO Auto-generated method stub
-		
+		print("INFO", message, t);
+	}
+
+	@Override
+	public void warn(Object message) {
+		print("WARN", message);
 	}
 
 	@Override
 	public void warn(Object message, Throwable t) {
-		// TODO Auto-generated method stub
-		
+		print("WARN", message, t);
 	}
 
 	@Override
 	public void error(Object message) {
-		// TODO Auto-generated method stub
-		
+		print("ERROR", message);
 	}
 
 	@Override
 	public void error(Object message, Throwable t) {
-		// TODO Auto-generated method stub
-		
+		print("ERROR", message, t);
 	}
 
 	@Override
 	public void fatal(Object message) {
-		// TODO Auto-generated method stub
-		
+		print("FATAL", message);
+	}
+
+	@Override
+	public void fatal(Object message, Throwable t) {
+		print("FATAL", message, t);
 	}
 
 }
