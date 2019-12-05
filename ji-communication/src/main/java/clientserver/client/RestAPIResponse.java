@@ -30,5 +30,23 @@ public class RestAPIResponse {
 	public String toString() {
 		return code + " " + message + "\r\n" + content;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof RestAPIResponse) ) {
+			return false;
+		}
+		RestAPIResponse r = (RestAPIResponse)obj;
+		if (code != r.code) {
+			return false;
+		}
+		if (!message.equals(r.message)) {
+			return false;
+		}
+		if (!content.equals(r.content)) {
+			return false;
+		}
+		return true;
+	}
 
 }

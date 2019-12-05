@@ -45,7 +45,10 @@ public class RestApiClient {
 		String url = createUrl(serverUrl, uri, method, params);		
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		
+		return send(con, method, header, params);
+	}
+	
+	protected RestAPIResponse send(HttpURLConnection con, HttpMethod method, Properties header, Properties params) throws IOException {
 		con.setRequestMethod(method.toString());
 		header.forEach((name, value)->{
 			con.setRequestProperty(name.toString(), value.toString());
@@ -75,16 +78,19 @@ public class RestApiClient {
 			try (OutputStream os = con.getOutputStream();) {
 				StringBuilder b = new StringBuilder();
 				params.forEach((name, value)->{
+					if (!b.toString().isEmpty()) {
+						b.append("&");
+					}
 					b.append(String.format("%s=%s", name, value));
 				});
-				
+				// TODO escape this text
 				os.write(b.toString().getBytes());
 				os.flush();
 			}
 		}
 	}
 
-	private String createUrl(String server, String uri, HttpMethod method, Properties params) {
+	protected String createUrl(String server, String uri, HttpMethod method, Properties params) {
 		if (HttpMethod.GET.equals(method)) {
 			StringBuilder b = new StringBuilder();
 			params.forEach((name, value)->{

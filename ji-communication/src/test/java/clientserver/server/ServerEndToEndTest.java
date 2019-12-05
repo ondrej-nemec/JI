@@ -42,6 +42,13 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, Properties params) throws IOException {
+				new Console().out(
+					"Method: " + method,
+					"Url: " + url,
+					"Full: " + fullUrl,
+					"Header: " + header,
+					"Params: " + params
+				);
 				Date today = new Date();
 				return new RestApiResponse(
 					StatusCode.OK,

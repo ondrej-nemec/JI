@@ -145,6 +145,7 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 		if (payload.isEmpty()) {
 			return;
 		}
+		//TODO escape payload
 		String[] params = payload.split("\\&");
 		for (String param : params) {
 			String[] keyValue = param.split("=");

@@ -12,6 +12,7 @@ public class ClientEndToEndTest {
 	private static String ip = "127.0.0.1";
 
 	public static void main(String[] args) {
+		/*
 		try {
 			SpeakerClient client = new SpeakerClient(
 					ip,
@@ -32,7 +33,7 @@ public class ClientEndToEndTest {
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		*/
 		/***************************************/
 		
 		RestApiClient client = new RestApiClient(
@@ -42,8 +43,10 @@ public class ClientEndToEndTest {
 		
 		Properties header = new Properties();
 		header.put("User-Agent", "Mozilla/5.0");
+		header.put("User", "Chrome");
 		Properties params = new Properties();
 		params.put("userName", "sysadmin");
+		params.put("password", "secret-password");
 		
 		try {
 			console.out("GET");
