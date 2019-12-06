@@ -46,7 +46,7 @@ public class MigrationPreparation {
 	private int indexOfLastMigrated(List<String> loadedFiles, List<String> migrated) throws MigrationException {
 		int index = -1;
 		for (int i = 0; i < migrated.size(); i++) {
-			String fileId = new IdSeparator(loadedFiles.get(1), separator).getId();
+			String fileId = new IdSeparator(loadedFiles.get(i), separator).getId();
 			if (!migrated.get(i).equals(fileId)) {
 				throw new MigrationException();
 			}

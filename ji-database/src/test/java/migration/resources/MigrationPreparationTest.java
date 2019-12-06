@@ -27,7 +27,7 @@ public class MigrationPreparationTest {
 	private static final String MIGRATION_TABLE = "migration";
 	private static final String SEPARATOR = "__";
 
-	@Test(expected = MigrationException.class)
+	@Test // (expected = MigrationException.class)
 	public void testGetFilesToMigrateThrowIfMigrationGape() throws SQLException, MigrationException {
 		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
@@ -37,7 +37,10 @@ public class MigrationPreparationTest {
 		when(builder.select("id")).thenReturn(select);
 		
 		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE, SEPARATOR);
-		prep.getFilesToMigrate(Arrays.asList("First__migration.java", "Second__migration.sql"), false, builder);
+		try {
+			prep.getFilesToMigrate(Arrays.asList("First__migration.java", "Second__migration.sql"), false, builder);
+			fail("Expected " + MigrationException.class);
+		} catch (Exception e) {}
 		
 		verify(select, times(1)).from(MIGRATION_TABLE);
 		verify(select, times(1)).fetchAll(any());
