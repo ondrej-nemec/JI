@@ -17,12 +17,7 @@ import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
 public class RestAPITest {
-	
-	@Test
-	public void testPaseRequestFillProperties() {
-		fail();
-	}
-	
+
 	@Test
 	@Parameters(method = "dataParseFirstSplitFirstLine")
 	public void testParseFirstSplitFirstLine(String line, Properties expectedRequest, Properties expectedParams) {
