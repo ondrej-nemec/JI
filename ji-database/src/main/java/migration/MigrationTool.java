@@ -1,9 +1,7 @@
 package migration;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.sql.SQLException;
 import java.util.List;
 
 import common.Logger;
@@ -21,30 +19,51 @@ public class MigrationTool {
 	private static final String SEPARATOR = "__";
 	
 	private final Logger logger;
+	private final QueryBuilder builder;
+	private final String folder;
 	
-	public MigrationTool(Logger logger) {
+	public MigrationTool(String folder, QueryBuilder builder, Logger logger) {
 		this.logger = logger;
+		this.folder = folder;
+		this.builder = builder;
 	}
 
 	public void migrate() throws Exception {
-	/*	File file = getMigrationDir(folder);
-		Map<String, String> map = loadFiles(file.listFiles());
-		doMigrations(file, map, folder, false);*/
+		process(folder, false, builder, (filesToMigrate, single, builder)->{
+			for (int i = 0; i < filesToMigrate.size(); i++) {
+    			single.transaction(filesToMigrate.get(i), builder, false);
+    		}
+		});
 	}
 	
-	public void revert() {
-		
+	public void revert() throws Exception {
+		process(folder, true, builder, (filesToMigrate, single, builder)->{
+			for (int i = filesToMigrate.size(); i > 0; i--) {
+				single.transaction(filesToMigrate.get(i-1), builder, true);
+			}
+		});
 	}
 	
-	public void revert(String id) {
-		
+	public void revert(String id) throws Exception {
+		process(folder, true, builder, (filesToMigrate, single, builder)->{
+			for (int i = filesToMigrate.size(); i > 0; i--) {
+    			if (new IdSeparator(filesToMigrate.get(i-1), SEPARATOR).getId().equals(id)) {
+    				return;
+    			}
+    			single.transaction(filesToMigrate.get(i-1), builder, true);
+    		}
+		});
 	}
 	
-	public void revert(int steps) {
-		
+	public void revert(int steps) throws Exception {
+		process(folder, true, builder, (filesToMigrate, single, builder)->{
+			for (int i = filesToMigrate.size(); filesToMigrate.size() - i < steps; i--) {
+    			single.transaction(filesToMigrate.get(i-1), builder, true);
+    		}
+		});
 	}
-	
-	private void process(String folder, boolean isRevert, QueryBuilder builder) throws IOException, SQLException, MigrationException {
+
+	private void process(String folder, boolean isRevert, QueryBuilder builder, MigrationProcess process) throws Exception {
 		MigrationFiles files = new MigrationFiles(folder);
 		MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE, SEPARATOR);
 		List<String> filesToMigrate = prep.getFilesToMigrate(files.getFiles(), isRevert, builder);
@@ -55,29 +74,9 @@ public class MigrationTool {
     		SqlMigration sql = new SqlMigration(folder, isRevert, files.isInClasspath());
     		JavaMigration java = new JavaMigration(folder, loader, isRevert, files.isInClasspath());
 			SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, logger);
-    		
+    		process.process(filesToMigrate, tool, builder);
     	}
 		
 	}
-	
-	private void foward(List<String> filesToMigrate, SingleMigrationTool single, QueryBuilder builder) throws Exception {
-		for (int i = 0; i < filesToMigrate.size(); i++) {
-			single.transaction(filesToMigrate.get(i), builder, false);
-		}
-	}
-	
-	private void back(List<String> filesToMigrate, SingleMigrationTool single, QueryBuilder builder, int steps) throws Exception {
-		for (int i = filesToMigrate.size(); filesToMigrate.size() - i < steps; i--) {
-			single.transaction(filesToMigrate.get(i-1), builder, true);
-		}
-	}
-	
-	private void back(List<String> filesToMigrate, SingleMigrationTool single, QueryBuilder builder, String id) throws Exception {
-		for (int i = filesToMigrate.size(); i > 0; i--) {
-			if (new IdSeparator(filesToMigrate.get(i-1), SEPARATOR).getId().equals(id)) {
-				return;
-			}
-			single.transaction(filesToMigrate.get(i-1), builder, true);
-		}
-	}
+
 }
