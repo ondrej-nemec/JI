@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 
@@ -62,28 +61,6 @@ public class MySqlSelectBuilderTest {
 		assertEquals(expected, builder.getSql());
 		assertEquals(created, builder.createSql());
 		verifyNoMoreInteractions(mock);
-	}
-	
-	@Test
-	@Parameters
-	public void testJoinToString(Join join, String expected) {
-		assertEquals(
-			expected,
-			new MySqlSelectBuilder(null, "").joinToString(join)
-		);
-	}
-	
-	@Test(expected=RuntimeException.class)
-	public void testJoinToStringThrowsWhenFullOuterJoin() {
-		new MySqlSelectBuilder(null, "").joinToString(Join.FULL_OUTER_JOIN);
-	}
-	
-	public Object[] parametersForTestJoinToString() {
-		return new Object[] {
-			new Object[] {Join.INNER_JOIN, "JOIN"},
-			new Object[] {Join.LEFT_OUTER_JOIN, "LEFT JOIN"},
-			new Object[] {Join.RIGHT_OUTER_JOIN, "RIGHT JOIN"}
-		};
 	}
 	
 }

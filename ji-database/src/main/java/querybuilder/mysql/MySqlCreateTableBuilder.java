@@ -37,40 +37,13 @@ public class MySqlCreateTableBuilder implements CreateTableQueryBuilder {
 		}
 		first = false;
 		sql.append(" ").append(name).append(" ");
-		sql.append(typeToString(type));
-		sql.append(defaultValueToString(defaultValue));
+		sql.append(EnumToMysqlString.typeToString(type));
+		sql.append(EnumToMysqlString.defaultValueToString(defaultValue));
 		for (ColumnSetting setting : settings) {
-			sql.append(settingToString(setting, name));
+			sql.append(EnumToMysqlString.settingToString(setting, name, append));
 		}
 		
 		return this;
-	}
-	
-	private Object defaultValueToString(Object defaultValue) {
-		if (defaultValue == null) {
-			return "";
-		}
-		String value = (defaultValue instanceof String) ? String.format("'%s'", defaultValue) : defaultValue.toString();
-		return " DEFAULT " + value;
-	}
-
-	private Object settingToString(ColumnSetting setting, String column) {
-		switch (setting) {
-    		case AUTO_INCREMENT: return " AUTO INCREMENT";
-    		case UNIQUE: return " UNIQUE";
-    		case NOT_NULL: return " NOT NULL";
-    		case NULL: break;
-    		case PRIMARY_KEY: append.append(String.format(", PRIMARY KEY (%s)", column)); break;
-		}
-		return "";
-	}
-
-	private String typeToString(ColumnType type) {
-		switch (type.getType()) {
-    		case STRING:
-    			return String.format("VARCHAR(%s)", type.getSize());
-    		default: return type.getType().toString();
-		}
 	}
 
 	@Override

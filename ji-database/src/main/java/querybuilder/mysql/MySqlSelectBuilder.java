@@ -37,7 +37,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder join(String table, Join join, String on) {
-		query.append(" " + joinToString(join) +" " + table + " ON " + on);
+		query.append(" " + EnumToMysqlString.joinToString(join) +" " + table + " ON " + on);
 		return this;
 	}
 
@@ -194,7 +194,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+/*	
 	protected String joinToString(final Join join) {
 		switch(join) {
 			case FULL_OUTER_JOIN: throw new RuntimeException("Full Outer Join is not supported by mysql");
@@ -204,5 +204,5 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 			default: throw new RuntimeException("Not implemented join: " + join);
 		}
 	}
-	
+*/
 }
