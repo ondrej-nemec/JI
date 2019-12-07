@@ -20,7 +20,7 @@ public class MySqlSelectBuilderTest {
 	@Test
 	public void testBuilderViaGetSql() {
 		Connection mock = mock(Connection.class);
-		SelectQueryBuilder builder = new MySqlSelectBuilder(mock, "a.id, a.name, a.FK_id")
+		SelectQueryBuilder builder = new MySqlSelectBuilder(mock, "a.id", "a.name", "a.FK_id")
 					.from("table_name a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
 					.where("b.id = 1")

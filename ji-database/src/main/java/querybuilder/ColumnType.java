@@ -2,7 +2,7 @@ package querybuilder;
 
 public class ColumnType {
 	
-	enum Type {
+	public enum Type {
 		BOOLEAN,
 		INT,
 		STRING,
@@ -34,11 +34,11 @@ public class ColumnType {
 	
 	private final Type type;
 	
-	public ColumnType(Type type) {
+	private ColumnType(Type type) {
 		this.type = type;
 	}
 	
-	public ColumnType(Type type, int size) {
+	private ColumnType(Type type, int size) {
 		this.type = type;
 		this.size = size;
 	}

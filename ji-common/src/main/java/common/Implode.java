@@ -4,7 +4,7 @@ import common.exceptions.LogicException;
 
 public class Implode {
 
-	public static String implode(String glue, Object... data) {
+	public static String implode(String glue, String... data) {
 		return implode(glue, data, 0, data.length - 1);
 	}
 	

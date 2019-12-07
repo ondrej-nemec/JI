@@ -28,7 +28,7 @@ public abstract class QueryBuilder {
 	
 	public abstract ExecuteQueryBuilder deleteTable(String table);
 	
-	public abstract CreateTableQueryTable createTable(String name);
+	public abstract CreateTableQueryBuilder createTable(String name);
 	
 	public abstract AlterTableQueryBuilder alterTable(String name);
 	
@@ -36,9 +36,9 @@ public abstract class QueryBuilder {
 	
 	public abstract ExecuteQueryBuilder deleteView(String table);
 	
-	public abstract CreateViewQueryTable createView(String name);
+	public abstract CreateViewQueryBuilder createView(String name);
 	
-	public abstract CreateViewQueryTable alterView(String name);
+	public abstract CreateViewQueryBuilder alterView(String name);
 	
 	/***********************/
 	

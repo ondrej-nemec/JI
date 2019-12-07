@@ -17,7 +17,7 @@ import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import migration.MigrationException;
-import querybuilder.CreateTableQueryTable;
+import querybuilder.CreateTableQueryBuilder;
 import querybuilder.QueryBuilder;
 import querybuilder.SelectQueryBuilder;
 
@@ -122,7 +122,7 @@ public class MigrationPreparationTest {
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
 		when(select.fetchAll(any())).thenThrow(SQLException.class);
 		
-		CreateTableQueryTable create = mock(CreateTableQueryTable.class);
+		CreateTableQueryBuilder create = mock(CreateTableQueryBuilder.class);
 		when(create.addColumn(any(), any(), any())).thenReturn(create);
 		
 		QueryBuilder builder = mock(QueryBuilder.class);

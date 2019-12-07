@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import common.Implode;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
@@ -22,9 +23,9 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 	
 	private final Connection connection;
 	
-	public MySqlSelectBuilder(final Connection connection, final String select) {
+	public MySqlSelectBuilder(final Connection connection, final String... select) {
 		this.connection = connection;
-		this.query = new StringBuilder("SELECT " + select);
+		this.query = new StringBuilder("SELECT " + Implode.implode(", ", select));
 		this.params = new HashMap<>();
 	}
 

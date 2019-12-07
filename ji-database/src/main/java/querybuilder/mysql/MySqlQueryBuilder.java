@@ -2,9 +2,10 @@ package querybuilder.mysql;
 
 import java.sql.Connection;
 
+import common.Implode;
 import querybuilder.AlterTableQueryBuilder;
-import querybuilder.CreateTableQueryTable;
-import querybuilder.CreateViewQueryTable;
+import querybuilder.CreateTableQueryBuilder;
+import querybuilder.CreateViewQueryBuilder;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.ExecuteQueryBuilder;
 import querybuilder.InsertQueryBuilder;
@@ -40,14 +41,12 @@ public class MySqlQueryBuilder extends QueryBuilder {
 
 	@Override
 	public ExecuteQueryBuilder deleteTable(String table) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MySqlExecuteBuilder(connection, String.format("DROP TABLE %s", table));
 	}
 
 	@Override
-	public CreateTableQueryTable createTable(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public CreateTableQueryBuilder createTable(String name) {
+		return new MySqlCreateTableBuilder(connection, name);
 	}
 
 	@Override
@@ -58,32 +57,33 @@ public class MySqlQueryBuilder extends QueryBuilder {
 
 	@Override
 	public ExecuteQueryBuilder deleteView(String table) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MySqlExecuteBuilder(connection, String.format("DROP VIEW %s", table));
 	}
 
 	@Override
-	public CreateViewQueryTable createView(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public CreateViewQueryBuilder createView(String name) {
+		return new MySqlCreateViewBuilder(connection, name, false);
 	}
 
 	@Override
-	public CreateViewQueryTable alterView(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public CreateViewQueryBuilder alterView(String name) {
+		return new MySqlCreateViewBuilder(connection, name, true);
 	}
 
 	@Override
 	public ExecuteQueryBuilder createIndex(String name, String table, String... colums) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MySqlExecuteBuilder(
+			connection,
+			String.format("CREATE INDEX %s ON %s(%s)", name, table, Implode.implode(", ", colums))
+		);
 	}
 
 	@Override
 	public ExecuteQueryBuilder deleteIndex(String name, String table) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MySqlExecuteBuilder(
+				connection,
+				String.format("ALTER TABLE %s DROP INDEX %s", table, name)
+			);
 	}
 
 }
