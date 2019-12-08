@@ -51,8 +51,7 @@ public class MySqlQueryBuilder extends QueryBuilder {
 
 	@Override
 	public AlterTableQueryBuilder alterTable(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MySqlAlterTableBuilder(connection, name);
 	}
 
 	@Override
