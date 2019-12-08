@@ -31,7 +31,7 @@ import querybuilder.mysql.MySqlQueryBuilder;
 import text.BufferedReaderFactory;
 
 @RunWith(Parameterized.class)
-public class EndToEndTest {
+public class QueryBuilderEndToEndTest {
 	
 	private final String type;
 	
@@ -39,7 +39,7 @@ public class EndToEndTest {
 	
 	private final boolean isExternalServer;
 
-	public EndToEndTest(String type, String pathToDb, boolean isExternalServer) {
+	public QueryBuilderEndToEndTest(String type, String pathToDb, boolean isExternalServer) {
 		super();
 		this.type = type;
 		this.pathToDb = pathToDb;

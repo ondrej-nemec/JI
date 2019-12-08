@@ -10,12 +10,8 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-import common.Logger;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import querybuilder.mysql.MySqlQueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class MigrationToolEndToEndTest {
