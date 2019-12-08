@@ -1,13 +1,14 @@
 package querybuilder.mysql;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import querybuilder.ColumnSetting;
+import querybuilder.ColumnType;
 import querybuilder.Join;
 
 @RunWith(JUnitParamsRunner.class)
@@ -33,12 +34,38 @@ public class EnumToStringTest {
 	}
 	
 	@Test
-	public void testSettingToStringReturnsCorrectString() {
-		fail("Not finished");
+	@Parameters(method = "dataSettingToStringReturnsCorrectString")
+	public void testSettingToStringReturnsCorrectString(String expected, ColumnSetting setting, String column, String appended) {
+		StringBuilder append = new StringBuilder();
+		assertEquals(expected, EnumToMysqlString.settingToString(setting, column, append));
+		assertEquals(appended, append.toString());
 	}
 	
-	@Test
-	public void testTypeToStringReturnsCorrectString() {
-		fail("Not finished");
+	public Object[] dataSettingToStringReturnsCorrectString() {
+		return new Object[] {
+			new Object[] {" AUTO INCREMENT", ColumnSetting.AUTO_INCREMENT, "col", ""},
+			new Object[] {" UNIQUE", ColumnSetting.UNIQUE, "col", ""},
+			new Object[] {" NOT NULL", ColumnSetting.NOT_NULL, "col", ""},
+			new Object[] {"", ColumnSetting.NULL, "col", ""},
+			new Object[] {"", ColumnSetting.PRIMARY_KEY, "col", ", PRIMARY KEY (col)"}
+		};
 	}
+
+	@Test
+	@Parameters(method = "dataTypeToStringReturnsCorrectString")
+	public void testTypeToStringReturnsCorrectString(String expected, ColumnType type) {
+		assertEquals(expected, EnumToMysqlString.typeToString(type));
+	}
+	
+	public Object[] dataTypeToStringReturnsCorrectString() {
+		return new Object[] {
+			new Object[] {"BOOLEAN", ColumnType.bool()},
+			new Object[] {"INT", ColumnType.integer()},
+			new Object[] {"DATETIME", ColumnType.datetime()},
+			new Object[] {"VARCHAR(10)", ColumnType.string(10)},
+			new Object[] {"VARCHAR(255)", ColumnType.string(255)},
+			new Object[] {"TEXT", ColumnType.text()}
+		};
+	}
+	
 }

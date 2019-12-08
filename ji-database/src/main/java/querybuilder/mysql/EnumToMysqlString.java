@@ -29,10 +29,10 @@ public class EnumToMysqlString {
     		case AUTO_INCREMENT: return " AUTO INCREMENT";
     		case UNIQUE: return " UNIQUE";
     		case NOT_NULL: return " NOT NULL";
-    		case NULL: break;
-    		case PRIMARY_KEY: append.append(String.format(", PRIMARY KEY (%s)", column)); break;
+    		case NULL: return "";
+    		case PRIMARY_KEY: append.append(String.format(", PRIMARY KEY (%s)", column)); return "";
+    		default: return "";
 		}
-		return "";
 	}
 
 	public static String typeToString(ColumnType type) {
