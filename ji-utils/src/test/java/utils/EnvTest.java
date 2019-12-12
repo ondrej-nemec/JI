@@ -36,7 +36,7 @@ public class EnvTest {
 	public void testConstructorForFileFindCorrectProperties(final AppMode mode, final String subDir)
 			throws FileNotFoundException, IOException {
 		Env e = new Env("env/env." + subDir + ".properties");
-		assertEquals(mode, e.mode);
+		assertEquals(mode, e.getAppMode());
 		assertEquals("value", e.getProperties().getProperty("key"));
 	}
 	
@@ -50,7 +50,7 @@ public class EnvTest {
 	
 	@Test(expected=RuntimeException.class)
 	public void testConstructorForCodeThrowsIfAppModeIsNotSetted() {
-		new Env(new Properties());
+		new Env(new Properties()).getAppMode();
 	}
 
 }
