@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static common.MapInit.*;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Test;
@@ -114,6 +115,30 @@ public class TranslatorTest {
     		new Object[]{"Default 9", 9},
     		new Object[]{"Default 0", 0},
     		new Object[]{"Five", 5},
+    	};
+    }
+    
+    @Test
+    @Parameters(method = "dataTranslateWorksWithSpecialAlphabets")
+    public void testTranslateWorksWithSpecialAlphabets(String expected, Locale locale, String path) {
+    	Locale.setDefault(locale);
+    	Translator translator = new Translator(mock(Logger.class), path, "messages");    	
+    	assertEquals(expected, translator.translate("key"));
+    }
+    
+    public Object[] dataTranslateWorksWithSpecialAlphabets() {
+    	return new Object[] {
+    		new Object[] {"English text", Locale.ENGLISH, "langs/"},
+    		new Object[] {"České znaky -> ěščřžýáíéůú", new Locale("cs"), "langs/"},
+    		new Object[] {"中文文字", Locale.CHINESE, "langs/"},
+    		new Object[] {"Русский текст", new Locale("ru"), "langs/"},
+    		new Object[] {"Default", new Locale("not-existing"), "langs/"},
+
+    		new Object[] {"English text", Locale.ENGLISH, "trans/langs/"},
+    		new Object[] {"České znaky -> ěščřžýáíéůú", new Locale("cs"), "trans/langs/"},
+    		new Object[] {"中文文字", Locale.CHINESE, "trans/langs/"},
+    		new Object[] {"Русский текст", new Locale("ru"), "trans/langs/"},
+    		new Object[] {"Default", new Locale("not-existing"), "trans/langs/"}
     	};
     }
 

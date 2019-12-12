@@ -1,15 +1,13 @@
 package translator;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
+import java.util.Properties;
 
 import common.Implode;
 import common.Logger;
+import utils.io.PropertiesLoader;
 
 public class Translator {
 	
@@ -19,11 +17,18 @@ public class Translator {
 	
 	private final Logger logger;
 	
-	private final ResourceBundle defaultResource;
+	private final Properties defaultResource;
 	
-	private final Map<String, ResourceBundle> otherResources;
+	private final Map<String, Properties> otherResources;
+	
+	private final Locale locale;
 	
 	public Translator(Logger logger, String pathToFiles, String defaultName, String... others) {
+		this(logger, Locale.getDefault(), pathToFiles, defaultName, others);
+	}
+	
+	public Translator(Logger logger, Locale locale, String pathToFiles, String defaultName, String... others) {
+		this.locale = locale;
 		this.logger = logger;
 		this.defaultResource = loadBundle(pathToFiles + defaultName);
 		this.otherResources = new HashMap<>();
@@ -34,17 +39,20 @@ public class Translator {
 		otherResources.put(defaultName, defaultResource);
 	}
 	
-	private ResourceBundle loadBundle(String path) {
+	private Properties loadBundle(String path) {
 		try {
-			return ResourceBundle.getBundle(path);
-		} catch(Exception e) {}
-		try (InputStream fis = new FileInputStream(path + ".properties")) {
-			return new PropertyResourceBundle(fis);
-		} catch(Exception e) {
-			throw new RuntimeException(e);
+			return PropertiesLoader.loadProperties(String.format("%s_%s.properties", path, locale));
+		} catch (Exception e) {
+			logger.error("Cannot load translation file. Default used");
+		}
+		try {
+			return PropertiesLoader.loadProperties(String.format("%s.properties", path));
+		} catch (Exception e) {
+			logger.error("Cannot load translation file", e);
+			return new Properties();
 		}
 	}
-	
+
 	/**
 	 * key structure: <resource>.<key> OR <key>
 	 * if <resource> not exists returns <resource.key> as <key> from default
@@ -99,21 +107,22 @@ public class Translator {
 	private String trans(String key) {
 		String from = getFrom(key);
 		if (from == null) {
-			return trans(key, defaultResource);
+			return trans(key, defaultResource, "");
 		}
 		String newKey = getKey(key);
-		ResourceBundle bundle = otherResources.get(from);
+		Properties bundle = otherResources.get(from);
 		if (bundle != null) {
-			return trans(newKey, bundle);
+			return trans(newKey, bundle, from);
 		}
-		return trans(key, defaultResource);
+		return trans(key, defaultResource, from);
 	}
 	
-	private String trans(String key, ResourceBundle from) {
-		try{
-			return from.getString(key);
-		}catch (MissingResourceException e){
-			logger.warn("Missing key - " + key + " in " + from.getBaseBundleName());
+	private String trans(String key, Properties from, String bundleName) {
+		String result = from.getProperty(key);
+		if (result != null) {
+			return result;
+		} else {
+			logger.warn("Missing key - " + key + " in " + bundleName);
 			return key;
 		}
 	}
