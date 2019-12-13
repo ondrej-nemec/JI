@@ -40,15 +40,16 @@ public class Translator {
 	}
 	
 	private Properties loadBundle(String path) {
+		String name = String.format("%s_%s.properties", path, locale);
 		try {
-			return PropertiesLoader.loadProperties(String.format("%s_%s.properties", path, locale));
+			return PropertiesLoader.loadProperties(name);
 		} catch (Exception e) {
-			logger.error("Cannot load translation file. Default used");
+			logger.error("Cannot load translation file " + name + ". Default used");
 		}
 		try {
 			return PropertiesLoader.loadProperties(String.format("%s.properties", path));
 		} catch (Exception e) {
-			logger.error("Cannot load translation file", e);
+			logger.error("Cannot load translation file "  + path, e);
 			return new Properties();
 		}
 	}
@@ -122,7 +123,7 @@ public class Translator {
 		if (result != null) {
 			return result;
 		} else {
-			logger.warn("Missing key - " + key + " in " + bundleName);
+			logger.warn("Missing key - " + key);
 			return key;
 		}
 	}
