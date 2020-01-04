@@ -11,6 +11,7 @@ import org.junit.Test;
 import querybuilder.AlterTableQueryBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
+import querybuilder.OnAction;
 
 public class MySqlAlterTableBuilderTest {
 	
@@ -21,7 +22,7 @@ public class MySqlAlterTableBuilderTest {
 				.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL)
 				.addColumn("Column2", ColumnType.integer(), 1)
 				.deleteColumn("Column3")
-				.addForeingKey("Column", "Table2", "id")
+				.addForeingKey("Column", "Table2", "id", OnAction.RESTRICT, OnAction.SET_DEFAULT)
 				.deleteForeingKey("Column")
 				.modifyColumnType("Column4", ColumnType.integer())
 				.renameColumn("Column5", "Column6", ColumnType.integer());
@@ -30,7 +31,7 @@ public class MySqlAlterTableBuilderTest {
 				+ " ADD Column1 INT NOT NULL,"
 				+ " ADD Column2 INT DEFAULT 1,"
 				+ " DROP COLUMN Column3,"
-				+ " ADD FOREIGN KEY (Column) REFERENCES Table2(id),"
+				+ " ADD FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
 				+ " DROP FOREIGN KEY Column,"
 				+ " MODIFY Column4 INT,"
 				+ " CHANGE COLUMN Column5 Column6 INT";

@@ -3,8 +3,20 @@ package querybuilder.mysql;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.Join;
+import querybuilder.OnAction;
 
 public class EnumToMysqlString {
+	
+	public static String onActionToString(OnAction action) {
+		switch (action) {
+    		case RESTRICT: return "RESTRICT";
+    		case CASCADE: return "CASCADE";
+    		case SET_NULL: return "SET NULL";
+    		case NO_ACTION: return "NO ACTION";
+    		case SET_DEFAULT: return "SET DEFAULT";
+			default: throw new RuntimeException("Not implemented action: " + action);
+		}
+	}
 	
 	public static String joinToString(final Join join) {
 		switch(join) {

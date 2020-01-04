@@ -10,6 +10,8 @@ public interface CreateTableQueryBuilder {
 	
 	CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn);
 	
+	CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate);
+	
 	void execute() throws SQLException;
 	
 	String getSql();

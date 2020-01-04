@@ -10,6 +10,8 @@ public interface AlterTableQueryBuilder {
 	
 	AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn);
 	
+	AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate);
+		
 	AlterTableQueryBuilder deleteColumn(String name);
 	
 	AlterTableQueryBuilder deleteForeingKey(String name);

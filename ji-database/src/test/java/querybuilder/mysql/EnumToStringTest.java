@@ -10,6 +10,7 @@ import junitparams.Parameters;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.Join;
+import querybuilder.OnAction;
 
 @RunWith(JUnitParamsRunner.class)
 public class EnumToStringTest {
@@ -65,6 +66,22 @@ public class EnumToStringTest {
 			new Object[] {"VARCHAR(10)", ColumnType.string(10)},
 			new Object[] {"VARCHAR(255)", ColumnType.string(255)},
 			new Object[] {"TEXT", ColumnType.text()}
+		};
+	}
+
+	@Test
+	@Parameters(method = "dataOnActionToStringReturnsCorrectString")
+	public void testOnActionToStringReturnsCorrectString(String expected, OnAction action) {
+		assertEquals(expected, EnumToMysqlString.onActionToString(action));
+	}
+	
+	public Object[] dataOnActionToStringReturnsCorrectString() {
+		return new Object[] {
+			new Object[] {"RESTRICT", OnAction.RESTRICT},
+			new Object[] {"CASCADE", OnAction.CASCADE},
+			new Object[] {"SET NULL", OnAction.SET_NULL},
+			new Object[] {"NO ACTION", OnAction.NO_ACTION},
+			new Object[] {"SET DEFAULT", OnAction.SET_DEFAULT},
 		};
 	}
 	

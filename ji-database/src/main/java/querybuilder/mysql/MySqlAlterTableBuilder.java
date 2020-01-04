@@ -7,6 +7,7 @@ import java.sql.Statement;
 import querybuilder.AlterTableQueryBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
+import querybuilder.OnAction;
 
 public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
 	
@@ -49,6 +50,20 @@ public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
 	}
 
 	@Override
+	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
+		first();
+		sql.append(String.format(
+				"ADD FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s ON UPDATE %s",
+				column,
+				referedTable,
+				referedColumn,
+				EnumToMysqlString.onActionToString(onDelete),
+				EnumToMysqlString.onActionToString(onUpdate)
+		));
+		return this;
+	}
+
+	@Override
 	public AlterTableQueryBuilder deleteColumn(String name) {
 		first();
 		sql.append(String.format("DROP COLUMN %s", name));
@@ -79,7 +94,7 @@ public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
 	@Override
 	public void execute() throws SQLException {
 		try (Statement stat = connection.createStatement();) {
-			stat.executeUpdate(getSql());
+			stat.execute(getSql());
 		}
 	}
 

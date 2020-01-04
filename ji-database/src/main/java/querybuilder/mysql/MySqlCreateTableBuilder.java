@@ -7,6 +7,7 @@ import java.sql.Statement;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.CreateTableQueryBuilder;
+import querybuilder.OnAction;
 
 public class MySqlCreateTableBuilder implements CreateTableQueryBuilder {
 
@@ -49,6 +50,19 @@ public class MySqlCreateTableBuilder implements CreateTableQueryBuilder {
 	@Override
 	public CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn) {
 		sql.append(String.format(", FOREIGN KEY (%s) REFERENCES %s(%s)", column, referedTable, referedColumn));
+		return this;
+	}
+
+	@Override
+	public CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
+		sql.append(String.format(
+				", FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s ON UPDATE %s",
+				column,
+				referedTable,
+				referedColumn,
+				EnumToMysqlString.onActionToString(onDelete),
+				EnumToMysqlString.onActionToString(onUpdate)
+		));
 		return this;
 	}
 
