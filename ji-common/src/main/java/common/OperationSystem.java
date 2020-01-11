@@ -3,8 +3,9 @@ package common;
 public enum OperationSystem {
 	
 	NEW_LINE("\r\n", "\n"),
-	PATH_SEPARATOR("\\", ""),
-	PRE_COMMAND("cmd /c ", "/"),
+	PATH_SEPARATOR("\\", "/"),
+	PRE_COMMAND("cmd /c ", ""),
+	PRE_FILE("", "./"),
 	CLI_EXTENSION(".bat", ""); //.sh
 	
 	enum Supported {

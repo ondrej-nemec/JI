@@ -19,7 +19,7 @@ public class Terminal {
 	}
 	
 	public int runFile(final Consumer<String> stdOut, final Consumer<String> stdErr, final String fileName) {
-		return run(stdOut, stdErr, fileName + OperationSystem.CLI_EXTENSION);
+		return run(stdOut, stdErr, OperationSystem.PRE_FILE + fileName + OperationSystem.CLI_EXTENSION);
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class Terminal {
 	 * @param command
 	 */
 	public void runFile(final String fileName) {
-		run(fileName + OperationSystem.CLI_EXTENSION);
+		run(OperationSystem.PRE_FILE + fileName + OperationSystem.CLI_EXTENSION);
 	}
 	
 	public int runCommand(final Consumer<String> stdOut, final Consumer<String> stdErr, final String command) {
