@@ -160,7 +160,8 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 	}
 	
 	/** protected for test only */
-	protected String unEscapeText(String text) {
+	//TODO change
+	public static String unEscapeText(String text) {
 		for (String key : ESCAPE.keySet()) {
 			text = text.replaceAll(key, ESCAPE.get(key));
 		}
