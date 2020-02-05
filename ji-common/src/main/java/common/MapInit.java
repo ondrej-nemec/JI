@@ -33,6 +33,15 @@ public class MapInit<K, V> {
 		}
 		return map;
 	}
+
+	@SafeVarargs
+	public static <K, V> UniqueMap<K, V> uniqueMap(Tuple2<K, V>... kvs) {
+		UniqueMap<K, V> map = new UniqueMap<>();
+		for (Tuple2<K, V> kv : kvs) {
+			map.put(kv._1(), kv._2());
+		}
+		return map;
+	}
 	
 	@SafeVarargs
 	public static <K, V> Map<K, V> hashMap(Tuple2<K, V>... kvs) {
