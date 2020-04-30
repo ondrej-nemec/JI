@@ -1,11 +1,12 @@
 package migration.migrations;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Statement;
 
+import core.text.InputStreamLoader;
+import core.text.Text;
+import core.text.basic.ReadText;
 import querybuilder.QueryBuilder;
-import text.BufferedReaderFactory;
 
 public class SqlMigration implements SingleMigration {
 
@@ -26,39 +27,25 @@ public class SqlMigration implements SingleMigration {
 		String[] batches = loadContent(path + "/" + name, isRevert, isInclasspath).split(";");
 		Statement stat = builder.getConnection().createStatement();
 		for (String batch : batches) {
-			stat.addBatch(batch);
+			stat.addBatch(batch.trim());
 		}
 		stat.executeBatch();
 	}
 
 	private String loadContent(String file, boolean isRevert, boolean isInclasspath) throws IOException {
-		if (isInclasspath) {
-			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream("/" + file))) {
-				return loadContent(br, isRevert, file);
-			}
-		} else {
-			try (BufferedReader br = BufferedReaderFactory.buffer(file)) {
-				return loadContent(br, isRevert, file);
-			}
-		}
-	}
-	
-	private String loadContent(BufferedReader br, boolean revert, String file) throws IOException {
 		StringBuilder sql = new StringBuilder();
-		String line = br.readLine();
-		while (line != null) {
-			sql.append(line);
-			line = br.readLine();
-		}
+		Text.read((br)->{
+			sql.append(ReadText.asString(br));
+		}, InputStreamLoader.createInputStream(getClass(), file)); // TODO
 		
 		String[] mig = sql.toString().split("--- REVERT ---");
-		if (revert && mig.length > 1) {
+		if (isRevert && mig.length > 1) {
 			return mig[1];
-		} else if (revert && mig.length < 2) {
+		} else if (isRevert && mig.length < 2) {
 			throw new RuntimeException(String.format("Migration %s has not revert part", file));
-		} else if (!revert && mig.length == 1) {
+		} else if (!isRevert && mig.length == 1) {
 			return sql.toString();
-		} else if (!revert && mig.length > 1) {
+		} else if (!isRevert && mig.length > 1) {
 			return mig[0];
 		}
 		return sql.toString();

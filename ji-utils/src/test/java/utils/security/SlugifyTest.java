@@ -29,7 +29,7 @@ public class SlugifyTest {
 				"text_text"
 			},
 			new Object[] {
-				"љишћ",
+				"ЕЎДЌЕ™Еѕ",
 				"scrz"
 			},
 		};

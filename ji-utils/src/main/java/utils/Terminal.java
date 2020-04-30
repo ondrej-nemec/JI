@@ -1,14 +1,13 @@
 package utils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
 import common.Logger;
 import common.OperationSystem;
-import text.BufferedReaderFactory;
-import text.plaintext.PlainTextLoader;
+import core.text.Text;
+import core.text.basic.ReadText;
 
 public class Terminal {
 	
@@ -69,8 +68,10 @@ public class Terminal {
 	}
 	
 	private void readsAndApplyConsumer(final InputStream stream, final Consumer<String> consumer) throws IOException {
-		try (BufferedReader br = BufferedReaderFactory.buffer(stream)) {
-			new PlainTextLoader(br).read(consumer);
-		} finally {}
+		Text.read((br)->{
+			ReadText.perLine(br, (line)->{
+				consumer.accept(line);
+			});
+		}, stream);
 	}
 }

@@ -1,6 +1,5 @@
 package logging.providers;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Handler;
@@ -10,9 +9,9 @@ import java.util.logging.Logger;
 
 import common.Console;
 import common.OperationSystem;
+import core.text.Text;
+import core.text.basic.WriteText;
 import logging.LoggerConfig;
-import text.BufferedWriterFactory;
-import text.plaintext.PlainTextCreator;
 
 public class NativeLoggerProvider {
 	
@@ -46,8 +45,10 @@ public class NativeLoggerProvider {
 			
 			@Override
 			public synchronized void publish(LogRecord record) {
-				try(BufferedWriter bw = BufferedWriterFactory.buffer(pathToLogger, true)) {
-					new PlainTextCreator(bw).write(makeMessage(record));
+				try {
+					Text.write((bw)->{
+						WriteText.write(bw, makeMessage(record));
+					}, pathToLogger, true);
 				} catch (IOException e) {
 					//TODO what do if writing falls
 					e.printStackTrace();

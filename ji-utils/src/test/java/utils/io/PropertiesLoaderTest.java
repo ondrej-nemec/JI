@@ -1,9 +1,10 @@
 package utils.io;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +22,9 @@ public class PropertiesLoaderTest {
 
 	@Test
 	@Parameters({"conf","env"})
-	public void testConstructorForFilesWorksForClasspathAndPathOnly(String path) throws FileNotFoundException, IOException {
-		PropertiesLoader.loadProperties(path + "/app.properties");
-		assertTrue(true);
+	public void testConstructorWorks(String path) throws FileNotFoundException, IOException {
+		Properties prop = PropertiesLoader.loadProperties(path + "/app.properties");
+		assertEquals("dev", prop.get("app.mode"));
 	}
 
 }

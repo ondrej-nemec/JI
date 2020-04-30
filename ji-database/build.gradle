@@ -10,13 +10,12 @@ repositories {
 
 dependencies {
 	compile project(':ji-common')
+	compile project(':ji-files')
 	compile project(':ji-utils')
 	
 	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
 	compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
 	
-	// https://jitpack.io/#ondrej-nemec/lordoffiles
-	implementation 'com.github.ondrej-nemec.lordoffiles:lof-text:v3.1'
 	
 	// https://mvnrepository.com/artifact/junit/junit
 	compile group: 'junit', name: 'junit', version: '4.12'

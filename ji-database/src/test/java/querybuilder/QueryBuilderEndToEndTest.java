@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,16 +25,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.mockito.Mockito;
 
-import common.Logger;
 import common.structures.ThrowingBiConsumer;
+import core.text.Text;
+import core.text.basic.ReadText;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
-import text.BufferedReaderFactory;
-import utils.Terminal;
 
 @RunWith(Parameterized.class)
 public class QueryBuilderEndToEndTest {
@@ -67,7 +64,7 @@ public class QueryBuilderEndToEndTest {
 
 	@Parameters
 	public static Collection<Object[]> parameters() {
-		Terminal terminal = new Terminal(Mockito.mock(Logger.class));
+	//	Terminal terminal = new Terminal(Mockito.mock(Logger.class));
 		
 		Properties props = new Properties();
 		props.setProperty("user", "root");
@@ -102,7 +99,7 @@ public class QueryBuilderEndToEndTest {
 				(ignored) -> {/* not required*/}, 
 				"mysql"
 		));
-		String derbyPath = "C:\\software\\DerbyDB\\bin";
+	/*	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
 				(conn) -> {return new MySqlQueryBuilder(conn);},
 				() -> {
@@ -125,7 +122,7 @@ public class QueryBuilderEndToEndTest {
 					terminal.runFile(derbyPath + "/stopNetworkServer");
 				}, 
 				"derby"
-		));
+		));*/
 		return result;
 	}
 	
@@ -201,23 +198,17 @@ public class QueryBuilderEndToEndTest {
 	}
 	
 	private void loadDb(Connection connection, String file) throws IOException, SQLException {
-		try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(
-				"/querybuilder/" + type + "/" + file + ".sql"
-				))) {
-			StringBuilder sql = new StringBuilder();
-			String line = br.readLine();
-			while (line != null) {
-				sql.append(line);
-				line = br.readLine();
-			}
-			Statement stat = connection.createStatement();
-			String[] batches = sql.toString().split(";");
-			for (String batch : batches) {
-				stat.addBatch(batch);
-			}
-			stat.executeBatch();
-			stat.close();
+		StringBuilder sql = new StringBuilder();
+		Text.read((br)->{
+			sql.append(ReadText.asList(br));
+		}, getClass().getResourceAsStream("/querybuilder/" + type + "/" + file + ".sql"));
+		Statement stat = connection.createStatement();
+		String[] batches = sql.toString().split(";");
+		for (String batch : batches) {
+			stat.addBatch(batch);
 		}
+		stat.executeBatch();
+		stat.close();
 	}
 
 	/*************************************/
@@ -390,38 +381,44 @@ public class QueryBuilderEndToEndTest {
 	
 	@Test
 	public void testCreateTable() throws Exception {
-		test(null, (conn, builder)->{
+		test("createTable", (conn, builder)->{
 			builder
 				.createTable("create_table")
 				.addColumn("c1", ColumnType.bool(), 1, ColumnSetting.NOT_NULL)
 				.addColumn("c2", ColumnType.integer())
 				.addColumn("c3", ColumnType.string(10), ColumnSetting.UNIQUE)
+				.addForeingKey("c2", "second", "second_id", OnAction.CASCADE, OnAction.CASCADE)
 				.execute();
 			
 			conn.createStatement().executeQuery("select c1, c2, c3 from create_table");
-		}, Arrays.asList("create_table"));
+		}, Arrays.asList("create_table", "second"));
 	}
 	
 	@Test
 	public void testAlterTable() throws Exception {
 		test("alterTable", (conn, builder)->{
-			builder.alterTable("alter_table").modifyColumnType("id", ColumnType.bool()).execute();
-			
-			builder.alterTable("alter_table").renameColumn("name", "name2", ColumnType.string(10)).execute();
-			conn.createStatement().executeQuery("select name2 from alter_table");
-						
-			builder.alterTable("alter_table").addColumn("number", ColumnType.integer()).execute();
-			conn.createStatement().executeQuery("select number from alter_table");
-			
-			builder.alterTable("alter_table").deleteColumn("number").execute();
 			try {
-				conn.createStatement().executeQuery("select number from alter_table");
-				fail("Column number exists");
-			} catch (SQLException ignored) {}
-
-			builder.alterTable("alter_table").addForeingKey("fKey", "table_fk", "id").execute();
-			
-			builder.alterTable("alter_table").deleteForeingKey("fKey").execute();
+    			builder.alterTable("alter_table").modifyColumnType("id", ColumnType.bool()).execute();
+    			
+    			builder.alterTable("alter_table").renameColumn("name", "name2", ColumnType.string(10)).execute();
+    			conn.createStatement().executeQuery("select name2 from alter_table");
+    						
+    			builder.alterTable("alter_table").addColumn("number", ColumnType.integer()).execute();
+    			conn.createStatement().executeQuery("select number from alter_table");
+    			
+    			builder.alterTable("alter_table").deleteColumn("number").execute();
+    			try {
+    				conn.createStatement().executeQuery("select number from alter_table");
+    				fail("Column number exists");
+    			} catch (SQLException ignored) {}
+        			
+    			builder.alterTable("alter_table").addForeingKey("fKey", "table_fk", "id").execute();
+    			
+    			builder.alterTable("alter_table").deleteForeingKey("fKey").execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				fail("fail");
+			}
 		}, Arrays.asList("alter_table", "table_fk"));
 	}
 	

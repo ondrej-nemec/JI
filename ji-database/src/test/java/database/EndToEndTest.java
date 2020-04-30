@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,13 +21,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import common.Logger;
+import core.text.Text;
+import core.text.basic.ReadText;
 import database.Database;
 import database.DatabaseConfig;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
-import text.BufferedReaderFactory;
 
 @RunWith(Parameterized.class)
 public class EndToEndTest {
@@ -93,22 +93,18 @@ public class EndToEndTest {
 		String[] files = new String[] {"V1__update", "V2__insert", "V3__delete", "V4__select"};
 		for (String file : files) {
 			String migration = "/migrations/" + config.type + "/" + file + ".sql";
-			try (BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(migration))) {
-				StringBuilder sql = new StringBuilder();
-				String line = br.readLine();
-				while (line != null) {
-					sql.append(line);
-					line = br.readLine();
+			StringBuilder sql = new StringBuilder();
+			Text.read((br)->{
+				sql.append(ReadText.asString(br));
+			}, getClass().getResourceAsStream(migration));
+			database.applyQuery((conn)->{
+				Statement stat = conn.createStatement();
+				String[] batches = sql.toString().split(";");
+				for (String batch : batches) {
+					stat.addBatch(batch);
 				}
-				database.applyQuery((conn)->{
-					Statement stat = conn.createStatement();
-					String[] batches = sql.toString().split(";");
-					for (String batch : batches) {
-						stat.addBatch(batch);
-					}
-					stat.executeBatch();
-				});
-			}
+				stat.executeBatch();
+			});
 		}
 	}
 	

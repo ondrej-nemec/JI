@@ -4,10 +4,10 @@ import common.exceptions.LogicException;
 
 public class Implode {
 
-	public static String implode(String glue, String... data) {
+	public static String implode(String glue, Object... data) {
 		return implode(glue, data, 0, data.length - 1);
 	}
-	
+
 	/**
 	 * 
 	 * @param glue
