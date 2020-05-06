@@ -1,0 +1,93 @@
+
+## HTML
+
+Accept-Ranges: bytes
+Content-Length: 328
+Content-Type: text/html
+Date: Wed, 05 Feb 2020 14:22:59 GMT
+ETag: "148-59dd4df69b27b"
+Last-Modified: Wed, 05 Feb 2020 14:21:30 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
+## CSS
+
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 229
+Content-Type: text/css
+Date: Wed, 05 Feb 2020 14:22:45 GMT
+ETag: "e5-57af04de56dcc"
+Keep-Alive: timeout=5, max=98
+Last-Modified: Sun, 18 Nov 2018 13:23:21 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
+## JS
+
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 0
+Content-Type: application/javascript
+Date: Wed, 05 Feb 2020 14:22:45 GMT
+ETag: "0-59dd4d884db62"
+Keep-Alive: timeout=5, max=100
+Last-Modified: Wed, 05 Feb 2020 14:19:34 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
+## ICON
+
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 318
+Content-Type: image/x-icon
+Date: Wed, 05 Feb 2020 14:41:19 GMT
+ETag: "13e-57af04db1a33a"
+Keep-Alive: timeout=5, max=98
+Last-Modified: Sun, 18 Nov 2018 13:23:17 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
+## AJAX
+
+Connection: Keep-Alive
+Content-Length: 15
+Content-Type: application/json
+Date: Wed, 05 Feb 2020 14:40:19 GMT
+Keep-Alive: timeout=5, max=100
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+X-Powered-By: PHP/7.0.13
+
+## IMG
+
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 317
+Content-Type: image/png
+Date: Wed, 05 Feb 2020 14:41:19 GMT
+ETag: "13d-59cd5aa1cfa44"
+Keep-Alive: timeout=5, max=99
+Last-Modified: Thu, 23 Jan 2020 21:52:59 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
+## ZIP
+
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 22
+Content-Type: application/zip
+Date: Wed, 05 Feb 2020 14:47:37 GMT
+ETag: "16-59dd52884c3d5"
+Keep-Alive: timeout=5, max=100
+Last-Modified: Wed, 05 Feb 2020 14:41:56 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
+## DOC
+
+Accept-Ranges: bytes
+Connection: Keep-Alive
+Content-Length: 8458
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Date: Wed, 05 Feb 2020 14:48:25 GMT
+ETag: "210a-59dd53eb2ada6"
+Keep-Alive: timeout=5, max=100
+Last-Modified: Wed, 05 Feb 2020 14:48:09 GMT
+Server: Apache/2.4.23 (Win32) OpenSSL/1.0.2h PHP/7.0.13
+
