@@ -149,12 +149,6 @@ public class RestAPITest {
 		};
 	}
 	
-	@Test
-	public void testUnEscapeTextReplacePercentages() {
-		RestAPI api = getApi();
-		assertEquals("a?b/c\\d:e f=g&h%i", api.unEscapeText("a%3Fb%2Fc%5Cd%3Ae+f%3Dg%26h%25i"));
-	}
-	
 	/***********************/
 	
 	private RestAPI getApi() {

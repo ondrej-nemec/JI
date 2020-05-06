@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Properties;
 
 import clientserver.HttpMethod;
+import clientserver.UrlEscape;
 import common.Logger;
 
 public class RestApiClient {
@@ -81,9 +82,12 @@ public class RestApiClient {
 					if (!b.toString().isEmpty()) {
 						b.append("&");
 					}
-					b.append(String.format("%s=%s", name, value));
+					b.append(String.format(
+							"%s=%s",
+							UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
+							UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
+					));
 				});
-				// TODO escape this text
 				os.write(b.toString().getBytes());
 				os.flush();
 			}
@@ -101,7 +105,11 @@ public class RestApiClient {
 				} else {
 					b.append("&");
 				}
-				b.append(String.format("%s=%s", name, value));
+				b.append(String.format(
+						"%s=%s",
+						UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
+						UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
+				));
 			});
 			return b.toString();
 		}

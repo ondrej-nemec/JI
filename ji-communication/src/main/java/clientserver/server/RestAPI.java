@@ -2,42 +2,26 @@ package clientserver.server;
 
 import static common.MapInit.*;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Properties;
 
 import clientserver.HttpMethod;
+import clientserver.UrlEscape;
 import clientserver.server.restapi.CreateRestAPIResponce;
 import clientserver.server.restapi.RestApiResponse;
 import common.Logger;
-import common.structures.ThrowingBiConsumer;
 
-public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> {
+public class RestAPI implements Servant {
 	
 	protected final static String METHOD = "method";
 	protected final static String PROTOCOL = "protocol";
 	protected final static String URL = "url";
 	protected final static String FULL_URL = "full-url";
-	
-	private final static Map<String, String> ESCAPE = 
-			//TODO
-			hashMap(
-					t("%3F", "?"),
-					t("%2F", "/"),
-					t("%5C", "\\\\"), // escaped \
-					t("%3A", ":"),
-					t("\\+", " "), // escaped +
-					t("%3D", "="),
-					t("%26", "&"),
-					t("%25", "%")/*,
-					t("", "\""),
-					t("", "'"),
-					t("", "+"),
-					t("", "*")*/
-			);
-	
+		
 	private final Logger logger;
 
 	private final CreateRestAPIResponce createResponce;
@@ -48,7 +32,7 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 	}
 	
 	@Override
-	public void accept(BufferedReader br, BufferedWriter bw) throws IOException {
+	public void serve(BufferedReader br, BufferedWriter bw, BufferedInputStream is, BufferedOutputStream os) throws IOException {
 		Properties params = new Properties();
 		Properties header = new Properties();
 		Properties request = new Properties();
@@ -150,22 +134,13 @@ public class RestAPI implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 		for (String param : params) {
 			String[] keyValue = param.split("=");
 			if (keyValue.length == 1) {
-				prop.put(keyValue[0], "");
+				prop.put(UrlEscape.unEscapeText(keyValue[0]), "");
 			} else if (keyValue.length == 2) {
-				prop.put(keyValue[0], keyValue[1]);
+				prop.put(UrlEscape.unEscapeText(keyValue[0]), UrlEscape.unEscapeText(keyValue[1]));
 			} else {
 	    		logger.warn("Invalid param " + param);
 	    	}
 		}
-	}
-	
-	/** protected for test only */
-	//TODO change
-	public static String unEscapeText(String text) {
-		for (String key : ESCAPE.keySet()) {
-			text = text.replaceAll(key, ESCAPE.get(key));
-		}
-		return text;
 	}
 
 }
