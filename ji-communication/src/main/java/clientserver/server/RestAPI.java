@@ -1,7 +1,5 @@
 package clientserver.server;
 
-import static common.MapInit.*;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

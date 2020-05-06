@@ -1,10 +1,8 @@
 package common.structures;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class TwinList<K, V> {
 	
