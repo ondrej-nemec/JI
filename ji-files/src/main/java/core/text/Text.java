@@ -15,53 +15,54 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import common.structures.ThrowingConsumer;
+import common.structures.ThrowingFunction;
 
 public class Text {
 			
 	/************ read from buffered reader ****************/
 	
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, String path) throws IOException {
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, String path) throws IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-			consumer.accept(br);
+			return function.apply(br);
 		}
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, String path, String charset) throws IOException {
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, String path, String charset) throws IOException {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), charset))) {
-			consumer.accept(br);
+			return function.apply(br);
 		}
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, File file) throws IOException {
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, File file) throws IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			consumer.accept(br);
+			return function.apply(br);
 		}
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, File file, String charset) throws IOException {
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, File file, String charset) throws IOException {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset))) {
-			consumer.accept(br);
+			return function.apply(br);
 		}
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, InputStream stream) throws IOException {
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, InputStream stream) throws IOException {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
-			consumer.accept(br);
+			return function.apply(br);
 		}
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, InputStream stream, String charset) throws IOException {
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, InputStream stream, String charset) throws IOException {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(stream, charset))) {
-			consumer.accept(br);
+			return function.apply(br);
 		}
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, URL url) throws IOException {
-		read(consumer, url.openStream());
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, URL url) throws IOException {
+		return read(function, url.openStream());
 	}
 
-	public static void read(ThrowingConsumer<BufferedReader, IOException> consumer, URL url, String charset) throws IOException {
-		read(consumer, url.openStream(), charset);
+	public static <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, URL url, String charset) throws IOException {
+		return read(function, url.openStream(), charset);
 	}
 	
 	/************** write to buffered writer ***************/
