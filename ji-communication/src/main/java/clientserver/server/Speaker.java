@@ -1,5 +1,7 @@
 package clientserver.server;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,9 +9,8 @@ import java.util.function.Function;
 
 import clientserver.Communication;
 import common.Logger;
-import common.structures.ThrowingBiConsumer;
 
-public class Speaker implements ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> {
+public class Speaker implements Servant {
 	
 	private final Logger logger;
 	
@@ -21,7 +22,7 @@ public class Speaker implements ThrowingBiConsumer<BufferedReader, BufferedWrite
 	}
 	
 	@Override
-	public void accept(BufferedReader br, BufferedWriter bw) throws IOException {
+	public void serve(BufferedReader br, BufferedWriter bw, BufferedInputStream is, BufferedOutputStream os) throws IOException {
 		String message = null;
         do {
         	message = Communication.readMessage(br);

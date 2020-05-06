@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,14 +24,16 @@ public class SpeakerTest {
 	@Test
 	@Ignore
 	public void testAcceptAnswerRequest() throws IOException {
-		BufferedReader br = mock(BufferedReader.class);		
+		BufferedInputStream is = mock(BufferedInputStream.class);
+		BufferedOutputStream os = mock(BufferedOutputStream.class);
+		BufferedReader br = mock(BufferedReader.class);
 		when(br.readLine()).thenReturn("first").thenReturn("second").thenReturn(null).thenReturn(Communication.END);
 		
 		BufferedWriter bw = mock(BufferedWriter.class);
 		
 		
 		Speaker s = new Speaker((a)->a, mock(Logger.class));
-		s.accept(br, bw);
+		s.serve(br, bw, is, os);
 		
 		// reader
 		verify(br, times(5)).readLine();

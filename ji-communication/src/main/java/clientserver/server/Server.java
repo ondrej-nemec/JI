@@ -1,5 +1,7 @@
 package clientserver.server;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,7 +18,6 @@ import java.util.function.Function;
 
 import clientserver.server.restapi.CreateRestAPIResponce;
 import common.Logger;
-import common.structures.ThrowingBiConsumer;
 
 public class Server {
 	
@@ -35,7 +36,7 @@ public class Server {
     
     private final String charset;
     
-    private final ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> servant;
+    private final Servant servant;
     
     public static Server create(int port,
     		int threadPool,
@@ -55,11 +56,11 @@ public class Server {
     	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), charset, logger);
     }
     
-    protected Server(
+    public Server(
     		int port,
     		int threadPool,
     		long readTimeout,
-    		ThrowingBiConsumer<BufferedReader, BufferedWriter, IOException> servant,
+    		Servant servant,
     		String charset,
     		Logger logger) throws IOException {
         this.executor = Executors.newFixedThreadPool(threadPool);
@@ -141,8 +142,10 @@ public class Server {
             );
             
             try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), charset));
-            		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), charset));) {
-            	servant.accept(br, bw);
+            	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), charset));
+            	 BufferedInputStream is = new BufferedInputStream(clientSocket.getInputStream());
+            	 BufferedOutputStream os = new BufferedOutputStream(clientSocket.getOutputStream());) {
+            	servant.serve(br, bw, is, os);
             } catch (SocketTimeoutException e) {
                 logger.warn("Connection closed - reading timeout");
             } catch (IOException e) {
