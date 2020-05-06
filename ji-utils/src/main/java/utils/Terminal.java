@@ -72,6 +72,7 @@ public class Terminal {
 			ReadText.perLine(br, (line)->{
 				consumer.accept(line);
 			});
+			return null;
 		}, stream);
 	}
 }
