@@ -27,18 +27,19 @@ public class SqlMigration implements SingleMigration {
 		String[] batches = loadContent(path + "/" + name, isRevert, isInclasspath).split(";");
 		Statement stat = builder.getConnection().createStatement();
 		for (String batch : batches) {
-			stat.addBatch(batch.trim());
+			if (!batch.trim().isEmpty()) {
+				stat.addBatch(batch.trim());
+			}
 		}
 		stat.executeBatch();
 	}
 
 	private String loadContent(String file, boolean isRevert, boolean isInclasspath) throws IOException {
-		StringBuilder sql = new StringBuilder();
-		Text.read((br)->{
-			sql.append(ReadText.asString(br));
+		String sql = Text.read((br)->{
+			return ReadText.asString(br);
 		}, InputStreamLoader.createInputStream(getClass(), file)); // TODO
 		
-		String[] mig = sql.toString().split("--- REVERT ---");
+		String[] mig = sql.split("--- REVERT ---");
 		if (isRevert && mig.length > 1) {
 			return mig[1];
 		} else if (isRevert && mig.length < 2) {

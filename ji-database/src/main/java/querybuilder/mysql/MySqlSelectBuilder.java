@@ -191,8 +191,11 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 */
 	@Override
 	public List<String> fetchAll(Function<DatabaseRow, String> function) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> result = new LinkedList<>();
+		for(DatabaseRow row : fetchAll()) {
+			result.add(function.apply(row));
+		}
+		return result;
 	}
 /*	
 	protected String joinToString(final Join join) {

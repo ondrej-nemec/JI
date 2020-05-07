@@ -1,7 +1,5 @@
 package migration;
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,8 +8,13 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
+import common.Logger;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import querybuilder.QueryBuilder;
+import querybuilder.mysql.MySqlQueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class MigrationToolEndToEndTest {
@@ -41,12 +44,11 @@ public class MigrationToolEndToEndTest {
 	@Test
 	@Parameters(method = "dataMigrateMakeMigrations")
 	public void testMigrateMakeMigrations(String folder) throws Exception {
-		fail("Not finished");
-	/*	Connection c = createConnection();
+		Connection c = createConnection();
 		c.setAutoCommit(false);
 		
-		MySqlQueryBuilder queryBuilder = new MySqlQueryBuilder(c);
-		MigrationTool tool = new MigrationTool(queryBuilder, folder, Mockito.mock(Logger.class));
+		QueryBuilder queryBuilder = new MySqlQueryBuilder(c);
+		MigrationTool tool = new MigrationTool(folder, queryBuilder, Mockito.mock(Logger.class));
 		
 		testStates(c, false);
 		tool.migrate();
@@ -55,11 +57,11 @@ public class MigrationToolEndToEndTest {
 		testStates(c, false);
 		
 		c.rollback();
-		c.close();*/
+		c.close();
 	}
 	
 	private void testStates(Connection c, boolean exists) throws SQLException {
-		String[] tables = new String[] {"First_table", "Second", "first_to_second", "migrations"};
+		String[] tables = new String[] {"First_table", "Second_table", "migrations"};
 		for (String table : tables) {
 			try {
 				c.prepareStatement("select * from " + table).execute();
@@ -74,7 +76,7 @@ public class MigrationToolEndToEndTest {
 	public Object[] dataMigrateMakeMigrations() {
 		return new Object[] {
 			new Object[] {
-				"migration"
+				"migration/endToEnd"
 			},
 			new Object[] {
 				"test/migration"
@@ -84,18 +86,23 @@ public class MigrationToolEndToEndTest {
 	
 	@Test(expected = IOException.class)
 	public void testMigrateThrowsIfNotExistingFolderGiven() throws Exception {
-	/*	try (Connection c = createConnection()) {
+		try (Connection c = createConnection()) {
 			MySqlQueryBuilder queryBuilder = new MySqlQueryBuilder(c);
-			MigrationTool tool = new MigrationTool(queryBuilder, "not-existing-folder", Mockito.mock(Logger.class));
+			MigrationTool tool = new MigrationTool("not-existing-folder", queryBuilder, Mockito.mock(Logger.class));
 			tool.migrate();
-		}*/
+		}
 	}
 	
 	private Connection createConnection() throws SQLException {
 		Properties prop = new Properties();
 		prop.setProperty("user", "root");
 		prop.setProperty("password", "");
-		prop.setProperty("serverTimezone", "Europe/Prague");
+		prop.setProperty("serverTimezone", "Europe/Prague");		
+
+		DriverManager
+			.getConnection("jdbc:mysql://localhost:3306/", prop)
+			.prepareStatement("DROP SCHEMA IF EXISTS " + dbName)
+			.execute();
 		
 		DriverManager
 			.getConnection("jdbc:mysql://localhost:3306/", prop)

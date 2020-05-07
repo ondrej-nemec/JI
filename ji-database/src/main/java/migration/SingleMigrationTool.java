@@ -64,14 +64,14 @@ public class SingleMigrationTool {
 	private void idToDb(String id, String description, QueryBuilder builder, boolean isRevert) throws SQLException {
 		if (isRevert) {
 			logger.warn("Migration reverted: " + id);
-			builder.delete(migrationTable).where("id = :id").addParameter("id", id).execute();
+			builder.delete(migrationTable).where("id = :id").addParameter(":id", id).execute();
 		} else {
 			builder
-    		.insert(migrationTable)
-    		.addValue("id", id)
-    		.addValue("Description", description)
-    		.addValue("DateTime", DateTime.format("YYYY-mm-dd H:m:s"))
-    		.execute();
+	    		.insert(migrationTable)
+	    		.addValue("id", id)
+	    		.addValue("Description", description)
+	    		.addValue("DateTime", DateTime.format("YYYY-mm-dd H:m:s"))
+	    		.execute();
 		}
 	}
 
