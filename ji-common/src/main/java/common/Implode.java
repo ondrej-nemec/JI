@@ -4,7 +4,8 @@ import common.exceptions.LogicException;
 
 public class Implode {
 
-	public static String implode(String glue, Object... data) {
+	@SafeVarargs
+	public static <T> String implode(String glue, T... data) {
 		return implode(glue, data, 0, data.length - 1);
 	}
 
@@ -16,7 +17,7 @@ public class Implode {
 	 * @param to inclusive
 	 * @return
 	 */
-	public static String implode(String glue, Object[] data, int from, int to) {
+	public static <T> String implode(String glue, T[] data, int from, int to) {
 		String result = "";
 		if (to >= data.length || from < 0 || from > to) {
 			throw new LogicException(String.format(
