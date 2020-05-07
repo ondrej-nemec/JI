@@ -31,7 +31,7 @@ public class MySqlCreateTableBuilderTest {
 				+ " Column_3 DATETIME UNIQUE,"
 				+ " Column_4 TEXT,"
 				+ " Column_5 VARCHAR(50) DEFAULT 'some text' NOT NULL,"
-				+ " FOREIGN KEY (Column_4) REFERENCES Table2(id) ON DELETE CASCADE ON UPDATE SET NULL,"
+				+ " CONSTRAINT FK_Column_4 FOREIGN KEY (Column_4) REFERENCES Table2(id) ON DELETE CASCADE ON UPDATE SET NULL,"
 				+ " PRIMARY KEY (Column_1)"
 				+ ")";
 		

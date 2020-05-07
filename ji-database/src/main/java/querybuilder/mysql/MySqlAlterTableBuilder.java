@@ -45,18 +45,15 @@ public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
 	@Override
 	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn) {
 		first();
-		sql.append(String.format("ADD FOREIGN KEY (%s) REFERENCES %s(%s)", column, referedTable, referedColumn));
+		sql.append(String.format("ADD CONSTRAINT FK_%s FOREIGN KEY (%s) REFERENCES %s(%s)", column, column, referedTable, referedColumn));
 		return this;
 	}
 
 	@Override
 	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
-		first();
+		addForeingKey(column, referedTable, referedColumn);
 		sql.append(String.format(
-				"ADD FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s ON UPDATE %s",
-				column,
-				referedTable,
-				referedColumn,
+				" ON DELETE %s ON UPDATE %s",
 				EnumToMysqlString.onActionToString(onDelete),
 				EnumToMysqlString.onActionToString(onUpdate)
 		));
@@ -73,7 +70,7 @@ public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
 	@Override
 	public AlterTableQueryBuilder deleteForeingKey(String name) {
 		first();
-		sql.append(String.format("DROP FOREIGN KEY %s", name));
+		sql.append(String.format("DROP FOREIGN KEY FK_%s", name));
 		return this;
 	}
 

@@ -31,8 +31,8 @@ public class MySqlAlterTableBuilderTest {
 				+ " ADD Column1 INT NOT NULL,"
 				+ " ADD Column2 INT DEFAULT 1,"
 				+ " DROP COLUMN Column3,"
-				+ " ADD FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
-				+ " DROP FOREIGN KEY Column,"
+				+ " ADD CONSTRAINT FK_Column FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
+				+ " DROP FOREIGN KEY FK_Column,"
 				+ " MODIFY Column4 INT,"
 				+ " CHANGE COLUMN Column5 Column6 INT";
 		

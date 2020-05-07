@@ -56,8 +56,8 @@ public class MySqlCreateTableBuilder implements CreateTableQueryBuilder {
 	@Override
 	public CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
 		sql.append(String.format(
-				", FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s ON UPDATE %s",
-				column,
+				", CONSTRAINT FK_%s FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s ON UPDATE %s",
+				column, column,
 				referedTable,
 				referedColumn,
 				EnumToMysqlString.onActionToString(onDelete),

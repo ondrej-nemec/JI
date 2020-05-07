@@ -198,12 +198,11 @@ public class QueryBuilderEndToEndTest {
 	}
 	
 	private void loadDb(Connection connection, String file) throws IOException, SQLException {
-		StringBuilder sql = new StringBuilder();
-		Text.read((br)->{
-			sql.append(ReadText.asList(br));
+		String sql = Text.read((br)->{
+			return ReadText.asString(br);
 		}, getClass().getResourceAsStream("/querybuilder/" + type + "/" + file + ".sql"));
 		Statement stat = connection.createStatement();
-		String[] batches = sql.toString().split(";");
+		String[] batches = sql.split(";");
 		for (String batch : batches) {
 			stat.addBatch(batch);
 		}
@@ -417,6 +416,7 @@ public class QueryBuilderEndToEndTest {
     			builder.alterTable("alter_table").deleteForeingKey("fKey").execute();
 			} catch (Exception e) {
 				e.printStackTrace();
+				// System.exit(0);
 				fail("fail");
 			}
 		}, Arrays.asList("alter_table", "table_fk"));
