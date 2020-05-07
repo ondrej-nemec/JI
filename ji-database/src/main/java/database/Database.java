@@ -35,7 +35,6 @@ public class Database {
 		this.instance = createInstance(config.schemaName, logger);
 	}
 
-
 	protected Database(DatabaseConfig config, DatabaseInstance instance, ConnectionPool pool, Logger logger) {
 		this.config = config;
 		this.logger = logger;
