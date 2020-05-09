@@ -9,12 +9,12 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
-public class ValueTest {
+public class ValueParserTest {
 
 	@Test
 	@Parameters(method = "dataGetTypeWorks")
-	public void testGetTypeWorks(ValueType expected, String value, boolean isQuoted) {
-		assertEquals(expected, new Value(value, isQuoted).getType());
+	public void testGetTypeWorks(ValueType expected, String value, boolean isValueQuoted) {
+		assertEquals(expected, ValueParser.parse(value, isValueQuoted).getType());
 	}
 	
 	public Object[] dataGetTypeWorks() {
@@ -27,6 +27,7 @@ public class ValueTest {
 			new Object[] {ValueType.BOOLEAN, "false", false},
 			new Object[] {ValueType.BOOLEAN, "true", false},
 			new Object[] {ValueType.NULL, "null", false},
+			new Object[] {ValueType.NULL, "", false},
 		};
 	}
 	

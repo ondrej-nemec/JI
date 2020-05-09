@@ -8,6 +8,7 @@ public enum EventType {
 	LIST_START,
 	LIST_END,
 	LIST_ITEM,
-	DOKUMENT_END;
+	DOCUMENT_START,
+	DOCUMENT_END;
 
 }

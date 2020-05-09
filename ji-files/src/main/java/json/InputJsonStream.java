@@ -2,7 +2,7 @@ package json;
 
 import json.event.Event;
 import json.event.EventType;
-import json.event.Value;
+import json.event.ValueParser;
 import json.providers.Provider;
 import json.providers.StringProvider;
 
@@ -18,6 +18,7 @@ public class InputJsonStream {
 	
 	private char actualCache = CHAR_DEFAULT;
 	private char previousChar = CHAR_DEFAULT;
+	private int level = 0;
 	
 	public InputJsonStream(Provider provider) {
 		this.provider = provider;
@@ -29,9 +30,17 @@ public class InputJsonStream {
 		boolean isInQuots = false;
 		boolean isWaitingForValue = false;
 		boolean isValueQuoted = false;
+		boolean isKeyQuoted = false;
 		
 		char actual = (actualCache == CHAR_DEFAULT) ? provider.getNext() : actualCache;
 		while(actual != (char)-1) {
+			/*System.out.println(String.format("a: '%s', p: '%s', c: '%s'", actual, previousChar, actualCache));
+			System.out.println(String.format("name: '%s', value: '%s'", name, value));
+			System.out.println(String.format(
+					"Quotes %s, Waiting for value: %s",
+					isInQuots, isWaitingForValue
+			));
+			System.out.println();*/
 			/***** if char is in quotes *******/
 			if (actual != '"' && isInQuots) {
 				if (isWaitingForValue) {
@@ -59,9 +68,13 @@ public class InputJsonStream {
 				actualCache = CHAR_DEFAULT;
 				switch (cache) {
 					case '}':
-						return new Event(EventType.OBJECT_END, name, new Value(value, isValueQuoted));
+						level--;
+						if (level == 0) {
+							return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), level);
+						}
+						return new Event(EventType.OBJECT_END, name, ValueParser.parse(value, isValueQuoted), level);
 					case ']':
-						return new Event(EventType.LIST_END, name, new Value(value, isValueQuoted));
+						return new Event(EventType.LIST_END, name, ValueParser.parse(value, isValueQuoted), --level);
 				}
 				continue;
 			}
@@ -71,6 +84,7 @@ public class InputJsonStream {
 					if (!isInQuots) {
 						isInQuots = true;
 						isValueQuoted = isWaitingForValue; // IMPORTANT
+						isKeyQuoted = !isWaitingForValue; // IMPORTANT
 					} else if (previousChar != '\\') {
 						isInQuots = false;
 					} else if (isWaitingForValue) {
@@ -79,26 +93,33 @@ public class InputJsonStream {
 						name += actual;
 					}
 					break;
-				case '{': return new Event(EventType.OBJECT_START, name, new Value(value, isValueQuoted));
+				case '{': 
+					if (level == 0) {
+						return new Event(EventType.DOCUMENT_START, name, ValueParser.parse(value, isValueQuoted), level++);
+					}
+					return new Event(EventType.OBJECT_START, name, ValueParser.parse(value, isValueQuoted), level++);
 				case '}':
 					actualCache = actual;
 					if (!name.isEmpty() && (isValueQuoted || !value.isEmpty())) {
-						return new Event(EventType.OBJECT_ITEM, name, new Value(value, isValueQuoted));
+						return new Event(EventType.OBJECT_ITEM, name, ValueParser.parse(value, isValueQuoted), level);
 					}
 					break;
-				case '[': return new Event(EventType.LIST_START, name, new Value(value, isValueQuoted));
-				case ']':
-					actualCache = actual;
+				case '[': return new Event(EventType.LIST_START, name, ValueParser.parse(value, isValueQuoted), level++);
+				case ']':					
+					actualCache = actual;					
 					if (!name.isEmpty()) { // list has not name, value is in name
-						return new Event(EventType.LIST_ITEM, value, new Value(name, isValueQuoted));
+						return new Event(EventType.LIST_ITEM, value, ValueParser.parse(name, isKeyQuoted), level);
+					}
+					if (!value.isEmpty()) { // TODO why this happend??
+						return new Event(EventType.LIST_ITEM, name, ValueParser.parse(value, isValueQuoted), level);
 					}
 					break;
 				case ',':
 					if (isWaitingForValue) {
-						return new Event(EventType.OBJECT_ITEM, name, new Value(value, isValueQuoted));
+						return new Event(EventType.OBJECT_ITEM, name, ValueParser.parse(value, isValueQuoted), level);
 					}
 					if (!value.isEmpty()) {
-						return new Event(EventType.LIST_ITEM, name, new Value(value, isValueQuoted));
+						return new Event(EventType.LIST_ITEM, name, ValueParser.parse(value, isValueQuoted), level);
 					}
 					break;
 				case ':': isWaitingForValue = true; break;
@@ -113,7 +134,7 @@ public class InputJsonStream {
 			//////
 		}
 		
-		return new Event(EventType.DOKUMENT_END, name, new Value(value, isValueQuoted));
+		return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), -1);
 	}
 	
 }

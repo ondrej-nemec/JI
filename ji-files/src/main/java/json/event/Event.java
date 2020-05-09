@@ -6,12 +6,15 @@ public class Event {
 	
 	private String name;
 	
-	private Value value;
+	private Value<?> value;
+	
+	private int level;
 
-	public Event(EventType type, String name, Value value) {
+	public Event(EventType type, String name, Value<?> value, int level) {
 		this.type = type;
 		this.name = name;
 		this.value = value;
+		this.level = level;
 	}
 
 	public EventType getType() {
@@ -22,13 +25,17 @@ public class Event {
 		return name;
 	}
 
-	public Value getValue() {
+	public Value<?> getValue() {
 		return value;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("%s: %s (%s)", name, value, type);
+		return String.format("%s: %s (%s-%s)", name, value, type, level);
 	}
 	
 	@Override
@@ -44,6 +51,9 @@ public class Event {
 			return false;
 		}
 		if (!value.equals(e.value)) {
+			return false;
+		}
+		if (level != e.level) {
 			return false;
 		}
 		return true;

@@ -1,34 +1,22 @@
 package json.event;
 
-public class Value {
+public class Value<T> {
 
-	private String val;
+	private final T value;
 	
-	private boolean isQuoted;
+	private final ValueType type;
 	
-	public Value(String val, boolean isQuoted) {
-		this.val = val;
-		this.isQuoted = isQuoted;
+	public Value(T value, ValueType type) {
+		this.value = value;
+		this.type = type;
 	}
 	
-	public String getValue() {
-		return val;
+	protected ValueType getType() {
+		return type;
 	}
 	
-	public ValueType getType() {
-		if (isQuoted) {
-			return ValueType.STRING;
-		}
-		if ("null".equals(val.toLowerCase())) {
-			return ValueType.NULL;
-		}
-		if ("false".equals(val.toLowerCase()) || "true".equals(val.toLowerCase())) {
-			return ValueType.BOOLEAN;
-		}
-		if (val.contains(".")) {
-			return ValueType.DOUBLE;
-		}
-		return ValueType.INTEGER;
+	public T get() {
+		return value;
 	}
 	
 	@Override
@@ -36,11 +24,15 @@ public class Value {
 		if (!(obj instanceof Value)) {
 			return false;
 		}
-		Value v = (Value)obj;
-		if (isQuoted != v.isQuoted) {
+		@SuppressWarnings("unchecked")
+		Value<T> v = (Value<T>)obj;
+		if (!type.equals(v.type)) {
 			return false;
 		}
-		if (!val.equals(v.val)) {
+		if (type == ValueType.NULL) { //  && value == null && v.value == null - if type == null value no matter
+			return true;
+		}
+		if (!value.equals(v.value)) {
 			return false;
 		}
 		return true;
@@ -48,9 +40,9 @@ public class Value {
 	
 	@Override
 	public String toString() {
-		if (isQuoted) {
-			return String.format("\"%s\"", val);
+		if (type == ValueType.STRING) {
+			return String.format("\"%s\"", value);
 		}
-		return val;
+		return value + "";
 	}
 }
