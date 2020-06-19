@@ -1,4 +1,4 @@
-package querybuilder.mysql;
+package querybuilder.derby;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -14,12 +14,12 @@ import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
-public class MySqlSelectBuilderTest {
+public class DerbySelectBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
 		Connection mock = mock(Connection.class);
-		SelectQueryBuilder builder = new MySqlSelectBuilder(mock, "a.id", "a.name", "a.FK_id")
+		SelectQueryBuilder builder = new DerbySelectBuilder(mock, "a.id", "a.name", "a.FK_id")
 					.from("table_name a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
 					.where("b.id = 1")
@@ -42,8 +42,7 @@ public class MySqlSelectBuilderTest {
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > %id"
-				+ " LIMIT 0"
-				+ " OFFSET 0";
+				+ " OFFSET 0 ROWS FETCH NEXT 0 ROWS ONLY";
 		
 		String created = "SELECT a.id, a.name, a.FK_id"
 				+ " FROM table_name a"
@@ -54,8 +53,7 @@ public class MySqlSelectBuilderTest {
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > 10"
-				+ " LIMIT 0"
-				+ " OFFSET 0";
+				+ " OFFSET 0 ROWS FETCH NEXT 0 ROWS ONLY";
 		
 		assertEquals(expected, builder.getSql());
 		assertEquals(created, builder.createSql());

@@ -16,7 +16,8 @@ public class DatabaseRow {
 	}
 	
 	public void addValue(String key, String value) {
-		values.put(key, value);
+		// to lower case - some db change column name
+		values.put(key.toLowerCase(), value);
 	}
 	
 	@Override

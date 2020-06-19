@@ -3,9 +3,7 @@ CREATE TABLE update_table (
 	name VARCHAR(50)
 );
 
-INSERT INTO update_table
-	VALUES
-		(1, "set it"),
-		(2, "set it"),
-		(3, "this too"),
-		(4, "this not");
+INSERT INTO update_table VALUES (1, 'set it');
+INSERT INTO update_table VALUES (2, 'set it');
+INSERT INTO update_table VALUES (3, 'this too');
+INSERT INTO update_table VALUES (4, 'this not');

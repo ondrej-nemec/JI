@@ -25,14 +25,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Mockito;
 
+import common.Logger;
 import common.structures.ThrowingBiConsumer;
 import core.text.Text;
 import core.text.basic.ReadText;
 import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
+import querybuilder.derby.DerbyQueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
+import utils.Terminal;
 
 @RunWith(Parameterized.class)
 public class QueryBuilderEndToEndTest {
@@ -64,7 +68,7 @@ public class QueryBuilderEndToEndTest {
 
 	@Parameters
 	public static Collection<Object[]> parameters() {
-	//	Terminal terminal = new Terminal(Mockito.mock(Logger.class));
+		Terminal terminal = new Terminal(Mockito.mock(Logger.class));
 		
 		Properties props = new Properties();
 		props.setProperty("user", "root");
@@ -99,9 +103,10 @@ public class QueryBuilderEndToEndTest {
 				(ignored) -> {/* not required*/}, 
 				"mysql"
 		));
-	/*	String derbyPath = "C:\\software\\DerbyDB\\bin";
+	//*
+	  	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
-				(conn) -> {return new MySqlQueryBuilder(conn);},
+				(conn) -> {return new DerbyQueryBuilder(conn);},
 				() -> {
 					try {
 						return DriverManager.getConnection("jdbc:derby:" +derbyPath + "/" + DB_NAME, props);
@@ -122,7 +127,8 @@ public class QueryBuilderEndToEndTest {
 					terminal.runFile(derbyPath + "/stopNetworkServer");
 				}, 
 				"derby"
-		));*/
+		));
+		//*/
 		return result;
 	}
 	
@@ -161,6 +167,8 @@ public class QueryBuilderEndToEndTest {
 				try {
 				loadDb(connection, file);
 				} catch (Exception e) {
+					System.err.println(file);
+					System.err.println(tables);
 					e.printStackTrace();
 				}
 			}
@@ -173,6 +181,7 @@ public class QueryBuilderEndToEndTest {
 			connection.close();
 		}
 		if (ex != null) {
+			ex.printStackTrace();
 			throw ex;
 		}
 	}
@@ -259,7 +268,8 @@ public class QueryBuilderEndToEndTest {
 				.addParameter("%whereName", "delete this")
 				.addParameter("%orWhere", "this too")
 				.execute();
-			assertEquals(code, 2);
+			
+			assertEquals(2, code);
 			
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM delete_table");
 			
@@ -280,7 +290,7 @@ public class QueryBuilderEndToEndTest {
 		test("insert", (conn, builder)->{
 			int code = builder
 					.insert("insert_table")
-					.addValue("id", "1")
+					.addValue("id", 1)
 					.addValue("name", "column_name")
 					.execute();
 				assertEquals(code, 1);
@@ -299,6 +309,42 @@ public class QueryBuilderEndToEndTest {
 	}
 	
 	@Test
+	public void testExecuteSelectWithoutGroupBy() throws Exception {
+		test("select", (conn, builder) -> {
+			SelectQueryBuilder res = builder
+					.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
+					.from("select_table a")
+					.join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
+					.where("a.id > %id")
+					.andWhere("a.name = %a_name")
+					.orWhere("b.name = %b_name")
+					.orderBy("a.id ASC")
+					.limit(2, 0)
+					.addParameter("%id", 1)
+					.addParameter("%a_name", "name_a")
+					.addParameter("%b_name", "name_b");
+				
+				String expectedSingle = "2";
+				DatabaseRow expectedRow = new DatabaseRow();
+				expectedRow.addValue("a_id", "2");
+				expectedRow.addValue("b_id", "3");
+				expectedRow.addValue("a_name", "name 2");
+				expectedRow.addValue("b_name", "name_b");
+				
+
+				DatabaseRow expectedRow2 = new DatabaseRow();
+				expectedRow2.addValue("a_id", "4");
+				expectedRow2.addValue("b_id", "7");
+				expectedRow2.addValue("a_name", "name_a");
+				expectedRow2.addValue("b_name", "name 7");
+				
+				assertEquals(expectedSingle, res.fetchSingle());
+				assertEquals(expectedRow, res.fetchRow());
+				assertEquals(Arrays.asList(expectedRow, expectedRow2), res.fetchAll());	
+		}, Arrays.asList("select_table", "joined_table"));
+	}
+		
+	@Test
 	public void testExecuteSelect() throws Exception {
 		test("select", (conn, builder) -> {
 			SelectQueryBuilder res = builder
@@ -308,11 +354,10 @@ public class QueryBuilderEndToEndTest {
 					.where("a.id > %id")
 					.andWhere("a.name = %a_name")
 					.orWhere("b.name = %b_name")
-					.groupBy("a.id")
+					.groupBy("a.id, b.id, a.name, b.name")
 					.having("a.id < %a_id")
-					.orderBy("a.id ASC")
-					.limit(2)
-					.offset(0)
+					.orderBy("a.id ASC, b.id ASC")
+					.limit(2, 0)
 					.addParameter("%id", 1)
 					.addParameter("%a_name", "name_a")
 					.addParameter("%b_name", "name_b")
@@ -383,42 +428,36 @@ public class QueryBuilderEndToEndTest {
 		test("createTable", (conn, builder)->{
 			builder
 				.createTable("create_table")
-				.addColumn("c1", ColumnType.bool(), 1, ColumnSetting.NOT_NULL)
+				.addColumn("c1", ColumnType.bool(), true, ColumnSetting.NOT_NULL)
 				.addColumn("c2", ColumnType.integer())
 				.addColumn("c3", ColumnType.string(10), ColumnSetting.UNIQUE)
-				.addForeingKey("c2", "second", "second_id", OnAction.CASCADE, OnAction.CASCADE)
+				.addForeingKey("c2", "SecondTable", "second_id", OnAction.RESTRICT, OnAction.RESTRICT)
 				.execute();
 			
 			conn.createStatement().executeQuery("select c1, c2, c3 from create_table");
-		}, Arrays.asList("create_table", "second"));
+		}, Arrays.asList("create_table", "SecondTable"));
 	}
 	
 	@Test
 	public void testAlterTable() throws Exception {
 		test("alterTable", (conn, builder)->{
-			try {
-    			builder.alterTable("alter_table").modifyColumnType("id", ColumnType.bool()).execute();
-    			
-    			builder.alterTable("alter_table").renameColumn("name", "name2", ColumnType.string(10)).execute();
-    			conn.createStatement().executeQuery("select name2 from alter_table");
-    						
-    			builder.alterTable("alter_table").addColumn("number", ColumnType.integer()).execute();
+    		builder.alterTable("alter_table").modifyColumnType("id", ColumnType.bool()).execute();
+    		
+    		builder.alterTable("alter_table").renameColumn("name", "name2", ColumnType.string(10)).execute();
+    		conn.createStatement().executeQuery("select name2 from alter_table");
+    					
+    		builder.alterTable("alter_table").addColumn("number", ColumnType.integer()).execute();
+    		conn.createStatement().executeQuery("select number from alter_table");
+    		
+    		builder.alterTable("alter_table").deleteColumn("number").execute();
+    		try {
     			conn.createStatement().executeQuery("select number from alter_table");
-    			
-    			builder.alterTable("alter_table").deleteColumn("number").execute();
-    			try {
-    				conn.createStatement().executeQuery("select number from alter_table");
-    				fail("Column number exists");
-    			} catch (SQLException ignored) {}
-        			
-    			builder.alterTable("alter_table").addForeingKey("fKey", "table_fk", "id").execute();
-    			
-    			builder.alterTable("alter_table").deleteForeingKey("fKey").execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				// System.exit(0);
-				fail("fail");
-			}
+    			fail("Column number exists");
+    		} catch (SQLException ignored) {}
+        		
+    		builder.alterTable("alter_table").addForeingKey("fKey", "table_fk", "id").execute();
+    		
+    		builder.alterTable("alter_table").deleteForeingKey("fKey").execute();
 		}, Arrays.asList("alter_table", "table_fk"));
 	}
 	
@@ -434,11 +473,10 @@ public class QueryBuilderEndToEndTest {
     				.join("table2 b", Join.INNER_JOIN, "a.id = b.id")
     				.where("a.id != :id1")
     				.addParameter(":id1", 0)
-    				.groupBy("a.id")
+    				.groupBy("a.id, b.id, a.name")
     				.having("b.id != :id2")
     				.addParameter(":id2", 0)
-    				.limit(5)
-    				.offset(0)
+    				.limit(5, 0)
     				.execute();
     			
     			ResultSet rs = conn.createStatement().executeQuery("select * from test_view");
@@ -468,8 +506,7 @@ public class QueryBuilderEndToEndTest {
     			.groupBy("a.id")
     			.having("b.id != :id2")
     			.addParameter(":id2", 0)
-    			.limit(4)
-    			.offset(0)
+    			.limit(4, 0)
     			.execute();
     		
     		ResultSet rs = conn.createStatement().executeQuery("select * from test_view");

@@ -1,4 +1,4 @@
-package querybuilder.mysql;
+package querybuilder.derby;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,7 +15,7 @@ import database.support.DatabaseRow;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 
-public class MySqlSelectBuilder implements SelectQueryBuilder {
+public class DerbySelectBuilder implements SelectQueryBuilder {
 
 	private final StringBuilder query;
 	
@@ -23,7 +23,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 	
 	private final Connection connection;
 	
-	public MySqlSelectBuilder(final Connection connection, final String... select) {
+	public DerbySelectBuilder(final Connection connection, final String... select) {
 		this.connection = connection;
 		this.query = new StringBuilder("SELECT " + Implode.implode(", ", select));
 		this.params = new HashMap<>();
@@ -37,7 +37,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder join(String table, Join join, String on) {
-		query.append(" " + EnumToMysqlString.joinToString(join) +" " + table + " ON " + on);
+		query.append(" " + EnumToDerbyString.joinToString(join) +" " + table + " ON " + on);
 		return this;
 	}
 
@@ -79,7 +79,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder limit(int limit, int offset) {
-		query.append(" LIMIT " + limit + " OFFSET " + offset);
+		query.append(String.format(" OFFSET %s ROWS FETCH NEXT %s ROWS ONLY", offset, limit));
 		return this;
 	}
 

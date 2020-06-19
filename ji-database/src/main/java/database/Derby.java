@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import common.Logger;
 import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
-import querybuilder.mysql.MySqlQueryBuilder;
+import querybuilder.derby.DerbyQueryBuilder;
 import utils.Terminal;
 
 public class Derby implements DatabaseInstance {
@@ -46,7 +46,7 @@ public class Derby implements DatabaseInstance {
 
 	@Override
 	public QueryBuilder getQueryBuilder(Connection connection) {
-		return new MySqlQueryBuilder(connection);
+		return new DerbyQueryBuilder(connection);
 	}
 
 }

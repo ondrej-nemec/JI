@@ -13,7 +13,7 @@ public class ConnectionPool {
 	
 	private final static int WAIT_TIME = 30;
 	
-	private final int size;
+	private final int maxSize;
 	
 	private final Map<Integer, Connection> pool;
 	
@@ -25,8 +25,8 @@ public class ConnectionPool {
 	
 	private final Logger logger;
 	
-	public ConnectionPool(String connectionString, Properties prop, int size, Logger logger, boolean temp) {
-		this.size = size;
+	public ConnectionPool(String connectionString, Properties prop, int maxSize, Logger logger, boolean temp) {
+		this.maxSize = maxSize;
 		this.isTemp = temp;
 		this.prop = prop;
 		this.connectionString = connectionString;
@@ -35,7 +35,7 @@ public class ConnectionPool {
 	}
 	
 	public Connection getConnection() throws SQLException {		
-		while (pool.size() >= size) {
+		while (pool.size() >= maxSize) {
 			logger.debug("Connection pool is busy, waiting.");
 			try {Thread.sleep(WAIT_TIME);} catch (InterruptedException e) {e.printStackTrace();}
 		}

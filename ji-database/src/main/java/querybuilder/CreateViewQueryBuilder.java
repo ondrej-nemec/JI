@@ -22,9 +22,7 @@ public interface CreateViewQueryBuilder extends Parameters<CreateViewQueryBuilde
 	
 	CreateViewQueryBuilder having(String having);
 	
-	CreateViewQueryBuilder limit(int limit);
-	
-	CreateViewQueryBuilder offset(int offset);
+	CreateViewQueryBuilder limit(int limit, int offset);
 	
 	void execute() throws SQLException;
 	

@@ -1,4 +1,4 @@
-package querybuilder.mysql;
+package querybuilder.derby;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -15,13 +15,13 @@ import querybuilder.CreateViewQueryBuilder;
 import querybuilder.Join;
 
 @RunWith(JUnitParamsRunner.class)
-public class MySqlCreateViewBuilderTest {
+public class DerbyCreateViewBuilderTest {
 	
 	@Test
 	@Parameters(method = "dataBuilderViaSql")
 	public void testBuilderViaSql(boolean modify, String expected) {
 		Connection con = mock(Connection.class);
-		CreateViewQueryBuilder builder = new MySqlCreateViewBuilder(con, "View1", modify)
+		CreateViewQueryBuilder builder = new DerbyCreateViewBuilder(con, "View1", modify)
 				.select("a.id ID", "b.id ID_2")
 				.from("table_name a")
 				.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
@@ -50,8 +50,7 @@ public class MySqlCreateViewBuilderTest {
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > %id"
-				+ " LIMIT 0"
-				+ " OFFSET 0";
+				+ " OFFSET 0 ROWS FETCH NEXT 0 ROWS ONLY";
 		return new Object[] {
 			new Object[] {false, query},
 			new Object[] {true, "DROP VIEW View1;" + query}

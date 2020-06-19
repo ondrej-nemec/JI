@@ -24,9 +24,7 @@ public interface SelectQueryBuilder extends Parameters<SelectQueryBuilder> {
 	
 	SelectQueryBuilder having(String having);
 	
-	SelectQueryBuilder limit(int limit);
-	
-	SelectQueryBuilder offset(int offset);
+	SelectQueryBuilder limit(int limit, int offset);
 	
 	String fetchSingle() throws SQLException;
 	

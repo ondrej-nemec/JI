@@ -1,4 +1,4 @@
-package querybuilder.mysql;
+package querybuilder.derby;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,7 +10,7 @@ import common.Implode;
 import querybuilder.CreateViewQueryBuilder;
 import querybuilder.Join;
 
-public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
+public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 	
 	private final Connection connection;
 
@@ -18,7 +18,7 @@ public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 	
 	private final Map<String, String> params;
 	
-	public MySqlCreateViewBuilder(Connection connection, String name, boolean modify) {
+	public DerbyCreateViewBuilder(Connection connection, String name, boolean modify) {
 		this.connection = connection;
 		this.params = new HashMap<>();
 		this.query = new StringBuilder();
@@ -42,7 +42,7 @@ public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder join(String table, Join join, String on) {
-		query.append(" " + EnumToMysqlString.joinToString(join) +" " + table + " ON " + on);
+		query.append(" " + EnumToDerbyString.joinToString(join) +" " + table + " ON " + on);
 		return this;
 	}
 
@@ -84,7 +84,8 @@ public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder limit(int limit, int offset) {
-		query.append(" LIMIT " + limit + " OFFSET " + offset);
+		// OFFSET 0 ROWS FETCH NEXT 0 ROWS ONLY
+		query.append(String.format(" OFFSET %s ROWS FETCH NEXT %s ROWS ONLY", offset, limit));
 		return this;
 	}
 
