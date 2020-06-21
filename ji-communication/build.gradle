@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
 	compile project(':ji-common')
+	compile project(':ji-files')
 
 	// https://mvnrepository.com/artifact/junit/junit
 	testCompile group: 'junit', name: 'junit', version: '4.12'
