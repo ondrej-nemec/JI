@@ -82,8 +82,12 @@ public class RestApiServer implements Servant {
         
         // payload
         StringBuilder payload = new StringBuilder();
-        while(br.ready()){
-        	payload.append((char) br.read());
+        int value;
+        while((value = br.read()) != -1) {
+            payload.append((char) value);
+            if (!br.ready()) {
+                break;
+            }
         }
         parsePayload(params, payload.toString());
 	}
