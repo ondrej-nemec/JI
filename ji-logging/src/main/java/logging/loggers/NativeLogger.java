@@ -4,20 +4,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.Console;
-import logging.LogLevel;
 import logging.LoggerConfig;
 import logging.providers.NativeLoggerProvider;
 
-public class NativeLogger implements common.Logger{
+public class NativeLogger extends Logger implements common.Logger{
 	
 	private final Logger logger;
 	
 	private final ConsoleLogger console;
 	
 	public NativeLogger(final String name, final LoggerConfig config) {
+		super(name, "");
 		NativeLoggerProvider log = new NativeLoggerProvider(new Console(), config);
-		Level level = switchLevel(config.getMinLogLevel());
-		this.logger = log.getLogger(name, level);
+		this.logger = log.getLogger(name);
 		this.console = new ConsoleLogger(name);
 	}
 
@@ -81,18 +80,4 @@ public class NativeLogger implements common.Logger{
 		logger.log(Level.SEVERE, message.toString(), t);
 	}
 	
-	/*********************************/
-
-	private Level switchLevel(LogLevel minLogLevel) {
-		switch (minLogLevel) {
-    		case NO_LOG: return Level.OFF;
-    		case FATAL: return Level.SEVERE;
-    		case ERROR: return Level.WARNING;
-    		case WARNING: return Level.INFO;
-    		case INFO: return Level.CONFIG;
-    		case DEBUG: return Level.FINE;
-    		default: return Level.ALL;
-		}
-	}
-
 }

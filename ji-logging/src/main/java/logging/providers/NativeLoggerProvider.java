@@ -11,6 +11,7 @@ import common.Console;
 import common.OperationSystem;
 import core.text.Text;
 import core.text.basic.WriteText;
+import logging.LogLevel;
 import logging.LoggerConfig;
 
 public class NativeLoggerProvider {
@@ -24,15 +25,38 @@ public class NativeLoggerProvider {
 		this.console = console;
 	}
 	
-	public Logger getLogger(String name, final Level loggeredLevel) {
+	public Logger getLogger(String name) {
 		Logger logger = Logger.getLogger(name);
-		logger.setLevel(Level.ALL);
+		logger.setLevel(switchLevel(config.getLogLevel(name)));
 		logger.setUseParentHandlers(false);		
 		
-		logger.addHandler(consoleHandler(loggeredLevel));
-		logger.addHandler(fileHandler(loggeredLevel, config.getPathToLogs()));
+		config.getTypes(name).forEach((type)->{
+			switch (type) {
+			case CONSOLE:
+				logger.addHandler(consoleHandler(switchLevel(config.getLogLevel(name, type))));
+				break;
+			case FILE:
+				logger.addHandler(fileHandler(switchLevel(config.getLogLevel(name, type)), config.getLoggerPath(name, type)));
+				break;
+			default:
+				break;
+			}
+		});
 		
 		return logger;
+	}
+	
+	private Level switchLevel(LogLevel minLogLevel) {
+		switch (minLogLevel) {
+    		case NO_LOG: return Level.OFF;
+    		case FATAL: return Level.SEVERE;
+    		case ERROR: return Level.WARNING;
+    		case WARNING: return Level.INFO;
+    		case INFO: return Level.CONFIG;
+    		case DEBUG: return Level.FINE;
+    		case ALL:
+    		default: return Level.ALL;
+		}
 	}
 	
 	private Handler fileHandler(final Level loggeredLevel, final String pathToLogger) {
