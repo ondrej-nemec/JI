@@ -14,6 +14,7 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -30,11 +31,11 @@ public class Server {
     
     private final ExecutorService executor;
     private final ScheduledExecutorService sheduled;
+    private ScheduledFuture<?> clientWaitingFuture;
     
     private int threadCount = 0;
     private final int maxThread;
     
-    private boolean isPaused = false;
     private final long clientWaitTimeout;
     private final long readTimeOut;
     
@@ -84,26 +85,41 @@ public class Server {
         logger.info("Server prepared " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
     }
 
-    public void start() {
-        sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
+    public synchronized void start() {
+    	clientWaitingFuture = sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
         logger.info("Server running");
     }
     
-    public void pause(boolean isPaused) {
-    	this.isPaused = isPaused;
+    public synchronized void pause() {
+    	if (clientWaitingFuture != null) {
+    		clientWaitingFuture.cancel(true);
+	    	clientWaitingFuture = null;
+	    	logger.info("Server paused - no serving to clients");
+    	}
+    	
     }
     
     public void stop() throws InterruptedException {
-    	stop(1, TimeUnit.SECONDS);
+    	logger.info("Stopping server");
+    	executor.shutdownNow();
+        executor.awaitTermination(30, TimeUnit.SECONDS);
+        sheduled.shutdownNow();
+        sheduled.awaitTermination(30, TimeUnit.SECONDS);
+        logger.info("Server stopped");
     }
     
+    @Deprecated
+    public void pause(boolean isPaused) {
+    	if (isPaused) {
+    		pause();
+    	} else {
+    		start();
+    	}
+    }
+    
+    @Deprecated
     public void stop(long timeout, TimeUnit unit) throws InterruptedException {
-    	logger.info("Stopping server");
-    	executor.shutdown();
-        executor.awaitTermination(timeout, unit);
-        sheduled.shutdownNow();
-        sheduled.awaitTermination(timeout, unit);
-        logger.info("Server stopped");
+    	stop();
     }
     
     protected int getActualThreadCount() {
@@ -114,23 +130,16 @@ public class Server {
     
     private Runnable getClientChacker() {
         return ()->{
-        	if (isPaused) {
-        		logger.info(String.format("Server is paused, clients(%d/%d)...", threadCount, maxThread));
-        		try {
-					Thread.sleep(clientWaitTimeout);
-				} catch (InterruptedException e) {
-					logger.debug("Sleep", e);
-				}
+        	if (Thread.currentThread().isInterrupted()) {
         		return;
         	}
             try {
             	logger.info(String.format("Waiting for client(%d/%d)...", threadCount, maxThread));
-                executor.execute(
-                    serveToClient(
-                        serverSocket.accept(), // accept is blocking
-                        charset
-                    )
-                );
+            	Socket clientSocket = serverSocket.accept(); // accept is blocking
+            	if (Thread.currentThread().isInterrupted()) {
+            		return;
+            	}
+                executor.execute(serveToClient(clientSocket,  charset));
             } catch (SocketTimeoutException e) {
                 logger.warn("Connection closed - reading timeout: " + clientWaitTimeout);
             } catch (IOException e) {

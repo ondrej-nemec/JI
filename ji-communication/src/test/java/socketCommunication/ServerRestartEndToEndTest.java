@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import common.Console;
@@ -27,15 +26,17 @@ public class ServerRestartEndToEndTest {
 			//*/
 			
 			server.start();
-			Thread.sleep(10000);
+			Thread.sleep(30000);
 			
-			server.pause(true);
-			Thread.sleep(10000);
-			server.pause(false);
-			
+			server.pause();
+			System.err.println("server paused");
+			Thread.sleep(30000);
+			server.start();
+			System.err.println("server restarted");
+			Thread.sleep(30000);
 			
 			// server.stop();
-			server.stop(3, TimeUnit.SECONDS);
+			server.stop();
 			/*
             Thread.sleep(10000);
 			server.start();
