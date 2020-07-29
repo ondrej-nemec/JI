@@ -21,7 +21,7 @@ public class ServerRestartEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 8000, apiResponse(), "UTF-8",  new LoggerImpl());
+			Server server = Server.create(10123, 5, 60000, 8000, apiResponse(), "UTF-8",  new LoggerImpl());
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/
@@ -55,10 +55,10 @@ public class ServerRestartEndToEndTest {
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, Properties params) throws IOException {
 				Date today = new Date();
-				return new RestApiResponse(
+				return RestApiResponse.textResponse(
 					StatusCode.OK,
 					Arrays.asList("Access-Control-Allow-Origin: *", "Content-Type: text/html; charset=utf-8"),
-					(bw, bos)->{
+					(bw)->{
 						bw.write(String.format(
 								"<html> <head></head><body><h1>Time</h1>%s</body></html>", today.toString()
 						));

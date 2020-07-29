@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,6 +35,7 @@ public class Server {
     private final int maxThread;
     
     private boolean isPaused = false;
+    private final long clientWaitTimeout;
     private final long readTimeOut;
     
     private final String charset;
@@ -42,26 +44,29 @@ public class Server {
     
     public static Server create(int port,
     		int threadPool,
+    		long clientWaitTimeout,
     		long readTimeout,
     		RestApiServerResponseFactory response,
     		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, readTimeout, new RestApiServer(response, logger), charset, logger);
+    	return new Server(port, threadPool, clientWaitTimeout, readTimeout, new RestApiServer(response, logger), charset, logger);
     }
     
     public static Server create(int port,
     		int threadPool,
+    		long clientWaitTimeout,
     		long readTimeout,
     		Function<String, String> response,
     		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), charset, logger);
+    	return new Server(port, threadPool, clientWaitTimeout, readTimeout, new Speaker(response, logger), charset, logger);
     }
     
     public Server(
     		int port,
     		int threadPool,
-    		long readTimeout,
+    		long clientWaitTimeout,
+    		long readTimeOut,
     		Servant servant,
     		String charset,
     		Logger logger) throws IOException {
@@ -71,10 +76,11 @@ public class Server {
         this.servant = servant;
         this.charset = charset;
         this.maxThread = threadPool;
-        this.readTimeOut = readTimeout;
+        this.clientWaitTimeout = clientWaitTimeout;
+        this.readTimeOut = readTimeOut;
         
         this.serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout((int)readTimeout);
+        serverSocket.setSoTimeout((int)clientWaitTimeout);
         logger.info("Server prepared " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
     }
 
@@ -95,7 +101,7 @@ public class Server {
     	logger.info("Stopping server");
     	executor.shutdown();
         executor.awaitTermination(timeout, unit);
-        sheduled.shutdown();
+        sheduled.shutdownNow();
         sheduled.awaitTermination(timeout, unit);
         logger.info("Server stopped");
     }
@@ -111,7 +117,7 @@ public class Server {
         	if (isPaused) {
         		logger.info(String.format("Server is paused, clients(%d/%d)...", threadCount, maxThread));
         		try {
-					Thread.sleep(readTimeOut);
+					Thread.sleep(clientWaitTimeout);
 				} catch (InterruptedException e) {
 					logger.debug("Sleep", e);
 				}
@@ -126,7 +132,7 @@ public class Server {
                     )
                 );
             } catch (SocketTimeoutException e) {
-                logger.warn("Connection closed - reading timeout: " + readTimeOut);
+                logger.warn("Connection closed - reading timeout: " + clientWaitTimeout);
             } catch (IOException e) {
                 logger.fatal("Preparing sockets", e);
             }
@@ -142,13 +148,17 @@ public class Server {
             logger.info(
                 "Client " + threadCount + " connected - " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()
             );
-            
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), charset));
-            	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), charset));
-            	 BufferedInputStream is = new BufferedInputStream(clientSocket.getInputStream());
-            	 BufferedOutputStream os = new BufferedOutputStream(clientSocket.getOutputStream());) {
-            	servant.serve(br, bw, is, os);
-            } catch (SocketTimeoutException e) {
+            try {
+				clientSocket.setSoTimeout((int)readTimeOut);
+				try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), charset));
+		            	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), charset));
+		            	 BufferedInputStream is = new BufferedInputStream(clientSocket.getInputStream());
+		            	 BufferedOutputStream os = new BufferedOutputStream(clientSocket.getOutputStream());) {
+		            servant.serve(br, bw, is, os);
+		        }
+			} catch (SocketException e) {
+				logger.error("Read Timeout cannot be setted", e);
+			} catch (SocketTimeoutException e) {
                 logger.warn("Connection closed - reading timeout");
             } catch (IOException e) {
                 logger.fatal("Reading from socket", e);

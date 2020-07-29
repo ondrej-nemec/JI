@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.function.Function;
 
 import common.Console;
+import core.text.Binary;
 import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
@@ -20,7 +21,7 @@ public class ServerEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 60000, apiResponse(), "UTF-8",  new LoggerImpl());
+			Server server = Server.create(10123, 5, 60000, 60000, apiResponse(), "UTF-8",  new LoggerImpl());
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/
@@ -42,11 +43,25 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, Properties params) throws IOException {
+				if (url.equals("/favicon.ico")) {
+					return RestApiResponse.binaryResponse(
+						StatusCode.OK,
+						Arrays.asList("Access-Control-Allow-Origin: *", "Content-Type: image/ico; charset=utf-8"),
+						(bos)->{
+								Binary.read((dis)->{
+									byte[] cache = new byte[32];
+									while (dis.read(cache) != -1) {
+										bos.write(cache);
+									}
+								}, getClass().getResourceAsStream("/socketCommunication/favicon.ico"));
+						}
+					);
+				}
 				Date today = new Date();
-				return new RestApiResponse(
+				return RestApiResponse.textResponse(
 					StatusCode.OK,
 					Arrays.asList("Access-Control-Allow-Origin: *", "Content-Type: text/html; charset=utf-8"),
-					(bw, bos)->{
+					(bw)->{
 						bw.write(String.format(
 								"<html> <head></head><body><h1>Time</h1>%s</body></html>", today.toString()
 						));

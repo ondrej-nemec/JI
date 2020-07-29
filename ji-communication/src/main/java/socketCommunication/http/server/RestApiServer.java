@@ -59,11 +59,14 @@ public class RestApiServer implements Servant {
         }
 		// end of header
         bw.newLine();
-		// write context
-        response.createContent(bw, os); // bw.write(response.getMessage());
+        
+		// write text context
+        response.createTextContent(bw);
         bw.newLine();
+        bw.flush();
+		// write binary context
+        response.createBinaryContent(os);
         os.flush();
-		bw.flush();
 	}
 	
 	/********* PARSE **************/
@@ -72,22 +75,23 @@ public class RestApiServer implements Servant {
 		// url, method, protocol
 		String first = br.readLine();
 		parseFirst(request, params, first);
-		
         // header
         String line = br.readLine();
         while (line != null && !line.isEmpty()) {
         	parseHeaderLine(line, header);
         	line = br.readLine();
         }
-        
+
         // payload
         StringBuilder payload = new StringBuilder();
-        int value;
-        while((value = br.read()) != -1) {
-            payload.append((char) value);
-            if (!br.ready()) {
-                break;
-            }
+        if (br.ready()) {
+        	int value;
+            while((value = br.read()) != -1) {
+                payload.append((char) value);
+                if (!br.ready()) {
+                    break;
+                }
+            } 
         }
         parsePayload(params, payload.toString());
 	}
