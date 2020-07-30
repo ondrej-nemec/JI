@@ -1,6 +1,7 @@
 package socketCommunication;
 
 import java.io.IOException;
+import java.io.ObjectInputStream.GetField;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
@@ -43,27 +44,69 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, Properties params) throws IOException {
+				System.err.println(params);
+				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
+					return getCert();
+				}*/
 				if (url.equals("/favicon.ico")) {
-					return RestApiResponse.binaryResponse(
-						StatusCode.OK,
-						Arrays.asList("Access-Control-Allow-Origin: *", "Content-Type: image/ico; charset=utf-8"),
-						(bos)->{
-								Binary.read((dis)->{
-									byte[] cache = new byte[32];
-									while (dis.read(cache) != -1) {
-										bos.write(cache);
-									}
-								}, getClass().getResourceAsStream("/socketCommunication/favicon.ico"));
-						}
-					);
+					return getFavicon();
 				}
+				return getHtml();
+			}
+			
+			private RestApiResponse getCert() {
+				return RestApiResponse.binaryResponse(
+					StatusCode.OK,
+					Arrays.asList(
+							"Access-Control-Allow-Origin: *",
+							"Content-Type: image/ico; charset=utf-8",
+							"X-XSS-Protection: 1; mode=block"
+					),
+					(bos)->{
+							Binary.read((dis)->{
+								byte[] cache = new byte[32];
+								while (dis.read(cache) != -1) {
+									bos.write(cache);
+								}
+							}, getClass().getResourceAsStream("/socketCommunication/cert.pem"));
+					}
+				);
+			}
+			
+			private RestApiResponse getFavicon() {
+				return RestApiResponse.binaryResponse(
+					StatusCode.OK,
+					Arrays.asList(
+							"Access-Control-Allow-Origin: *",
+							"Content-Type: image/ico; charset=utf-8",
+							"X-XSS-Protection: 1; mode=block"
+					),
+					(bos)->{
+							Binary.read((dis)->{
+								byte[] cache = new byte[32];
+								while (dis.read(cache) != -1) {
+									bos.write(cache);
+								}
+							}, getClass().getResourceAsStream("/socketCommunication/favicon.ico"));
+					}
+				);
+			}
+			
+			private RestApiResponse getHtml() {
 				Date today = new Date();
 				return RestApiResponse.textResponse(
 					StatusCode.OK,
-					Arrays.asList("Access-Control-Allow-Origin: *", "Content-Type: text/html; charset=utf-8"),
+					Arrays.asList(
+							"Access-Control-Allow-Origin: *", 
+							"Content-Type: text/html; charset=utf-8",
+							"X-XSS-Protection: 1; mode=block"
+					),
 					(bw)->{
 						bw.write(String.format(
-								"<html> <head></head><body><h1>Time</h1>%s</body></html>", today.toString()
+								"<html> <head></head><body><h1>Time</h1>%s"
+								+ "<br><form><label for='name'></label><input type='text' name='name'/>"
+								+ "<input type='submit' value='submit'></form>"
+								+ "</body></html>", today.toString()
 						));
 					}
 				);

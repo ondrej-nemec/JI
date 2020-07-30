@@ -81,16 +81,26 @@ public class Server {
         this.readTimeOut = readTimeOut;
         
         this.serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout((int)clientWaitTimeout);
+     //   serverSocket.setSoTimeout((int)clientWaitTimeout);
         logger.info("Server prepared " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
     }
 
     public synchronized void start() {
+    	try {
+			serverSocket.setSoTimeout(0);
+		} catch (SocketException e) {
+			logger.fatal("Server secket waiting time cannot be setted", e);
+		}
     	clientWaitingFuture = sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
         logger.info("Server running");
     }
     
     public synchronized void pause() {
+        try {
+			serverSocket.setSoTimeout(1);
+		} catch (SocketException e) {
+			logger.fatal("Server secket waiting time cannot be setted", e);
+		}
     	if (clientWaitingFuture != null) {
     		clientWaitingFuture.cancel(true);
 	    	clientWaitingFuture = null;
@@ -100,6 +110,11 @@ public class Server {
     }
     
     public void stop() throws InterruptedException {
+    	try {
+			serverSocket.setSoTimeout(1);
+		} catch (SocketException e) {
+			logger.fatal("Server secket waiting time cannot be setted", e);
+		}
     	logger.info("Stopping server");
     	executor.shutdownNow();
         executor.awaitTermination(30, TimeUnit.SECONDS);
