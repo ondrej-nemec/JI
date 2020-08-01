@@ -2,13 +2,13 @@ package json.providers;
 
 import json.JsonStreamException;
 
-public class StringProvider implements Provider {
+public class InputStringProvider implements InputProvider {
 
 	private String json;
 	
 	private int index = 0;
 	
-	public StringProvider(String json) {
+	public InputStringProvider(String json) {
 		this.json = json;
 	}
 	
@@ -18,6 +18,11 @@ public class StringProvider implements Provider {
 			return json.charAt(index++);
 		}
 		return (char)-1;
+	}
+
+	@Override
+	public void close() throws JsonStreamException {
+		// not required
 	}
 	
 }

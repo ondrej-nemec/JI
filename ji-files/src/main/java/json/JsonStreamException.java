@@ -8,4 +8,8 @@ public class JsonStreamException extends Exception {
 		super(t);
 	}
 	
+	public JsonStreamException(String message) {
+		super(message);
+	}
+	
 }

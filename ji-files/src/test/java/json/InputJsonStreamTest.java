@@ -9,17 +9,17 @@ import json.event.Event;
 import json.event.EventType;
 import json.event.Value;
 import json.event.ValueType;
-import json.providers.StringProvider;
+import json.providers.InputStringProvider;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
-public class JsonStreamTest {
+public class InputJsonStreamTest {
 
 	@Test
 	@Parameters(method = "dataNextTestEventTypes")
 	public void testNextTestEventTypes(String json, Event[] events) throws JsonStreamException {
-		StringProvider provider = new StringProvider(json);
+		InputStringProvider provider = new InputStringProvider(json);
 		InputJsonStream stream = new InputJsonStream(provider);
 		
 		Event e = stream.next();
@@ -130,7 +130,7 @@ public class JsonStreamTest {
 	@Test
 	public void testNextIfTextIsEmpty() throws JsonStreamException {
 		String testingJson = "";
-		StringProvider provider = new StringProvider(testingJson);
+		InputStringProvider provider = new InputStringProvider(testingJson);
 		InputJsonStream stream = new InputJsonStream(provider);
 		assertEquals(EventType.DOCUMENT_END, stream.next().getType());
 	}

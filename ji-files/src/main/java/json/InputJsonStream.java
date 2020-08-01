@@ -3,24 +3,24 @@ package json;
 import json.event.Event;
 import json.event.EventType;
 import json.event.ValueParser;
-import json.providers.Provider;
-import json.providers.StringProvider;
+import json.providers.InputProvider;
+import json.providers.InputStringProvider;
 
 public class InputJsonStream {
 	
 	public static InputJsonStream fromString(String json) {
-		return new InputJsonStream(new StringProvider(json));
+		return new InputJsonStream(new InputStringProvider(json));
 	}
 	
 	private final static char CHAR_DEFAULT = '\u0000';
 	
-	private final Provider provider;
+	private final InputProvider provider;
 	
 	private char actualCache = CHAR_DEFAULT;
 	private char previousChar = CHAR_DEFAULT;
 	private int level = 0;
 	
-	public InputJsonStream(Provider provider) {
+	public InputJsonStream(InputProvider provider) {
 		this.provider = provider;
 	}
 	
@@ -133,7 +133,7 @@ public class InputJsonStream {
 				actual = (actualCache == CHAR_DEFAULT) ? provider.getNext() : actualCache;
 			//////
 		}
-		
+		provider.close();
 		return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), -1);
 	}
 	

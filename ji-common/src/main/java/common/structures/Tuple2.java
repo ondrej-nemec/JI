@@ -19,4 +19,9 @@ public class Tuple2<F, S> {
 		return _2;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("Tuple(%s,%s)", _1, _2);
+	}
+	
 }
