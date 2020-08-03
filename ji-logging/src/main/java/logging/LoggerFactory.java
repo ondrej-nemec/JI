@@ -6,7 +6,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import common.Logger;
+import logging.loggers.ConsoleLogger;
 import logging.loggers.Log4JLogger;
+import logging.loggers.NativeLogger;
+import logging.loggers.NullLogger;
 
 public class LoggerFactory {
 	
@@ -26,7 +29,7 @@ public class LoggerFactory {
 
 	public static Logger getLogger(final String name) {
 		if (cache.get(name) == null) {
-			cache.put(name, new Log4JLogger(name, new LoggerConfig(PROPERTIES)));
+			cache.put(name, selectLogger(name));
 		}
 		return cache.get(name);
 	}
@@ -34,16 +37,18 @@ public class LoggerFactory {
 	public static Logger getLogger(final Class<?> clazz) {
 		return getLogger(clazz.getName());
 	}
-/*
+	
 	private static Logger selectLogger(String name) {
-		switch (config.getLoggerType(name)) {
-		case NULL: return new NullLogger();
-		case CONSOLE: return new ConsoleLogger(name);
-		case NATIVE: return new NativeLogger(name, config);
-		case LOG4J: return new Log4JLogger(name, config);
-		default:
-			throw new RuntimeException("Unsupported logger " + config.getLoggerType(name));
+		
+		LoggerConfig config = new LoggerConfig(PROPERTIES);		
+		switch (config.getLogHander()) {
+			case NULL: return new NullLogger();
+			case CONSOLE: return new ConsoleLogger(name);
+			case NATIVE: return new NativeLogger(name, config);
+			case LOG4J: return new Log4JLogger(name, config);
+			default:
+			throw new RuntimeException("Unsupported handler " + config.getLogHander());
 		}
 	}
-*/
+
 }
