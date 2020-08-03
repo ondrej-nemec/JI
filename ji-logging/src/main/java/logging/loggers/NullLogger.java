@@ -54,4 +54,14 @@ public class NullLogger implements Logger {
 		// not implemented
 	}
 
+	@Override
+	public void trace(Object message) {
+		// not implemented
+	}
+
+	@Override
+	public void trace(Object message, Throwable t) {
+		// not implemented
+	}
+
 }

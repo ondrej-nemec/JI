@@ -21,6 +21,18 @@ public class NativeLogger extends Logger implements common.Logger{
 	}
 
 	@Override
+	public void trace(Object message) {
+		console.trace(message);
+		logger.finest(message.toString());
+	}
+
+	@Override
+	public void trace(Object message, Throwable t) {
+		console.trace(message, t);
+		logger.log(Level.FINEST, message.toString(), t);
+	}
+
+	@Override
 	public void debug(Object message) {
 		console.debug(message);
 		logger.fine(message.toString());

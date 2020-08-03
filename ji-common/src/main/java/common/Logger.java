@@ -2,6 +2,10 @@ package common;
 
 public interface Logger {
 
+	public void trace(final Object message);
+	
+	public void trace(final Object message, final Throwable t);
+
 	public void debug(final Object message);
 	
 	public void debug(final Object message, final Throwable t);

@@ -68,4 +68,16 @@ public class LoggerImpl implements Logger {
 		print("FATAL", message, t);
 	}
 
+	@Override
+	public void trace(Object message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void trace(Object message, Throwable t) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
