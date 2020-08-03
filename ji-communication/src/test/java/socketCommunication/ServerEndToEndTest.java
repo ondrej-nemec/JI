@@ -1,7 +1,6 @@
 package socketCommunication;
 
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
@@ -22,7 +21,7 @@ public class ServerEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 60000, 60000, apiResponse(), "UTF-8",  new LoggerImpl());
+			Server server = Server.create(10123, 5, 60000, apiResponse(), "UTF-8",  new LoggerImpl());
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/
@@ -44,16 +43,31 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, Properties params) throws IOException {
-				System.err.println(params);
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
 					return getCert();
 				}*/
+				if (url.equals("/redirect")) {
+					return getRedirect();
+				}
 				if (url.equals("/favicon.ico")) {
 					return getFavicon();
 				}
 				return getHtml();
 			}
 			
+			private RestApiResponse getRedirect() {
+				return RestApiResponse.binaryResponse(
+						StatusCode.TEMPORARY_REDIRECT,
+						Arrays.asList(
+								"Access-Control-Allow-Origin: *",
+								"Content-Type: image/ico; charset=utf-8",
+								"X-XSS-Protection: 1; mode=block",
+								"Location: /test"
+						),
+						(bos)->{}
+					);
+			}
+/*
 			private RestApiResponse getCert() {
 				return RestApiResponse.binaryResponse(
 					StatusCode.OK,
@@ -72,7 +86,7 @@ public class ServerEndToEndTest {
 					}
 				);
 			}
-			
+*/	
 			private RestApiResponse getFavicon() {
 				return RestApiResponse.binaryResponse(
 					StatusCode.OK,
@@ -87,7 +101,7 @@ public class ServerEndToEndTest {
 								while (dis.read(cache) != -1) {
 									bos.write(cache);
 								}
-							}, getClass().getResourceAsStream("/socketCommunication/favicon.ico"));
+							}, getClass().getResourceAsStream("/certs/favicon.ico"));
 					}
 				);
 			}

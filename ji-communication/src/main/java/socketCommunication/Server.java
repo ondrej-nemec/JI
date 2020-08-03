@@ -36,7 +36,6 @@ public class Server {
     private int threadCount = 0;
     private final int maxThread;
     
-    private final long clientWaitTimeout;
     private final long readTimeOut;
     
     private final String charset;
@@ -45,28 +44,25 @@ public class Server {
     
     public static Server create(int port,
     		int threadPool,
-    		long clientWaitTimeout,
     		long readTimeout,
     		RestApiServerResponseFactory response,
     		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, clientWaitTimeout, readTimeout, new RestApiServer(response, logger), charset, logger);
+    	return new Server(port, threadPool, readTimeout, new RestApiServer(response, logger), charset, logger);
     }
     
     public static Server create(int port,
     		int threadPool,
-    		long clientWaitTimeout,
     		long readTimeout,
     		Function<String, String> response,
     		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, clientWaitTimeout, readTimeout, new Speaker(response, logger), charset, logger);
+    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), charset, logger);
     }
     
     public Server(
     		int port,
     		int threadPool,
-    		long clientWaitTimeout,
     		long readTimeOut,
     		Servant servant,
     		String charset,
@@ -77,7 +73,6 @@ public class Server {
         this.servant = servant;
         this.charset = charset;
         this.maxThread = threadPool;
-        this.clientWaitTimeout = clientWaitTimeout;
         this.readTimeOut = readTimeOut;
         
         this.serverSocket = new ServerSocket(port);
@@ -91,7 +86,9 @@ public class Server {
 		} catch (SocketException e) {
 			logger.fatal("Server secket waiting time cannot be setted", e);
 		}
-    	clientWaitingFuture = sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
+    	if (clientWaitingFuture == null) {
+    		clientWaitingFuture = sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
+    	}    	
         logger.info("Server running");
     }
     
@@ -156,7 +153,11 @@ public class Server {
             	}
                 executor.execute(serveToClient(clientSocket,  charset));
             } catch (SocketTimeoutException e) {
-                logger.warn("Connection closed - reading timeout: " + clientWaitTimeout);
+                try {
+					logger.warn("Connection closed - reading timeout: " + serverSocket.getSoTimeout());
+				} catch (IOException e1) {
+					logger.fatal("Preparing sockets", e);
+				}
             } catch (IOException e) {
                 logger.fatal("Preparing sockets", e);
             }
