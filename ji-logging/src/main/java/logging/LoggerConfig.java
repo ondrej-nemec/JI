@@ -6,7 +6,10 @@ import java.util.Properties;
 
 public class LoggerConfig {
 	
-	// private static final String defaultLayout = "%p %d{yyyy-MM-dd HH:mm:ss} %c{3} [%t] - %m%n"; // TODO
+	private static final String defaultLayout = "%p %d{yyyy-MM-dd HH:mm:ss} %c{3} [%t] - %m%n";
+	private static final LogLevel defaultLogLevel = LogLevel.INFO;
+	private static final String defaultPath = "logs/";
+	private static final String defaultTypes = "FILE,CONSOLE";
 	
 	private final Properties prop;
 	
@@ -14,45 +17,52 @@ public class LoggerConfig {
 		this.prop = prop;
 	}
 	
+	public LogHandler getLogHander() {
+		if (prop.getProperty("handler") == null) {
+			return LogHandler.LOG4J;
+		}
+		return LogHandler.valueOf(prop.getProperty("handler").toUpperCase());
+	}
+	
 	public LogLevel getLogLevel(String name, LoggerType type) {
-		return LogLevel.valueOf(getValue(name, type, "level").toUpperCase());
+		return LogLevel.valueOf(getValue(name, type, "level", defaultLogLevel.toString()).toUpperCase());
 	}
 	
 	public LogLevel getLogLevel(String name) {
-		return LogLevel.valueOf(getValue(name, "level").toUpperCase());
+		return LogLevel.valueOf(getValue(name, "level", defaultLogLevel.toString()).toUpperCase());
 	}
 	
 	public String getLoggerPath(String name, LoggerType type) {
-		return getValue(name, type, "path");
+		return getValue(name, type, "path", defaultPath);
 	}
 	
 	public String getLoggerPath(String name) {
-		return getValue(name, "path");
+		return getValue(name, "path", defaultPath);
 	}
 	
 	public String getMessagePattern(String name, LoggerType type) {
-		return getValue(name, type, "pattern");
+		return getValue(name, type, "pattern", defaultLayout);
 	}
 	
 	public List<LoggerType> getTypes(String name) {
-		String logger = getValue(name, "types");
+		String logger = getValue(name, "types", defaultTypes);
 		List<LoggerType> types = new LinkedList<>();
 		String[] ty = logger.split(",");
 		for (String type : ty) {
-			types.add(LoggerType.valueOf(type.toUpperCase()));
+			types.add(LoggerType.valueOf(type.toUpperCase().trim()));
 		}
 		return types;
 	}
 	
 
-	private String getValue(String name, String property) {
-		String root = prop.getProperty(property) == null ? LogLevel.INFO.toString() : prop.getProperty(property);
+	private String getValue(String name, String property, String defaultValue) {
+		String root = prop.getProperty(property) == null ? defaultValue : prop.getProperty(property);
 		String logger = prop.getProperty(name + "." + property) == null ? root : prop.getProperty(name + "." + property);
 		return logger;
 	}
 	
-	private String getValue(String name, LoggerType type, String property) {
-		String logger = getValue(name, property);
+	private String getValue(String name, LoggerType type, String property, String defaultValue) {
+		String logger = getValue(name, property, defaultValue);
 		String appender = prop.getProperty(name + "." + property + "." + type.toString().toLowerCase()) == null 
 				? logger : prop.getProperty(name + "." + property + "." + type.toString().toLowerCase());
 		return appender;
