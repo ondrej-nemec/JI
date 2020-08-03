@@ -1,6 +1,5 @@
 package logging;
 
-@Deprecated
 public enum LogHandler {
 	
 	NULL,
