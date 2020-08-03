@@ -73,6 +73,18 @@ public class ConnectionPoolEndToEndTest {
 			public void debug(Object message) {
 				System.out.println(message);
 			}
+
+			@Override
+			public void trace(Object message) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void trace(Object message, Throwable t) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 		
 		ExecutorService exec = Executors.newFixedThreadPool(5);
