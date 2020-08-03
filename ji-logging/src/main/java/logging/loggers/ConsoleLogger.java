@@ -15,6 +15,16 @@ public class ConsoleLogger implements Logger {
 	}
 
 	@Override
+	public void trace(Object message) {
+		print("TRACE", message.toString());
+	}
+
+	@Override
+	public void trace(Object message, Throwable t) {
+		print("TRACE", message.toString(), t);
+	}
+
+	@Override
 	public void debug(Object message) {
 		print("DEBUG", message.toString());
 	}
