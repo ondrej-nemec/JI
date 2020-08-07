@@ -11,84 +11,85 @@ public class NativeLogger extends Logger implements common.Logger{
 	
 	private final Logger logger;
 	
-	private final ConsoleLogger console;
+//	private final ConsoleLogger console;
 	
 	public NativeLogger(final String name, final LoggerConfig config) {
-		super(name, "");
+		super(name, null);
+		
 		NativeLoggerProvider log = new NativeLoggerProvider(new Console(), config);
 		this.logger = log.getLogger(name);
-		this.console = new ConsoleLogger(name);
+	//	this.console = new ConsoleLogger(name);
 	}
 
 	@Override
 	public void trace(Object message) {
-		console.trace(message);
+	//	console.trace(message);
 		logger.finest(message.toString());
 	}
 
 	@Override
 	public void trace(Object message, Throwable t) {
-		console.trace(message, t);
+	//	console.trace(message, t);
 		logger.log(Level.FINEST, message.toString(), t);
 	}
 
 	@Override
 	public void debug(Object message) {
-		console.debug(message);
+	//	console.debug(message);
 		logger.fine(message.toString());
 	}
 
 	@Override
 	public void debug(Object message, Throwable t) {
-		console.debug(message, t);
+	//	console.debug(message, t);
 		logger.log(Level.FINE, message.toString(), t);
 	}
 
 	@Override
 	public void info(Object message) {
-		console.info(message);
+	//	console.info(message);
 		logger.config(message.toString());
 	}
 
 	@Override
 	public void info(Object message, Throwable t) {
-		console.info(message, t);
+	//	console.info(message, t);
 		logger.log(Level.CONFIG, message.toString(), t);
 	}
 
 	@Override
 	public void warn(Object message) {
-		console.warn(message);
+	//	console.warn(message);
 		logger.info(message.toString());
 	}
 
 	@Override
 	public void warn(Object message, Throwable t) {
-		console.warn(message, t);
+	//	console.warn(message, t);
 		logger.log(Level.INFO, message.toString(), t);
 	}
 
 	@Override
 	public void error(Object message) {
-		console.error(message);
+	//	console.error(message);
 		logger.warning(message.toString());
 	}
 
 	@Override
 	public void error(Object message, Throwable t) {
-		console.error(message, t);
+	//	console.error(message, t);
 		logger.log(Level.WARNING, message.toString(), t);
 	}
 
 	@Override
 	public void fatal(Object message) {
-		console.fatal(message);
+	//	console.fatal(message);
 		logger.severe(message.toString());
 	}
 
 	@Override
 	public void fatal(Object message, Throwable t) {
-		console.fatal(message, t);
+	//	console.fatal(message, t);
 		logger.log(Level.SEVERE, message.toString(), t);
 	}
 	

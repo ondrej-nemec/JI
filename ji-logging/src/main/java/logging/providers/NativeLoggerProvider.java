@@ -8,7 +8,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import common.Console;
-import common.OperationSystem;
 import core.text.Text;
 import core.text.basic.WriteText;
 import logging.LogLevel;
@@ -112,11 +111,27 @@ public class NativeLoggerProvider {
 	}
 	
 	private String makeMessage(final LogRecord record) {
+		// "%p %d{yyyy-MM-dd HH:mm:ss} %c{3} [%t] (%F:%L) - %m%n";
+		StringBuilder message = new StringBuilder();
+		message.append(record.getLevel());
+		message.append(" ");
+		message.append(new Date(record.getMillis()));
+		message.append(" ");
+		// TODO %c
+		message.append(String.format("[%s]", record.getThreadID()));
+		message.append(" ");
+		message.append(String.format("%s:%s", record.getSourceClassName(), record.getSourceMethodName()));
+		message.append(" ");
+		message.append(record.getMessage());
+		message.append(" ");
+		return message.toString();
+		/*
 		String result = new Date(record.getMillis()) + " | "
 				+ record.getSourceClassName() + " : "
 				+ record.getSourceMethodName() + " : "
 				+ record.getParameters();
 		result += OperationSystem.NEW_LINE;
 		return result + record.getLevel() + ": " + record.getMessage();
+		*/
 	}
 }
