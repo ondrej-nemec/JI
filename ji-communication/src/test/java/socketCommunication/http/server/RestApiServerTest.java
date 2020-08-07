@@ -14,6 +14,8 @@ import common.Logger;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.session.Session;
+import socketCommunication.http.server.session.SessionStorage;
 import socketCommunication.http.server.RestApiServer;
 
 @RunWith(JUnitParamsRunner.class)
@@ -150,10 +152,99 @@ public class RestApiServerTest {
 		};
 	}
 	
+	@Test
+	@Parameters(method="dataGetSessionidFromCookieHeaderReturnsCorrectId")
+	public void testGetSessionidFromCookieHeaderReturnsCorrectId(Object cookiesString, String expected) {
+		RestApiServer api = getApi();
+		assertEquals(expected, api.getSessionIdFromCookieHeader(cookiesString));
+	}
+	
+	public Object[] dataGetSessionidFromCookieHeaderReturnsCorrectId() {
+		return new Object[] {
+			new Object[] {
+				null,
+				null
+			},
+			new Object[] {
+					"not-valid-text",
+					null
+				},
+			new Object[] {
+					"not;valid",
+					null
+				},
+			new Object[] {
+					"missing=correct;key=cookie",
+					null
+				},
+			new Object[] {
+					"SessionID=123456",
+					"123456"
+				},
+			new Object[] {
+					"SessionID=123456;another=value",
+					"123456"
+				},
+			new Object[] {
+					"SessionID = 123456 ; another=value",
+					"123456"
+				}
+		};
+	}
+	
+	@Test
+	@Parameters(method = "dataGetSessionReturnsCorrectSession")
+	public void testGetSessionReturnsCorrectSession(Session inStorage, Session expected, int removeCount, int addCount) {
+		SessionStorage storage = mock(SessionStorage.class);
+		when(storage.getSession(any())).thenReturn(inStorage);
+		
+		RestApiServer api = new RestApiServer(
+				50,
+				mock(RestApiServerResponseFactory.class),
+				storage,
+				mock(Logger.class)
+		);
+		Properties header = new Properties();
+		header.put("Cookie", "SessionID=-session-id-");
+		Session actual = api.getSession(header, "ip", 100);
+		assertEquals(expected.getExpirationTime(), actual.getExpirationTime());
+		assertEquals(expected.getIp(), actual.getIp());
+		
+		verify(storage, times(1)).getSession("-session-id-");
+		verify(storage, times(addCount)).addSession(any());//expected
+		verify(storage, times(removeCount)).removeSession("-session-id-");
+		verifyNoMoreInteractions(storage);
+	}
+	
+	public Object[] dataGetSessionReturnsCorrectSession() {
+		return new Object[] {
+			new Object[] {
+					null,
+					new Session("", "ip", 150, ""),
+					0, 1
+			},
+			new Object[] {
+					new Session("-session-id-", "ip2", 125, ""),
+					new Session("", "ip2", 150, ""),
+					0, 1
+			},
+			new Object[] {
+					new Session("-session-id-", "ip", 75, ""),
+					new Session("", "", 0, ""),
+					1, 0
+			}
+		};
+	}
+	
 	/***********************/
 	
 	private RestApiServer getApi() {
-		return new RestApiServer(mock(RestApiServerResponseFactory.class), mock(Logger.class));
+		return new RestApiServer(
+				0,
+				mock(RestApiServerResponseFactory.class),
+				mock(SessionStorage.class),
+				mock(Logger.class)
+		);
 	}
 
 }

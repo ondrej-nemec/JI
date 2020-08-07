@@ -99,8 +99,8 @@ public class RestApiClient {
 			StringBuilder b = new StringBuilder();
 			params.forEach((name, value)->{
 				if (b.toString().isEmpty()) {
-					b.append(server);
-					b.append(uri);
+				//	b.append(server);
+				//	b.append(uri);
 					b.append("?");
 				} else {
 					b.append("&");

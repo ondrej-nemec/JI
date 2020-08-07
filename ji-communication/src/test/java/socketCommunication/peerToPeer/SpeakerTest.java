@@ -1,5 +1,6 @@
 package socketCommunication.peerToPeer;
 
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -34,8 +35,8 @@ public class SpeakerTest {
 		
 		
 		Speaker s = new Speaker((a)->a, mock(Logger.class));
-		s.serve(br, bw, is, os);
-		
+		// TODO mock socket s.serve(br, bw, is, os);
+		fail("Mock socket");
 		// reader
 		verify(br, times(5)).readLine();
 		verifyNoMoreInteractions(br);

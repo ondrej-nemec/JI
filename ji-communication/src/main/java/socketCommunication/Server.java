@@ -1,12 +1,6 @@
 package socketCommunication;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -20,6 +14,7 @@ import java.util.function.Function;
 
 import common.Logger;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.session.SessionStorage;
 import socketCommunication.http.server.RestApiServer;
 import socketCommunication.peerToPeer.Speaker;
 
@@ -45,10 +40,12 @@ public class Server {
     public static Server create(int port,
     		int threadPool,
     		long readTimeout,
+    		long sessionExpirationTime,
     		RestApiServerResponseFactory response,
+    		SessionStorage sessionsStorage,
     		String charset,
     		Logger logger) throws IOException {
-    	return new Server(port, threadPool, readTimeout, new RestApiServer(response, logger), charset, logger);
+    	return new Server(port, threadPool, readTimeout, new RestApiServer(sessionExpirationTime, response, sessionsStorage, logger), charset, logger);
     }
     
     public static Server create(int port,
@@ -146,7 +143,7 @@ public class Server {
         		return;
         	}
             try {
-            	logger.info(String.format("Waiting for client(%d/%d)...", threadCount, maxThread));
+            	logger.trace(String.format("Waiting for client(%d/%d)...", threadCount, maxThread));
             	Socket clientSocket = serverSocket.accept(); // accept is blocking
             	if (Thread.currentThread().isInterrupted()) {
             		return;
@@ -169,18 +166,12 @@ public class Server {
     private Runnable serveToClient(Socket clientSocket, String charset) {
         return ()->{
             threadCount++;
-            
-            logger.info(
-                "Client " + threadCount + " connected - " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()
-            );
+            String client =  clientSocket.getInetAddress() + ":" + clientSocket.getPort();
+            logger.trace("Client " + threadCount + " connected - " + client);
             try {
 				clientSocket.setSoTimeout((int)readTimeOut);
-				try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), charset));
-		            	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), charset));
-		            	 BufferedInputStream is = new BufferedInputStream(clientSocket.getInputStream());
-		            	 BufferedOutputStream os = new BufferedOutputStream(clientSocket.getOutputStream());) {
-		            servant.serve(br, bw, is, os);
-		        }
+				servant.serve(clientSocket, charset);
+				
 			} catch (SocketException e) {
 				logger.error("Read Timeout cannot be setted", e);
 			} catch (SocketTimeoutException e) {
@@ -190,12 +181,15 @@ public class Server {
             } catch (Exception e) {
             	logger.fatal("Problem in Server", e);
             } finally {
+            	try {
+					clientSocket.close();
+				} catch (IOException e) {
+					logger.info("Socket closing problem", e);
+				}
 				threadCount--;
 			}
             
-            logger.info(
-                "Client " + threadCount + " disconnected - " + clientSocket.getInetAddress() + ":" + clientSocket.getPort()
-            );
+            logger.trace("Client " + threadCount + " disconnected - " + client);
         };
     }
 }

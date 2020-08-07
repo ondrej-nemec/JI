@@ -12,6 +12,7 @@ import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.session.MemorySessionStorage;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerEndToEndTest {
@@ -21,7 +22,16 @@ public class ServerEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 60000, apiResponse(), "UTF-8",  new LoggerImpl());
+			Server server = Server.create(
+					10123,
+					5,
+					60000,
+					120000,
+					apiResponse(),
+					new MemorySessionStorage(), 
+					"UTF-8",
+					new LoggerImpl()
+			);
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/
@@ -114,6 +124,8 @@ public class ServerEndToEndTest {
 							"Access-Control-Allow-Origin: *", 
 							"Content-Type: text/html; charset=utf-8",
 							"X-XSS-Protection: 1; mode=block"
+						//	"Set-Cookie: Test=susenka"//,
+						//	"Set-Cookie: jina=cookie"
 					),
 					(bw)->{
 						bw.write(String.format(

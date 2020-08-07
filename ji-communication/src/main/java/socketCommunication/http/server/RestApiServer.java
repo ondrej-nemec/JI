@@ -5,12 +5,20 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.util.Date;
 import java.util.Properties;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 import common.Logger;
 import socketCommunication.Servant;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.UrlEscape;
+import socketCommunication.http.server.session.Session;
+import socketCommunication.http.server.session.SessionStorage;
 
 public class RestApiServer implements Servant {
 	
@@ -23,17 +31,44 @@ public class RestApiServer implements Servant {
 
 	private final RestApiServerResponseFactory createResponce;
 	
-	public RestApiServer(RestApiServerResponseFactory response, Logger logger) {
+	private final SessionStorage sessionsStorage;
+	
+	private final long sessionExpirationTime; // in ms
+	
+	public RestApiServer(
+			long sessionExpirationTime,
+			RestApiServerResponseFactory response, 
+			SessionStorage sessionsStorage,
+			Logger logger) {
+		this.sessionExpirationTime = sessionExpirationTime;
 		this.logger = logger;
 		this.createResponce = response;
+		this.sessionsStorage = sessionsStorage;
 	}
 	
 	@Override
-	public void serve(BufferedReader br, BufferedWriter bw, BufferedInputStream is, BufferedOutputStream os) throws IOException {
+	public void serve(Socket socket, String charset) throws IOException {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+           	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
+           	 BufferedInputStream is = new BufferedInputStream(socket.getInputStream());
+           	 BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());) {
+			serve(br, bw, is, os, socket.getInetAddress().toString()); // + socket.getPort()
+       }
+	}
+	
+	//@Override
+	protected void serve(
+			BufferedReader br, 
+			BufferedWriter bw,
+			BufferedInputStream is,
+			BufferedOutputStream os,
+			String clientIp) throws IOException {
 		Properties params = new Properties();
 		Properties header = new Properties();
 		Properties request = new Properties();
 		parseRequest(request, header, params, br);
+		
+		Session session = getSession(header, clientIp, new Date().getTime());
 		
 		logger.debug("Request: " + request);
 		RestApiResponse response = createResponce.accept(
@@ -46,17 +81,27 @@ public class RestApiServer implements Servant {
 		);
 		String code = response.getStatusCode().toString();
 		logger.debug("Response: " + code);
-		
+				
 		// write first line
 		bw.write(request.getProperty(PROTOCOL));
         bw.write(" ");
         bw.write(code);
         bw.newLine();
-		// write heared
+		// write headers
         for (String headerLine : response.getHeader()) {
         	bw.write(headerLine);
         	bw.newLine();
         }
+        if (!session.isEmpty()) {
+			bw.write(
+				"Set-Cookie: SessionID="
+				+ session.getSessionId()
+				+ "; HttpOnly; SameSite=Strict;"
+				+ " Max-Age="
+				+ (sessionExpirationTime / 1000)
+				);
+        	bw.newLine();
+		}
 		// end of header
         bw.newLine();
         
@@ -68,7 +113,7 @@ public class RestApiServer implements Servant {
         response.createBinaryContent(os);
         os.flush();
 	}
-	
+
 	/********* PARSE **************/
 	
 	private void parseRequest(Properties request, Properties header, Properties params, BufferedReader br) throws IOException {
@@ -135,7 +180,6 @@ public class RestApiServer implements Servant {
 		if (payload.isEmpty()) {
 			return;
 		}
-		//TODO escape payload
 		String[] params = payload.split("\\&");
 		for (String param : params) {
 			String[] keyValue = param.split("=");
@@ -147,6 +191,49 @@ public class RestApiServer implements Servant {
 	    		logger.warn("Invalid param " + param);
 	    	}
 		}
+	}
+	
+	/*********************/
+
+	// TODO test
+	protected Session getSession(Properties header, String clientIp, long now) {
+		String sessionId = getSessionIdFromCookieHeader(header.get("Cookie"));
+		Session session = getSession(sessionId, clientIp, sessionExpirationTime, now);
+		if (now > session.getExpirationTime()) {
+			sessionsStorage.removeSession(sessionId);
+			return Session.empty();
+		}
+		session.setExpirationTime(now + sessionExpirationTime);
+		sessionsStorage.addSession(session);
+		return session;
+	}
+	
+	// TODO test
+	private Session getSession(String sessionId, String clientIp, long expirationTime, long now) {
+		Session ses = sessionsStorage.getSession(sessionId);
+		if (sessionId == null || ses == null) {
+			return new Session(
+					RandomStringUtils.randomAlphanumeric(50), 
+					clientIp, 
+					now + expirationTime,
+					""
+			);
+		}
+		return ses;
+	}
+	
+	protected String getSessionIdFromCookieHeader(Object cookieString) {
+		if (cookieString == null) {
+			return null;
+		}
+		String[] cookiesArray = cookieString.toString().split(";");
+		for (String cookies : cookiesArray) {
+			String[] cookie = cookies.split("=");
+			if (cookie.length == 2 && cookie[0].trim().equals("SessionID")) {
+				return cookie[1].trim();
+			}
+		}
+		return null;
 	}
 
 }
