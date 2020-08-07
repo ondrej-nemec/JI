@@ -6,7 +6,8 @@ import java.util.Properties;
 
 public class LoggerConfig {
 	
-	private static final String defaultLayout = "%p %d{yyyy-MM-dd HH:mm:ss} %c{3} [%t] - %m%n";
+	// %d{ISO8601} %5p [%t] (%F:%L) - %m%n
+	private static final String defaultLayout = "%p %d{yyyy-MM-dd HH:mm:ss} %c{3} [%t] (%F:%L) - %m%n";
 	private static final LogLevel defaultLogLevel = LogLevel.INFO;
 	private static final String defaultPath = "logs/";
 	private static final String defaultTypes = "FILE,CONSOLE";
