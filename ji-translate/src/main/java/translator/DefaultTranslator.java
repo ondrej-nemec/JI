@@ -9,7 +9,7 @@ import common.Implode;
 import common.Logger;
 import utils.io.PropertiesLoader;
 
-public class Translator {
+public class DefaultTranslator implements Translator {
 	
 	private final static String VARIABLE_SEPARATOR = "%";
 	private final static String COUNT_SEPARATOR = "\\|";
@@ -23,11 +23,11 @@ public class Translator {
 	
 	private final Locale locale;
 	
-	public Translator(Logger logger, String pathToFiles, String defaultName, String... others) {
+	public DefaultTranslator(Logger logger, String pathToFiles, String defaultName, String... others) {
 		this(logger, Locale.getDefault(), pathToFiles, defaultName, others);
 	}
 	
-	public Translator(Logger logger, Locale locale, String pathToFiles, String defaultName, String... others) {
+	public DefaultTranslator(Logger logger, Locale locale, String pathToFiles, String defaultName, String... others) {
 		this.locale = locale;
 		this.logger = logger;
 		this.defaultResource = loadBundle(pathToFiles + defaultName);
@@ -54,51 +54,37 @@ public class Translator {
 		}
 	}
 
-	/**
-	 * key structure: <resource>.<key> OR <key>
-	 * if <resource> not exists returns <resource.key> as <key> from default
-	 * if no message for <key> founded, <key> returned 
-	 * message structure: "some text"
+	/* (non-Javadoc)
+	 * @see translator.Translator#translate(java.lang.String)
 	 */
+	@Override
 	public String translate(String key) {
 		return trans(key);
 	}
 
-	/**
-	 * key structure: <resource>.<key> OR <key>
-	 * if <resource> not exists returns <resource.key> as <key> from default
-	 * if no message for <key> founded, <key> returned 
-	 * message structure: "text %variable% %another-variable%"
+	/* (non-Javadoc)
+	 * @see translator.Translator#translate(java.lang.String, java.util.Map)
 	 */
+	@Override
 	public String translate(String key, Map<String, String> variables) {
 		String partialMessage = trans(key);
 		return replaceVariableNamesWithValues(partialMessage, variables);
 	}
 
-	/**
-	 * key structure: <resource>.<key> OR <key>
-	 * if <resource> not exists returns <resource.key> as <key> from default
-	 * if no message for <key> founded, <key> returned 
-	 * message structure:
-	 *   [<countResolution>]|"text %variable% %another-variable%";[<countResolution>]|"text %variable% %another-variable%"
-	 *   <countResolution>: m,n - number, I - infinity
-	 *   	n - exactly this number
-	 *      [n,m] - in given list
-	 *      (n,m) - in sequence from n to m exclusive
-	 *      <n,m> - in sequence from n to m inclusive
-	 *      (-I,n) - everything less n
-	 *      (-I,n> - everything less or equals n
-	 *      (m,I) - everything more that m
-	 *      <m,I) - everything more or equals m
-	 *      D - default - used if no other resolution matched, if default missing <key>.count returned 
-	 *    <countCode> reffer to <resource>.<key>.<countCode> - there is final message 
+	/* (non-Javadoc)
+	 * @see translator.Translator#translate(java.lang.String, int, java.util.Map)
 	 */
+	@Override
 	public String translate(String key, int count, Map<String, String> variables) {
 		String counts = trans(key);
 		String partialMessage = selectMessageWithCount(counts, count);
 		return replaceVariableNamesWithValues(partialMessage, variables);
 	}
 
+	/* (non-Javadoc)
+	 * @see translator.Translator#translate(java.lang.String, int)
+	 */
+	@Override
 	public String translate(String key, int count) {
 		return translate(key, count, new HashMap<>());
 	}
