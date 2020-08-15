@@ -11,7 +11,7 @@ import common.structures.Tuple2;
 	import static common.MapInit.*;
 	
 	Tuple2 factory - static t() method
- * @author Ondøej Nìmec
+ * @author Ondï¿½ej Nï¿½mec
  *
  * @param <K>
  * @param <V>
@@ -23,6 +23,9 @@ public class MapInit<K, V> {
 	}
 	
 	public static Tuple2<String, String> t(String key, Object value) {
+		if (value == null) {
+			return new Tuple2<>(key, null);
+		}
 		return new Tuple2<>(key, value.toString());
 	}
 	
