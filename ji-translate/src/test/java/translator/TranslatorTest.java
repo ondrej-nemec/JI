@@ -20,13 +20,13 @@ public class TranslatorTest {
 	@Test
 	@Parameters({"mess-tree", "mess-classpath"})
 	public void testTranslateLoadFilesFromClasspathAndDirTree(String resource) {
-		new Translator(mock(Logger.class), "trans/", resource);
+		new DefaultTranslator(mock(Logger.class), "trans/", resource);
 		assertTrue(true);
 	}
 	
 	@Test
 	public void testTranslateReturnsKeyIfKeyNotExists(){
-		Translator translator = new Translator(mock(Logger.class), "", "messages");
+		Translator translator = new DefaultTranslator(mock(Logger.class), "", "messages");
 		assertEquals("not-existing-key", translator.translate("not-existing-key"));
 		assertEquals("not-existing-resource.translate.works", translator.translate("not-existing-resource.translate.works"));
 	}
@@ -34,7 +34,7 @@ public class TranslatorTest {
 	@Test
 	@Parameters(method = "dataTranslateReturnsCorrectKey")
 	public void testTranslateReturnsCorrectKey(String key, String expected) {
-		Translator translator = new Translator(mock(Logger.class), "", "messages", "from");
+		Translator translator = new DefaultTranslator(mock(Logger.class), "", "messages", "from");
 		assertEquals(expected, translator.translate(key));
 	}
 	
@@ -58,7 +58,7 @@ public class TranslatorTest {
 	@Test
 	@Parameters
 	public void testTranslateWithVariableWorks(String expectedMessage, String key, Map<String, String> variables){
-		Translator translator = new Translator(mock(Logger.class), "", "messages");
+		Translator translator = new DefaultTranslator(mock(Logger.class), "", "messages");
 		assertEquals(
 			expectedMessage,
 			translator.translate(
@@ -81,14 +81,14 @@ public class TranslatorTest {
 
 	@Test
 	public void testTranslateCountNotExistingCount(){
-		Translator translator = new Translator(mock(Logger.class), "", "messages");
+		Translator translator = new DefaultTranslator(mock(Logger.class), "", "messages");
 		assertEquals("Translated message (1)", translator.translate("translate.works", 1));
 	}
 	
     @Test
     @Parameters
     public void testTranslateWithCountWorks(String expectedMessage, int count){
-		Translator translator = new Translator(mock(Logger.class), "", "messages");
+		Translator translator = new DefaultTranslator(mock(Logger.class), "", "messages");
     	assertEquals(
     		expectedMessage,
     		translator.translate(
@@ -122,7 +122,7 @@ public class TranslatorTest {
     @Parameters(method = "dataTranslateWorksWithSpecialAlphabets")
     public void testTranslateWorksWithSpecialAlphabets(String expected, Locale locale, String path) {
     	Locale.setDefault(locale);
-    	Translator translator = new Translator(mock(Logger.class), path, "messages");    	
+    	Translator translator = new DefaultTranslator(mock(Logger.class), path, "messages");    	
     	assertEquals(expected, translator.translate("key"));
     }
     
