@@ -49,7 +49,7 @@ public class Session {
 	}
 
 	public String serialize() {
-		return String.format("%s;%s;%s%s", sessionId, ip, expirationTime, content);
+		return String.format("%s;%s;%s;%s", sessionId, ip, expirationTime, content);
 	}
 	
 	public static Session deserialize(String session) {
@@ -58,7 +58,7 @@ public class Session {
 			 return new Session(
 					 fields[0],
 					 fields[1],
-					 Long.parseLong(fields[0]),
+					 Long.parseLong(fields[2]),
 					 fields.length < 4 ? "" : fields[3]
 			);
 		 } catch (Exception e) {
