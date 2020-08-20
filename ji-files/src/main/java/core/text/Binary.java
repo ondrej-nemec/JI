@@ -2,6 +2,7 @@ package core.text;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,5 +45,9 @@ public class Binary {
 		try (DataOutputStream dis = new DataOutputStream(stream)) {
 			consumer.accept(dis);
 		}
+	}
+	
+	public static void write(ThrowingConsumer<DataOutputStream, IOException> consumer, String file) throws IOException {
+		write(consumer, new FileOutputStream(file));
 	}
 }
