@@ -13,6 +13,7 @@ import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
 import socketCommunication.http.server.session.MemorySessionStorage;
+import socketCommunication.http.server.session.Session;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerEndToEndTest {
@@ -42,7 +43,7 @@ public class ServerEndToEndTest {
             //    console.out("Server running");
             }
             server.stop();
-		} catch (IOException | InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -52,7 +53,7 @@ public class ServerEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, Properties params) throws IOException {
+					Properties header, Properties params, Session session) throws IOException {
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
 					return getCert();
 				}*/
@@ -77,26 +78,6 @@ public class ServerEndToEndTest {
 						(bos)->{}
 					);
 			}
-/*
-			private RestApiResponse getCert() {
-				return RestApiResponse.binaryResponse(
-					StatusCode.OK,
-					Arrays.asList(
-							"Access-Control-Allow-Origin: *",
-							"Content-Type: image/ico; charset=utf-8",
-							"X-XSS-Protection: 1; mode=block"
-					),
-					(bos)->{
-							Binary.read((dis)->{
-								byte[] cache = new byte[32];
-								while (dis.read(cache) != -1) {
-									bos.write(cache);
-								}
-							}, getClass().getResourceAsStream("/socketCommunication/cert.pem"));
-					}
-				);
-			}
-*/	
 			private RestApiResponse getFavicon() {
 				return RestApiResponse.binaryResponse(
 					StatusCode.OK,
@@ -132,6 +113,12 @@ public class ServerEndToEndTest {
 								"<html> <head></head><body><h1>Time</h1>%s"
 								+ "<br><form><label for='name'></label><input type='text' name='name'/>"
 								+ "<input type='submit' value='submit'></form>"
+								+ "<br><br><br>"
+								+ "<form method=\"post\" enctype=\"multipart/form-data\" action='/file'>"
+								+ "Select image to upload:"
+								+ " <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">"
+								+ "<input type=\"submit\" value=\"Upload Image\" name=\"submit\">"
+								+ "</form>"
 								+ "</body></html>", today.toString()
 						));
 					}

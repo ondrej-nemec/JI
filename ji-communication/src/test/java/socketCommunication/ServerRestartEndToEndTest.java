@@ -12,6 +12,7 @@ import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
 import socketCommunication.http.server.session.MemorySessionStorage;
+import socketCommunication.http.server.session.Session;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerRestartEndToEndTest {
@@ -46,7 +47,7 @@ public class ServerRestartEndToEndTest {
 			// server.stop();
 			server.stop(3, TimeUnit.SECONDS);
 			//*/
-		} catch (IOException | InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -56,7 +57,7 @@ public class ServerRestartEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, Properties params) throws IOException {
+					Properties header, Properties params, Session session) throws IOException {
 				Date today = new Date();
 				return RestApiResponse.textResponse(
 					StatusCode.OK,

@@ -70,14 +70,12 @@ public class LoggerImpl implements Logger {
 
 	@Override
 	public void trace(Object message) {
-		// TODO Auto-generated method stub
-		
+		print("TRACE", message);
 	}
 
 	@Override
 	public void trace(Object message, Throwable t) {
-		// TODO Auto-generated method stub
-		
+		print("TRACE", message, t);
 	}
 
 }
