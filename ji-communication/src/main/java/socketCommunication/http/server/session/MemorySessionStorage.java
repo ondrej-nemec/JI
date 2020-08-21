@@ -2,6 +2,7 @@ package socketCommunication.http.server.session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class MemorySessionStorage implements SessionStorage {
 
@@ -20,6 +21,13 @@ public class MemorySessionStorage implements SessionStorage {
 	@Override
 	public void addSession(Session session) {
 		sessions.put(session.getSessionId(), session);
+	}
+
+	@Override
+	public void forEach(Consumer<Session> consumer) {
+		sessions.forEach((sessionId, session)->{
+			consumer.accept(session);
+		});
 	}
 	
 }

@@ -49,5 +49,10 @@ public class Speaker implements Servant {
 	        Communication.writeMessage(bw, Communication.END);
        }
 	}
+	@Override
+	public void start() {}
+	
+	@Override
+	public void stop() {}
 
 }

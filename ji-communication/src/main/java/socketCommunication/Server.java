@@ -1,16 +1,28 @@
 package socketCommunication;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import common.Logger;
 import socketCommunication.http.server.RestApiServerResponseFactory;
@@ -44,7 +56,7 @@ public class Server {
     		RestApiServerResponseFactory response,
     		SessionStorage sessionsStorage,
     		String charset,
-    		Logger logger) throws IOException {
+    		Logger logger) throws Exception {
     	return new Server(port, threadPool, readTimeout, new RestApiServer(sessionExpirationTime, response, sessionsStorage, logger), charset, logger);
     }
     
@@ -53,7 +65,7 @@ public class Server {
     		long readTimeout,
     		Function<String, String> response,
     		String charset,
-    		Logger logger) throws IOException {
+    		Logger logger) throws Exception {
     	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), charset, logger);
     }
     
@@ -63,7 +75,7 @@ public class Server {
     		long readTimeOut,
     		Servant servant,
     		String charset,
-    		Logger logger) throws IOException {
+    		Logger logger) throws Exception {
         this.executor = Executors.newFixedThreadPool(threadPool);
         this.sheduled = Executors.newScheduledThreadPool(1);
         this.logger = logger;
@@ -72,9 +84,51 @@ public class Server {
         this.maxThread = threadPool;
         this.readTimeOut = readTimeOut;
         
-        this.serverSocket = new ServerSocket(port);
+        this.serverSocket = getUnsecuredSocket(port);
+        //this.serverSocket = getSecuredSocket(port);
      //   serverSocket.setSoTimeout((int)clientWaitTimeout);
         logger.info("Server prepared " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
+    }
+    
+    private ServerSocket getUnsecuredSocket(int port) throws IOException {
+    	return new ServerSocket(port);
+    }
+    
+    private ServerSocket getSecuredSocket(int port) throws Exception {
+    	String clientTrustStore = "";
+    	String clientTrustStorePasswd = "";
+    	String serverKeyStore = "certs2/keystore.jks";
+    	String serverKeyStorePasswd = "abc123";
+    	String tlsVersion = "TLSv1.2";
+    	/***/
+    /*	KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        InputStream tstore = getClass().getResourceAsStream("/" + clientTrustStore);
+        trustStore.load(tstore, clientTrustStorePasswd.toCharArray());
+        tstore.close();
+        TrustManagerFactory tmf = TrustManagerFactory
+            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(trustStore);
+        /***/
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        InputStream kstore = getClass().getResourceAsStream("/" + serverKeyStore);
+        keyStore.load(kstore, serverKeyStorePasswd.toCharArray());
+        KeyManagerFactory kmf = KeyManagerFactory
+            .getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, serverKeyStorePasswd.toCharArray());
+        /***/
+        
+        SSLContext ctx = SSLContext.getInstance("TLS");
+        ctx.init(kmf.getKeyManagers(), null, // nevyzaduje certifikat od klienta; tmf.getTrustManagers(),
+            SecureRandom.getInstanceStrong());
+
+        SSLServerSocketFactory factory = ctx.getServerSocketFactory();
+        
+        ServerSocket listener = factory.createServerSocket(port);
+        SSLServerSocket sslListener = (SSLServerSocket) listener;
+
+        sslListener.setNeedClientAuth(false); // nevyzaduje certifikat od klienta; true
+        sslListener.setEnabledProtocols(new String[] {tlsVersion});
+   		return sslListener;
     }
 
     public synchronized void start() {
@@ -85,7 +139,8 @@ public class Server {
 		}
     	if (clientWaitingFuture == null) {
     		clientWaitingFuture = sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
-    	}    	
+    	}
+    	servant.start();
         logger.info("Server running");
     }
     
@@ -109,6 +164,7 @@ public class Server {
 		} catch (SocketException e) {
 			logger.fatal("Server secket waiting time cannot be setted", e);
 		}
+    	servant.stop();
     	logger.info("Stopping server");
     	executor.shutdownNow();
         executor.awaitTermination(30, TimeUnit.SECONDS);

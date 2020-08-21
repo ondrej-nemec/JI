@@ -2,6 +2,9 @@ package socketCommunication.http.server.session;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import core.text.Text;
 import core.text.basic.ReadText;
@@ -11,8 +14,11 @@ public class FileSessionStorage implements SessionStorage {
 	
 	private final String sessionPath;
 	
+	private final Set<String> sessions;
+	
 	public FileSessionStorage(String sessionPath) {
 		this.sessionPath = sessionPath;
+		this.sessions = new HashSet<>();
 	}
 
 	@Override
@@ -29,10 +35,15 @@ public class FileSessionStorage implements SessionStorage {
 	@Override
 	public void addSession(Session session) {
 		try {
-			Text.write((bw)->{
-				WriteText.write(bw, session.serialize());
-			}, getFileName(session.getSessionId()), false);
+			if (sessions.add(session.getSessionId())) {
+				Text.write((bw)->{
+					WriteText.write(bw, session.serialize());
+				}, getFileName(session.getSessionId()), false);
+			} else {
+				throw new RuntimeException("This session ID already exists");
+			}
 		} catch (IOException e) {
+			sessions.remove(session.getSessionId());
 			throw new RuntimeException(e);
 		}
 	}
@@ -40,10 +51,18 @@ public class FileSessionStorage implements SessionStorage {
 	@Override
 	public void removeSession(String sessionId) {
 		new File(getFileName(sessionId)).delete();
+		sessions.remove(sessionId);
 	}
 
 	private String getFileName(String name) {
 		return String.format("%s/%s.session", sessionPath, name);
+	}
+
+	@Override
+	public void forEach(Consumer<Session> consumer) {
+		sessions.forEach((sessionId)->{
+			consumer.accept(getSession(sessionId));
+		});
 	}
 	
 }

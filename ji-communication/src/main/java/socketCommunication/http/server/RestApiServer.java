@@ -18,6 +18,7 @@ import socketCommunication.Servant;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.UrlEscape;
 import socketCommunication.http.server.session.Session;
+import socketCommunication.http.server.session.SessionCheckTask;
 import socketCommunication.http.server.session.SessionStorage;
 
 public class RestApiServer implements Servant {
@@ -34,6 +35,7 @@ public class RestApiServer implements Servant {
 	private final SessionStorage sessionsStorage;
 	
 	private final long sessionExpirationTime; // in ms
+	private final SessionCheckTask task;
 	
 	public RestApiServer(
 			long sessionExpirationTime,
@@ -44,6 +46,7 @@ public class RestApiServer implements Servant {
 		this.logger = logger;
 		this.createResponce = response;
 		this.sessionsStorage = sessionsStorage;
+		this.task = new SessionCheckTask(sessionsStorage, logger);
 	}
 	
 	@Override
@@ -66,7 +69,7 @@ public class RestApiServer implements Servant {
 		Properties params = new Properties();
 		Properties header = new Properties();
 		Properties request = new Properties();
-		parseRequest(request, header, params, br);
+		parseRequest(request, header, params, br, is);
 		
 		Session session = getSession(header, clientIp, new Date().getTime());
 		
@@ -77,7 +80,8 @@ public class RestApiServer implements Servant {
 				request.getProperty(FULL_URL),
 				request.getProperty(PROTOCOL),
 				header,
-				params
+				params,
+				session
 		);
 		String code = response.getStatusCode().toString();
 		logger.debug("Response: " + code);
@@ -116,7 +120,9 @@ public class RestApiServer implements Servant {
 
 	/********* PARSE **************/
 	
-	private void parseRequest(Properties request, Properties header, Properties params, BufferedReader br) throws IOException {
+	private void parseRequest(
+			Properties request, Properties header, Properties params, 
+			BufferedReader br, BufferedInputStream bis) throws IOException {
 		// url, method, protocol
 		String first = br.readLine();
 		parseFirst(request, params, first);
@@ -127,18 +133,35 @@ public class RestApiServer implements Servant {
         	line = br.readLine();
         }
 
-        // payload
-        StringBuilder payload = new StringBuilder();
-        if (br.ready()) {
-        	int value;
-            while((value = br.read()) != -1) {
-                payload.append((char) value);
-                if (!br.ready()) {
-                    break;
-                }
-            } 
-        }
-        parsePayload(params, payload.toString());
+	/*	if (header.get("Content-Type") != null && header.get("Content-Type").toString().contains("multipart/form-data")) {
+			// u souboru - kontrola originu
+			// Content-Length
+			Binary.write((stream)->{
+				int count;
+				int bufferSize = 32768;
+				byte[] buffer = new byte[bufferSize]; // or 4096, or more 8192
+				while ((count = bis.read(buffer)) > 0) {
+					stream.write(buffer, 0, count);
+					System.out.println(count + " " + bufferSize);
+					if (count < bufferSize) {
+						break;
+					}
+				}
+			}, "test.png");
+		} else {*/
+			// payload
+	        StringBuilder payload = new StringBuilder();
+	        if (br.ready()) {
+	        	int value;
+	            while((value = br.read()) != -1) {
+	                payload.append((char) value);
+	                if (!br.ready()) {
+	                    break;
+	                }
+	            }
+	        }
+	        parsePayload(params, payload.toString());
+	//	}
 	}
 
 	/** protected for test only */
@@ -234,6 +257,16 @@ public class RestApiServer implements Servant {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void start() {
+		task.startChecking();
+	}
+
+	@Override
+	public void stop() {
+		task.stopChecking();
 	}
 
 }

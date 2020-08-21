@@ -9,4 +9,8 @@ public interface Servant {
 	
 	void serve(Socket socket, String charset) throws IOException;
 	
+	void start();
+	
+	void stop();
+	
 }
