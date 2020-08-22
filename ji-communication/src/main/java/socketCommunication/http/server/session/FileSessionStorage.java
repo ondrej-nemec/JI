@@ -23,6 +23,9 @@ public class FileSessionStorage implements SessionStorage {
 
 	@Override
 	public Session getSession(String sessionId) {
+		if (!sessions.contains(sessionId)) {
+			return null;
+		}
 		try {
 			return Session.deserialize(Text.read((br)->{
 				return ReadText.asString(br);
