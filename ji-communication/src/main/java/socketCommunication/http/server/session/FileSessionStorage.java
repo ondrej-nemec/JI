@@ -38,13 +38,9 @@ public class FileSessionStorage implements SessionStorage {
 	@Override
 	public void addSession(Session session) {
 		try {
-			if (sessions.add(session.getSessionId())) {
-				Text.write((bw)->{
-					WriteText.write(bw, session.serialize());
-				}, getFileName(session.getSessionId()), false);
-			} else {
-				throw new RuntimeException(String.format("This session ID already exists: '%s'", session.getSessionId()));
-			}
+			Text.write((bw)->{
+				WriteText.write(bw, session.serialize());
+			}, getFileName(session.getSessionId()), false);
 		} catch (IOException e) {
 			sessions.remove(session.getSessionId());
 			throw new RuntimeException(e);
