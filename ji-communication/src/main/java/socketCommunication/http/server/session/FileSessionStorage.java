@@ -43,7 +43,7 @@ public class FileSessionStorage implements SessionStorage {
 					WriteText.write(bw, session.serialize());
 				}, getFileName(session.getSessionId()), false);
 			} else {
-				throw new RuntimeException("This session ID already exists");
+				throw new RuntimeException(String.format("This session ID already exists: '%s'", session.getSessionId()));
 			}
 		} catch (IOException e) {
 			sessions.remove(session.getSessionId());
