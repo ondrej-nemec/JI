@@ -49,6 +49,7 @@ public class RestApiResponse {
 	public void createBinaryContent(BufferedOutputStream bos) throws IOException {
 		if (binaryContent != null) {
 			binaryContent.accept(bos);
+			bos.flush();
 		}
 	}
 	
@@ -56,6 +57,7 @@ public class RestApiResponse {
 		if (textContent != null) {
 			textContent.accept(bw);
 		}
+		bw.flush();
 	}
 
 }

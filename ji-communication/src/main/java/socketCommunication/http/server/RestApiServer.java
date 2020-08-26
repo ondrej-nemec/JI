@@ -108,14 +108,15 @@ public class RestApiServer implements Servant {
 		}
 		// end of header
         bw.newLine();
-        
-		// write text context
-        response.createTextContent(bw);
-        bw.newLine();
         bw.flush();
 		// write binary context
         response.createBinaryContent(os);
-        os.flush();
+		// write text context
+        response.createTextContent(bw);
+        
+     //   bw.newLine();
+      //  os.flush();
+      //  bw.flush();
 	}
 
 	/********* PARSE **************/
