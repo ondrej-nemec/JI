@@ -89,6 +89,7 @@ public class Log4JLogger extends Logger implements common.Logger {
     		case WARNING: return Level.WARN;
     		case INFO: return Level.INFO;
     		case DEBUG: return Level.DEBUG;
+    		case TRACE: return Level.TRACE;
     		case ALL:
     		default: return Level.ALL;
 		}
