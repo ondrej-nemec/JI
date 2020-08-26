@@ -228,8 +228,8 @@ public class Server {
 				clientSocket.setSoTimeout((int)readTimeOut);
 				servant.serve(clientSocket, charset);
 				
-			} catch (SocketException e) {
-				logger.error("Read Timeout cannot be setted", e);
+		//	} catch (SocketException e) {
+		//		logger.error("Read Timeout cannot be setted", e);
 			} catch (SocketTimeoutException e) {
                 logger.warn("Connection closed - reading timeout");
             } catch (IOException e) {

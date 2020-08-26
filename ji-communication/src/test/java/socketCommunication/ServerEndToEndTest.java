@@ -26,7 +26,7 @@ public class ServerEndToEndTest {
 			Server server = Server.create(
 					10123,
 					5,
-					60000,
+					120000,
 					120000,
 					apiResponse(),
 					new MemorySessionStorage(), 
@@ -61,7 +61,10 @@ public class ServerEndToEndTest {
 					return getRedirect();
 				}
 				if (url.equals("/favicon.ico")) {
-					return getFavicon();
+					return getBinaryFile("favicon.ico", "image/ico");
+				}
+				if (url.equals("/final.gif")) {
+					return getBinaryFile("final.gif", "image/gif");
 				}
 				return getHtml();
 			}
@@ -78,21 +81,32 @@ public class ServerEndToEndTest {
 						(bos)->{}
 					);
 			}
-			private RestApiResponse getFavicon() {
+			private RestApiResponse getBinaryFile(String fileName, String contentType) {
 				return RestApiResponse.binaryResponse(
 					StatusCode.OK,
 					Arrays.asList(
+							// "Content-length: ",
 							"Access-Control-Allow-Origin: *",
-							"Content-Type: image/ico; charset=utf-8",
+							"Content-Type: " + contentType, // ; charset=utf-8
 							"X-XSS-Protection: 1; mode=block"
 					),
 					(bos)->{
 							Binary.read((dis)->{
-								byte[] cache = new byte[32];
-								while (dis.read(cache) != -1) {
-									bos.write(cache);
+								/*
+								int c;
+								while ((c = dis.read()) != -1) {
+									bos.write(c);
 								}
-							}, getClass().getResourceAsStream("/certs/favicon.ico"));
+								/*/
+								byte[] cache = new byte[2048 * 8];
+								int len;
+								while ((len = dis.read(cache, 0, cache.length)) != -1) {
+								//	System.out.println(len);
+									bos.write(cache, 0, len);
+								}
+							//	bos.flush();
+								//*/
+							}, getClass().getResourceAsStream("/certs/" + fileName));
 					}
 				);
 			}
@@ -113,7 +127,11 @@ public class ServerEndToEndTest {
 								"<html> <head></head><body><h1>Time</h1>%s"
 								+ "<br><form><label for='name'></label><input type='text' name='name'/>"
 								+ "<input type='submit' value='submit'></form>"
-								+ "<br><br><br>"
+								+ "<br><br>"
+								+ "<img src='final.gif'/>"
+								+ "<br>"
+								+ "<img src='favicon.ico'/>"
+								+ "<br>"
 								+ "<form method=\"post\" enctype=\"multipart/form-data\" action='/file'>"
 								+ "Select image to upload:"
 								+ " <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">"
