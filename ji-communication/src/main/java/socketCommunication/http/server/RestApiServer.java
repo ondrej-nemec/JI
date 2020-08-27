@@ -74,15 +74,42 @@ public class RestApiServer implements Servant {
 		Session session = getSession(header, clientIp, new Date().getTime());
 		
 		logger.debug("Request: " + request);
-		RestApiResponse response = createResponce.accept(
-				HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
-				request.getProperty(URL),
-				request.getProperty(FULL_URL),
-				request.getProperty(PROTOCOL),
-				header,
-				params,
-				session
-		);
+		try {
+			RestApiResponse response = createResponce.accept(
+					HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
+					request.getProperty(URL),
+					request.getProperty(FULL_URL),
+					request.getProperty(PROTOCOL),
+					header,
+					params,
+					session
+			);
+			sendResponse(response, request, bw, os, session);
+		} catch (Throwable t) {
+			RestApiResponse response = createResponce.onException(HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
+					request.getProperty(URL),
+					request.getProperty(FULL_URL),
+					request.getProperty(PROTOCOL),
+					header,
+					params,
+					session,
+					t
+			);
+			if (response == null) {
+				throw new IOException(t);
+			} else {
+				sendResponse(response, request, bw, os, session);
+			}
+		}
+	}
+	
+	private void sendResponse(
+			RestApiResponse response,
+			Properties request, 
+			BufferedWriter bw,
+			BufferedOutputStream os,
+			Session session
+		) throws IOException {
 		String code = response.getStatusCode().toString();
 		logger.debug("Response: " + code);
 				
@@ -113,10 +140,6 @@ public class RestApiServer implements Servant {
         response.createBinaryContent(os);
 		// write text context
         response.createTextContent(bw);
-        
-     //   bw.newLine();
-      //  os.flush();
-      //  bw.flush();
 	}
 
 	/********* PARSE **************/

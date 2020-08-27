@@ -17,5 +17,18 @@ public interface RestApiServerResponseFactory {
 			Properties params,
 			Session session
 	) throws IOException;
+	
+	default RestApiResponse onException(
+			HttpMethod method,
+			String url,
+			String fullUrl,
+			String protocol,
+			Properties header,
+			Properties params,
+			Session session,
+			Throwable t
+	) throws IOException {
+		return null;
+	}
 
 }
