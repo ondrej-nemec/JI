@@ -71,7 +71,8 @@ public class RestApiServer implements Servant {
 		Properties request = new Properties();
 		parseRequest(request, header, params, br, is);
 		
-		Session session = getSession(header, clientIp, new Date().getTime());
+		long now = new Date().getTime();
+		Session session = getSession(header, clientIp, now);
 		
 		logger.debug("Request: " + request);
 		try {
@@ -101,6 +102,8 @@ public class RestApiServer implements Servant {
 				sendResponse(response, request, bw, os, session);
 			}
 		}
+		session.setExpirationTime(now + sessionExpirationTime);
+		sessionsStorage.addSession(session);
 	}
 	
 	private void sendResponse(
@@ -173,16 +176,29 @@ public class RestApiServer implements Servant {
 				}
 			}, "test.png");
 		} else {*/
-			// payload
+	        // payload
 	        StringBuilder payload = new StringBuilder();
-	        if (br.ready()) {
-	        	int value;
+	        // TODO fix
+	        if (header.get("Content-Length") != null) {
+	            int value;
+	            int readed = 0;
 	            while((value = br.read()) != -1) {
 	                payload.append((char) value);
-	                if (!br.ready()) {
+	                readed++;
+	                if (Integer.parseInt(header.get("Content-Length").toString()) <= readed) {
 	                    break;
 	                }
 	            }
+	        } else {
+	            if (br.ready()) {
+	                int value;
+	                while((value = br.read()) != -1) {
+	                    payload.append((char) value);
+	                    if (!br.ready()) {
+	                        break;
+	                    }
+	                }
+	           }
 	        }
 	        parsePayload(params, payload.toString());
 	//	}
@@ -247,11 +263,8 @@ public class RestApiServer implements Servant {
 		String sessionId = getSessionIdFromCookieHeader(header.get("Cookie"));
 		Session session = getSession(sessionId, clientIp, sessionExpirationTime, now);
 		if (now > session.getExpirationTime()) {
-			sessionsStorage.removeSession(sessionId);
-			return Session.empty();
+			session.clean();
 		}
-		session.setExpirationTime(now + sessionExpirationTime);
-		sessionsStorage.addSession(session);
 		return session;
 	}
 	
