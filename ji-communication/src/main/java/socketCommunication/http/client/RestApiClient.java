@@ -3,15 +3,17 @@ package socketCommunication.http.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
 import common.Logger;
+import core.text.Binary;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.UrlEscape;
 
+// TODO improve https://www.baeldung.com/java-http-request and https url request
+// TODO https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
 public class RestApiClient {
 	
 	private final String serverUrl;
@@ -76,6 +78,22 @@ public class RestApiClient {
 	private void addParams(HttpMethod method, Properties params, HttpURLConnection con) throws IOException {
 		if (!HttpMethod.GET.equals(method)) {
 			con.setDoOutput(true);
+			Binary.write((bos)->{
+				StringBuilder b = new StringBuilder();
+				params.forEach((name, value)->{
+					if (!b.toString().isEmpty()) {
+						b.append("&");
+					}
+					b.append(String.format(
+							"%s=%s",
+							UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
+							UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
+					));
+				});
+				bos.write(b.toString().getBytes());
+				bos.flush();
+			}, con.getOutputStream());
+			/*
 			try (OutputStream os = con.getOutputStream();) {
 				StringBuilder b = new StringBuilder();
 				params.forEach((name, value)->{
@@ -90,7 +108,7 @@ public class RestApiClient {
 				});
 				os.write(b.toString().getBytes());
 				os.flush();
-			}
+			}*/
 		}
 	}
 
