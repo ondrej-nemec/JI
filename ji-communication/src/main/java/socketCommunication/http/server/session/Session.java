@@ -8,7 +8,7 @@ public class Session {
 	
 	private long expirationTime;
 	
-	private final String content;
+	private String content;
 	
 	private final boolean isEmpty;
 
@@ -42,6 +42,14 @@ public class Session {
 	
 	public boolean isEmpty() {
 		return isEmpty;
+	}
+	
+	public void clean() {
+		this.content = "";
+	}
+	
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public void setExpirationTime(long expirationTime) {
