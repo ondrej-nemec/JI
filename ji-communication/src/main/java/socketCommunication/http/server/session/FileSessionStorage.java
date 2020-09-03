@@ -41,6 +41,7 @@ public class FileSessionStorage implements SessionStorage {
 			Text.write((bw)->{
 				WriteText.write(bw, session.serialize());
 			}, getFileName(session.getSessionId()), false);
+			sessions.add(session.getSessionId());
 		} catch (IOException e) {
 			sessions.remove(session.getSessionId());
 			throw new RuntimeException(e);
