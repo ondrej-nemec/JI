@@ -103,7 +103,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", value));
+		params.put(name, String.format("'%s'", value)); // TODO this is unsave, value must be escaped
 		return this;
 	}
 
