@@ -3,6 +3,7 @@ package socketCommunication;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
 
@@ -23,7 +24,7 @@ public class ServerRestartEndToEndTest {
 		try {
 			//*
 			Server server = Server.create(10123, 5, 60000, 120000, apiResponse(),
-					new MemorySessionStorage(),  "UTF-8",  new LoggerImpl());
+					new MemorySessionStorage(), Optional.empty(),  "UTF-8",  new LoggerImpl());
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/

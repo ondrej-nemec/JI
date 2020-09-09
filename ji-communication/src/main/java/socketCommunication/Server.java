@@ -11,6 +11,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,12 +26,15 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 import common.Logger;
+import core.text.InputStreamLoader;
 import socketCommunication.http.server.RestApiServerResponseFactory;
 import socketCommunication.http.server.session.SessionStorage;
 import socketCommunication.http.server.RestApiServer;
 import socketCommunication.peerToPeer.Speaker;
 
 public class Server {
+	
+	private final String tlsVersion = "TLSv1.2";
 	
 	private final Logger logger;
     
@@ -48,25 +52,35 @@ public class Server {
     private final String charset;
     
     private final Servant servant;
-    
+        
     public static Server create(int port,
     		int threadPool,
     		long readTimeout,
     		long sessionExpirationTime,
     		RestApiServerResponseFactory response,
     		SessionStorage sessionsStorage,
+    		Optional<SecuredConnectionCredentials> config,
     		String charset,
     		Logger logger) throws Exception {
-    	return new Server(port, threadPool, readTimeout, new RestApiServer(sessionExpirationTime, response, sessionsStorage, logger), charset, logger);
+    	return new Server(
+    			port, 
+    			threadPool,
+    			readTimeout,
+    			new RestApiServer(sessionExpirationTime, response, sessionsStorage, logger),
+    			config,
+    			charset,
+    			logger
+    	);
     }
     
     public static Server create(int port,
     		int threadPool,
     		long readTimeout,
     		Function<String, String> response,
+    		Optional<SecuredConnectionCredentials> config,
     		String charset,
     		Logger logger) throws Exception {
-    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), charset, logger);
+    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), config, charset, logger);
     }
     
     public Server(
@@ -74,6 +88,7 @@ public class Server {
     		int threadPool,
     		long readTimeOut,
     		Servant servant,
+    		Optional<SecuredConnectionCredentials> config,
     		String charset,
     		Logger logger) throws Exception {
         this.executor = Executors.newFixedThreadPool(threadPool);
@@ -84,23 +99,27 @@ public class Server {
         this.maxThread = threadPool;
         this.readTimeOut = readTimeOut;
         
-        this.serverSocket = getUnsecuredSocket(port);
+        this.serverSocket = getSocket(port, config);
         //this.serverSocket = getSecuredSocket(port);
      //   serverSocket.setSoTimeout((int)clientWaitTimeout);
         logger.info("Server prepared " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
+    }
+    
+    private ServerSocket getSocket(int port, Optional<SecuredConnectionCredentials> config) throws Exception {
+    	if (config.isPresent()) {
+    		return getSecuredSocket(port, config.get());
+    	}
+    	logger.warn("No Secured connection credentials, so unsecured server socket used");
+    	return getUnsecuredSocket(port);
     }
     
     private ServerSocket getUnsecuredSocket(int port) throws IOException {
     	return new ServerSocket(port);
     }
     
-    private ServerSocket getSecuredSocket(int port) throws Exception {
-    	String clientTrustStore = "";
-    	String clientTrustStorePasswd = "";
-    	String serverKeyStore = "certs2/keystore.jks";
-    	String serverKeyStorePasswd = "abc123";
-    	String tlsVersion = "TLSv1.2";
+    private ServerSocket getSecuredSocket(int port, SecuredConnectionCredentials config) throws Exception {
     	/***/
+    	// TODO
     /*	KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
         InputStream tstore = getClass().getResourceAsStream("/" + clientTrustStore);
         trustStore.load(tstore, clientTrustStorePasswd.toCharArray());
@@ -110,11 +129,12 @@ public class Server {
         tmf.init(trustStore);
         /***/
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream kstore = getClass().getResourceAsStream("/" + serverKeyStore);
-        keyStore.load(kstore, serverKeyStorePasswd.toCharArray());
+        InputStream kstore = InputStreamLoader.createInputStream(getClass(), config.getServerKeyStore());
+        		// getClass().getResourceAsStream("/" + serverKeyStore);
+        keyStore.load(kstore, config.getServerKeystorePassword().toCharArray());
         KeyManagerFactory kmf = KeyManagerFactory
             .getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        kmf.init(keyStore, serverKeyStorePasswd.toCharArray());
+        kmf.init(keyStore, config.getServerKeystorePassword().toCharArray());
         /***/
         
         SSLContext ctx = SSLContext.getInstance("TLS");

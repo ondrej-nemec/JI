@@ -3,6 +3,7 @@ package socketCommunication;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
 
@@ -22,14 +23,26 @@ public class ServerEndToEndTest {
 
 	public static void main(String[] args) {
 		try {
-			//*
+			//*	    	
+			SecuredConnectionCredentials cred = new SecuredConnectionCredentials(
+					"servercerts/keystore.jks",
+					"abc123",
+					Optional.empty(),
+					Optional.empty()
+			);
+			
 			Server server = Server.create(
 					10123,
 					5,
 					120000,
 					120000,
 					apiResponse(),
-					new MemorySessionStorage(), 
+					new MemorySessionStorage(),
+					/*
+					Optional.empty(),
+					/*/
+					Optional.of(cred),
+					//*/
 					"UTF-8",
 					new LoggerImpl()
 			);
@@ -106,7 +119,7 @@ public class ServerEndToEndTest {
 								}
 							//	bos.flush();
 								//*/
-							}, getClass().getResourceAsStream("/certs/" + fileName));
+							}, getClass().getResourceAsStream("/restapiserver/" + fileName));
 					}
 				);
 			}
