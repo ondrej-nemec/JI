@@ -15,7 +15,7 @@ import junitparams.Parameters;
 import common.Logger;
 
 @RunWith(JUnitParamsRunner.class)
-public class TranslatorTest {
+public class DefaultTranslatorTest {
 	
 	@Test
 	@Parameters({"mess-tree", "mess-classpath"})
