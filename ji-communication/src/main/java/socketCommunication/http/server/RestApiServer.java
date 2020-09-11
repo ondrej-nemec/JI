@@ -55,11 +55,10 @@ public class RestApiServer implements Servant {
            	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
            	 BufferedInputStream is = new BufferedInputStream(socket.getInputStream());
            	 BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());) {
-			serve(br, bw, is, os, socket.getInetAddress().toString()); // + socket.getPort()
+			serve(br, bw, is, os, socket.getInetAddress().toString());
        }
 	}
 	
-	//@Override
 	protected void serve(
 			BufferedReader br, 
 			BufferedWriter bw,
@@ -70,7 +69,7 @@ public class RestApiServer implements Servant {
 		Properties header = new Properties();
 		Properties request = new Properties();
 		parseRequest(request, header, params, br, is);
-		
+
 		long now = new Date().getTime();
 		Session session = getSession(header, clientIp, now);
 		
@@ -178,27 +177,16 @@ public class RestApiServer implements Servant {
 		} else {*/
 	        // payload
 	        StringBuilder payload = new StringBuilder();
-	        // TODO fix
-	        if (header.get("Content-Length") != null) {
+	       	// stream ready is fix - before close stream does not wrote -1
+	        // using header Content-Length is not reliable - does not works f.e. with arabic chars
+	        if (br.ready()) {
 	            int value;
-	            int readed = 0;
 	            while((value = br.read()) != -1) {
 	                payload.append((char) value);
-	                readed++;
-	                if (Integer.parseInt(header.get("Content-Length").toString()) <= readed) {
+	                if (!br.ready()) {
 	                    break;
 	                }
 	            }
-	        } else {
-	            if (br.ready()) {
-	                int value;
-	                while((value = br.read()) != -1) {
-	                    payload.append((char) value);
-	                    if (!br.ready()) {
-	                        break;
-	                    }
-	                }
-	           }
 	        }
 	        parsePayload(params, payload.toString());
 	//	}
