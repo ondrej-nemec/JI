@@ -2,18 +2,32 @@ package socketCommunication.http.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Optional;
 import java.util.Properties;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import common.Logger;
 import core.text.Binary;
+import core.text.InputStreamLoader;
+import socketCommunication.ClientSecuredCredentials;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.UrlEscape;
 
-// TODO improve https://www.baeldung.com/java-http-request and https url request
-// TODO https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
 public class RestApiClient {
 	
 	private final String serverUrl;
@@ -22,34 +36,93 @@ public class RestApiClient {
 	
 	private final String charset;
 	
-	public RestApiClient(String serverUrl, String charset, Logger logger) {
+	private final Optional<ClientSecuredCredentials> config;
+	
+	public RestApiClient(String serverUrl, Optional<ClientSecuredCredentials> config, String charset, Logger logger) {
 		this.serverUrl = serverUrl;
 		this.logger = logger;
 		this.charset = charset;
+		this.config = config;
 	}
 	
-	public RestApiResponse get(String uri, Properties header, Properties params) throws IOException {
+	public RestApiResponse get(String uri, Properties header, Properties params) throws Exception {
 		return send(uri, HttpMethod.GET, header, params);
 	}
 	
-	public RestApiResponse post(String uri, Properties header, Properties params) throws IOException {
+	public RestApiResponse post(String uri, Properties header, Properties params) throws Exception {
 		return send(uri, HttpMethod.POST, header, params);
 	}
 	
-	public RestApiResponse put(String uri, Properties header, Properties params) throws IOException {
+	public RestApiResponse put(String uri, Properties header, Properties params) throws Exception {
 		return send(uri, HttpMethod.PUT, header, params);
 	}
 	
-	public RestApiResponse delete(String uri, Properties header, Properties params) throws IOException {
+	public RestApiResponse delete(String uri, Properties header, Properties params) throws Exception {
 		return send(uri, HttpMethod.DELETE, header, params);
 	}
 	
-	private RestApiResponse send(String uri, HttpMethod method, Properties header, Properties params) throws IOException {
+	/**************/
+	
+	private RestApiResponse send(String uri, HttpMethod method, Properties header, Properties params) throws Exception {
 		String url = createUrl(serverUrl, uri, method, params);
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		HttpURLConnection con = getConnection(url, config);
 		return send(con, method, header, params);
 	}
+	
+	private HttpURLConnection getConnection(String url, Optional<ClientSecuredCredentials> config) throws Exception {
+		if (config.isPresent()) {
+			return getSecuredConnection(url, config.get());
+		} else {
+			return getUnsecuredConnection(url);
+		}
+	}
+
+	private HttpsURLConnection getSecuredConnection(String url, ClientSecuredCredentials config) throws Exception {
+		TrustManager[] trustManager = null;
+		if (config.getClientTrustStore().isPresent()) {
+	    	if (config.getClientTrustStore().isPresent()) {
+	    		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+		        InputStream tstore = InputStreamLoader.createInputStream(getClass(), config.getClientTrustStore().get());
+		        trustStore.load(tstore, config.getClientTrustStorePassword().orElse("").toCharArray());
+		        tstore.close();
+		        TrustManagerFactory tmf = TrustManagerFactory
+		            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		        tmf.init(trustStore);
+		        trustManager = tmf.getTrustManagers();
+	    	}
+		} else {
+			// trust all certs
+			trustManager = new TrustManager[]{
+			    new X509TrustManager() {
+					@Override public X509Certificate[] getAcceptedIssuers() { return null; }
+					@Override public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+					@Override public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+				}
+			};
+		}
+		SSLContext sc = SSLContext.getInstance("TLS");
+	    sc.init(null, trustManager, SecureRandom.getInstanceStrong());
+		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		
+		
+		URL obj = new URL(url);
+		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		if (!config.getClientTrustStore().isPresent()) {
+			// trust all certs 2
+			con.setHostnameVerifier(new HostnameVerifier() {
+				@Override public boolean verify(String hostname, SSLSession session) { return true; }
+			});
+		}
+		
+		return con;
+	}
+	
+	private HttpURLConnection getUnsecuredConnection(String url) throws IOException {
+		URL obj = new URL(url);
+		return (HttpURLConnection) obj.openConnection();
+	}
+	
+	/*************/
 	
 	protected RestApiResponse send(HttpURLConnection con, HttpMethod method, Properties header, Properties params) throws IOException {
 		con.setRequestMethod(method.toString());
@@ -75,62 +148,39 @@ public class RestApiClient {
 		return new RestApiResponse(responseCode, resposeMessage, response.toString());
 	}
 
+	/****************/
+	
 	private void addParams(HttpMethod method, Properties params, HttpURLConnection con) throws IOException {
 		if (!HttpMethod.GET.equals(method)) {
 			con.setDoOutput(true);
 			Binary.write((bos)->{
-				StringBuilder b = new StringBuilder();
-				params.forEach((name, value)->{
-					if (!b.toString().isEmpty()) {
-						b.append("&");
-					}
-					b.append(String.format(
-							"%s=%s",
-							UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
-							UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
-					));
-				});
-				bos.write(b.toString().getBytes());
+				bos.write(getParamsString(params).getBytes());
 				bos.flush();
 			}, con.getOutputStream());
-			/*
-			try (OutputStream os = con.getOutputStream();) {
-				StringBuilder b = new StringBuilder();
-				params.forEach((name, value)->{
-					if (!b.toString().isEmpty()) {
-						b.append("&");
-					}
-					b.append(String.format(
-							"%s=%s",
-							UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
-							UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
-					));
-				});
-				os.write(b.toString().getBytes());
-				os.flush();
-			}*/
 		}
 	}
 
 	protected String createUrl(String server, String uri, HttpMethod method, Properties params) {
 		if (HttpMethod.GET.equals(method)) {
-			StringBuilder b = new StringBuilder();
-			params.forEach((name, value)->{
-				if (b.toString().isEmpty()) {
-				//	b.append(server);
-				//	b.append(uri);
-					b.append("?");
-				} else {
-					b.append("&");
-				}
-				b.append(String.format(
-						"%s=%s",
-						UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
-						UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
-				));
-			});
-			return server + uri + b.toString();
+			return server + uri + "?" + getParamsString(params);
 		}
 		return server + uri;
 	}
+	
+	// TODO test this method
+	protected String getParamsString(Properties params) {
+		StringBuilder b = new StringBuilder();
+		params.forEach((name, value)->{
+			if (!b.toString().isEmpty()) {
+				b.append("&");
+			}
+			b.append(String.format(
+					"%s=%s",
+					UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
+					UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
+			));
+		});
+		return b.toString();
+	}
+	
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -133,7 +134,7 @@ public class RestApiClientTest {
 	}
 	
 	private RestApiClient getClient(String serverUrl) {
-		return new RestApiClient(serverUrl, "utf-8", mock(Logger.class));
+		return new RestApiClient(serverUrl, Optional.empty(), "utf-8", mock(Logger.class));
 	}
 	
 }

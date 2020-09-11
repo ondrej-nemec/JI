@@ -24,7 +24,7 @@ public class ServerEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*	    	
-			SecuredConnectionCredentials cred = new SecuredConnectionCredentials(
+			ServerSecuredCredentials cred = new ServerSecuredCredentials(
 					"servercerts/keystore.jks",
 					"abc123",
 					Optional.empty(),

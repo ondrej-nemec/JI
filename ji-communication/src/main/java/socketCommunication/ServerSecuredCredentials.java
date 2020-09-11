@@ -2,7 +2,7 @@ package socketCommunication;
 
 import java.util.Optional;
 
-public class SecuredConnectionCredentials {
+public class ServerSecuredCredentials {
 
 	private final String serverKeyStore;
 	private final String serverKeystorePassword;
@@ -10,7 +10,7 @@ public class SecuredConnectionCredentials {
 	private final Optional<String> clientTrustStore;
 	private final Optional<String> clientTrustStorePassword;
 	
-	public SecuredConnectionCredentials(String serverKeyStore, String serverKeystorePassword,
+	public ServerSecuredCredentials(String serverKeyStore, String serverKeystorePassword,
 			Optional<String> clientTrustStore, Optional<String> clientTrustStorePassword) {
 		this.serverKeyStore = serverKeyStore;
 		this.serverKeystorePassword = serverKeystorePassword;

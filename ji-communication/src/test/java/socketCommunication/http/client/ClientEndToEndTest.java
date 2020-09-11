@@ -1,6 +1,6 @@
 package socketCommunication.http.client;
 
-import java.io.IOException;
+import java.util.Optional;
 import java.util.Properties;
 
 import common.Console;
@@ -37,7 +37,9 @@ public class ClientEndToEndTest {
 		*/
 		/***************************************/
 		RestApiClient client = new RestApiClient(
-			"http://" + ip + ":" + 10123 + "/server", "UTF-8",
+			"https://" + ip + ":" + 10123 + "/server",
+			Optional.empty(),
+			"UTF-8",
 			new LoggerImpl()
 		);
 		
@@ -49,6 +51,8 @@ public class ClientEndToEndTest {
 		params.put("password", "secret-password");
 		
 		try {
+		//	client.send(HttpMethod.GET, "/", header, params);
+		//*
 			console.out("GET");
 			console.out(client.get("/uri", header, params));
 			console.out("POST");
@@ -57,7 +61,8 @@ public class ClientEndToEndTest {
 			console.out(client.put("/uri", header, params));
 			console.out("DELETE");
 			console.out(client.delete("/uri", header, params));
-		} catch (IOException e) {
+		//*/
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
