@@ -8,18 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Date;
 import java.util.Properties;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import common.Logger;
 import socketCommunication.Servant;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.UrlEscape;
-import socketCommunication.http.server.session.Session;
-import socketCommunication.http.server.session.SessionCheckTask;
-import socketCommunication.http.server.session.SessionStorage;
 
 public class RestApiServer implements Servant {
 	
@@ -32,21 +26,11 @@ public class RestApiServer implements Servant {
 
 	private final RestApiServerResponseFactory createResponce;
 	
-	private final SessionStorage sessionsStorage;
-	
-	private final long sessionExpirationTime; // in ms
-	private final SessionCheckTask task;
-	
 	public RestApiServer(
-			long sessionExpirationTime,
-			RestApiServerResponseFactory response, 
-			SessionStorage sessionsStorage,
+			RestApiServerResponseFactory response,
 			Logger logger) {
-		this.sessionExpirationTime = sessionExpirationTime;
 		this.logger = logger;
 		this.createResponce = response;
-		this.sessionsStorage = sessionsStorage;
-		this.task = new SessionCheckTask(sessionsStorage, logger);
 	}
 	
 	@Override
@@ -69,48 +53,25 @@ public class RestApiServer implements Servant {
 		Properties header = new Properties();
 		Properties request = new Properties();
 		parseRequest(request, header, params, br, is);
-
-		long now = new Date().getTime();
-		Session session = getSession(header, clientIp, now);
-		
+		/***********/
 		logger.debug("Request: " + request);
-		try {
-			RestApiResponse response = createResponce.accept(
-					HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
-					request.getProperty(URL),
-					request.getProperty(FULL_URL),
-					request.getProperty(PROTOCOL),
-					header,
-					params,
-					session
-			);
-			sendResponse(response, request, bw, os, session);
-		} catch (Throwable t) {
-			RestApiResponse response = createResponce.onException(HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
-					request.getProperty(URL),
-					request.getProperty(FULL_URL),
-					request.getProperty(PROTOCOL),
-					header,
-					params,
-					session,
-					t
-			);
-			if (response == null) {
-				throw new IOException(t);
-			} else {
-				sendResponse(response, request, bw, os, session);
-			}
-		}
-		session.setExpirationTime(now + sessionExpirationTime);
-		sessionsStorage.addSession(session);
+		RestApiResponse response = createResponce.accept(
+			HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
+			request.getProperty(URL),
+			request.getProperty(FULL_URL),
+			request.getProperty(PROTOCOL),
+			header,
+			params,
+			clientIp
+		);
+		sendResponse(response, request, bw, os);
 	}
 	
 	private void sendResponse(
 			RestApiResponse response,
 			Properties request, 
 			BufferedWriter bw,
-			BufferedOutputStream os,
-			Session session
+			BufferedOutputStream os
 		) throws IOException {
 		String code = response.getStatusCode().toString();
 		logger.debug("Response: " + code);
@@ -125,16 +86,6 @@ public class RestApiServer implements Servant {
         	bw.write(headerLine);
         	bw.newLine();
         }
-        if (!session.isEmpty()) {
-			bw.write(
-				"Set-Cookie: SessionID="
-				+ session.getSessionId()
-				+ "; HttpOnly; SameSite=Strict;"
-				+ " Max-Age="
-				+ (sessionExpirationTime / 1000)
-				);
-        	bw.newLine();
-		}
 		// end of header
         bw.newLine();
         bw.flush();
@@ -242,56 +193,6 @@ public class RestApiServer implements Servant {
 	    		logger.warn("Invalid param " + param);
 	    	}
 		}
-	}
-	
-	/*********************/
-
-	// TODO test
-	protected Session getSession(Properties header, String clientIp, long now) {
-		String sessionId = getSessionIdFromCookieHeader(header.get("Cookie"));
-		Session session = getSession(sessionId, clientIp, sessionExpirationTime, now);
-		if (now > session.getExpirationTime()) {
-			session.clean();
-		}
-		return session;
-	}
-	
-	// TODO test
-	private Session getSession(String sessionId, String clientIp, long expirationTime, long now) {
-		Session ses = sessionsStorage.getSession(sessionId);
-		if (sessionId == null || ses == null) {
-			return new Session(
-					RandomStringUtils.randomAlphanumeric(50), 
-					clientIp, 
-					now + expirationTime,
-					""
-			);
-		}
-		return ses;
-	}
-	
-	protected String getSessionIdFromCookieHeader(Object cookieString) {
-		if (cookieString == null) {
-			return null;
-		}
-		String[] cookiesArray = cookieString.toString().split(";");
-		for (String cookies : cookiesArray) {
-			String[] cookie = cookies.split("=");
-			if (cookie.length == 2 && cookie[0].trim().equals("SessionID")) {
-				return cookie[1].trim();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void start() {
-		task.startChecking();
-	}
-
-	@Override
-	public void stop() {
-		task.stopChecking();
 	}
 
 }

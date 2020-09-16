@@ -13,8 +13,6 @@ import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
-import socketCommunication.http.server.session.MemorySessionStorage;
-import socketCommunication.http.server.session.Session;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerEndToEndTest {
@@ -35,9 +33,7 @@ public class ServerEndToEndTest {
 					10123,
 					5,
 					120000,
-					120000,
 					apiResponse(),
-					new MemorySessionStorage(),
 					/*
 					Optional.empty(),
 					/*/
@@ -66,7 +62,7 @@ public class ServerEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, Properties params, Session session) throws IOException {
+					Properties header, Properties params, String ip) throws IOException {
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
 					return getCert();
 				}*/

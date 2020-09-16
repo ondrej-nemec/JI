@@ -12,8 +12,6 @@ import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
-import socketCommunication.http.server.session.MemorySessionStorage;
-import socketCommunication.http.server.session.Session;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerRestartEndToEndTest {
@@ -23,8 +21,7 @@ public class ServerRestartEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 60000, 120000, apiResponse(),
-					new MemorySessionStorage(), Optional.empty(),  "UTF-8",  new LoggerImpl());
+			Server server = Server.create(10123, 5, 60000, apiResponse(), Optional.empty(),  "UTF-8",  new LoggerImpl());
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/
@@ -58,7 +55,7 @@ public class ServerRestartEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, Properties params, Session session) throws IOException {
+					Properties header, Properties params, String ip) throws IOException {
 				Date today = new Date();
 				return RestApiResponse.textResponse(
 					StatusCode.OK,

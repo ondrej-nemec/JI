@@ -26,7 +26,6 @@ import javax.net.ssl.TrustManagerFactory;
 import common.Logger;
 import core.text.InputStreamLoader;
 import socketCommunication.http.server.RestApiServerResponseFactory;
-import socketCommunication.http.server.session.SessionStorage;
 import socketCommunication.http.server.RestApiServer;
 import socketCommunication.peerToPeer.Speaker;
 
@@ -54,9 +53,7 @@ public class Server {
     public static Server create(int port,
     		int threadPool,
     		long readTimeout,
-    		long sessionExpirationTime,
     		RestApiServerResponseFactory response,
-    		SessionStorage sessionsStorage,
     		Optional<ServerSecuredCredentials> config,
     		String charset,
     		Logger logger) throws Exception {
@@ -64,7 +61,7 @@ public class Server {
     			port, 
     			threadPool,
     			readTimeout,
-    			new RestApiServer(sessionExpirationTime, response, sessionsStorage, logger),
+    			new RestApiServer(response, logger),
     			config,
     			charset,
     			logger
@@ -161,7 +158,6 @@ public class Server {
     	if (clientWaitingFuture == null) {
     		clientWaitingFuture = sheduled.scheduleAtFixedRate(getClientChacker(), 0, 10, TimeUnit.MILLISECONDS);
     	}
-    	servant.start();
         logger.info("Server running");
     }
     
@@ -185,27 +181,12 @@ public class Server {
 		} catch (SocketException e) {
 			logger.fatal("Server secket waiting time cannot be setted", e);
 		}
-    	servant.stop();
     	logger.info("Stopping server");
     	executor.shutdownNow();
         executor.awaitTermination(30, TimeUnit.SECONDS);
         sheduled.shutdownNow();
         sheduled.awaitTermination(30, TimeUnit.SECONDS);
         logger.info("Server stopped");
-    }
-    
-    @Deprecated
-    public void pause(boolean isPaused) {
-    	if (isPaused) {
-    		pause();
-    	} else {
-    		start();
-    	}
-    }
-    
-    @Deprecated
-    public void stop(long timeout, TimeUnit unit) throws InterruptedException {
-    	stop();
     }
     
     protected int getActualThreadCount() {
