@@ -18,12 +18,14 @@ public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 	
 	private final Map<String, String> params;
 	
+	private String dropView = null;
+	
 	public DerbyCreateViewBuilder(Connection connection, String name, boolean modify) {
 		this.connection = connection;
 		this.params = new HashMap<>();
 		this.query = new StringBuilder();
 		if (modify) {
-			query.append("DROP VIEW " + name + ";");
+			this.dropView = "DROP VIEW " + name;
 		}
 		query.append("CREATE VIEW " + name + " AS");
 	}
@@ -142,6 +144,9 @@ public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 	@Override
 	public void execute() throws SQLException {
 		try (Statement stat = connection.createStatement();) {
+			if (dropView != null) {
+				stat.execute(dropView);
+			}
 			stat.executeUpdate(createSql());
 		}
 	}
