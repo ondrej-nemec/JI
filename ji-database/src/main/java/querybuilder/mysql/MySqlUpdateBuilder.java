@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import querybuilder.SQL;
 import querybuilder.UpdateQueryBuilder;
 
 public class MySqlUpdateBuilder implements UpdateQueryBuilder {
@@ -73,7 +74,7 @@ public class MySqlUpdateBuilder implements UpdateQueryBuilder {
 
 	@Override
 	public UpdateQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", value));
+		params.put(name, String.format("'%s'", SQL.escape(value)));
 		return this;
 	}
 

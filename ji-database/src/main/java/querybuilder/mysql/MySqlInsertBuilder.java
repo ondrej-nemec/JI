@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import querybuilder.InsertQueryBuilder;
+import querybuilder.SQL;
 
 public class MySqlInsertBuilder implements InsertQueryBuilder {
 
@@ -24,7 +25,7 @@ public class MySqlInsertBuilder implements InsertQueryBuilder {
 
 	@Override
 	public InsertQueryBuilder addValue(String columnName, String value) {
-		params.put(columnName, String.format("'%s'", value));
+		params.put(columnName, String.format("'%s'", SQL.escape(value)));
 		return this;
 	}
 

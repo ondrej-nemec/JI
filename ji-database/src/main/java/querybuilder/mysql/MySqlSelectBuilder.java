@@ -13,6 +13,7 @@ import java.util.function.Function;
 import common.Implode;
 import database.support.DatabaseRow;
 import querybuilder.Join;
+import querybuilder.SQL;
 import querybuilder.SelectQueryBuilder;
 
 public class MySqlSelectBuilder implements SelectQueryBuilder {
@@ -103,7 +104,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", value)); // TODO this is unsave, value must be escaped
+		params.put(name, String.format("'%s'", SQL.escape(value)));
 		return this;
 	}
 

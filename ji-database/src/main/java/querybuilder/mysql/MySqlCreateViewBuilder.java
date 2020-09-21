@@ -9,6 +9,7 @@ import java.util.Map;
 import common.Implode;
 import querybuilder.CreateViewQueryBuilder;
 import querybuilder.Join;
+import querybuilder.SQL;
 
 public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 	
@@ -108,7 +109,7 @@ public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", value));
+		params.put(name, String.format("'%s'", SQL.escape(value)));
 		return this;
 	}
 
