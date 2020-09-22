@@ -48,6 +48,8 @@ public class Database {
 			return new Derby(config.pathOrUrlToLocation, getDoubleConsumer(), logger);
 		case "mysql":
 			return new MySql(createDatabaseConnectionString(), createProperties(), name, logger);
+		case "posgre":
+			return new PosgreSql(createDatabaseConnectionString(), createProperties(), name);
 		default:
 			throw new RuntimeException("Unsupported type " + config.type);
 		}
