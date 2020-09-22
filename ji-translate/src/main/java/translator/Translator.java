@@ -1,5 +1,6 @@
 package translator;
 
+import java.util.Locale;
 import java.util.Map;
 
 public interface Translator {
@@ -11,6 +12,8 @@ public interface Translator {
 	 * message structure: "some text"
 	 */
 	String translate(String key);
+	
+	String translate(String key, Locale locale);
 
 	/**
 	 * key structure: <resource>.<key> OR <key>
@@ -19,6 +22,8 @@ public interface Translator {
 	 * message structure: "text %variable% %another-variable%"
 	 */
 	String translate(String key, Map<String, String> variables);
+
+	String translate(String key, Map<String, String> variables, Locale locale);
 
 	/**
 	 * key structure: <resource>.<key> OR <key>
@@ -38,8 +43,8 @@ public interface Translator {
 	 *      D - default - used if no other resolution matched, if default missing <key>.count returned 
 	 *    <countCode> reffer to <resource>.<key>.<countCode> - there is final message 
 	 */
-	String translate(String key, int count, Map<String, String> variables);
+//	String translate(String key, int count, Map<String, String> variables);
 
-	String translate(String key, int count);
+//	String translate(String key, int count);
 
 }
