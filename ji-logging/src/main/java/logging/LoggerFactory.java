@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import common.Logger;
+import core.text.InputStreamLoader;
 import logging.loggers.ConsoleLogger;
 import logging.loggers.Log4JLogger;
 import logging.loggers.NativeLogger;
@@ -13,7 +14,7 @@ import logging.loggers.NullLogger;
 
 public class LoggerFactory {
 	
-	private final static String CONF_FILE = "/ji-logging.properties";
+	private final static String CONF_FILE = "ji-logging.properties";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Map<String, Logger> CACHE = new HashMap<>();
 
@@ -52,10 +53,10 @@ public class LoggerFactory {
 	}
 	
 	private static void loadProperties(String file) {
-		try (InputStreamReader isr = new InputStreamReader(LoggerFactory.class.getResourceAsStream(file))){
+		try (InputStreamReader isr = new InputStreamReader(InputStreamLoader.createInputStream(LoggerFactory.class, file))){
 			PROPERTIES.load(isr);
 		} catch (Exception e) {
-			System.err.println("Cannot load " + CONF_FILE + ", default configuration used. Caused " + e.getMessage());
+			System.err.println("Cannot load " + file + ", default configuration used. Caused " + e.getMessage());
 			// e.printStackTrace();
 		}
 	}
