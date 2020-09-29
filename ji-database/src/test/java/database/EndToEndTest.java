@@ -74,7 +74,7 @@ public class EndToEndTest {
 				"javainit_database_test",
 				"root",
 				"",
-				"migrations",
+				Arrays.asList("migrations"),
 				"Europe/Prague",
 				5
 		);

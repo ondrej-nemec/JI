@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class MigrationToolEndToEndTest {
 		c.setAutoCommit(false);
 		
 		QueryBuilder queryBuilder = new MySqlQueryBuilder(c);
-		MigrationTool tool = new MigrationTool(folder, queryBuilder, Mockito.mock(Logger.class));
+		MigrationTool tool = new MigrationTool(Arrays.asList(folder), queryBuilder, Mockito.mock(Logger.class));
 		
 		testStates(c, false);
 		tool.migrate();
@@ -88,7 +89,7 @@ public class MigrationToolEndToEndTest {
 	public void testMigrateThrowsIfNotExistingFolderGiven() throws Exception {
 		try (Connection c = createConnection()) {
 			MySqlQueryBuilder queryBuilder = new MySqlQueryBuilder(c);
-			MigrationTool tool = new MigrationTool("not-existing-folder", queryBuilder, Mockito.mock(Logger.class));
+			MigrationTool tool = new MigrationTool(Arrays.asList("not-existing-folder"), queryBuilder, Mockito.mock(Logger.class));
 			tool.migrate();
 		}
 	}

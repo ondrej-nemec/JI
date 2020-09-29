@@ -4,15 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.logging.LogFactory;
-import org.flywaydb.core.internal.exception.FlywaySqlException;
-
 import common.Logger;
 import database.support.ConnectionConsumer;
 import database.support.DoubleConsumer;
-import database.support.FlywayLogger;
 import database.support.QueryBuilderConsumer;
+import migration.MigrationTool;
 
 public class Database {
 	
@@ -105,24 +101,6 @@ public class Database {
 		return props;
 	}
 	
-	// for flyway migrations
-	private String createFullConnectionString() {
-		String con = createSchemaConnectionString();
-		Properties p = createProperties();
-		boolean first = true;
-		for(Object property : p.keySet()) {
-			if (first) {
-				first = false;
-				con += "?";
-			} else {
-				con += "&";
-			}
-			con += property +"=" + p.getProperty(property.toString());
-		}
-		
-		return con;
-	}
-	
 	/********* Migration ****************/
 	
 	public boolean createDbAndMigrate() {
@@ -130,7 +108,7 @@ public class Database {
 			createDbIfNotExists();
 			migrate();
 			logger.info("All migrations were applied");
-		} catch (SQLException | FlywaySqlException e) {
+		} catch (SQLException e) {
 			logger.fatal("Create db and migrante fail", e);
 			return false;
 		}
@@ -142,20 +120,15 @@ public class Database {
 		logger.info("DB schema was created");
 	}
 	
-	private void migrate() throws FlywaySqlException {
-		LogFactory.setLogCreator((clazz)->{
-			return new FlywayLogger(this.logger);
+	private void migrate() throws SQLException {
+		applyBuilder((builder)->{
+			MigrationTool tool = new MigrationTool(config.pathToMigrations, builder, logger);
+			try {
+				tool.migrate();
+			} catch (Exception e) {
+				throw new SQLException(e);
+			}
 		});
-		Flyway f  = Flyway
-				.configure()
-				.dataSource(
-					createFullConnectionString(), // connectionString,
-					config.login,
-					config.password
-				)
-				.locations(config.pathToMigrations)
-				.load();
-		f.migrate();
 	}
 	
 }

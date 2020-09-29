@@ -1,5 +1,6 @@
 package database;
 
+import java.util.List;
 
 public class DatabaseConfig {
 
@@ -13,7 +14,7 @@ public class DatabaseConfig {
 
 	public final String password;
 	
-	public final String pathToMigrations;
+	public final List<String> pathToMigrations;
 	
 	public final boolean runOnExternalServer;
 	
@@ -28,7 +29,7 @@ public class DatabaseConfig {
 			final String schemaName,
 			final String login,
 			final String password,
-			final String pathToMigrations,
+			final List<String> pathToMigrations,
 			final String timezone,
 			final int poolSize) {
 		this.type = type;

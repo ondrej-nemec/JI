@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,7 +18,7 @@ public class ConnectionPoolEndToEndTest {
 				"javainit_database_test",
 				"root",
 				"",
-				"migrations",
+				Arrays.asList("migrations"),
 				"Europe/Prague",
 				2
 		);
