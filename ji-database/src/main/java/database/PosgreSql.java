@@ -2,6 +2,8 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -34,13 +36,14 @@ public class PosgreSql implements DatabaseInstance {
 
 	@Override
 	public void createDb() throws SQLException {
-		DriverManager
-		.getConnection(connectionString, property)
-		.createStatement()
-		.executeUpdate(String.format(
-				"IF EXISTS (SELECT FROM pg_database WHERE datname = '%s') THEN"
-				+ "   ELSE CREATE DATABASE %s"
-				+ "END IF ", name, name));
+		try (Connection con = DriverManager.getConnection(connectionString, property)) {
+			PreparedStatement stmt = con.prepareStatement("SELECT FROM pg_database WHERE datname = ?");
+			stmt.setString(1, name);
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.next()) {
+				con.createStatement().executeUpdate(String.format("CREATE DATABASE %s", name));
+			}
+		}
 	}
 
 	@Override
