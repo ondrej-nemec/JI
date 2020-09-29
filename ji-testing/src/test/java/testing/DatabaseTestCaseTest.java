@@ -138,7 +138,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 				env.getProperty("db.schema"),
 				env.getProperty("db.login"),
 				env.getProperty("db.password"),
-				env.getProperty("db.pathToMigrations"),
+				Arrays.asList(env.getProperty("db.pathToMigrations").split(",")),
 				env.getProperty("app.timezone"),
 				Integer.parseInt(env.getProperty("db.poolSize"))
 		);
