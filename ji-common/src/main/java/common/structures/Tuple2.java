@@ -24,4 +24,19 @@ public class Tuple2<F, S> {
 		return String.format("Tuple(%s,%s)", _1, _2);
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if ( ! (obj instanceof Tuple2<?, ?>)) {
+			return false;
+		}
+		Tuple2<?, ?> t = Tuple2.class.cast(obj);
+		if (!_1.equals(t._1)) {
+			return false;
+		}
+		if (!_2.equals(t._2)) {
+			return false;
+		}
+		return true;
+	}
+	
 }
