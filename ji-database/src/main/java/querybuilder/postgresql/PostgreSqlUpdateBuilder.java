@@ -1,4 +1,4 @@
-package querybuilder.derby;
+package querybuilder.postgresql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.Map;
 import querybuilder.SQL;
 import querybuilder.UpdateQueryBuilder;
 
-public class DerbyUpdateBuilder implements UpdateQueryBuilder {
+public class PostgreSqlUpdateBuilder implements UpdateQueryBuilder {
 
 	private final String update;
 	
@@ -19,7 +19,7 @@ public class DerbyUpdateBuilder implements UpdateQueryBuilder {
 	
 	private final Connection connection;
 	
-	public DerbyUpdateBuilder(final Connection connection, final String table) {
+	public PostgreSqlUpdateBuilder(final Connection connection, final String table) {
 		this.connection = connection;
 		this.update = "UPDATE " + table;
 		this.set = new StringBuilder();

@@ -20,16 +20,17 @@ dependencies {
 	// https://mvnrepository.com/artifact/junit/junit
 	compile group: 'junit', name: 'junit', version: '4.12'
 	
-	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
-	testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
-	
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
 	
 	// https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
 	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
 	
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
 	testCompile fileTree(dir: "libs/derby", includes: ['*.jar'])
+	// https://mvnrepository.com/artifact/org.postgresql/postgresql
+	testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
 
 }
 

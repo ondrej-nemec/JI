@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import querybuilder.QueryBuilder;
-import querybuilder.mysql.MySqlQueryBuilder;
+import querybuilder.postgresql.PostgreSqlQueryBuilder;
 
 public class PosgreSql implements DatabaseInstance {
 	
@@ -48,7 +48,7 @@ public class PosgreSql implements DatabaseInstance {
 
 	@Override
 	public QueryBuilder getQueryBuilder(Connection connection) {
-		return new MySqlQueryBuilder(connection); // TODO fix
+		return new PostgreSqlQueryBuilder(connection);
 	}
 
 }

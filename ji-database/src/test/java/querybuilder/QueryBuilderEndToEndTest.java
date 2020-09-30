@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -36,6 +37,7 @@ import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
+import querybuilder.postgresql.PostgreSqlQueryBuilder;
 import utils.Terminal;
 
 @RunWith(Parameterized.class)
@@ -78,6 +80,7 @@ public class QueryBuilderEndToEndTest {
 		props.setProperty("allowMultiQueries", "true");
 		
 		List<Object[]> result = new LinkedList<>();
+		//*
 		result.add(createParams(
 				(conn) -> {return new MySqlQueryBuilder(conn);},
 				() -> {
@@ -100,10 +103,13 @@ public class QueryBuilderEndToEndTest {
 						e.printStackTrace();
 					}
 				},
-				(ignored) -> {/* not required*/}, 
+				(ignored) -> {
+					// not required
+				}, 
 				"mysql"
 		));
-	//*
+		//*/
+		//*
 	  	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
 				(conn) -> {return new DerbyQueryBuilder(conn);},
@@ -127,6 +133,38 @@ public class QueryBuilderEndToEndTest {
 					terminal.runFile(derbyPath + "/stopNetworkServer");
 				}, 
 				"derby"
+		));
+		//*/
+		//*
+		result.add(createParams(
+				(conn) -> {return new PostgreSqlQueryBuilder(conn);},
+				() -> {
+					try {
+						props.setProperty("user", "postgres");
+						props.setProperty("password", "1234");
+						return DriverManager.getConnection("jdbc:postgresql://localhost/" + DB_NAME, props);
+					} catch (SQLException e) {
+						fail("Connection not created: " + e.getMessage());
+						return null;
+					}
+				},
+				(ignored) -> {
+					props.setProperty("user", "postgres");
+					props.setProperty("password", "1234");
+					try (Connection con = DriverManager
+							.getConnection("jdbc:postgresql://localhost/", props)) {
+						PreparedStatement stmt = con.prepareStatement("SELECT FROM pg_database WHERE datname = ?");
+						stmt.setString(1, DB_NAME);
+						ResultSet rs = stmt.executeQuery();
+						if (!rs.next()) {
+							con.createStatement().executeUpdate(String.format("CREATE DATABASE %s", DB_NAME));
+						}
+					} catch (Exception e) {
+						fail("Connection not created: " + e.getMessage());
+					}
+				},
+				(ignored) -> {}, 
+				"postgresql"
 		));
 		//*/
 		return result;
@@ -164,23 +202,25 @@ public class QueryBuilderEndToEndTest {
 		Exception ex = null;
 		try {
 			if (file != null) {
-				try {
+				//try {
 				loadDb(connection, file);
-				} catch (Exception e) {
+				/*} catch (Exception e) {
 					System.err.println(file);
 					System.err.println(tables);
 					e.printStackTrace();
-				}
+				}*/
 			}
 			test.accept(connection, createBuilder.apply(connection));
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			dropTables(connection, tables);
 			dropViews(connection, views);
+			dropTables(connection, tables);
+			
 			connection.close();
 		}
 		if (ex != null) {
+			System.err.println("QueryBuilder Error, file: " + file);
 			ex.printStackTrace();
 			throw ex;
 		}
@@ -190,9 +230,7 @@ public class QueryBuilderEndToEndTest {
 		for (String table : tables) {
 			try {
 				connection.createStatement().executeUpdate(String.format("drop table %s", table));
-			} catch (Exception e) {
-				
-			}
+			} catch (Exception e) { /* ignored*/ }
 		}
 	}
 	
@@ -200,9 +238,7 @@ public class QueryBuilderEndToEndTest {
 		for (String view : views) {
 			try {
 				connection.createStatement().executeUpdate(String.format("drop view %s", view));
-			} catch (Exception e) {
-				
-			}
+			} catch (Exception e) { /* ignored*/ }
 		}
 	}
 	
@@ -235,7 +271,7 @@ public class QueryBuilderEndToEndTest {
     			.addParameter("%orName", "this too")
     			.execute();
 		
-    		ResultSet res = conn.createStatement().executeQuery("SELECT * FROM update_table");
+    		ResultSet res = conn.createStatement().executeQuery("SELECT * FROM update_table order by id");
     		
     		int id = 1;
     		while(res.next()) {
@@ -401,7 +437,7 @@ public class QueryBuilderEndToEndTest {
 	
 	@Test
 	public void testExecuteDeleteView() throws Exception {
-		test("viewDelete", (conn, builder)->{
+		test("viewDelete", (conn, builder)->{			
 			builder
 			.deleteView("view_to_delete")
 			.execute();
@@ -475,11 +511,12 @@ public class QueryBuilderEndToEndTest {
     				.addParameter(":id1", 0)
     				.groupBy("a.id, b.id, a.name")
     				.having("b.id != :id2")
+    				.orderBy("a.id")
     				.addParameter(":id2", 0)
     				.limit(5, 0)
     				.execute();
     			
-    			ResultSet rs = conn.createStatement().executeQuery("select * from test_view");
+    			ResultSet rs = conn.createStatement().executeQuery("select * from test_view order by a_id");
     			int i = 0;
     			while (rs.next()) {
     				i++;
@@ -503,13 +540,13 @@ public class QueryBuilderEndToEndTest {
     			.join("table2 b", Join.INNER_JOIN, "a.id = b.id")
     			.where("a.id != :id1")
     			.addParameter(":id1", 0)
-    			.groupBy("a.id")
+    			.groupBy("a.id, b.id, a.name")
     			.having("b.id != :id2")
     			.addParameter(":id2", 0)
     			.limit(4, 0)
     			.execute();
     		
-    		ResultSet rs = conn.createStatement().executeQuery("select * from test_view");
+    		ResultSet rs = conn.createStatement().executeQuery("select * from test_view order by a_id");
     		int i = 0;
     		while (rs.next()) {
     			i++;

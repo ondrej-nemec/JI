@@ -1,4 +1,4 @@
-package querybuilder.derby;
+package querybuilder.postgresql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,7 +16,7 @@ import querybuilder.Join;
 import querybuilder.SQL;
 import querybuilder.SelectQueryBuilder;
 
-public class DerbySelectBuilder implements SelectQueryBuilder {
+public class PostgreSqlSelectBuilder implements SelectQueryBuilder {
 
 	private final StringBuilder query;
 	
@@ -24,7 +24,7 @@ public class DerbySelectBuilder implements SelectQueryBuilder {
 	
 	private final Connection connection;
 	
-	public DerbySelectBuilder(final Connection connection, final String... select) {
+	public PostgreSqlSelectBuilder(final Connection connection, final String... select) {
 		this.connection = connection;
 		this.query = new StringBuilder("SELECT " + Implode.implode(", ", select));
 		this.params = new HashMap<>();
@@ -38,7 +38,7 @@ public class DerbySelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder join(String table, Join join, String on) {
-		query.append(" " + EnumToDerbyString.joinToString(join) +" " + table + " ON " + on);
+		query.append(" " + EnumToPostgresqlString.joinToString(join) +" " + table + " ON " + on);
 		return this;
 	}
 
@@ -80,7 +80,7 @@ public class DerbySelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder limit(int limit, int offset) {
-		query.append(String.format(" OFFSET %s ROWS FETCH NEXT %s ROWS ONLY", offset, limit));
+		query.append(" LIMIT " + limit + " OFFSET " + offset);
 		return this;
 	}
 

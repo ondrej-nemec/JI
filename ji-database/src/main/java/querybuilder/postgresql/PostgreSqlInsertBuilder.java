@@ -1,4 +1,4 @@
-package querybuilder.derby;
+package querybuilder.postgresql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.Map;
 import querybuilder.InsertQueryBuilder;
 import querybuilder.SQL;
 
-public class DerbyInsertBuilder implements InsertQueryBuilder {
+public class PostgreSqlInsertBuilder implements InsertQueryBuilder {
 
 	private final String query;
 	
@@ -17,7 +17,7 @@ public class DerbyInsertBuilder implements InsertQueryBuilder {
 	
 	private final Connection connection;
 	
-	public DerbyInsertBuilder(final Connection connection, final String table) {
+	public PostgreSqlInsertBuilder(final Connection connection, final String table) {
 		this.connection = connection;
 		this.query = "INSERT INTO " + table;
 		this.params = new HashMap<>();

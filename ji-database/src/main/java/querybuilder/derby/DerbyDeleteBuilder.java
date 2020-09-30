@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import querybuilder.DeleteQueryBuilder;
+import querybuilder.SQL;
 
 public class DerbyDeleteBuilder implements DeleteQueryBuilder {
 	
@@ -60,7 +61,7 @@ public class DerbyDeleteBuilder implements DeleteQueryBuilder {
 
 	@Override
 	public DeleteQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", value));
+		params.put(name, String.format("'%s'", SQL.escape(value)));
 		return this;
 	}
 

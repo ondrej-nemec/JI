@@ -1,4 +1,4 @@
-package querybuilder.derby;
+package querybuilder.postgresql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.OnAction;
 
-public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
+public class PostgreSqlAlterTableBuilder implements AlterTableQueryBuilder {
 	
 	private final Connection connection;
 	
@@ -17,7 +17,7 @@ public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
 	
 	private boolean first = true;
 
-	public DerbyAlterTableBuilder(Connection connection, String name) {
+	public PostgreSqlAlterTableBuilder(Connection connection, String name) {
 		this.connection = connection;
 		this.sql = new StringBuilder("ALTER TABLE " + name);
 	}
@@ -32,11 +32,11 @@ public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
 	public AlterTableQueryBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
 		first();
 		sql.append("ADD ").append(name).append(" ");
-		sql.append(EnumToDerbyString.typeToString(type));
-		sql.append(EnumToDerbyString.defaultValueToString(defaultValue));
+		sql.append(EnumToPostgresqlString.typeToString(type));
+		sql.append(EnumToPostgresqlString.defaultValueToString(defaultValue));
 		StringBuilder append = new StringBuilder();
 		for (ColumnSetting setting : settings) {
-			sql.append(EnumToDerbyString.settingToString(setting, name, append));
+			sql.append(EnumToPostgresqlString.settingToString(setting, name, append));
 		}
 		sql.append(append.toString());
 		return this;
@@ -54,8 +54,8 @@ public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
 		addForeingKey(column, referedTable, referedColumn);
 		sql.append(String.format(
 				" ON DELETE %s ON UPDATE %s",
-				EnumToDerbyString.onActionToString(onDelete),
-				EnumToDerbyString.onActionToString(onUpdate)
+				EnumToPostgresqlString.onActionToString(onDelete),
+				EnumToPostgresqlString.onActionToString(onUpdate)
 		));
 		return this;
 	}
@@ -77,29 +77,20 @@ public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
 	@Override
 	public AlterTableQueryBuilder modifyColumnType(String name, ColumnType type) {
 		first();
-		sql.append(String.format("ALTER COLUMN %s SET DATA TYPE %s", name, EnumToDerbyString.typeToString(type)));
-		// ALTER TABLE bl.USERSPROPERTIES ALTER COLUMN Value SET DATA TYPE CHAR(32000)
-		/*
-		ALTER TABLE MY_TABLE ADD COLUMN NEW_COLUMN BLOB(2147483647);
-		UPDATE MY_TABLE SET NEW_COLUMN=MY_COLUMN;
-		ALTER TABLE MY_TABLE DROP COLUMN MY_COLUMN;
-		RENAME COLUMN MY_TABLE.NEW_COLUMN TO MY_COLUMN;
-		*/
+		sql.append(String.format("MODIFY %s %s", name, EnumToPostgresqlString.typeToString(type)));
 		return this;
 	}
 
 	@Override
 	public AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type) {
 		first();
-		//sql.append(String.format("RENAME COLUMN %s %s %s", originName, newName, EnumToDerbyString.typeToString(type)));
-		sql.append(String.format("RENAME COLUMN %s %s", originName, newName));
+		sql.append(String.format("CHANGE COLUMN %s %s %s", originName, newName, EnumToPostgresqlString.typeToString(type)));
 		return this;
 	}
 
 	@Override
 	public void execute() throws SQLException {
 		try (Statement stat = connection.createStatement();) {
-			System.out.println(getSql());
 			stat.execute(getSql());
 		}
 	}

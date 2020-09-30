@@ -1,4 +1,4 @@
-package querybuilder.derby;
+package querybuilder.postgresql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import querybuilder.CreateViewQueryBuilder;
 import querybuilder.Join;
 import querybuilder.SQL;
 
-public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
+public class PostgreSqlCreateViewBuilder implements CreateViewQueryBuilder {
 	
 	private final Connection connection;
 
@@ -19,14 +19,12 @@ public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 	
 	private final Map<String, String> params;
 	
-	private String dropView = null;
-	
-	public DerbyCreateViewBuilder(Connection connection, String name, boolean modify) {
+	public PostgreSqlCreateViewBuilder(Connection connection, String name, boolean modify) {
 		this.connection = connection;
 		this.params = new HashMap<>();
 		this.query = new StringBuilder();
 		if (modify) {
-			this.dropView = "DROP VIEW " + name;
+			query.append("DROP VIEW " + name + ";");
 		}
 		query.append("CREATE VIEW " + name + " AS");
 	}
@@ -45,7 +43,7 @@ public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder join(String table, Join join, String on) {
-		query.append(" " + EnumToDerbyString.joinToString(join) +" " + table + " ON " + on);
+		query.append(" " + EnumToPostgresqlString.joinToString(join) +" " + table + " ON " + on);
 		return this;
 	}
 
@@ -87,8 +85,7 @@ public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder limit(int limit, int offset) {
-		// OFFSET 0 ROWS FETCH NEXT 0 ROWS ONLY
-		query.append(String.format(" OFFSET %s ROWS FETCH NEXT %s ROWS ONLY", offset, limit));
+		query.append(" LIMIT " + limit + " OFFSET " + offset);
 		return this;
 	}
 
@@ -145,9 +142,6 @@ public class DerbyCreateViewBuilder implements CreateViewQueryBuilder {
 	@Override
 	public void execute() throws SQLException {
 		try (Statement stat = connection.createStatement();) {
-			if (dropView != null) {
-				stat.execute(dropView);
-			}
 			stat.executeUpdate(createSql());
 		}
 	}
