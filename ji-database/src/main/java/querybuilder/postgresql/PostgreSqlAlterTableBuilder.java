@@ -70,21 +70,21 @@ public class PostgreSqlAlterTableBuilder implements AlterTableQueryBuilder {
 	@Override
 	public AlterTableQueryBuilder deleteForeingKey(String name) {
 		first();
-		sql.append(String.format("DROP FOREIGN KEY FK_%s", name));
+		sql.append(String.format("DROP CONSTRAINT FK_%s", name));
 		return this;
 	}
 
 	@Override
 	public AlterTableQueryBuilder modifyColumnType(String name, ColumnType type) {
 		first();
-		sql.append(String.format("MODIFY %s %s", name, EnumToPostgresqlString.typeToString(type)));
+		sql.append(String.format("ALTER COLUMN %s TYPE %s", name, EnumToPostgresqlString.typeToString(type)));
 		return this;
 	}
 
 	@Override
 	public AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type) {
 		first();
-		sql.append(String.format("CHANGE COLUMN %s %s %s", originName, newName, EnumToPostgresqlString.typeToString(type)));
+		sql.append(String.format("RENAME COLUMN %s TO %s", originName, newName/*, EnumToPostgresqlString.typeToString(type)*/));
 		return this;
 	}
 

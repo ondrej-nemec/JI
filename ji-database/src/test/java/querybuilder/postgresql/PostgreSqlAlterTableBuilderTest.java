@@ -32,9 +32,9 @@ public class PostgreSqlAlterTableBuilderTest {
 				+ " ADD Column2 INT DEFAULT 1,"
 				+ " DROP COLUMN Column3,"
 				+ " ADD CONSTRAINT FK_Column FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
-				+ " DROP FOREIGN KEY FK_Column,"
-				+ " MODIFY Column4 INT,"
-				+ " CHANGE COLUMN Column5 Column6 INT";
+				+ " DROP CONSTRAINT FK_Column,"
+				+ " ALTER COLUMN Column4 TYPE INT,"
+				+ " RENAME COLUMN Column5 TO Column6";
 		
 		assertEquals(expected, builder.getSql());
 		verifyNoMoreInteractions(con);

@@ -81,7 +81,7 @@ public class PostgreSqlQueryBuilder extends QueryBuilder {
 	public ExecuteQueryBuilder deleteIndex(String name, String table) {
 		return new PostgreSqlExecuteBuilder(
 				connection,
-				String.format("ALTER TABLE %s DROP INDEX %s", table, name)
+				String.format("DROP INDEX %s", name)
 			);
 	}
 

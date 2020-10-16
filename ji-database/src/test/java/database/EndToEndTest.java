@@ -38,10 +38,16 @@ public class EndToEndTest {
 	private final String pathToDb;
 	
 	private final boolean isExternalServer;
+	
+	private final String username;
+	
+	private final String password;
 
-	public EndToEndTest(String type, String pathToDb, boolean isExternalServer) {
+	public EndToEndTest(String type, String pathToDb, String username, String password, boolean isExternalServer) {
 		this.type = type;
 		this.pathToDb = pathToDb;
+		this.username = username;
+		this.password = password;
 		this.isExternalServer = isExternalServer;
 	}
 
@@ -51,12 +57,23 @@ public class EndToEndTest {
 		result.add(new Object[] {
 				"mysql",
 				"//localhost",
+				"root",
+				"",
 				true
 		});
 		result.add(new Object[] {
 				"derby",
 				"C:/software/DerbyDB/bin",
+				"root",
+				"",
 				false
+		});
+		result.add(new Object[] {
+				"postgresql",
+				"C:/software/DerbyDB/bin",
+				"postgres",
+				"1234",
+				true
 		});
 		return result;
 	}
@@ -72,8 +89,8 @@ public class EndToEndTest {
 				pathToDb,
 				isExternalServer,
 				"javainit_database_test",
-				"root",
-				"",
+				username,
+				password,
 				Arrays.asList("migrations"),
 				"Europe/Prague",
 				5

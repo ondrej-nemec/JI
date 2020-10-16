@@ -34,7 +34,7 @@ public class DerbyAlterTableBuilderTest {
 				+ " ADD CONSTRAINT FK_Column FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
 				+ " DROP FOREIGN KEY FK_Column,"
 				+ " ALTER COLUMN Column4 SET DATA TYPE INT,"
-				+ " CHANGE COLUMN Column5 Column6 INT";
+				+ " RENAME COLUMN Column5 Column6";
 		
 		assertEquals(expected, builder.getSql());
 		verifyNoMoreInteractions(con);

@@ -53,7 +53,7 @@ public class DerbyCreateViewBuilderTest {
 				+ " OFFSET 0 ROWS FETCH NEXT 0 ROWS ONLY";
 		return new Object[] {
 			new Object[] {false, query},
-			new Object[] {true, "DROP VIEW View1;" + query}
+			new Object[] {true, /*"DROP VIEW View1;" +*/ query}
 		};
 	}
 
