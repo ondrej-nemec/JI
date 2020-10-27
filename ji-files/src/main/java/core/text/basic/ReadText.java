@@ -42,7 +42,6 @@ public class ReadText {
 		return result;
 	}
 	
-	//TODO add Table structure
 	public static Collection<List<String>> asTable(BufferedReader br, final String split) throws IOException {
 		List<List<String>> result = new ArrayList<>();
 		String line = br.readLine();

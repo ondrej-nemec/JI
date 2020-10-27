@@ -3,7 +3,16 @@ package json;
 import java.util.List;
 import java.util.Map;
 
+import json.providers.OutputStringProvider;
+
 public class OutputJsonWritter {
+	
+	public String write(Map<String, Object> json) throws JsonStreamException {
+		OutputStringProvider provider = new OutputStringProvider();
+		OutputJsonStream stream = new OutputJsonStream(provider);
+		write(stream, json);
+		return provider.getJson();
+	}
 
 	public void write(OutputJsonStream stream, Map<String, Object> json) throws JsonStreamException {
 		stream.startDocument();
