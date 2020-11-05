@@ -38,7 +38,7 @@ public class UploadedFile {
 			for (int i = 0; i  < content.size(); i++) {
 				stream.write(content.get(i).byteValue());
 			}
-		}, name);
+		}, path + name);
 	}
 	
 	@Override
