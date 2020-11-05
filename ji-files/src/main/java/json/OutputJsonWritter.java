@@ -55,6 +55,8 @@ public class OutputJsonWritter {
 			} else {
 				stream.writeObjectValue(name, value);
 			}
+		} else if (value instanceof Jsonable) {
+			writeObject(stream, ((Jsonable)value).toJson(), name);
 		} else if (value instanceof List) {
 			write(stream, (List<Object>)value, name);
 		} else if (value instanceof Map) {
