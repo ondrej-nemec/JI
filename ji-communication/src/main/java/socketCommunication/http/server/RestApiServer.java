@@ -188,7 +188,7 @@ public class RestApiServer implements Servant {
 					m.find();
 					elementName = m.group(1);
 					filename = m.group(5);
-					if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+					if (filename != null && (filename.contains("..") || filename.contains("/") || filename.contains("\\"))) {
 						throw new IOException("Filename is probably corrupted " + filename);
 					}
 				} else if (requestLine.startsWith("Content-Type: ") && !isElementValue) {
