@@ -132,20 +132,21 @@ public class RestApiServer implements Servant {
 			List<Byte> fileContent = null;
 			while(readed < contentLength) {
 				List<Byte> reqLine = new LinkedList<>();
-				byte actual;
-				while ((actual = (byte)bis.read()) != '\n' && readed < contentLength) {
+				while (readed < contentLength) {
+					byte actual = (byte)bis.read();
 					readed++;
-					if (actual == '\r') {continue;} // ignored
 					reqLine.add(actual);
+					if (actual == '\n') {
+						break;
+					}
 				}
-				if (actual == '\n') {
-					readed++;
-				}
+				
 				byte[] bytes = new byte[reqLine.size()];
 				for (int i = 0; i < reqLine.size(); i++) {
 					bytes[i] = reqLine.get(i);
 				}
-				String requestLine = new String(bytes);
+				
+				String requestLine = new String(bytes).replace("\r", "").replace("\n", "");
 				if (requestLine.startsWith(boundary)) {
 					if (elementName != null && elementValue != null) {
 						params.put(elementName, elementValue);
@@ -174,13 +175,12 @@ public class RestApiServer implements Servant {
 						if (fileContent == null) {
 							fileContent = new LinkedList<>();
 						}
-						for (byte b : requestLine.getBytes()) {
+						for (byte b : reqLine) {
 							if (fileContent.size() > maxUploadFileSize) {
 								throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
 							}
 							fileContent.add(b);
 						}
-						fileContent.add((byte)'\n');
 					}
 				} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isElementValue) {
 					Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
