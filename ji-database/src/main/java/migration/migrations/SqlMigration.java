@@ -37,7 +37,7 @@ public class SqlMigration implements SingleMigration {
 	private String loadContent(String file, boolean isRevert, boolean isInclasspath) throws IOException {
 		String sql = Text.read((br)->{
 			return ReadText.asString(br);
-		}, InputStreamLoader.createInputStream(getClass(), file)); // TODO
+		}, InputStreamLoader.createInputStream(getClass(), file));
 		
 		String[] mig = sql.split("--- REVERT ---");
 		if (isRevert && mig.length > 1) {
