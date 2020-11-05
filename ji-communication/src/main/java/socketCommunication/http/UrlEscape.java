@@ -9,7 +9,7 @@ public class UrlEscape {
 	private final static TwinList<String, String> ESCAPE = 
 			// TODO https://www.w3schools.com/tags/ref_urlencode.ASP
 			TwinList.fromArray(
-					t("%25", "%"),
+					t("%25", "%"), // must be first
 					t("%3F", "\\?"),
 					t("%2F", "/"),
 					t("%5C", "\\\\"), // escaped \
@@ -28,8 +28,10 @@ public class UrlEscape {
 					t("%22", "\""),
 					t("%2C", ","),
 					t("%20", " "),
-					t("%40", "@")
-					
+					t("%40", "@"),
+					t("%23", "#")
+					//t("%21", "!")
+					//t("%24", "\\$")
 					/*,
 					t("", "\""), // not escaped
 					t("", "*")// not escaped */
