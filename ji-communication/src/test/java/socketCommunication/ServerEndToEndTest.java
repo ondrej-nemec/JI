@@ -30,15 +30,17 @@ public class ServerEndToEndTest {
 			);
 			
 			Server server = Server.create(
-					10123,
+					80,
 					5,
 					120000,
 					apiResponse(),
-					/*
+					//*
 					Optional.empty(),
 					/*/
 					Optional.of(cred),
 					//*/
+					10 * 1024, // 10 kB
+					Optional.empty(),
 					"UTF-8",
 					new LoggerImpl()
 			);
@@ -66,11 +68,17 @@ public class ServerEndToEndTest {
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
 					return getCert();
 				}*/
+				if (url.equals("/secured")) {
+					return getSecured();
+				}
 				if (url.equals("/redirect")) {
 					return getRedirect();
 				}
 				if (url.equals("/favicon.ico")) {
 					return getBinaryFile("favicon.ico", "image/ico");
+				}
+				if (url.equals("/file")) {
+					return getFile();
 				}
 				if (url.equals("/final.gif")) {
 					return getBinaryFile("final.gif", "image/gif");
@@ -78,6 +86,26 @@ public class ServerEndToEndTest {
 				return getHtml();
 			}
 			
+			private RestApiResponse getFile() {
+				return RestApiResponse.textResponse(
+						StatusCode.OK,
+						Arrays.asList(
+								"Access-Control-Allow-Origin: *", 
+								"Content-Type: text/html; charset=utf-8",
+								"X-XSS-Protection: 1; mode=block"
+							//	"Set-Cookie: Test=susenka"//,
+							//	"Set-Cookie: jina=cookie"
+						),
+						(bw)->{
+							bw.write(
+									"<html> <head></head><body>"
+									+ "<img src='favicon.ico'/>"
+									+ "</body></html>"
+							);
+						}
+					);
+			}
+
 			private RestApiResponse getRedirect() {
 				return RestApiResponse.binaryResponse(
 						StatusCode.TEMPORARY_REDIRECT,
@@ -85,7 +113,21 @@ public class ServerEndToEndTest {
 								"Access-Control-Allow-Origin: *",
 								"Content-Type: image/ico; charset=utf-8",
 								"X-XSS-Protection: 1; mode=block",
+								"Access-Control-Allow-Credentials: true",
 								"Location: /test"
+						),
+						(bos)->{}
+					);
+			}
+			
+			private RestApiResponse getSecured() {
+				return RestApiResponse.binaryResponse(
+						StatusCode.forCode(401),
+						Arrays.asList(
+								"Access-Control-Allow-Origin: *",
+								"Content-Type: image/ico; charset=utf-8",
+								"X-XSS-Protection: 1; mode=block",
+								"WWW-Authenticate: basic realm=\"User Visible Realm\""
 						),
 						(bos)->{}
 					);
@@ -134,16 +176,20 @@ public class ServerEndToEndTest {
 					(bw)->{
 						bw.write(String.format(
 								"<html> <head></head><body><h1>Time</h1>%s"
-								+ "<br><form><label for='name'></label><input type='text' name='name'/>"
+								+ "<br><form method='post'><label for='name'></label><input type='text' name='name'/>"
 								+ "<input type='submit' value='submit'></form>"
 								+ "<br><br>"
-								+ "<img src='final.gif'/>"
+								//+ "<img src='final.gif'/>"
 								+ "<br>"
-								+ "<img src='favicon.ico'/>"
+								//+ "<img src='favicon.ico'/>"
 								+ "<br>"
 								+ "<form method=\"post\" enctype=\"multipart/form-data\" action='/file'>"
+								+ "Fill the name"
+								+ "<input type='number' name='some-form-number'/><br>"
 								+ "Select image to upload:"
-								+ " <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">"
+								+ " <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload-id\"> <br>"
+								+ "Fill the name"
+								+ "<input type='text' name='some-form-text'/><br>"
 								+ "<input type=\"submit\" value=\"Upload Image\" name=\"submit\">"
 								+ "</form>"
 								+ "</body></html>", today.toString()

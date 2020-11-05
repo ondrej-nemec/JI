@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static common.MapInit.*;
 
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -19,6 +20,8 @@ import socketCommunication.http.server.RestApiServer;
 @RunWith(JUnitParamsRunner.class)
 public class RestApiServerTest {
 
+	// TODO test file upload
+	
 	@Test
 	@Parameters(method = "dataParseFirstSplitFirstLine")
 	public void testParseFirstSplitFirstLine(String line, Properties expectedRequest, Properties expectedParams) {
@@ -154,6 +157,8 @@ public class RestApiServerTest {
 	private RestApiServer getApi() {
 		return new RestApiServer(
 				mock(RestApiServerResponseFactory.class),
+				0,
+				Optional.empty(),
 				mock(Logger.class)
 		);
 	}

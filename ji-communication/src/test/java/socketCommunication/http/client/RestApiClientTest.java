@@ -76,7 +76,6 @@ public class RestApiClientTest {
 			
 			@Override
 			public int read() throws IOException {
-				// TODO Auto-generated method stub
 				return -1;
 			}
 		};

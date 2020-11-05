@@ -8,7 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import common.Logger;
 import socketCommunication.Servant;
@@ -23,14 +28,19 @@ public class RestApiServer implements Servant {
 	protected final static String FULL_URL = "full-url";
 		
 	private final Logger logger;
-
+	private final int maxUploadFileSize;
+	private final Optional<List<String>> allowedFileTypes;
 	private final RestApiServerResponseFactory createResponce;
 	
 	public RestApiServer(
 			RestApiServerResponseFactory response,
+			int maxUploadFileSize,
+			Optional<List<String>> allowedFileTypes,
 			Logger logger) {
 		this.logger = logger;
 		this.createResponce = response;
+		this.allowedFileTypes = allowedFileTypes;
+		this.maxUploadFileSize = maxUploadFileSize;
 	}
 	
 	@Override
@@ -109,23 +119,86 @@ public class RestApiServer implements Servant {
         	parseHeaderLine(line, header);
         	line = br.readLine();
         }
-
-	/*	if (header.get("Content-Type") != null && header.get("Content-Type").toString().contains("multipart/form-data")) {
-			// u souboru - kontrola originu
-			// Content-Length
-			Binary.write((stream)->{
-				int count;
-				int bufferSize = 32768;
-				byte[] buffer = new byte[bufferSize]; // or 4096, or more 8192
-				while ((count = bis.read(buffer)) > 0) {
-					stream.write(buffer, 0, count);
-					System.out.println(count + " " + bufferSize);
-					if (count < bufferSize) {
-						break;
+        String type = header.getProperty("Content-Type");
+		if (type != null && type.contains("multipart/form-data")) {
+			int contentLength = Integer.parseInt(header.getProperty("Content-Length"));
+			String boundary = "--" + type.split(";")[1].split("=")[1].trim();
+			int readed = 0;
+			boolean isElementValue = false;
+			String elementName = null;
+			String elementValue = null;
+			String contentType = null;
+			String filename = null;
+			List<Byte> fileContent = null;
+			while(readed < contentLength) {
+				List<Byte> reqLine = new LinkedList<>();
+				byte actual;
+				while ((actual = (byte)bis.read()) != '\n' && readed < contentLength) {
+					readed++;
+					if (actual == '\r') {continue;} // ignored
+					reqLine.add(actual);
+				}
+				if (actual == '\n') {
+					readed++;
+				}
+				byte[] bytes = new byte[reqLine.size()];
+				for (int i = 0; i < reqLine.size(); i++) {
+					bytes[i] = reqLine.get(i);
+				}
+				String requestLine = new String(bytes);
+				if (requestLine.startsWith(boundary)) {
+					if (elementName != null && elementValue != null) {
+						params.put(elementName, elementValue);
+					} else if (elementName != null && fileContent != null) {
+						params.put(elementName, new UploadedFile(filename, contentType, fileContent));
 					}
 				}
-			}, "test.png");
-		} else {*/
+				if (boundary.equals(requestLine)) {
+					isElementValue = false;
+					elementName = null;
+					contentType = null;
+					filename = null;
+					elementValue = null;
+					fileContent = null;
+				} else if (requestLine.isEmpty()) {
+					isElementValue = true;
+				} else if (isElementValue) {
+					if (filename == null) { // text element
+						if (elementValue == null) {
+							elementValue = "";
+						} else {
+							elementValue += "\n";
+						}
+						elementValue += requestLine;
+					} else { // file
+						if (fileContent == null) {
+							fileContent = new LinkedList<>();
+						}
+						for (byte b : requestLine.getBytes()) {
+							if (fileContent.size() > maxUploadFileSize) {
+								throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
+							}
+							fileContent.add(b);
+						}
+						fileContent.add((byte)'\n');
+					}
+				} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isElementValue) {
+					Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
+							.matcher(requestLine);
+					m.find();
+					elementName = m.group(1);
+					filename = m.group(5);
+					if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+						throw new IOException("Filename is probably corrupted " + filename);
+					}
+				} else if (requestLine.startsWith("Content-Type: ") && !isElementValue) {
+					contentType = requestLine.replace("Content-Type: ", "");
+					if (allowedFileTypes.isPresent() && !allowedFileTypes.get().contains(contentType)) {
+						throw new IOException("Uploading file content type is not allowed " + contentType);
+					}
+				}
+            }
+		} else {
 	        // payload
 	        StringBuilder payload = new StringBuilder();
 	       	// stream ready is fix - before close stream does not wrote -1
@@ -140,7 +213,7 @@ public class RestApiServer implements Servant {
 	            }
 	        }
 	        parsePayload(params, payload.toString());
-	//	}
+		}
 	}
 
 	/** protected for test only */

@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,13 +56,15 @@ public class Server {
     		long readTimeout,
     		RestApiServerResponseFactory response,
     		Optional<ServerSecuredCredentials> config,
+    		int maxUploadFileSize,
+    		Optional<List<String>> allowedFileContentType,
     		String charset,
     		Logger logger) throws Exception {
     	return new Server(
     			port, 
     			threadPool,
     			readTimeout,
-    			new RestApiServer(response, logger),
+    			new RestApiServer(response, maxUploadFileSize, allowedFileContentType, logger),
     			config,
     			charset,
     			logger
