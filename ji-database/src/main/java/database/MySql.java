@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import common.Logger;
+import common.exceptions.NotImplementedYet;
 import querybuilder.QueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
 
@@ -19,8 +20,11 @@ public class MySql implements DatabaseInstance {
 	
 	private final String name;
 
-	public MySql(String connectionString, Properties property, String name, final Logger logger) {
+	private final boolean runOnExternal;
+	
+	public MySql(boolean runOnExternal, String connectionString, Properties property, String name, final Logger logger) {
 		this.logger = logger;
+		this.runOnExternal = runOnExternal;
 		this.connectionString = connectionString;
 		this.property = property;
 		this.name = name;
@@ -33,12 +37,20 @@ public class MySql implements DatabaseInstance {
 
 	@Override
 	public void startServer() {
-		// implemetation is not required
+		if (runOnExternal) {
+			logger.info("Signal Start DB server not sended because server is not under app manage");
+		} else {
+			throw new NotImplementedYet(); // TODO
+		}
 	}
 
 	@Override
 	public void stopServer() {
-		// implemetation is not required
+		if (runOnExternal) {
+			logger.info("Signal Stop DB server not sended because server is not under app manage");
+		} else {
+			throw new NotImplementedYet(); // TODO
+		}
 	}
 
 	@Override

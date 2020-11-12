@@ -19,24 +19,35 @@ public class Derby implements DatabaseInstance {
 	
 	private final DoubleConsumer consumer;
 	
-	public Derby(final String pathToServer, final DoubleConsumer consumer, final Logger logger) {
+	private final boolean runOnExternal;
+	
+	public Derby(boolean runOnExternal, final String pathToServer, final DoubleConsumer consumer, final Logger logger) {
 		this.terminal = new Terminal(logger);
 		this.logger = logger;
 		this.consumer = consumer;
 		this.pathToServer = pathToServer;
+		this.runOnExternal = runOnExternal;
 	}
 
 	@Override
-	public void startServer() { //TODO only if not on external server
-	//	System.getProperties().setProperty("derby.system.home", config.pathOrUrlToLocation);
-		terminal.runFile(pathToServer + "/startNetworkServer");
-		logger.info("Derby has been started");
+	public void startServer() {
+		if (runOnExternal) {
+			logger.info("Signal Start DB server not sended because server is not under app manage");
+		} else {
+		//	System.getProperties().setProperty("derby.system.home", config.pathOrUrlToLocation);
+			terminal.runFile(pathToServer + "/startNetworkServer");
+			logger.info("Derby has been started");
+		}
 	}
 
 	@Override
-	public void stopServer() { //TODO only if not on external server
-		terminal.runFile(pathToServer + "/stopNetworkServer");
-		logger.info("Derby has been shutdowned");
+	public void stopServer() {
+		if (runOnExternal) {
+			logger.info("Signal Stop DB server not sended because server is not under app manage");
+		} else {
+			terminal.runFile(pathToServer + "/stopNetworkServer");
+			logger.info("Derby has been shutdowned");			
+		}
 	}
 
 	@Override

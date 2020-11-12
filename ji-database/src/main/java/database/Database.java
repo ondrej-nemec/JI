@@ -41,11 +41,11 @@ public class Database {
 	private DatabaseInstance createInstance(String name, Logger logger) {
 		switch (config.type) {
 		case "derby":
-			return new Derby(config.pathOrUrlToLocation, getDoubleConsumer(), logger);
+			return new Derby(config.runOnExternalServer, config.pathOrUrlToLocation, getDoubleConsumer(), logger);
 		case "mysql":
-			return new MySql(createDatabaseConnectionString(), createProperties(), name, logger);
+			return new MySql(config.runOnExternalServer, createDatabaseConnectionString(), createProperties(), name, logger);
 		case "postgresql":
-			return new PosgreSql(createDatabaseConnectionString(), createProperties(), name);
+			return new PosgreSql(config.runOnExternalServer, createDatabaseConnectionString(), createProperties(), name, logger);
 		default:
 			throw new RuntimeException("Unsupported type " + config.type);
 		}

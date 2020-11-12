@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import common.Logger;
+import common.exceptions.NotImplementedYet;
 import querybuilder.QueryBuilder;
 import querybuilder.postgresql.PostgreSqlQueryBuilder;
 
@@ -17,21 +19,35 @@ public class PosgreSql implements DatabaseInstance {
 	private final Properties property;
 	
 	private final String name;
+
+	private final boolean runOnExternal;
 	
-	public PosgreSql(String connectionString, Properties property, String name) {
+	private final Logger logger;
+	
+	public PosgreSql(boolean runOnExternal, String connectionString, Properties property, String name, Logger logger) {
 		this.connectionString = connectionString;
 		this.property = property;
+		this.runOnExternal = runOnExternal;
+		this.logger = logger;
 		this.name = name;
 	}
 
 	@Override
 	public void startServer() {
-		// TODO Auto-generated method stub
+		if (runOnExternal) {
+			logger.info("Signal Start DB server not sended because server is not under app manage");
+		} else {
+			throw new NotImplementedYet(); // TODO
+		}
 	}
 
 	@Override
 	public void stopServer() {
-		// TODO Auto-generated method stub
+		if (runOnExternal) {
+			logger.info("Signal Stop DB server not sended because server is not under app manage");
+		} else {
+			throw new NotImplementedYet(); // TODO
+		}
 	}
 
 	@Override

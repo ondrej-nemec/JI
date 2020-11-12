@@ -1,6 +1,8 @@
 package querybuilder.postgresql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -49,8 +51,14 @@ public class PostgreSqlInsertBuilder implements InsertQueryBuilder {
 
 	@Override
 	public int execute() throws SQLException {
-		try (Statement stat = connection.createStatement();) {
-			return stat.executeUpdate(getSql());
+		try (PreparedStatement stat = connection.prepareStatement(getSql(), Statement.RETURN_GENERATED_KEYS)) {
+			stat.executeUpdate();
+			try(ResultSet rs = stat.getGeneratedKeys();){
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+				return -1; // if no key generated - can be valid state
+			}
 		}
 	}
 
