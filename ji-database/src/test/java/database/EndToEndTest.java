@@ -119,6 +119,7 @@ public class EndToEndTest {
 					stat.addBatch(batch);
 				}
 				stat.executeBatch();
+				return null;
 			});
 		}
 	}
@@ -138,6 +139,7 @@ public class EndToEndTest {
 				for (String table : tables) {
 					stat.executeUpdate("DROP TABLE " + table);
 				}
+				return null;
 			});
 		} finally {
 			if (!isExternalServer) {
@@ -150,6 +152,7 @@ public class EndToEndTest {
 	public void testQueryBuilderInstance() throws SQLException {
 		database.applyBuilder((builder) -> {
 			assertTrue(builder instanceof MySqlQueryBuilder);
+			return null;
 		});
 	}	
 	
@@ -167,6 +170,7 @@ public class EndToEndTest {
 				   .addParameter("%orName", "this too")
 				   .execute();
 			assertEquals(code, 2);
+			return null;
 		});
 		
 		database.applyQuery((conn)->{
@@ -183,6 +187,7 @@ public class EndToEndTest {
 				}
 				id++;
 			}
+			return null;
 		});
 	}
 	
@@ -205,6 +210,7 @@ public class EndToEndTest {
 			   .addParameter("%orWhere", "this too")
 			   .execute();
 			assertEquals(code, 2);
+			return null;
 		});
 		
 		database.applyQuery((conn)->{
@@ -219,6 +225,7 @@ public class EndToEndTest {
 				}
 				id++;
 			}
+			return null;
 		});
 		
 		} catch (Exception e) {
@@ -234,6 +241,7 @@ public class EndToEndTest {
 				.addValue("name", "column_name")
 			    .execute();
 			assertEquals(code, 1);
+			return null;
 		});
 		
 		database.applyQuery((conn)->{
@@ -247,6 +255,7 @@ public class EndToEndTest {
 				}
 				id++;
 			}
+			return null;
 		});
 	}
 	
@@ -288,6 +297,7 @@ public class EndToEndTest {
     				Arrays.asList(expectedRow, expectedRow2),
     				res.fetchAll()
     		);
+			return null;
 		});		
 	}
 	

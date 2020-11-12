@@ -1,10 +1,11 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import common.Logger;
-import database.support.DoubleConsumer;
 import querybuilder.QueryBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
 import utils.Terminal;
@@ -17,14 +18,17 @@ public class Derby implements DatabaseInstance {
 	
 	private final String pathToServer;
 	
-	private final DoubleConsumer consumer;
+	private final String connectionString;
+	
+	private final Properties property;
 	
 	private final boolean runOnExternal;
 	
-	public Derby(boolean runOnExternal, final String pathToServer, final DoubleConsumer consumer, final Logger logger) {
+	public Derby(boolean runOnExternal, final String pathToServer, String connectionString, Properties property, final Logger logger) {
 		this.terminal = new Terminal(logger);
 		this.logger = logger;
-		this.consumer = consumer;
+		this.connectionString = connectionString;
+		this.property = property;
 		this.pathToServer = pathToServer;
 		this.runOnExternal = runOnExternal;
 	}
@@ -52,7 +56,9 @@ public class Derby implements DatabaseInstance {
 
 	@Override
 	public void createDb() throws SQLException {
-		consumer.accept((conn)->{/* create and close connection - create db schema */});
+		try (Connection con = DriverManager.getConnection(connectionString, property)) {
+			/* create and close connection - create db schema */
+		}
 	}
 
 	@Override

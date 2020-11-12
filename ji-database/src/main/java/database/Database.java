@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import common.Logger;
-import database.support.ConnectionConsumer;
+import database.support.ConnectionFunction;
 import database.support.DoubleConsumer;
-import database.support.QueryBuilderConsumer;
+import database.support.QueryBuilderFunction;
 import migration.MigrationTool;
 
 public class Database {
@@ -41,7 +41,13 @@ public class Database {
 	private DatabaseInstance createInstance(String name, Logger logger) {
 		switch (config.type) {
 		case "derby":
-			return new Derby(config.runOnExternalServer, config.pathOrUrlToLocation, getDoubleConsumer(), logger);
+			return new Derby(
+					config.runOnExternalServer, 
+					config.pathOrUrlToLocation, 
+					createSchemaConnectionString(),
+					createProperties(),
+					logger
+			);
 		case "mysql":
 			return new MySql(config.runOnExternalServer, createDatabaseConnectionString(), createProperties(), name, logger);
 		case "postgresql":
@@ -61,23 +67,24 @@ public class Database {
 		instance.stopServer();
 	}
 	
-	public void applyQuery(final ConnectionConsumer consumer) throws SQLException {
-		getDoubleConsumer().accept(consumer);
+	public <T> T applyQuery(final ConnectionFunction<T> consumer) throws SQLException {
+		return getDoubleFunction(consumer).get();
 	}
 	
-	public void applyBuilder(final QueryBuilderConsumer consumer) throws SQLException {
-		getDoubleConsumer().accept((con)->{
-			consumer.accept(instance.getQueryBuilder(con));
-		});
+	public <T> T applyBuilder(final QueryBuilderFunction<T> consumer) throws SQLException {
+		return getDoubleFunction((con)->{
+			return consumer.apply(instance.getQueryBuilder(con));
+		}).get();
 	}
 
 	/***************************/
 	
-	protected DoubleConsumer getDoubleConsumer() {
-		return (consumer)->{
+	protected <T> DoubleConsumer<T> getDoubleFunction(ConnectionFunction<T> consumer) {
+		return ()->{
 			Connection con = pool.getConnection();
-			consumer.accept(con);
+			T t = consumer.apply(con);
 			pool.returnConnection(con);
+			return t;
 		};
 	}
 	
@@ -128,6 +135,7 @@ public class Database {
 			} catch (Exception e) {
 				throw new SQLException(e);
 			}
+			return null;
 		});
 	}
 	

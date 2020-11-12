@@ -77,14 +77,12 @@ public class ConnectionPoolEndToEndTest {
 
 			@Override
 			public void trace(Object message) {
-				// TODO Auto-generated method stub
-				
+				System.out.println(message);
 			}
 
 			@Override
 			public void trace(Object message, Throwable t) {
-				// TODO Auto-generated method stub
-				
+				System.out.println(message + " " + t.getMessage());
 			}
 		});
 		
@@ -107,6 +105,7 @@ public class ConnectionPoolEndToEndTest {
 				d.applyQuery((conn)->{
 					print("Query running: " + i);
 					try {Thread.sleep(5000);} catch (InterruptedException e) {e.printStackTrace();}
+					return null;
 				});
 			} catch (SQLException e) {
 				print("ERROR " + i + ": " + e.getMessage());
