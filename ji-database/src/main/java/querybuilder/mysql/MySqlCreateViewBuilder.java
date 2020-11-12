@@ -9,7 +9,6 @@ import java.util.Map;
 import common.Implode;
 import querybuilder.CreateViewQueryBuilder;
 import querybuilder.Join;
-import querybuilder.SQL;
 
 public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 	
@@ -90,26 +89,8 @@ public class MySqlCreateViewBuilder implements CreateViewQueryBuilder {
 	}
 
 	@Override
-	public CreateViewQueryBuilder addParameter(String name, boolean value) {
-		params.put(name, value ? "1" : "0");
-		return this;
-	}
-
-	@Override
-	public CreateViewQueryBuilder addParameter(String name, int value) {
-		params.put(name, Integer.toString(value));
-		return this;
-	}
-
-	@Override
-	public CreateViewQueryBuilder addParameter(String name, double value) {
-		params.put(name, Double.toString(value));
-		return this;
-	}
-
-	@Override
-	public CreateViewQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", SQL.escape(value)));
+	public CreateViewQueryBuilder addNotEscapedParameter(String name, String value) {
+		params.put(name, value);
 		return this;
 	}
 

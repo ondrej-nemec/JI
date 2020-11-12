@@ -6,7 +6,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import querybuilder.SQL;
 import querybuilder.UpdateQueryBuilder;
 
 public class PostgreSqlUpdateBuilder implements UpdateQueryBuilder {
@@ -55,26 +54,8 @@ public class PostgreSqlUpdateBuilder implements UpdateQueryBuilder {
 	}
 
 	@Override
-	public UpdateQueryBuilder addParameter(String name, boolean value) {
-		params.put(name, value ? "1" : "0");
-		return this;
-	}
-
-	@Override
-	public UpdateQueryBuilder addParameter(String name, int value) {
-		params.put(name, Integer.toString(value));
-		return this;
-	}
-
-	@Override
-	public UpdateQueryBuilder addParameter(String name, double value) {
-		params.put(name, Double.toString(value));
-		return this;
-	}
-
-	@Override
-	public UpdateQueryBuilder addParameter(String name, String value) {
-		params.put(name, String.format("'%s'", SQL.escape(value)));
+	public UpdateQueryBuilder addNotEscapedParameter(String name, String value) {
+		params.put(name, value);
 		return this;
 	}
 

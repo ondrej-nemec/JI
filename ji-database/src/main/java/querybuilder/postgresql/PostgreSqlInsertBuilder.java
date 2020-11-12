@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import querybuilder.InsertQueryBuilder;
-import querybuilder.SQL;
 
 public class PostgreSqlInsertBuilder implements InsertQueryBuilder {
 
@@ -26,26 +25,8 @@ public class PostgreSqlInsertBuilder implements InsertQueryBuilder {
 	}
 
 	@Override
-	public InsertQueryBuilder addValue(String columnName, String value) {
-		params.put(columnName, String.format("'%s'", SQL.escape(value)));
-		return this;
-	}
-
-	@Override
-	public InsertQueryBuilder addValue(String columnName, boolean value) {
-		params.put(columnName, Boolean.toString(value));
-		return this;
-	}
-
-	@Override
-	public InsertQueryBuilder addValue(String columnName, int value) {
-		params.put(columnName, Integer.toString(value));
-		return this;
-	}
-
-	@Override
-	public InsertQueryBuilder addValue(String columnName, double value) {
-		params.put(columnName, Double.toString(value));
+	public InsertQueryBuilder addNotEscapedValue(String columnName, String value) {
+		params.put(columnName, value);
 		return this;
 	}
 
