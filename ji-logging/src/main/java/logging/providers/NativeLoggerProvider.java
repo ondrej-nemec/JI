@@ -73,7 +73,6 @@ public class NativeLoggerProvider {
 						WriteText.write(bw, makeMessage(record));
 					}, pathToLogger, true);
 				} catch (IOException e) {
-					//TODO what do if writing falls
 					e.printStackTrace();
 				}
 			}
@@ -117,7 +116,6 @@ public class NativeLoggerProvider {
 		message.append(" ");
 		message.append(new Date(record.getMillis()));
 		message.append(" ");
-		// TODO %c
 		message.append(String.format("[%s]", record.getThreadID()));
 		message.append(" ");
 		message.append(String.format("%s:%s", record.getSourceClassName(), record.getSourceMethodName()));
