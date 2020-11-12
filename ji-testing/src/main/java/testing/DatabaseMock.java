@@ -7,6 +7,7 @@ import java.util.List;
 import common.Logger;
 import database.Database;
 import database.DatabaseConfig;
+import database.support.ConnectionFunction;
 import database.support.DoubleConsumer;
 import querybuilder.InsertQueryBuilder;
 import testing.entities.Row;
@@ -40,13 +41,14 @@ public class DatabaseMock extends Database {
     				builder.execute();
 				}
 			}
+			return null;
 		});
 	}
 	
 	@Override
-	protected DoubleConsumer getDoubleConsumer() {
-		return (consumer)->{
-			consumer.accept(connection);
+	protected <T> DoubleConsumer<T> getDoubleFunction(ConnectionFunction<T> consumer) {
+		return ()->{
+			return consumer.apply(connection);
 		};
 	}
 	

@@ -57,6 +57,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 				assertEquals(i, res.getInt(1));
 				assertEquals("Name #" + i, res.getObject(2));
 			}
+			return null;
 		});
 	}
 	
@@ -89,6 +90,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		try {
 			realDatabase.applyQuery((con)->{
 				testDbEmpty();
+				return null;
 			});
 		} catch (SQLException | RuntimeException e) {
 			assertEquals("Unknown database 'javainit_testing_test'", e.getMessage());
@@ -100,6 +102,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 			PreparedStatement stat = con.prepareStatement("select * from dbtc");
 			ResultSet res = stat.executeQuery();
 			assertFalse(res.next());
+			return null;
 		});
 	}
 	
