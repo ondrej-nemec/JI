@@ -401,17 +401,17 @@ public class QueryBuilderEndToEndTest {
 					.addParameter("%b_name", "name_b")
 					.addParameter("%a_id", 6);
 				
-				String expectedSingle = "2";
+				Object expectedSingle = 2;
 				DatabaseRow expectedRow = new DatabaseRow();
-				expectedRow.addValue("a_id", "2");
-				expectedRow.addValue("b_id", "3");
+				expectedRow.addValue("a_id", 2);
+				expectedRow.addValue("b_id", 3);
 				expectedRow.addValue("a_name", "name 2");
 				expectedRow.addValue("b_name", "name_b");
 				
 
 				DatabaseRow expectedRow2 = new DatabaseRow();
-				expectedRow2.addValue("a_id", "4");
-				expectedRow2.addValue("b_id", "5");
+				expectedRow2.addValue("a_id", 4);
+				expectedRow2.addValue("b_id", 5);
 				expectedRow2.addValue("a_name", "name_a");
 				expectedRow2.addValue("b_name", "name 5");
 				

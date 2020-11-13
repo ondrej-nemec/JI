@@ -61,7 +61,7 @@ public class MigrationPreparation {
 				.select("id")
 				.from(migrationTable)
 				.fetchAll((row)->{
-					return row.getValue("id");
+					return row.getValue("id").toString();
 				});
 		} catch (Exception ignored) {
 			builder

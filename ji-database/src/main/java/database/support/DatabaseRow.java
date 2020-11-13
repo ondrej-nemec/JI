@@ -5,19 +5,23 @@ import java.util.Map;
 
 public class DatabaseRow {
 
-	private Map<String, String> values;
+	private Map<String, Object> values;
 	
 	public DatabaseRow() {
 		this.values = new HashMap<>();
 	}
 	
-	public String getValue(final String name) {
+	public Object getValue(final String name) {
 		return values.get(name);
 	}
 	
-	public void addValue(String key, String value) {
+	public void addValue(String key, Object value) {
 		// to lower case - some db change column name
 		values.put(key.toLowerCase(), value);
+	}
+	
+	public Map<String, Object> getValues() {
+		return values;
 	}
 	
 	@Override

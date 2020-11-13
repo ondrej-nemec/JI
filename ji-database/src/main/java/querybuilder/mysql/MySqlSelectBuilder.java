@@ -105,11 +105,11 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 	}
 
 	@Override
-	public String fetchSingle() throws SQLException {
+	public Object fetchSingle() throws SQLException {
 		try (Statement stat = connection.createStatement(); ResultSet res  = stat.executeQuery(createSql());) {
-			String result = null;
+			Object result = null;
 			if (res.next()) {
-				result = res.getString(1);
+				result = res.getObject(1);
     		}
     		return result;
 		}
@@ -123,7 +123,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
     			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
     				row.addValue(
     					res.getMetaData().getColumnLabel(i),
-    					res.getString(i)
+    					res.getObject(i)
     				);
     			}
     		}
@@ -140,7 +140,7 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
     			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
     				row.addValue(
     					res.getMetaData().getColumnLabel(i),
-    					res.getString(i)
+    					res.getObject(i)
     				);
     			}
     			rows.add(row);
