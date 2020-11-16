@@ -19,15 +19,17 @@ public class AuthorizationHelper {
 	}
 	
 	public void throwIfIsNotAllowed(final AclUser who, final AclDestination where, final Action what) {
-		if(!isAllowed(who, where, what))
+		if(!isAllowed(who, where, what)) {
 			throw new AccessDeniedException(who, where, what);
+		}
 	}
 	
 	public boolean isAllowed(final AclUser who, final AclDestination where, final Action what) {
 		logger.debug("Access required: " + who + " -> " + where + " -> " + what);
 		
-		if (what == Action.FORBIDDEN || what == Action.UNDEFINED)
+		if (what == Action.FORBIDDEN || what == Action.UNDEFINED) {
 			throw new NotAllowedActionException(what);
+		}
 		
 		Rules rules = rulesDao.getRulesForUser(who, where);
 		
