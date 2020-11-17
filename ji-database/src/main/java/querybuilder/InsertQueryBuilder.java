@@ -36,6 +36,6 @@ public interface InsertQueryBuilder {
 	
 	String getSql();
 	
-	int execute() throws SQLException;
+	Object execute() throws SQLException;
 
 }

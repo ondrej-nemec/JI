@@ -325,7 +325,7 @@ public class QueryBuilderEndToEndTest {
 	@Test
 	public void testExecuteInsert() throws Exception {
 		test("insert", (conn, builder)->{
-			int code = builder
+			Object code = builder
 					.insert("insert_table")
 					.addValue("id", 1)
 					.addValue("name", "column_name")

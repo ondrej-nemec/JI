@@ -236,7 +236,7 @@ public class EndToEndTest {
 	//@Test
 	public void testExecuteInsert() throws SQLException {
 		database.applyBuilder((builder) -> {
-			int code = builder.insert("insert_table")
+			Object code = builder.insert("insert_table")
 				.addValue("id", "1")
 				.addValue("name", "column_name")
 			    .execute();

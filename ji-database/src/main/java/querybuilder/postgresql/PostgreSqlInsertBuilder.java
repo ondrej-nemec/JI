@@ -31,12 +31,12 @@ public class PostgreSqlInsertBuilder implements InsertQueryBuilder {
 	}
 
 	@Override
-	public int execute() throws SQLException {
+	public Object execute() throws SQLException {
 		try (PreparedStatement stat = connection.prepareStatement(getSql(), Statement.RETURN_GENERATED_KEYS)) {
 			stat.executeUpdate();
 			try(ResultSet rs = stat.getGeneratedKeys();){
 				if (rs.next()) {
-					return rs.getInt(1);
+					return rs.getObject(1);
 				}
 				return -1; // if no key generated - can be valid state
 			}
