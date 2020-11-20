@@ -23,10 +23,10 @@ public class MigrationPreparation {
 	public List<String> getFilesToMigrate(List<String> loadedFiles, boolean isRevert, QueryBuilder builder) throws SQLException, MigrationException {
 		// validace
 		List<String> migrated = selectMigrations(builder);
-		if (migrated.size() > loadedFiles.size()) {
+		/*if (migrated.size() > loadedFiles.size()) {
 			throw new MigrationException();
 		}
-		
+		*/
 		int indexOfLastMigrated = indexOfLastMigrated(loadedFiles, migrated);
 		// no migration in db - no to revert, all for migrate
 		if (indexOfLastMigrated == -1) {
