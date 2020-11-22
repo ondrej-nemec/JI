@@ -24,9 +24,11 @@ public class SingleMigrationTool {
 	private final SqlMigration sql;
 	
 	private final JavaMigration java;
+	
+	private final String module;
 		
 	public SingleMigrationTool(
-			String migrationTable, String allwaysId, String separator,
+			String module, String migrationTable, String allwaysId, String separator,
 			JavaMigration java, SqlMigration sql, Logger logger) {
 		this.logger = logger;
 		this.migrationTable = migrationTable;
@@ -34,6 +36,7 @@ public class SingleMigrationTool {
 		this.sql = sql;
 		this.allwaysId = allwaysId;
 		this.separator = separator;
+		this.module = module;
 	}
 
 	public void transaction(String file, QueryBuilder builder, boolean isRevert) throws Exception {
@@ -52,7 +55,7 @@ public class SingleMigrationTool {
 			}
 			IdSeparator id = new IdSeparator(ex.getName(), separator);
 			if (!id.getId().contains(allwaysId)) {
-				idToDb(id.getId(), id.getDesc(), builder, isRevert);
+				idToDb(id.getId(), id.getDesc(), module, builder, isRevert);
 			}
 			con.commit();
 		} catch (Exception e) {
@@ -61,16 +64,20 @@ public class SingleMigrationTool {
 		}
 	}
 	
-	private void idToDb(String id, String description, QueryBuilder builder, boolean isRevert) throws SQLException {
+	private void idToDb(String id, String description, String module, QueryBuilder builder, boolean isRevert) throws SQLException {
 		if (isRevert) {
 			logger.warn("Migration reverted: " + id);
-			builder.delete(migrationTable).where("id = :id").addParameter(":id", id).execute();
+			builder.delete(migrationTable)
+				.where("id = :id").addParameter(":id", id)
+				.andWhere("Module = :module").addParameter(":module", module)
+				.execute();
 		} else {
 			builder
 	    		.insert(migrationTable)
 	    		.addValue("id", id)
 	    		.addValue("Description", description)
 	    		.addValue("DateTime", DateTime.format("YYYY-mm-dd H:m:s"))
+	    		.addValue("Module", module)
 	    		.execute();
 		}
 	}

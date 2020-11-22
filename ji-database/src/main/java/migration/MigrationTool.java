@@ -67,14 +67,14 @@ public class MigrationTool {
 		for (String folder : folders) {
 			MigrationFiles files = new MigrationFiles(folder);
 			MigrationPreparation prep = new MigrationPreparation(MIGRATION_TABLE, SEPARATOR);
-			List<String> filesToMigrate = prep.getFilesToMigrate(files.getFiles(), isRevert, builder);
+			List<String> filesToMigrate = prep.getFilesToMigrate(folder, files.getFiles(), isRevert, builder);
 			URL[] urls = new URL[]{files.getDir().toURI().toURL()};
 			
 			// each migration
 			try (URLClassLoader loader = new URLClassLoader(urls);) {
 	    		SqlMigration sql = new SqlMigration(folder, isRevert, files.isInClasspath());
 	    		JavaMigration java = new JavaMigration(folder, loader, isRevert, files.isInClasspath());
-				SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, logger);
+				SingleMigrationTool tool = new SingleMigrationTool(folder, MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, logger);
 	    		process.process(filesToMigrate, tool, builder);
 	    	}
 		}

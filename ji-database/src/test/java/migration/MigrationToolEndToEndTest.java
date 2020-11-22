@@ -43,6 +43,36 @@ public class MigrationToolEndToEndTest {
 	private final String dbName = "javainit_migration_test";
 	
 	@Test
+	public void testMigrateOnSecondTime() throws Exception {
+		Connection c = createConnection();
+		c.setAutoCommit(false);
+		
+		QueryBuilder queryBuilder = new MySqlQueryBuilder(c);
+		try {
+			MigrationTool tableCreate = new MigrationTool(Arrays.asList("empty"), queryBuilder, Mockito.mock(Logger.class));
+			tableCreate.migrate();
+		} catch (Exception ignored) {
+			// this block for creating table
+		}		
+		queryBuilder.insert("migrations")
+			.addValue("id", "A")
+			.addValue("Description", "desc")
+			.addValue("DateTime", "2020-11-21 9:00:00")
+			.addValue("Module", "test/migA")
+			.execute();
+		
+		MigrationTool tool = new MigrationTool(
+			Arrays.asList("test/migA", "test/migB"), 
+			queryBuilder,
+			Mockito.mock(Logger.class)
+		);
+		tool.migrate();
+		
+		c.rollback();
+		c.close();
+	}
+	
+	@Test
 	@Parameters(method = "dataMigrateMakeMigrations")
 	public void testMigrateMakeMigrations(String folder) throws Exception {
 		Connection c = createConnection();

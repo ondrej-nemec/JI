@@ -10,14 +10,19 @@ public class IdSeparator {
 	
 	public IdSeparator(String name, String separator) {
 		if (!name.contains(separator)) {
-			throw new RuntimeException("File name is in incorrect format: " + name);
+			throw new RuntimeException("File name is in incorrect format: " + name + ", separator is required: " + separator);
 		}
 		String[] aux = new FileExtension(name).getName().split(separator);
-		if (aux.length != 2) {
-			throw new RuntimeException("File name is in incorrect format: " + name);
+		if (aux.length == 2) {
+			this.id = aux[0];
+			this.desc = aux[1];
+		} else {
+			throw new RuntimeException(
+				"File name is in incorrect format: " + name + ", required format: "
+				+ String.format("[<module>%s]<id>%s<description>", separator, separator)
+			);
 		}
-		this.id = aux[0];
-		this.desc = aux[1];
+		
 	}
 
 	public String getId() {

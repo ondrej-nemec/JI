@@ -20,13 +20,13 @@ public class MigrationPreparation {
 		this.separator = idSeparator;
 	}
 
-	public List<String> getFilesToMigrate(List<String> loadedFiles, boolean isRevert, QueryBuilder builder) throws SQLException, MigrationException {
+	public List<String> getFilesToMigrate(String module, List<String> loadedFiles, boolean isRevert, QueryBuilder builder) throws SQLException, MigrationException {
 		// validace
-		List<String> migrated = selectMigrations(builder);
-		/*if (migrated.size() > loadedFiles.size()) {
+		List<String> migrated = selectMigrations(builder, module);
+		if (migrated.size() > loadedFiles.size()) {
 			throw new MigrationException();
 		}
-		*/
+		
 		int indexOfLastMigrated = indexOfLastMigrated(loadedFiles, migrated);
 		// no migration in db - no to revert, all for migrate
 		if (indexOfLastMigrated == -1) {
@@ -55,11 +55,13 @@ public class MigrationPreparation {
 		return index;
 	}
 	
-	private List<String> selectMigrations(QueryBuilder builder) throws SQLException {
+	private List<String> selectMigrations(QueryBuilder builder, String module) throws SQLException {
 		try {
 			return builder
 				.select("id")
 				.from(migrationTable)
+				.where("Module = :module")
+				.addParameter(":module", module)
 				.fetchAll((row)->{
 					return row.getValue("id").toString();
 				});
@@ -69,6 +71,7 @@ public class MigrationPreparation {
 				.addColumn("id", ColumnType.string(100), ColumnSetting.NOT_NULL, ColumnSetting.PRIMARY_KEY)
 				.addColumn("Description", ColumnType.string(100), ColumnSetting.NOT_NULL)
 				.addColumn("DateTime", ColumnType.string(100), ColumnSetting.NOT_NULL)
+				.addColumn("Module", ColumnType.string(400), ColumnSetting.NULL)
 				.execute();
 		}
 		return new LinkedList<>();

@@ -35,6 +35,7 @@ public class SingleMigrationToolTest {
 		
 		DeleteQueryBuilder delete = mock(DeleteQueryBuilder.class);
 		when(delete.where(any())).thenReturn(delete);
+		when(delete.andWhere(any())).thenReturn(delete);
 		when(delete.addParameter(any(), any())).thenReturn(delete);
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
@@ -45,14 +46,15 @@ public class SingleMigrationToolTest {
 		SqlMigration sql = mock(SqlMigration.class);
 		JavaMigration java = mock(JavaMigration.class);
 		
-		SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, mock(Logger.class));
+		SingleMigrationTool tool = new SingleMigrationTool("module", MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, mock(Logger.class));
 		tool.transaction(name + "." + extension, builder, isRevert);
 		if (!isRevert) {
-    		verify(insert, times(3)).addValue(any(), any());
+    		verify(insert, times(4)).addValue(any(), any());
     		verify(insert, times(1)).execute();
 		} else {
     		verify(delete, times(1)).where(any());
-    		verify(delete, times(1)).addParameter(any(), any());
+    		verify(delete, times(1)).andWhere(any());
+    		verify(delete, times(2)).addParameter(any(), any());
     		verify(delete, times(1)).execute();
 		}
     	verifyNoMoreInteractions(insert);
@@ -91,7 +93,7 @@ public class SingleMigrationToolTest {
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.getConnection()).thenReturn(con);
 		
-		SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, null, null, mock(Logger.class)); // java, sql null for throwing exceptin
+		SingleMigrationTool tool = new SingleMigrationTool("module", MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, null, null, mock(Logger.class)); // java, sql null for throwing exceptin
 		try {
 			tool.transaction(file, builder, isRevert);
 			fail("NullPointerException required");
@@ -126,7 +128,7 @@ public class SingleMigrationToolTest {
 		SqlMigration sql = mock(SqlMigration.class);
 		JavaMigration java = mock(JavaMigration.class);
 		
-		SingleMigrationTool tool = new SingleMigrationTool(MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, mock(Logger.class));
+		SingleMigrationTool tool = new SingleMigrationTool("module", MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, mock(Logger.class));
 		tool.transaction("ALLWAYS_1__desc.java", builder, false);
 		tool.transaction("ALLWAYS_1__desc.sql", builder, false);
 		

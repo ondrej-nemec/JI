@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public class MultiModulesMigrationTest {
 	public void testMigrateWithDirs() throws Exception {
 		QueryBuilder queryBuilder = new MySqlQueryBuilder(createCon());
 		MigrationTool tool = new MigrationTool(
-			Arrays.asList("ji-database-a/migA", "ji-database-b/migB"), 
+			Arrays.asList("test/migA", "test/migB"), 
 			queryBuilder,
 			Mockito.mock(Logger.class)
 		);
@@ -42,6 +43,11 @@ public class MultiModulesMigrationTest {
 	private Connection createCon() throws SQLException {
 		Connection con = mock(Connection.class);
 		when(con.prepareStatement(any())).thenReturn(mock(PreparedStatement.class));
+		
+		PreparedStatement statement = mock(PreparedStatement.class);
+		ResultSet rs = mock(ResultSet.class);
+		when(statement.getGeneratedKeys()).thenReturn(rs);
+		when(con.prepareStatement(any(), anyInt())).thenReturn(statement);
 		when(con.createStatement()).thenReturn(mock(Statement.class));
 		return con;
 	}
