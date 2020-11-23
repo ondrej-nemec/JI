@@ -40,7 +40,7 @@ public class PropertiesTranslator implements Translator {
 				messages.putAll(prop);
 			} catch (IOException e) {
 				logger.warn("Cannot load properies file: " + name);
-				String name2 = String.format("%s.%s.properties", file, locale);
+				String name2 = String.format("%s.properties", file);
 				try {
 					Properties prop = PropertiesLoader.loadProperties(name2);
 					messages.putAll(prop);
