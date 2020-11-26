@@ -19,6 +19,12 @@ import utils.enums.AppMode;
 @RunWith(JUnitParamsRunner.class)
 public class EnvTest {
 
+	@Test
+	public void testGetEnumWorks() throws FileNotFoundException, IOException {
+		Env env = new Env("env/app.properties");
+		assertEquals(AppMode.DEV, env.getEnum("app.mode", AppMode.class));
+	}
+	
 	@Test(expected = IOException.class)
 	public void testConstructorForFilesThrowIfNoFileInDir() throws FileNotFoundException, IOException {
 		new Env("env/not-existing.properties");

@@ -49,6 +49,10 @@ public class Env {
 		return Arrays.asList(getString(key).split(delimiter));
 	}
 	
+	public <E extends Enum<E>> E getEnum(String key, Class<E> enumm) {
+		return E.valueOf(enumm, getString(key));
+	}
+	
 	public AppMode getAppMode() {
 		String mode = properties.getProperty("app.mode");
 		if (mode == null)
