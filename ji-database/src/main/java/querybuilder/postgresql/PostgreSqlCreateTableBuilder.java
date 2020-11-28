@@ -3,6 +3,7 @@ package querybuilder.postgresql;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
@@ -37,8 +38,10 @@ public class PostgreSqlCreateTableBuilder implements CreateTableQueryBuilder {
 			sql.append(",");
 		}
 		first = false;
-		sql.append(" ").append(name).append(" ");
-		sql.append(EnumToPostgresqlString.typeToString(type));
+		sql.append(" ").append(name);
+		if (!Arrays.asList(settings).contains(ColumnSetting.AUTO_INCREMENT)) {
+			sql.append(" ").append(EnumToPostgresqlString.typeToString(type));
+		}
 		sql.append(EnumToPostgresqlString.defaultValueToString(defaultValue));
 		for (ColumnSetting setting : settings) {
 			sql.append(EnumToPostgresqlString.settingToString(setting, name, append));

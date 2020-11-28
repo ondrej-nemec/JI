@@ -26,7 +26,7 @@ public class PostgreSqlCreateTableBuilderTest {
 					.addForeingKey("Column_4", "Table2", "id", OnAction.CASCADE, OnAction.SET_NULL);
 		
 		String expected = "CREATE TABLE Table1 ("
-				+ " Column_1 INT SERIAL,"
+				+ " Column_1 SERIAL,"
 				+ " Column_2 BOOLEAN NOT NULL,"
 				+ " Column_3 DATETIME UNIQUE,"
 				+ " Column_4 TEXT NULL,"
