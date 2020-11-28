@@ -51,6 +51,7 @@ public class EnumToPostgresqlString {
 		switch (type.getType()) {
     		case STRING:
     			return String.format("VARCHAR(%s)", type.getSize());
+    		case DATETIME: return "TIMESTAMP";
     		default: return type.getType().toString();
 		}
 	}

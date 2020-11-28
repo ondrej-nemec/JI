@@ -28,7 +28,7 @@ public class PostgreSqlCreateTableBuilderTest {
 		String expected = "CREATE TABLE Table1 ("
 				+ " Column_1 SERIAL,"
 				+ " Column_2 BOOLEAN NOT NULL,"
-				+ " Column_3 DATETIME UNIQUE,"
+				+ " Column_3 TIMESTAMP UNIQUE,"
 				+ " Column_4 TEXT NULL,"
 				+ " Column_5 VARCHAR(50) DEFAULT 'some text' NOT NULL,"
 				+ " CONSTRAINT FK_Column_4 FOREIGN KEY (Column_4) REFERENCES Table2(id) ON DELETE CASCADE ON UPDATE SET NULL,"
