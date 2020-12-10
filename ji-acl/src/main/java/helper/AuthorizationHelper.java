@@ -5,6 +5,7 @@ import exception.NotAllowedActionException;
 import interfaces.AclDestination;
 import interfaces.RulesDao;
 import interfaces.AclUser;
+
 import common.Logger;
 
 public class AuthorizationHelper {
@@ -31,24 +32,19 @@ public class AuthorizationHelper {
 			throw new NotAllowedActionException(what);
 		}
 		
-		Rules rules = rulesDao.getRulesForUser(who, where);
-		
-		Action userId = rules.getForUserId();		
-		if (userId != Action.UNDEFINED) {
-			return isAllowed(userId, what);
+		Rules rules = rulesDao.getRulesForUserAndGroups(who, where);
+		if (rules.getForUserId() != Action.UNDEFINED) {
+			return isAllowed(rules.getForUserId(), what);
 		}
 		
-		Action userRank = rules.getForUserRank();
-		if (userRank != Action.UNDEFINED) {
-			return isAllowed(userRank, what);
+		Action action = Action.UNDEFINED;
+		for (AccessRule rule : rules.getAccess()) {
+			if (rule.getRank() == null || rule.getRank() <= who.getRank()) {
+				action = selectRole(action, rule.getAction());
+			}
 		}
-		
-		Action roleId = Action.UNDEFINED;
-		for (Action actualRole : rules.getForRoleIds()) {
-			roleId = selectRole(roleId, actualRole);
-		}
-		if (roleId != Action.UNDEFINED) {
-			return isAllowed(roleId, what);
+		if (action != Action.UNDEFINED) {
+			return isAllowed(action, what);
 		}
 		
 		logger.warn("No access rule for: " + who + " -> " + where + " -> " + what); 

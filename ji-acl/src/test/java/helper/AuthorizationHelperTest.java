@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -33,15 +32,12 @@ public class AuthorizationHelperTest {
 		
 		RulesDao mock = mock(RulesDao.class);
 		
-		when(mock.getRulesForUser(user, domain)).thenReturn(
-			new Rules(Action.UNDEFINED, Action.UNDEFINED, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			new Rules(Action.UNDEFINED, Arrays.asList())
 		);
 		
 		AuthorizationHelper helper = getHelper(mock);
-		assertEquals(
-				false,
-				helper.isAllowed(user, domain, action)
-		);
+		assertEquals(false, helper.isAllowed(user, domain, action));
 	}
 	
 	public Object[] parametersForTestIsAllowedReturnFalseIfNoRulesGiven() {
@@ -88,16 +84,16 @@ public class AuthorizationHelperTest {
 		AclDestination destination = getDestination("user-id-rule");
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUser(allowed, destination)).thenReturn(
-			new Rules(Action.CREATE, Action.UNDEFINED, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
+			new Rules(Action.CREATE)
 		);
 		
-		when(mock.getRulesForUser(forbidden, destination)).thenReturn(
-			new Rules(Action.FORBIDDEN, Action.UNDEFINED, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(forbidden, destination)).thenReturn(
+			new Rules(Action.FORBIDDEN)
 		);
 		
-		when(mock.getRulesForUser(disallowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Action.UNDEFINED, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(disallowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED)
 		);
 		
 		AuthorizationHelper helper = getHelper(mock);
@@ -128,38 +124,45 @@ public class AuthorizationHelperTest {
 	}		
 
 	@Test
-	@Parameters
-	public void testIsAllowedWithUserRankRules(Action action, boolean isAllowed) {		
-		AclRole role = getRole("role");
-		AclUser allowed = getUser("allowed", 10, role);
+	@Parameters(method = "dataIsAllowedWithAccessRules")
+	public void testIsAllowedWithAccessRules(Action action, boolean isAllowed, int rank) {
+		AclUser allowed = getUser("allowed", rank, getRole(""));
 		AclDestination destination = getDestination("user-id-rule");
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUser(allowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Action.CREATE, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
+			new Rules(Arrays.asList(
+					new AccessRule(null, Action.UNDEFINED),
+					new AccessRule(null, Action.CREATE),
+					new AccessRule(15, Action.UNDEFINED),
+					new AccessRule(null, Action.UPDATE),
+					new AccessRule(15, Action.DELETE)
+			))
 		);
 		
 		AuthorizationHelper helper = getHelper(mock);
-		
-		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));		
+		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));
 	}
 	
-	public Object[] parametersForTestIsAllowedWithUserRankRules() {
+	public Object[] dataIsAllowedWithAccessRules() {
 		return new Object[] {
 				new Object[]{
-						Action.READ, true	
+						Action.READ, true, 10	
 				},
 				new Object[]{
-						Action.UPDATE, true
+						Action.UPDATE, true, 10
 				},
 				new Object[]{
-						Action.CREATE, true
+						Action.CREATE, true, 10
 				},
 				new Object[]{
-						Action.DELETE, false
+						Action.DELETE, false, 10
 				},
 				new Object[]{
-						Action.ADMIN, false	
+						Action.DELETE, true, 15
+				},
+				new Object[]{
+						Action.ADMIN, false	, 10
 				}
 		};
 	}
@@ -178,18 +181,21 @@ public class AuthorizationHelperTest {
 		AclDestination destination = getDestination("user-id-rule");
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUser(allowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Action.UNDEFINED, Arrays.asList(
-					Action.UNDEFINED, Action.CREATE, Action.UNDEFINED, Action.UPDATE
-				)
-			)
+		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Arrays.asList(
+					new AccessRule(null, Action.UNDEFINED),
+					new AccessRule(null, Action.CREATE),
+					new AccessRule(null, Action.UNDEFINED),
+					new AccessRule(null, Action.UPDATE)
+			))
 		);
-		when(mock.getRulesForUser(disallowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Action.UNDEFINED, Arrays.asList(Action.UNDEFINED))
+		when(mock.getRulesForUserAndGroups(disallowed, destination)).thenReturn(
+			new Rules(Action.UNDEFINED, Arrays.asList(new AccessRule(null, Action.UNDEFINED)))
 		);
-		when(mock.getRulesForUser(forbidden, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Action.UNDEFINED, Arrays.asList(
-					Action.UNDEFINED, Action.FORBIDDEN
+		when(mock.getRulesForUserAndGroups(forbidden, destination)).thenReturn(
+			new Rules(Action.UNDEFINED,Arrays.asList(
+					new AccessRule(null, Action.UNDEFINED),
+					new AccessRule(null, Action.FORBIDDEN)
 				)
 			)
 		);
@@ -235,8 +241,8 @@ public class AuthorizationHelperTest {
 		AclDestination destination = getDestination("user-id-rule");
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUser(user, destination)).thenReturn(
-			new Rules(userId, userRank, Arrays.asList(roleId))
+		when(mock.getRulesForUserAndGroups(user, destination)).thenReturn(
+			new Rules(userId, Arrays.asList(new AccessRule(10, userRank)))
 		);
 		
 		AuthorizationHelper helper = getHelper(mock);
@@ -271,8 +277,8 @@ public class AuthorizationHelperTest {
 		AclDestination destination = getDestination("user-id-rule");
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUser(disallowed, destination)).thenReturn(
-			new Rules(Action.READ, Action.UNDEFINED, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(disallowed, destination)).thenReturn(
+			new Rules(Action.READ, Arrays.asList(new AccessRule(null, Action.UNDEFINED)))
 		);
 				
 		AuthorizationHelper helper = getHelper(mock);
@@ -290,8 +296,8 @@ public class AuthorizationHelperTest {
 		AclDestination destination = getDestination("user-id-rule");
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUser(allowed, destination)).thenReturn(
-			new Rules(Action.CREATE, Action.UNDEFINED, new LinkedList<>())
+		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
+			new Rules(Action.CREATE, Arrays.asList(new AccessRule(null, Action.UNDEFINED)))
 		);
 				
 		AuthorizationHelper helper = getHelper(mock);
