@@ -14,6 +14,10 @@ public abstract class QueryBuilder {
 		return connection;
 	}
 	
+	public BatchBuilder batch() {
+		return new BatchBuilder(connection);
+	}
+	
 	/***********************/
 	
 	public abstract DeleteQueryBuilder delete(String table);

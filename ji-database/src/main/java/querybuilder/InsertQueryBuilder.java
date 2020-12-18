@@ -2,18 +2,7 @@ package querybuilder;
 
 import java.sql.SQLException;
 
-public interface InsertQueryBuilder {
-	/*
-	InsertQueryBuilder addValue(String columnName, String value);
-	
-	InsertQueryBuilder addValue(String columnName, boolean value);
-	
-	InsertQueryBuilder addValue(String columnName, int value);
-	
-	InsertQueryBuilder addValue(String columnName, double value);
-	
-	InsertQueryBuilder addNullValue(String columnName);
-	*/
+public interface InsertQueryBuilder extends Batch {
 	
 	InsertQueryBuilder addNotEscapedValue(String columnName, String value);
 	
@@ -37,5 +26,10 @@ public interface InsertQueryBuilder {
 	String getSql();
 	
 	Object execute() throws SQLException;
+	
+	@Override
+	default String getQuerySql() {
+		return getSql();
+	}
 
 }

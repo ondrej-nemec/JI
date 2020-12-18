@@ -2,7 +2,7 @@ package querybuilder;
 
 import java.sql.SQLException;
 
-public interface AlterTableQueryBuilder {
+public interface AlterTableQueryBuilder extends Batch {
 
 	AlterTableQueryBuilder addColumn(String name, ColumnType type, ColumnSetting... settings);
 
@@ -23,4 +23,9 @@ public interface AlterTableQueryBuilder {
 	void execute() throws SQLException;
 	
 	String getSql();
+	
+	@Override
+	default String getQuerySql() {
+		return getSql();
+	}
 }

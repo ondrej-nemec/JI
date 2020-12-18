@@ -25,13 +25,14 @@ public class SqlMigration implements SingleMigration {
 	@Override
 	public void migrate(String name, QueryBuilder builder) throws Exception {
 		String[] batches = loadContent(path + "/" + name, isRevert, isInclasspath).split(";");
-		Statement stat = builder.getConnection().createStatement();
-		for (String batch : batches) {
-			if (!batch.trim().isEmpty()) {
-				stat.addBatch(batch.trim());
+		try (Statement stat = builder.getConnection().createStatement()) {
+			for (String batch : batches) {
+				if (!batch.trim().isEmpty()) {
+					stat.addBatch(batch.trim());
+				}
 			}
+			stat.executeBatch();
 		}
-		stat.executeBatch();
 	}
 
 	private String loadContent(String file, boolean isRevert, boolean isInclasspath) throws IOException {
