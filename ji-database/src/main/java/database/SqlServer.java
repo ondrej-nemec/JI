@@ -2,13 +2,11 @@ package database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Properties;
 
-import common.Logger;
 import querybuilder.QueryBuilder;
 
 public class SqlServer implements DatabaseInstance {
-	
+	/*
 	private final Logger logger;
 	
 	private final String connectionString;
@@ -23,7 +21,7 @@ public class SqlServer implements DatabaseInstance {
 		this.property = property;
 		this.name = name;
 	}
-
+*/
 	@Override
 	public void startServer() {
 		// TODO Auto-generated method stub

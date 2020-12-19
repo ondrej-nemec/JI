@@ -12,7 +12,7 @@ public class MySqlUpdateBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
-		DoubleConsumer mock = mock(DoubleConsumer.class);
+		DoubleConsumer<?> mock = mock(DoubleConsumer.class);
 		UpdateQueryBuilder builder = new MySqlUpdateBuilder(null, "table_name")
 					.set("name = :name")
 					.set("value = :value")

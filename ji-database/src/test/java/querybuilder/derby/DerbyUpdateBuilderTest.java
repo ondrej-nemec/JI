@@ -12,7 +12,7 @@ public class DerbyUpdateBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
-		DoubleConsumer mock = mock(DoubleConsumer.class);
+		DoubleConsumer<?> mock = mock(DoubleConsumer.class);
 		UpdateQueryBuilder builder = new DerbyUpdateBuilder(null, "table_name")
 					.set("name = :name")
 					.set("value = :value")

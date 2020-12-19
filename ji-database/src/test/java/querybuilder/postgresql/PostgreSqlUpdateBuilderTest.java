@@ -12,7 +12,7 @@ public class PostgreSqlUpdateBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
-		DoubleConsumer mock = mock(DoubleConsumer.class);
+		DoubleConsumer<?> mock = mock(DoubleConsumer.class);
 		UpdateQueryBuilder builder = new PostgreSqlUpdateBuilder(null, "table_name")
 					.set("name = :name")
 					.set("value = :value")
