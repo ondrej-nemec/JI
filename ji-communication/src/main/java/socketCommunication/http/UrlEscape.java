@@ -40,6 +40,11 @@ public class UrlEscape {
 	
 	// http://localhost:10123/aaa/bbb?hidden1=hiden_value&text1=%7Ba%7Dbcde&submit1=Send
 
+	/**
+	 * Replaced by https://www.baeldung.com/java-url-encoding-decoding
+	 * @param text
+	 * @return
+	 */
 	@Deprecated
 	public static String unEscapeText(String text) {
 		text = text.replaceAll("\\+", " ");
@@ -49,6 +54,11 @@ public class UrlEscape {
 		return text;
 	}
 	
+	/**
+	 * Replaced by https://www.baeldung.com/java-url-encoding-decoding
+	 * @param text
+	 * @return
+	 */
 	@Deprecated
 	public static String escapeText(String text) {
 		for (String key : ESCAPE.getSeconds()) {

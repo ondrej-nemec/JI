@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static common.MapInit.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -24,7 +25,7 @@ public class RestApiServerTest {
 	
 	@Test
 	@Parameters(method = "dataParseFirstSplitFirstLine")
-	public void testParseFirstSplitFirstLine(String line, Properties expectedRequest, Properties expectedParams) {
+	public void testParseFirstSplitFirstLine(String line, Properties expectedRequest, Properties expectedParams) throws UnsupportedEncodingException {
 		RestApiServer api = getApi();
 		
 		Properties actualRequest = new Properties();
@@ -105,7 +106,7 @@ public class RestApiServerTest {
 	
 	@Test
 	@Parameters(method = "dataParsePayloadFillParamsProperties")
-	public void testParsePayloadFillParamsProperties(Properties expected, String payload) {
+	public void testParsePayloadFillParamsProperties(Properties expected, String payload) throws UnsupportedEncodingException {
 		RestApiServer api = getApi();
 		Properties actual = new Properties();
 		api.parsePayload(actual, payload);

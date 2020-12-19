@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.Optional;
 import java.util.Properties;
@@ -102,7 +103,7 @@ public class RestApiClientTest {
 
 	@Test
 	@Parameters(method = "dataAddParametersReturnExpectedUrl")
-	public void testAddParametersReturnExpectedUrl(String expected, HttpMethod method) {
+	public void testAddParametersReturnExpectedUrl(String expected, HttpMethod method) throws UnsupportedEncodingException {
 		Properties params = new Properties();
 		params.put("key1", "value1");
 		params.put("key2", "value2");
