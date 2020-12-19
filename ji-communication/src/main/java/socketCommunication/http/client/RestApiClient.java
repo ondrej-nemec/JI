@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -26,7 +29,6 @@ import core.text.Binary;
 import core.text.InputStreamLoader;
 import socketCommunication.ClientSecuredCredentials;
 import socketCommunication.http.HttpMethod;
-import socketCommunication.http.UrlEscape;
 
 public class RestApiClient {
 	
@@ -160,7 +162,7 @@ public class RestApiClient {
 		}
 	}
 
-	protected String createUrl(String server, String uri, HttpMethod method, Properties params) {
+	protected String createUrl(String server, String uri, HttpMethod method, Properties params) throws UnsupportedEncodingException {
 		if (HttpMethod.GET.equals(method)) {
 			return server + uri + "?" + getParamsString(params);
 		}
@@ -168,18 +170,21 @@ public class RestApiClient {
 	}
 	
 	// TODO test this method
-	protected String getParamsString(Properties params) {
+	protected String getParamsString(Properties params) throws UnsupportedEncodingException {
 		StringBuilder b = new StringBuilder();
-		params.forEach((name, value)->{
+		for (Object name : params.keySet()) {
+			Object value = params.get(name);
 			if (!b.toString().isEmpty()) {
 				b.append("&");
 			}
 			b.append(String.format(
 					"%s=%s",
+					URLEncoder.encode(name + "", StandardCharsets.UTF_8.toString()),
+					URLEncoder.encode(value + "", StandardCharsets.UTF_8.toString())/*
 					UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
-					UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null
+					UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null*/
 			));
-		});
+		}
 		return b.toString();
 	}
 	

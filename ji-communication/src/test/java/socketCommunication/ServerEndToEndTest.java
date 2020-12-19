@@ -65,6 +65,11 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, Properties params, String ip) throws IOException {
+				System.err.println("Params");
+				params.forEach((key, value)->{
+					System.err.println(key + ": " + value);
+				});
+				System.err.println();
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
 					return getCert();
 				}*/
@@ -176,7 +181,9 @@ public class ServerEndToEndTest {
 					(bw)->{
 						bw.write(String.format(
 								"<html> <head></head><body><h1>Time</h1>%s"
-								+ "<br><form method='post'><label for='name'></label><input type='text' name='name'/>"
+								+ "<br><form method='post' action='?aaa=asd *;'>"
+								+ "<label for='name'></label><input type='text' name='name'/>"
+								+ "<label for='name2'></label><input type='text' name='name2'/>"
 								+ "<input type='submit' value='submit'></form>"
 								+ "<br><br>"
 								//+ "<img src='final.gif'/>"

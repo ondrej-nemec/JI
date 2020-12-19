@@ -7,7 +7,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +21,6 @@ import java.util.regex.Pattern;
 import common.Logger;
 import socketCommunication.Servant;
 import socketCommunication.http.HttpMethod;
-import socketCommunication.http.UrlEscape;
 
 public class RestApiServer implements Servant {
 	
@@ -217,7 +219,7 @@ public class RestApiServer implements Servant {
 	}
 
 	/** protected for test only */
-	protected void parseFirst(Properties request, Properties params, String first) {
+	protected void parseFirst(Properties request, Properties params, String first) throws UnsupportedEncodingException {
 		String[] methods = first.split(" ");
 		if (methods.length != 3) {
 			logger.warn("Invalid request: " + first);
@@ -251,17 +253,19 @@ public class RestApiServer implements Servant {
 	}
 
 	/** protected for test only */
-	protected void parsePayload(Properties prop, String payload) {
+	protected void parsePayload(Properties prop, String payload) throws UnsupportedEncodingException {
 		if (payload.isEmpty()) {
 			return;
 		}
-		String[] params = payload.split("\\&");
+
+		String url = URLDecoder.decode(payload, StandardCharsets.UTF_8.toString());
+		String[] params = url.split("\\&");
 		for (String param : params) {
 			String[] keyValue = param.split("=");
 			if (keyValue.length == 1) {
-				prop.put(UrlEscape.unEscapeText(keyValue[0]), "");
+				prop.put(keyValue[0], "");
 			} else if (keyValue.length == 2) {
-				prop.put(UrlEscape.unEscapeText(keyValue[0]), UrlEscape.unEscapeText(keyValue[1]));
+				prop.put(keyValue[0], keyValue[1]);
 			} else {
 	    		logger.warn("Invalid param " + param);
 	    	}

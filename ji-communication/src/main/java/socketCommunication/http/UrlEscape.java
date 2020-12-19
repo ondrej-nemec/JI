@@ -39,7 +39,8 @@ public class UrlEscape {
 			);
 	
 	// http://localhost:10123/aaa/bbb?hidden1=hiden_value&text1=%7Ba%7Dbcde&submit1=Send
-		
+
+	@Deprecated
 	public static String unEscapeText(String text) {
 		text = text.replaceAll("\\+", " ");
 		for (String key : ESCAPE.getFirsts()) {
@@ -48,6 +49,7 @@ public class UrlEscape {
 		return text;
 	}
 	
+	@Deprecated
 	public static String escapeText(String text) {
 		for (String key : ESCAPE.getSeconds()) {
 			text = text.replaceAll(key, ESCAPE.getBySecond(key));
