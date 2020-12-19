@@ -1,19 +1,22 @@
 package translator;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public interface Translator {
 
-	/**
-	 * key structure: <resource>.<key> OR <key>
-	 * if <resource> not exists returns <resource.key> as <key> from default
-	 * if no message for <key> founded, <key> returned 
-	 * message structure: "some text"
-	 */
-	String translate(String key);
+	default String translate(String key) {
+		return translate(key, new HashMap<>(), Locale.getDefault());
+	}
 	
-	String translate(String key, Locale locale);
+	default String translate(String key, Locale locale) {
+		return translate(key, new HashMap<>(), locale);
+	}
+
+	default String translate(String key, Map<String, String> variables) {
+		return translate(key, variables, Locale.getDefault());
+	}
 
 	/**
 	 * key structure: <resource>.<key> OR <key>
@@ -21,8 +24,6 @@ public interface Translator {
 	 * if no message for <key> founded, <key> returned 
 	 * message structure: "text %variable% %another-variable%"
 	 */
-	String translate(String key, Map<String, String> variables);
-
 	String translate(String key, Map<String, String> variables, Locale locale);
 
 	/**
