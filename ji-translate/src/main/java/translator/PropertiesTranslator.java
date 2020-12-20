@@ -18,17 +18,48 @@ public class PropertiesTranslator implements Translator {
 	
 	private final Map<String, String> files;
 	
-	public PropertiesTranslator(Logger logger, String... files) {
-		this.logger = logger;
-		this.resources = new HashMap<>();
-		this.files = new HashMap<>();
+	private Locale locale;
+	
+	public static PropertiesTranslator create(Logger logger, String... files) {
+		Map<String, String> filesMap = new HashMap<>();
 		for (String file : files) {
-			this.files.put(new File(file).getName(), file);
+			filesMap.put(new File(file).getName(), file);
 		}
+		return new PropertiesTranslator(logger, Locale.getDefault(), new HashMap<>(), filesMap);
+	}
+	
+	private PropertiesTranslator(
+			Logger logger,
+			Locale locale,
+			Map<String, Properties> resources,
+			Map<String, String> files) {
+		this.logger = logger;
+		this.resources = resources;
+		this.locale = locale;
+		this.files = files;
+	}
+	
+	@Override
+	public Translator withLocale(Locale locale) {
+		return new PropertiesTranslator(logger, locale, resources, files);
+	}
+	
+	@Override
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+	
+	@Override
+	public String translate(String key, Map<String, String> variables) {
+		return trans(key, variables, locale);
 	}
 
 	@Override
 	public String translate(String key, Map<String, String> variables, Locale locale) {
+		return trans(key, variables, locale);
+	}
+	
+	private String trans(String key, Map<String, String> variables, Locale locale) {
 		String value = trans(key, locale);
 		for (String varName : variables.keySet()) {
 			value = value.replaceAll("\\%" + varName + "\\%", variables.get(varName));

@@ -20,20 +20,20 @@ public class PropertiesTranslatorTest {
 
 	@Test
 	public void testTranslateLoadFileFromClasspath() {
-		PropertiesTranslator t = new PropertiesTranslator(mock(Logger.class), "trans/mess-classpath");
+		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "trans/mess-classpath");
 		assertEquals("Translated message", t.translate("mess-classpath.translate.works", new HashMap<>(), Locale.getDefault()));
 	}
 
 	@Test
 	public void testTranslateLoadFileFromDirTree() {
-		PropertiesTranslator t = new PropertiesTranslator(mock(Logger.class), "trans/mess-tree");
+		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "trans/mess-tree");
 		assertEquals("Translated message", t.translate("mess-tree.translate.works", new HashMap<>(), Locale.getDefault()));
 	}
 
 	@Test
 	@Parameters(method = "dataTranslateReplaceVariable")
 	public void testTranslateReplaceVariable(String expected, String key, Map<String, String> params) {
-		PropertiesTranslator t = new PropertiesTranslator(mock(Logger.class), "messages");
+		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "messages");
 		assertEquals(expected, t.translate(key, params, Locale.getDefault()));
 	}
 	
@@ -57,8 +57,9 @@ public class PropertiesTranslatorTest {
 	@Test
 	@Parameters(method = "dataTranslateUseCorrectLocale")
 	public void testTranslateUseCorrectLocale(String expected, Locale locale) {
-		PropertiesTranslator t = new PropertiesTranslator(mock(Logger.class), "langs/messages");
+		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "langs/messages");
 		assertEquals(expected, t.translate("key", locale));
+		assertEquals(expected, t.withLocale(locale).translate("key"));
 	}
 	
 	public Object[] dataTranslateUseCorrectLocale() {
@@ -84,7 +85,7 @@ public class PropertiesTranslatorTest {
 	@Test
 	@Parameters(method = "dataTranslateSelectTransFileByPrefix")
 	public void testTranslateSelectTransFileByPrefix(String key, String expected) {
-		PropertiesTranslator t = new PropertiesTranslator(
+		PropertiesTranslator t = PropertiesTranslator.create(
 				mock(Logger.class),
 				"modules/common", 
 				"modules/module", 
