@@ -71,21 +71,30 @@ public class PropertiesTranslator implements Translator {
 		String[] split = key.split("\\.", 2);
 		
 		Properties prop = null;
+		String module = "";
 		if (split.length > 1) {
 			prop = load(locale, split[0]);
 			if (prop.isEmpty()) {
+				module = "messages";
 				prop = load(locale, "messages");
 			} else {
+				module = split[0];
 				key = split[1];
 			}
 		}
 		if (prop == null) {
+			module = "messages";
 			prop = load(locale, "messages");
 		}	
 		
 		String value= prop.getProperty(key);
 		if (value == null) {
-			logger.warn("Missing translation: " + key);
+			logger.warn(String.format(
+				"Missing translation [%s] in %s: %s",
+				locale,
+				module,
+				key
+			));
 			return key;
 		}
 		return value;
