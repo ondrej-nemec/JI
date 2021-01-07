@@ -32,7 +32,7 @@ public class FilesList {
 	}
 	/**************/
 	private List<String> getFiles(String folder, boolean recursive) throws Exception {
-		URL url = getClass().getResource("/" + getClass().getCanonicalName().replaceAll("\\.", "/") + ".class");
+		URL url = Thread.currentThread().getClass().getResource("/" + getClass().getCanonicalName().replaceAll("\\.", "/") + ".class");
 		
 		// rsrc - resources - export
 		// jar - in separated jar - gradle build
