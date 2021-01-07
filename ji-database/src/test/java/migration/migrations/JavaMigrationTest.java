@@ -31,7 +31,7 @@ public class JavaMigrationTest {
 		) throws Exception {
 		QueryBuilder builder = mock(QueryBuilder.class);
 		
-		JavaMigration m = new JavaMigration(path, loader, isRevert, isInClasspath);
+		JavaMigration m = new JavaMigration(path, loader, isRevert/*, isInClasspath*/);
 		m.migrate("Java", builder);
 		
 		verify(builder, times(1)).select(selectText);
@@ -51,6 +51,14 @@ public class JavaMigrationTest {
 			new Object[] {"test/migration/per_type", loader, false, false, "foward"}, // external foward
 			new Object[] {"test/migration/per_type", loader, false, true, "revert"}, // external revert
 		};
+	}
+	
+	@Test(expected = ClassNotFoundException.class)
+	public void testMigrateThrowsClassNotFoundOnNotExistingMigration() throws Exception {
+		QueryBuilder builder = mock(QueryBuilder.class);
+		
+		JavaMigration m = new JavaMigration("path", getClass().getClassLoader(), false);
+		m.migrate("not-existing-class", builder);
 	}
 	
 }

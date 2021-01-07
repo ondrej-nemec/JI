@@ -14,17 +14,14 @@ public class SqlMigration implements SingleMigration {
 	
 	private final boolean isRevert;
 	
-	private final boolean isInclasspath;
-	
-	public SqlMigration(String path, boolean isRevert, boolean isInclasspath) {
+	public SqlMigration(String path, boolean isRevert) {
 		this.path = path;
 		this.isRevert = isRevert;
-		this.isInclasspath = isInclasspath;
 	}
 
 	@Override
 	public void migrate(String name, QueryBuilder builder) throws Exception {
-		String[] batches = loadContent(path + "/" + name, isRevert, isInclasspath).split(";");
+		String[] batches = loadContent(path + "/" + name, isRevert).split(";");
 		try (Statement stat = builder.getConnection().createStatement()) {
 			for (String batch : batches) {
 				if (!batch.trim().isEmpty()) {
@@ -35,7 +32,7 @@ public class SqlMigration implements SingleMigration {
 		}
 	}
 
-	private String loadContent(String file, boolean isRevert, boolean isInclasspath) throws IOException {
+	private String loadContent(String file, boolean isRevert) throws IOException {
 		String sql = Text.read((br)->{
 			return ReadText.asString(br);
 		}, InputStreamLoader.createInputStream(getClass(), file));

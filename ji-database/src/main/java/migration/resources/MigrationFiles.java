@@ -10,71 +10,39 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import common.FileExtension;
-import common.structures.Tuple2;
+import core.FilesList;
 
 public class MigrationFiles {
 	
-	private final File dir;
-	private final boolean isInClasspath;
+	private final URL dir;
 	private final List<String> files;
 		
 	public MigrationFiles(String folder) throws IOException {
-		Tuple2<File, Boolean> aux = getMigrationDir(folder);
-		this.dir = aux._1();
-		this.isInClasspath = aux._2();
-		this.files = loadFiles(dir.listFiles());
+		try {
+			FilesList list= FilesList.get(folder, false);
+			this.dir = list.getURL();
+			this.files = loadFiles(list.getFiles());
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
 	}
 	
 	/***************************/
 	
-	public File getDir() {
+	public URL getDir() {
 		return dir;
 	}
-	
-	public boolean isInClasspath() {
-		return isInClasspath;
-	}
-	
+
 	public List<String> getFiles() {
 		return files;
 	}
-	
-	/***************************/
 
-	private Tuple2<File, Boolean> getMigrationDir(String folder) throws IOException {
-		try {
-			File file = getResourceFolderFiles(folder);
-			if (file.listFiles() != null) {
-				return new Tuple2<>(file, true);
-			}
-		} catch (Exception e) { /* ignored */ }
-		
-		try {
-			File file = getFolderFiles(folder);
-			if (file.listFiles() != null) {
-				return new Tuple2<>(file, false);
-			}
-		} catch (Exception e) { /* ignored */ }
-		
-		throw new IOException("No folder founded: " + folder);
-	}
-	
-	private File getResourceFolderFiles(String folder) {
-	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-	    URL url = loader.getResource(folder);
-	    String path = url.getPath();
-	    return new File(path);
-	}
-	
-	private File getFolderFiles(String folder) {
-		return new File(folder);
-	}
-
-	private List<String> loadFiles(File[] files) {
+	private List<String> loadFiles(List<String> files) {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		List<String> loadedFiles = new LinkedList<>();
-		for (File file : files) {
-			FileExtension fe = new FileExtension(file.getName());
+		for (String fileName : files) {
+			File file = new File(fileName);
+			FileExtension fe = new FileExtension(fileName);
 			switch (fe.getExtension()) {
 				case "java":
 					if (!loadedFiles.contains(fe.getName() + ".class")) {

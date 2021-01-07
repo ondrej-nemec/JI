@@ -9,7 +9,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import common.OperationSystem;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -18,28 +17,21 @@ public class MigrationFilesTest {
 
 	@Test
 	@Parameters(method = "dataLoadFilesFromDirTreeAndClasspath")
-	public void testLoadFilesFromDirTreeAndClasspath(String folder, boolean isInClasspath, String dir) throws IOException {
+	public void testLoadFilesFromDirTreeAndClasspath(String folder, String dir) throws IOException {
 		MigrationFiles f = new MigrationFiles(folder);
 		assertEquals(Arrays.asList("First.class" , "Second.sql"), f.getFiles());
-		assertEquals(isInClasspath, f.isInClasspath());
 		assertNotEquals(-1, f.getDir().toString().indexOf(dir));
 	}
 	
 	public Object[] dataLoadFilesFromDirTreeAndClasspath() {
 		return new Object[] {
 			new Object[] {
-				"migration/files", true,
-				String.format(
-					"javainit%sji-database%sbin%smigration%sfiles",
-					OperationSystem.PATH_SEPARATOR,
-					OperationSystem.PATH_SEPARATOR,
-					OperationSystem.PATH_SEPARATOR,
-					OperationSystem.PATH_SEPARATOR
-				)
+				"migration/files",
+				"javainit/ji-database/bin/migration/files"
 			},
 			new Object[] {
-				"test/migration/files", false,
-				String.format("test%smigration%sfiles", OperationSystem.PATH_SEPARATOR, OperationSystem.PATH_SEPARATOR)
+				"test/migration/files",
+				"test/migration/files"
 			}
 		};
 	}

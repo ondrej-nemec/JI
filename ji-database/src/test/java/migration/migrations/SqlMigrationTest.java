@@ -22,8 +22,8 @@ public class SqlMigrationTest {
 			boolean isRevert,
 			boolean isInclasspath,
 			String selectText) throws Exception {
-		Statement stat = mock(Statement.class);
 		
+		Statement stat = mock(Statement.class);
 		
 		Connection con = mock(Connection.class);
 		when(con.createStatement()).thenReturn(stat);
@@ -31,12 +31,13 @@ public class SqlMigrationTest {
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.getConnection()).thenReturn(con);
 		
-		SqlMigration m = new SqlMigration(path, isRevert, isInclasspath);
+		SqlMigration m = new SqlMigration(path, isRevert/*, isInclasspath*/);
 		m.migrate("Sql.sql", builder);
 		
 		verify(stat, times(1)).addBatch("select '" + selectText + "1'");
 		verify(stat, times(1)).addBatch("select '" + selectText + "2'");
 		verify(stat, times(1)).executeBatch();
+		verify(stat, times(1)).close();
 		verifyNoMoreInteractions(stat);
 		
 		verify(con, times(1)).createStatement();
