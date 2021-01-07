@@ -32,7 +32,7 @@ public class FilesList {
 	}
 	/**************/
 	private List<String> getFiles(String folder, boolean recursive) throws Exception {
-		URL url = Thread.currentThread().getClass().getResource("/" + getClass().getCanonicalName().replaceAll("\\.", "/") + ".class");
+		URL url = getClass().getResource("/" + getClassName().replaceAll("\\.", "/") + ".class");
 		
 		// rsrc - resources - export
 		// jar - in separated jar - gradle build
@@ -46,7 +46,15 @@ public class FilesList {
 		}
 	}
 
-     /*******************/
+     private String getClassName() {
+    	 StackTraceElement trace[] = Thread.currentThread().getStackTrace();
+    	 if (trace.length > 0) {
+    		 return trace[trace.length - 1].getClassName();
+    	 }
+    	 return getClass().getCanonicalName();
+	}
+
+	/*******************/
      
      private List<String> jar(String expectedNamespace, boolean recursive) throws Exception {
          List<String> files = new LinkedList<>();
