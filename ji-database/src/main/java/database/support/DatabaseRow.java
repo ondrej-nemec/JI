@@ -15,6 +15,26 @@ public class DatabaseRow {
 		return values.get(name);
 	}
 	
+	public String getString(String name) {
+		return getValue(name).toString();
+	}
+	
+	public Integer getInt(String name) {
+		return Integer.parseInt(getString(name));
+	}
+	
+	public Boolean getBoolean(String name) {
+		return Boolean.parseBoolean(getString(name));
+	}
+	
+	public Long getLong(String name) {
+		return Long.parseLong(getString(name));
+	}
+	
+	public Double getDouble(String name) {
+		return Double.parseDouble(getString(name));
+	}
+	
 	public void addValue(String key, Object value) {
 		// to lower case - some db change column name
 		values.put(key.toLowerCase(), value);
