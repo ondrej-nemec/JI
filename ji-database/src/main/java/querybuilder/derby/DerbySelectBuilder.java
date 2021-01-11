@@ -24,11 +24,15 @@ public class DerbySelectBuilder implements SelectQueryBuilder {
 	private final Connection connection;
 	
 	public DerbySelectBuilder(final Connection connection, final String... select) {
-		this.connection = connection;
-		this.query = new StringBuilder("SELECT " + Implode.implode(", ", select));
-		this.params = new HashMap<>();
+		this("SELECT " + Implode.implode(", ", select), connection);
 	}
 
+	protected DerbySelectBuilder(final String query, final Connection connection) {
+		this.connection = connection;
+		this.query = new StringBuilder(query);
+		this.params = new HashMap<>();
+	}
+	
 	@Override
 	public SelectQueryBuilder from(String table) {
 		query.append(" FROM " + table);

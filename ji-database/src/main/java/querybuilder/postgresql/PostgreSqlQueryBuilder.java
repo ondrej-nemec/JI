@@ -18,6 +18,11 @@ public class PostgreSqlQueryBuilder extends QueryBuilder {
 	public PostgreSqlQueryBuilder(Connection connection) {
 		super(connection);
 	}
+	
+	@Override
+	protected SelectQueryBuilder query(String query) {
+		return new PostgreSqlSelectBuilder(query, connection);
+	}
 
 	@Override
 	public DeleteQueryBuilder delete(String table) {

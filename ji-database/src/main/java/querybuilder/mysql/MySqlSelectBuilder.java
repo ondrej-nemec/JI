@@ -24,8 +24,12 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 	private final Connection connection;
 	
 	public MySqlSelectBuilder(final Connection connection, final String... select) {
+		this("SELECT " + Implode.implode(", ", select), connection);
+	}
+	
+	protected MySqlSelectBuilder(String query, Connection connection) {
 		this.connection = connection;
-		this.query = new StringBuilder("SELECT " + Implode.implode(", ", select));
+		this.query = new StringBuilder(query);
 		this.params = new HashMap<>();
 	}
 

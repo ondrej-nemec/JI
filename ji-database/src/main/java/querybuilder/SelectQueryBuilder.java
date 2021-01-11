@@ -10,8 +10,16 @@ public interface SelectQueryBuilder extends Parameters<SelectQueryBuilder> {
 
 	SelectQueryBuilder from(String table);
 	
+	default SelectQueryBuilder from(SelectQueryBuilder builder) {
+		return from(String.format("(%s)", builder.createSql()));
+	}
+	
 	SelectQueryBuilder join(String table, Join join, String on);
 
+	default SelectQueryBuilder join(SelectQueryBuilder builder, Join join, String on) {
+		return join(String.format("(%s)", builder.createSql()), join, on);
+	}
+	
 	SelectQueryBuilder where(String where);
 	
 	SelectQueryBuilder andWhere(String where);

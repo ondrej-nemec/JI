@@ -18,6 +18,11 @@ public class DerbyQueryBuilder extends QueryBuilder {
 	public DerbyQueryBuilder(Connection connection) {
 		super(connection);
 	}
+	
+	@Override
+	protected SelectQueryBuilder query(String query) {
+		return new DerbySelectBuilder(query, connection);
+	}
 
 	@Override
 	public DeleteQueryBuilder delete(String table) {

@@ -2,6 +2,8 @@ package querybuilder;
 
 import java.sql.Connection;
 
+import common.Implode;
+
 public abstract class QueryBuilder {
 
 	protected Connection connection;
@@ -27,6 +29,35 @@ public abstract class QueryBuilder {
 	public abstract UpdateQueryBuilder update(String table);
 	
 	public abstract SelectQueryBuilder select(String select);
+	
+	protected abstract SelectQueryBuilder query(String query);
+	
+	/**
+	 * A ∪ B   Set union: Combine two sets into one
+	 * @param union
+	 * @return
+	 */
+	public SelectQueryBuilder union(SelectQueryBuilder ...union) {
+		return query(Implode.implode(" UNION ", union));
+	}
+	
+	/**
+	 * A ∩ B   Set intersection: The members that A and B have in common
+	 * @param select
+	 * @return
+	 */
+	public SelectQueryBuilder intersect(SelectQueryBuilder ...intersect) {
+		return query(Implode.implode(" INTERSECT ", intersect));
+	}
+	
+	/**
+	 * A − B   Set difference: The members of A that are not in B
+	 * @param select
+	 * @return
+	 */
+	public SelectQueryBuilder except(SelectQueryBuilder ...except) {
+		return query(Implode.implode(" EXCEPT ", except));
+	}
 	
 	/***********************/
 	

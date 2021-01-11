@@ -18,6 +18,11 @@ public class MySqlQueryBuilder extends QueryBuilder {
 	public MySqlQueryBuilder(Connection connection) {
 		super(connection);
 	}
+	
+	@Override
+	protected SelectQueryBuilder query(String query) {
+		return new MySqlSelectBuilder(query, connection);
+	}
 
 	@Override
 	public DeleteQueryBuilder delete(String table) {
