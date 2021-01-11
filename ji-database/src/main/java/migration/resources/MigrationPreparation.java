@@ -48,7 +48,7 @@ public class MigrationPreparation {
 		for (int i = 0; i < migrated.size(); i++) {
 			String fileId = new IdSeparator(loadedFiles.get(i), separator).getId();
 			if (!migrated.get(i).equals(fileId)) {
-				throw new MigrationException();
+				throw new MigrationException("Last migrated id: " + fileId + ", migrated: " + migrated);
 			}
 			index++;
 		}
