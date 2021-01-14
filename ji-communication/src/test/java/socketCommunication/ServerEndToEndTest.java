@@ -13,6 +13,7 @@ import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.RequestParameters;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerEndToEndTest {
@@ -64,7 +65,7 @@ public class ServerEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, Properties params, String ip) throws IOException {
+					Properties header, RequestParameters params, String ip) throws IOException {
 				System.err.println("Params");
 				params.forEach((key, value)->{
 					System.err.println(key + ": " + value);

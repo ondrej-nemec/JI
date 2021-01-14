@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import static common.MapInit.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
+import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import socketCommunication.http.server.RestApiServerResponseFactory;
@@ -25,11 +27,11 @@ public class RestApiServerTest {
 	
 	@Test
 	@Parameters(method = "dataParseFirstSplitFirstLine")
-	public void testParseFirstSplitFirstLine(String line, Properties expectedRequest, Properties expectedParams) throws UnsupportedEncodingException {
+	public void testParseFirstSplitFirstLine(String line, Properties expectedRequest, RequestParameters expectedParams) throws UnsupportedEncodingException {
 		RestApiServer api = getApi();
 		
 		Properties actualRequest = new Properties();
-		Properties actualParams = new Properties();
+		RequestParameters actualParams = new RequestParameters();
 		api.parseFirst(actualRequest, actualParams, line);
 		
 		assertEquals(expectedRequest, actualRequest);
@@ -41,7 +43,7 @@ public class RestApiServerTest {
 				new Object[] {
 						"",
 						properties(),
-						properties()
+						new RequestParameters()
 				},
 				new Object[] {
 						"method url protocol",
@@ -51,7 +53,7 @@ public class RestApiServerTest {
 								t(RestApiServer.FULL_URL, "url"),
 								t(RestApiServer.PROTOCOL, "protocol")
 						),
-						properties()
+						new RequestParameters()
 				},
 				new Object[] {
 						"method url?aa=bb protocol",
@@ -61,7 +63,7 @@ public class RestApiServerTest {
 								t(RestApiServer.FULL_URL, "url?aa=bb"),
 								t(RestApiServer.PROTOCOL, "protocol")
 						),
-						properties(t("aa", "bb"))
+						new RequestParameters(t("aa", "bb"))
 				},
 		};
 	}
@@ -106,9 +108,9 @@ public class RestApiServerTest {
 	
 	@Test
 	@Parameters(method = "dataParsePayloadFillParamsProperties")
-	public void testParsePayloadFillParamsProperties(Properties expected, String payload) throws UnsupportedEncodingException {
+	public void testParsePayloadFillParamsProperties(RequestParameters expected, String payload) throws UnsupportedEncodingException {
 		RestApiServer api = getApi();
-		Properties actual = new Properties();
+		RequestParameters actual = new RequestParameters();
 		api.parsePayload(actual, payload);
 		assertEquals(expected, actual);
 	}
@@ -116,43 +118,109 @@ public class RestApiServerTest {
 	public Object[] dataParsePayloadFillParamsProperties() {
 		return new Object[] {
 			new Object[] {
-				properties(t("aa", "bb")),
+				new RequestParameters(t("aa", "bb")),
 				"aa=bb"
 			},
 			new Object[] {
-				properties(),
+				new RequestParameters(),
 				""
 			},
 			new Object[] {
-				properties(),
+				new RequestParameters(),
 				"&"
 			},
 			new Object[] {
-				properties(),
+				new RequestParameters(),
 				"=&="
 			},
 			new Object[] {
-				properties(t("aa", "bb")),
+				new RequestParameters(t("aa", "bb")),
 				"aa=bb&"
 			},
 			new Object[] {
-				properties(t("aa", "")),
+				new RequestParameters(t("aa", "")),
 				"aa="
 			},
 			new Object[] {
-					properties(t("aa", "")),
+					new RequestParameters(t("aa", "")),
 					"aa"
 				},
 			new Object[] {
-				properties(t("aa", "bb"), t("cc", "dd")),
+				new RequestParameters(t("aa", "bb"), t("cc", "dd")),
 				"aa=bb&cc=dd"
 			},
 			new Object[] {
-				properties(t("dd", "ee")),
+				new RequestParameters(t("dd", "ee")),
 				"aa=bb=cc&dd=ee"
-			}
+			},
+			/*************
+			new Object[] {
+					new RequestParameters(new Tuple2<>("number", 1)),
+					"number=1"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("boolean", true)),
+					"boolean=true"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("string", "text")),
+					"string=text"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("double", 12.3)),
+					"double=12.3"
+				},*/
+			new Object[] {
+					new RequestParameters(t("aa", "bb"), t("%", "&"), t("dd", "ee")),
+					"aa=bb&%25=%26&dd=ee"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("list", Arrays.asList("true", "b", "3"))),
+					"list[]=true&list[]=b&list[]=3"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("list", Arrays.asList("true", "b", "3", ""))),
+					"list[]=true&list[]=b&list[]=3&list[]="
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("list", Arrays.asList(Arrays.asList("true", "b", "3")))),
+					"list[][]=true&list[][]=b&list[][]=3"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("array", hashMap(
+						t("first", "true"),
+						t("second", "b"),
+						t("third", "3")
+					))),
+					"array[first]=true&array[second]=b&array[third]=3"
+				},
+			new Object[] {
+					new RequestParameters(new Tuple2<>("array", hashMap(
+						new Tuple2<>("abc", hashMap(
+								t("first", true),
+								t("second", "b"),
+								t("third", 3),
+								t("four", "")
+						))
+					))),
+					"array[abc][first]=true&array[abc][second]=b&array[abc][third]=3&array[abc][four]="
+				}
 		};
 	}
+	/*
+	@Test
+	public void test() throws UnsupportedEncodingException {
+		RequestParameters expected = new RequestParameters(new Tuple2<>("list", Arrays.asList(Arrays.asList("true", "b", "3"))));
+		String payload = "list[][]=true&list[][]=b&list[][]=3";
+		RestApiServer api = getApi();
+		RequestParameters actual = new RequestParameters();
+		api.parsePayload(actual, payload);
+		//System.out.println(expected);
+		//System.out.println(actual);
+		//System.out.println();
+		assertEquals(expected, actual);
+	}
+	//*/
 	/***********************/
 	
 	private RestApiServer getApi() {

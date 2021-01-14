@@ -11,12 +11,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 import common.Logger;
 import socketCommunication.Servant;
@@ -61,7 +65,7 @@ public class RestApiServer implements Servant {
 			BufferedInputStream is,
 			BufferedOutputStream os,
 			String clientIp) throws IOException {
-		Properties params = new Properties();
+		RequestParameters params = new RequestParameters();
 		Properties header = new Properties();
 		Properties request = new Properties();
 		parseRequest(request, header, params, br, is);
@@ -110,7 +114,7 @@ public class RestApiServer implements Servant {
 	/********* PARSE **************/
 	
 	private void parseRequest(
-			Properties request, Properties header, Properties params, 
+			Properties request, Properties header, RequestParameters params, 
 			BufferedReader br, BufferedInputStream bis) throws IOException {
 		// url, method, protocol
 		String first = br.readLine();
@@ -219,7 +223,7 @@ public class RestApiServer implements Servant {
 	}
 
 	/** protected for test only */
-	protected void parseFirst(Properties request, Properties params, String first) throws UnsupportedEncodingException {
+	protected void parseFirst(Properties request, RequestParameters params, String first) throws UnsupportedEncodingException {
 		String[] methods = first.split(" ");
 		if (methods.length != 3) {
 			logger.warn("Invalid request: " + first);
@@ -253,23 +257,93 @@ public class RestApiServer implements Servant {
 	}
 
 	/** protected for test only */
-	protected void parsePayload(Properties prop, String payload) throws UnsupportedEncodingException {
+	protected void parsePayload(RequestParameters prop, String payload) throws UnsupportedEncodingException {
 		if (payload.isEmpty()) {
 			return;
 		}
-
-		String url = URLDecoder.decode(payload, StandardCharsets.UTF_8.toString());
-		String[] params = url.split("\\&");
+		//String url = URLDecoder.decode(payload, StandardCharsets.UTF_8.toString());
+		//String[] params = url.split("\\&");
+		String[] params = payload.split("\\&");
 		for (String param : params) {
 			String[] keyValue = param.split("=");
 			if (keyValue.length == 1) {
-				prop.put(keyValue[0], "");
+				parseParams(prop, keyValue[0], "");
+				//prop.put(keyValue[0], "");
 			} else if (keyValue.length == 2) {
-				prop.put(keyValue[0], keyValue[1]);
+				parseParams(prop, keyValue[0], keyValue[1]);
+				//prop.put(keyValue[0], keyValue[1]);
 			} else {
 	    		logger.warn("Invalid param " + param);
 	    	}
 		}
 	}
+	
+	private void parseParams(RequestParameters params, String key, String value) throws UnsupportedEncodingException {
+		key = key.replace("[]", "&=").replace("][", "&").replace("[", "&").replace("]", "&");
+		String[] keys = key.split("\\&");
+		value = URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
+		int keyCount = StringUtils.countMatches(key, "&");
+		if (keyCount == 0) {
+			params.put(URLDecoder.decode(key, StandardCharsets.UTF_8.toString()), value);
+			return;
+		}
+		parseParams(params, keys, value);
+	}
 
+	private void parseParams(RequestParameters params, String[] keys, String value) throws UnsupportedEncodingException {
+		// todo =, rul escape
+		String key = URLDecoder.decode(keys[0], StandardCharsets.UTF_8.toString());
+		Object o = params.get(key);
+		if (o == null && keys[1].equals("=")) {
+			params.put(key, new LinkedList<>());
+		} else if (o == null) {
+			params.put(key, new HashMap<>());
+		}
+		parseParams(params.get(key), keys, 1, value);
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void parseParams(Object o, String[] keys, int index, String value) throws UnsupportedEncodingException {
+		// last
+	/*	if (index == keys.length - 1) {
+			if (o instanceof Map) {
+				Map.class.cast(o).put(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()), value);
+			} else if (o instanceof List) {
+				System.out.println("add value " + o);
+				List.class.cast(o).add(value);
+			}
+			return;
+		}*/
+		if (index == keys.length) {
+			return;
+		}
+		
+		Object sub = null;
+		if (o instanceof Map) {
+			sub = Map.class.cast(o).get(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()));
+		} else if (o instanceof List) {
+			List l = List.class.cast(o);
+			if (!l.isEmpty()) {
+				sub = l.get(l.size() - 1);
+			}
+		}
+		boolean needInsert = false;
+		if (index == keys.length - 1) {
+			needInsert = true;
+			sub = value;
+		} else if (sub == null && keys[index+1].equals("=")) {
+			needInsert = true;
+			sub = new LinkedList<>();
+		} else if (sub == null) {
+			needInsert = true;
+			sub = new HashMap<>();
+		}
+		if (needInsert && o instanceof Map) {
+			Map.class.cast(o).put(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()), sub);
+		} else if (needInsert && o instanceof List) {
+			List.class.cast(o).add(sub);
+		}
+		parseParams(sub, keys, index+1, value);
+	}
+	
 }

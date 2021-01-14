@@ -13,7 +13,7 @@ public interface RestApiServerResponseFactory {
 			String fullUrl,
 			String protocol,
 			Properties header,
-			Properties params,
+			RequestParameters params,
 			String ipAddress
 	) throws IOException;
 	/*

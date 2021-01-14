@@ -12,6 +12,7 @@ import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.RequestParameters;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerRestartEndToEndTest {
@@ -55,7 +56,7 @@ public class ServerRestartEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, Properties params, String ip) throws IOException {
+					Properties header, RequestParameters params, String ip) throws IOException {
 				Date today = new Date();
 				return RestApiResponse.textResponse(
 					StatusCode.OK,
