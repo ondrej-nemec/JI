@@ -82,9 +82,17 @@ public class Database {
 	protected <T> DoubleConsumer<T> getDoubleFunction(ConnectionFunction<T> consumer) {
 		return ()->{
 			Connection con = pool.getConnection();
-			T t = consumer.apply(con);
-			pool.returnConnection(con);
-			return t;
+			try {
+				con.setAutoCommit(false);
+				T t = consumer.apply(con);
+				con.commit();
+				pool.returnConnection(con);
+				return t;
+			} catch (Exception e) {
+				con.rollback();
+				pool.returnConnection(con);
+				throw new SQLException("Error in database consumer. Transaction rollback.", e);
+			}
 		};
 	}
 	
