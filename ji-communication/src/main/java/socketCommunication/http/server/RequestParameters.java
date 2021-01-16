@@ -49,11 +49,43 @@ public class RequestParameters extends HashMap<String, Object> {
 	/*
 	@Override
 	public String toString() {
-		StringBuilder b = new StringBuilder("RequestParameters:");
+		StringBuilder b = new StringBuilder();
 		forEach((key, item)->{
+			
 			b.append(String.format("{%s=%s[%s]},", key, item.getClass(), item));
 		});
+		return mapToString(this, "RequestParameters:");
+	}
+	
+	private String mapToString(Map<String, ?> map, String name) {
+		StringBuilder b = new StringBuilder(name + "{");
+		map.forEach((key, item)->{
+			if (item instanceof Map) {
+				b.append(mapToString((Map)item, key));
+			} else if (item instanceof List) {
+				b.append(listToString((List)item, key));
+			} else {
+				b.append(String.format("%s=%s->%s,", key, item.getClass(), item));
+			}
+		});
+		b.append("};");
 		return b.toString();
 	}
-	*/
+	
+	private String listToString(List<?> list, String name) {
+		StringBuilder b = new StringBuilder(name + "[");
+		list.forEach((item)->{
+			if (item instanceof Map) {
+				b.append(mapToString((Map)item, ""));
+			} else if (item instanceof List) {
+				b.append(listToString((List)item, ""));
+			} else {
+				b.append(String.format("%s->%s,", item.getClass(), item));
+			}
+		});
+		b.append("];");
+		return b.toString();
+	}
+	
+	//*/
 }

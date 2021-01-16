@@ -200,6 +200,20 @@ public class ServerEndToEndTest {
 								+ "<input type='text' name='some-form-text'/><br>"
 								+ "<input type=\"submit\" value=\"Upload Image\" name=\"submit\">"
 								+ "</form>"
+								+ ""
+								+ "<form >"
+								+ "	<input type=\"text\" name=\"aa[]\"><br>" 
+								+ "	<input type=\"text\" name=\"aa[]\"><br>" 
+								+ "	<input type=\"text\" name=\"aa[]\"><br>" 
+								+ "	<input type=\"text\" name=\"b[a]\"><br>" 
+								+ "	<input type=\"text\" name=\"b[b]\"><br>" 
+								+ "	<input type=\"text\" name=\"b[c]\"><br>" 
+								+ "	<input type=\"text\" name=\"c[a][]\"><br>" 
+								+ "	<input type=\"text\" name=\"c[a][]\"><br>" 
+								+ "	<input type=\"text\" name=\"c[a][]\"><br>"
+								+ "	<input type=\"submit\">"
+								+ "</form>"
+								+ ""
 								+ "</body></html>", today.toString()
 						));
 					}

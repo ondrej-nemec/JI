@@ -261,9 +261,12 @@ public class RestApiServer implements Servant {
 		if (payload.isEmpty()) {
 			return;
 		}
-		//String url = URLDecoder.decode(payload, StandardCharsets.UTF_8.toString());
-		//String[] params = url.split("\\&");
+		/*
+		String url = URLDecoder.decode(payload, StandardCharsets.UTF_8.toString());
+		String[] params = url.split("\\&");
+		/*/
 		String[] params = payload.split("\\&");
+		//*/
 		for (String param : params) {
 			String[] keyValue = param.split("=");
 			if (keyValue.length == 1) {
@@ -280,19 +283,20 @@ public class RestApiServer implements Servant {
 	
 	private void parseParams(RequestParameters params, String key, String value) throws UnsupportedEncodingException {
 		//key = key.replace("[]", "&=").replace("][", "&").replace("[", "&").replace("]", "&");
+		key = URLDecoder.decode(key, StandardCharsets.UTF_8.toString());
 		key = key.replace("[]", "[=]").replace("[", "&").replace("]", "");
 		String[] keys = key.split("\\&");
 		value = URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
 		int keyCount = StringUtils.countMatches(key, "&");
 		if (keyCount == 0) {
-			params.put(URLDecoder.decode(key, StandardCharsets.UTF_8.toString()), value);
+			params.put(key, value);
 			return;
 		}
 		parseParams(params, keys, value);
 	}
 
 	private void parseParams(RequestParameters params, String[] keys, String value) throws UnsupportedEncodingException {
-		String key = URLDecoder.decode(keys[0], StandardCharsets.UTF_8.toString());
+		String key = keys[0]; // URLDecoder.decode(keys[0], StandardCharsets.UTF_8.toString());
 		Object o = params.get(key);
 		if (o == null && keys[1].equals("=")) {
 			params.put(key, new LinkedList<>());
@@ -310,7 +314,8 @@ public class RestApiServer implements Servant {
 		
 		Object sub = null;
 		if (o instanceof Map) {
-			sub = Map.class.cast(o).get(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()));
+			// sub = Map.class.cast(o).get(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()));
+			sub = Map.class.cast(o).get(keys[index]);
 		} else if (o instanceof List) {
 			List l = List.class.cast(o);
 			if (!l.isEmpty()) {
@@ -329,7 +334,8 @@ public class RestApiServer implements Servant {
 			sub = new HashMap<>();
 		}
 		if (needInsert && o instanceof Map) {
-			Map.class.cast(o).put(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()), sub);
+			// Map.class.cast(o).put(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()), sub);
+			Map.class.cast(o).put(keys[index], sub);
 		} else if (needInsert && o instanceof List) {
 			List.class.cast(o).add(sub);
 		}

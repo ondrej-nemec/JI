@@ -6,6 +6,8 @@ import static common.MapInit.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -14,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
+import common.MapInit;
 import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -176,15 +179,15 @@ public class RestApiServerTest {
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("list", Arrays.asList("true", "b", "3"))),
-					"list[]=true&list[]=b&list[]=3"
+					"list%5B%5D=true&list%5B%5D=b&list%5B%5D=3"
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("list", Arrays.asList("true", "b", "3", ""))),
-					"list[]=true&list[]=b&list[]=3&list[]="
+					"list%5B%5D=true&list%5B%5D=b&list%5B%5D=3&list%5B%5D="
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("list", Arrays.asList(Arrays.asList("true", "b", "3")))),
-					"list[][]=true&list[][]=b&list[][]=3"
+					"list%5B%5D%5B%5D=true&list%5B%5D%5B%5D=b&list%5B%5D%5B%5D=3"
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("array", hashMap(
@@ -192,7 +195,7 @@ public class RestApiServerTest {
 						t("second", "b"),
 						t("third", "3")
 					))),
-					"array[first]=true&array[second]=b&array[third]=3"
+					"array%5Bfirst%5D=true&array%5Bsecond%5D=b&array%5Bthird%5D=3"
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("array", hashMap(
@@ -203,7 +206,7 @@ public class RestApiServerTest {
 								t("four", "")
 						))
 					))),
-					"array[abc][first]=true&array[abc][second]=b&array[abc][third]=3&array[abc][four]="
+					"array%5Babc%5D%5Bfirst%5D=true&array%5Babc%5D%5Bsecond%5D=b&array%5Babc%5D%5Bthird%5D=3&array%5Babc%5D%5Bfour%5D="
 				}
 		};
 	}
@@ -217,12 +220,12 @@ public class RestApiServerTest {
 		RequestParameters expected = new RequestParameters(
 				new Tuple2<>("aa", first),
 				new Tuple2<>("b", MapInit.hashMap(
-					MapInit.t("a", "4"),
-					MapInit.t("b", "5"),
-					MapInit.t("c", "6")
+					new Tuple2<>("a", "4"),
+					new Tuple2<>("b", "5"),
+					new Tuple2<>("c", "6")
 				)),
 				new Tuple2<>("c", MapInit.hashMap(
-					MapInit.t("a", second)
+					new Tuple2<>("a", second)
 				))
 		);
 		String payload = "aa[]=1&aa[]=2&aa[]=3&b[a]=4&b[b]=5&b[c]=6&c[a][]=7&c[a][]=8&c[a][]=9";
