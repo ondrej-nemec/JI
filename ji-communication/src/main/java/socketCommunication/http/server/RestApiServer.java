@@ -279,7 +279,8 @@ public class RestApiServer implements Servant {
 	}
 	
 	private void parseParams(RequestParameters params, String key, String value) throws UnsupportedEncodingException {
-		key = key.replace("[]", "&=").replace("][", "&").replace("[", "&").replace("]", "&");
+		//key = key.replace("[]", "&=").replace("][", "&").replace("[", "&").replace("]", "&");
+		key = key.replace("[]", "[=]").replace("[", "&").replace("]", "");
 		String[] keys = key.split("\\&");
 		value = URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
 		int keyCount = StringUtils.countMatches(key, "&");
@@ -291,7 +292,6 @@ public class RestApiServer implements Servant {
 	}
 
 	private void parseParams(RequestParameters params, String[] keys, String value) throws UnsupportedEncodingException {
-		// todo =, rul escape
 		String key = URLDecoder.decode(keys[0], StandardCharsets.UTF_8.toString());
 		Object o = params.get(key);
 		if (o == null && keys[1].equals("=")) {
@@ -304,16 +304,6 @@ public class RestApiServer implements Servant {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void parseParams(Object o, String[] keys, int index, String value) throws UnsupportedEncodingException {
-		// last
-	/*	if (index == keys.length - 1) {
-			if (o instanceof Map) {
-				Map.class.cast(o).put(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()), value);
-			} else if (o instanceof List) {
-				System.out.println("add value " + o);
-				List.class.cast(o).add(value);
-			}
-			return;
-		}*/
 		if (index == keys.length) {
 			return;
 		}

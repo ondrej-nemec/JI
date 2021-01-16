@@ -210,13 +210,27 @@ public class RestApiServerTest {
 	/*
 	@Test
 	public void test() throws UnsupportedEncodingException {
-		RequestParameters expected = new RequestParameters(new Tuple2<>("list", Arrays.asList(Arrays.asList("true", "b", "3"))));
-		String payload = "list[][]=true&list[][]=b&list[][]=3";
+		List<String> first = new LinkedList<>();
+		first.addAll(Arrays.asList("1", "2", "3"));
+		List<String> second = new LinkedList<>();
+		second.addAll(Arrays.asList("7", "8", "9"));
+		RequestParameters expected = new RequestParameters(
+				new Tuple2<>("aa", first),
+				new Tuple2<>("b", MapInit.hashMap(
+					MapInit.t("a", "4"),
+					MapInit.t("b", "5"),
+					MapInit.t("c", "6")
+				)),
+				new Tuple2<>("c", MapInit.hashMap(
+					MapInit.t("a", second)
+				))
+		);
+		String payload = "aa[]=1&aa[]=2&aa[]=3&b[a]=4&b[b]=5&b[c]=6&c[a][]=7&c[a][]=8&c[a][]=9";
 		RestApiServer api = getApi();
 		RequestParameters actual = new RequestParameters();
 		api.parsePayload(actual, payload);
-		//System.out.println(expected);
-		//System.out.println(actual);
+		System.out.println(expected);
+		System.out.println(actual);
 		//System.out.println();
 		assertEquals(expected, actual);
 	}
