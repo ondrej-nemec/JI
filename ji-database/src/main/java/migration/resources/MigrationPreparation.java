@@ -66,6 +66,7 @@ public class MigrationPreparation {
 					return row.getValue("id").toString();
 				});
 		} catch (Exception ignored) {
+			builder.getConnection().rollback();
 			builder
 				.createTable(migrationTable)
 				.addColumn("id", ColumnType.string(100), ColumnSetting.NOT_NULL, ColumnSetting.PRIMARY_KEY)
