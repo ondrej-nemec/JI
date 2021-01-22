@@ -8,6 +8,7 @@ import querybuilder.CreateTableQueryBuilder;
 import querybuilder.CreateViewQueryBuilder;
 import querybuilder.DeleteQueryBuilder;
 import querybuilder.ExecuteQueryBuilder;
+import querybuilder.Functions;
 import querybuilder.InsertQueryBuilder;
 import querybuilder.QueryBuilder;
 import querybuilder.SelectQueryBuilder;
@@ -88,6 +89,11 @@ public class DerbyQueryBuilder extends QueryBuilder {
 				connection,
 				String.format("DROP INDEX %s", name)
 			);
+	}
+
+	@Override
+	public Functions getSqlFunctions() {
+		return new DerbyFunctions();
 	}
 
 }

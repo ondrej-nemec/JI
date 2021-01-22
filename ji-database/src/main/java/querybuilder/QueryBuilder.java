@@ -22,6 +22,8 @@ public abstract class QueryBuilder {
 	
 	/***********************/
 	
+	public abstract Functions getSqlFunctions();
+	
 	public abstract DeleteQueryBuilder delete(String table);
 	
 	public abstract InsertQueryBuilder insert(String table);
@@ -31,7 +33,7 @@ public abstract class QueryBuilder {
 	public abstract SelectQueryBuilder select(String select);
 	
 	protected abstract SelectQueryBuilder query(String query);
-	
+		
 	/**
 	 * A ∪ B   Set union: Combine two sets into one
 	 * @param union
