@@ -6,7 +6,7 @@ import java.util.Arrays;
 import common.DateTime;
 import common.Logger;
 
-public class DatabaseEndToEndTest {
+public class DatabaseTransactionTesting {
 
 	public static void main(String[] args) throws SQLException {
 		DatabaseConfig config = new DatabaseConfig(
