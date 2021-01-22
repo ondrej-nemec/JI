@@ -63,6 +63,7 @@ public class EnumToStringTest {
 			new Object[] {"BOOLEAN", ColumnType.bool()},
 			new Object[] {"INT", ColumnType.integer()},
 			new Object[] {"DATETIME", ColumnType.datetime()},
+			new Object[] {"CHAR(20)", ColumnType.charType(20)},
 			new Object[] {"VARCHAR(10)", ColumnType.string(10)},
 			new Object[] {"VARCHAR(255)", ColumnType.string(255)},
 			new Object[] {"TEXT", ColumnType.text()}

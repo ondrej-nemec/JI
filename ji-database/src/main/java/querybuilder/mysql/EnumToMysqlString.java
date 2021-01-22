@@ -51,6 +51,8 @@ public class EnumToMysqlString {
 		switch (type.getType()) {
     		case STRING:
     			return String.format("VARCHAR(%s)", type.getSize());
+    		case CHAR:
+    			return String.format("CHAR(%s)", type.getSize());
     		default: return type.getType().toString();
 		}
 	}

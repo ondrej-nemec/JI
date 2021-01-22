@@ -7,7 +7,8 @@ public class ColumnType {
 		INT,
 		STRING,
 		TEXT,
-		DATETIME
+		DATETIME,
+		CHAR
 	}
 
 	public static ColumnType bool() {
@@ -16,6 +17,10 @@ public class ColumnType {
 	
 	public static ColumnType integer() {
 		return new ColumnType(Type.INT);
+	}
+
+	public static ColumnType charType(int size) {
+		return new ColumnType(Type.CHAR, size);
 	}
 	
 	public static ColumnType text() {
