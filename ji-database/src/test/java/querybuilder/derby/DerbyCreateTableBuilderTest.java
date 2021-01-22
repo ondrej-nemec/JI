@@ -28,7 +28,7 @@ public class DerbyCreateTableBuilderTest {
 		String expected = "CREATE TABLE Table1 ("
 				+ " Column_1 INT GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
 				+ " Column_2 BOOLEAN NOT NULL,"
-				+ " Column_3 DATETIME UNIQUE,"
+				+ " Column_3 TIMESTAMP UNIQUE,"
 				+ " Column_4 TEXT,"
 				+ " Column_5 VARCHAR(50) DEFAULT 'some text' NOT NULL,"
 				+ " CONSTRAINT FK_Column_4 FOREIGN KEY (Column_4) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET NULL,"

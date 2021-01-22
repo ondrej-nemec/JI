@@ -47,13 +47,13 @@ public class MySqlSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder where(String where) {
-		query.append(" WHERE " + where);
+		query.append(" WHERE (" + where + ")");
 		return this;
 	}
 
 	@Override
 	public SelectQueryBuilder andWhere(String where) {
-		query.append(" AND " + where);
+		query.append(" AND (" + where + ")");
 		return this;
 	}
 

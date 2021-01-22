@@ -21,13 +21,13 @@ public class DerbyDeleteBuilderTest {
 					.addParameter("%id", "12");
 		
 		String expected = "DELETE FROM table_name"
-				+ " WHERE id > 1"
-				+ " AND id < %id"
+				+ " WHERE (id > 1)"
+				+ " AND (id < %id)"
 				+ " OR (id = %id)";
 		
 		String sql = "DELETE FROM table_name"
-				+ " WHERE id > 1"
-				+ " AND id < '12'"
+				+ " WHERE (id > 1)"
+				+ " AND (id < '12')"
 				+ " OR (id = '12')";
 		
 		assertEquals(expected, builder.getSql());

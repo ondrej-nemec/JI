@@ -24,13 +24,13 @@ public class PostgreSqlDeleteBuilder implements DeleteQueryBuilder {
 
 	@Override
 	public DeleteQueryBuilder where(String where) {
-		query.append(" WHERE " + where);
+		query.append(" WHERE (" + where + ")");
 		return this;
 	}
 
 	@Override
 	public DeleteQueryBuilder andWhere(String where) {
-		query.append(" AND " + where);
+		query.append(" AND (" + where + ")");
 		return this;
 	}
 

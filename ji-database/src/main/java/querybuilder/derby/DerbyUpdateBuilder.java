@@ -37,13 +37,13 @@ public class DerbyUpdateBuilder implements UpdateQueryBuilder {
 
 	@Override
 	public UpdateQueryBuilder where(String where) {
-		set.append(" WHERE " + where);
+		set.append(" WHERE (" + where + ")");
 		return this;
 	}
 
 	@Override
 	public UpdateQueryBuilder andWhere(String where) {
-		set.append(" AND " + where);
+		set.append(" AND (" + where + ")");
 		return this;
 	}
 

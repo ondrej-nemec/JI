@@ -26,14 +26,14 @@ public class MySqlUpdateBuilderTest {
 		
 		String expected = "UPDATE table_name"
 				+ " SET name = :name, value = :value"
-				+ " WHERE id = :id"
-				+ " AND name = :actualName"
+				+ " WHERE (id = :id)"
+				+ " AND (name = :actualName)"
 				+ " OR (name = :actualName)";
 
 		String sql = "UPDATE table_name"
 				+ " SET name = 'Name', value = 'Value'"
-				+ " WHERE id = 1"
-				+ " AND name = 'AnotherName'"
+				+ " WHERE (id = 1)"
+				+ " AND (name = 'AnotherName')"
 				+ " OR (name = 'AnotherName')";
 		
 		assertEquals(expected, builder.getSql());
