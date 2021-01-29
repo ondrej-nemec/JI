@@ -12,28 +12,28 @@ import java.util.Set;
 
 import common.Logger;
 
-public class AuthorizationHelper {
+public class AuthorizationHelper<U, R> {
 
-	private RulesDao rulesDao;
+	private RulesDao<U, R> rulesDao;
 	
 	private final Logger logger;
 	
-	public AuthorizationHelper(final RulesDao rulesDao, Logger logger) {
+	public AuthorizationHelper(final RulesDao<U, R> rulesDao, Logger logger) {
 		this.rulesDao = rulesDao;
 		this.logger = logger;
 	}
 	
-	public void throwIfIsNotAllowed(AclUser who, AclDestination where, Action what) {
+	public void throwIfIsNotAllowed(AclUser<U, R> who, AclDestination where, Action what) {
 		if(!isAllowed(who, where, what)) {
 			throw new AccessDeniedException(who, where, what);
 		}
 	}
 	
-	public boolean isAllowed(AclUser who, AclDestination where, Action what) {
+	public boolean isAllowed(AclUser<U, R> who, AclDestination where, Action what) {
 		return isAllowed(who, where, what, null);
 	}
 	
-	public boolean isAllowed(AclUser who, AclDestination where, Action what, String owner) {
+	public boolean isAllowed(AclUser<U, R> who, AclDestination where, Action what, String owner) {
 		logger.debug("Access required: " + who + " -> " + where + " -> " + what + " (" + owner + ")");
 		
 		if (what == Action.FORBIDDEN || what == Action.UNDEFINED) {
@@ -90,7 +90,7 @@ public class AuthorizationHelper {
 	 * @throws AccessDeniedException
 	 * @return list of allowed user ids, empty means allowed to destination, but not for users
 	 */
-	public Collection<String> getAllowed(AclUser who, AclDestination where, Action what) {
+	public Collection<String> getAllowed(AclUser<U, R> who, AclDestination where, Action what) {
 		try {
 			return allowed(who, where, what);
 		} catch (AccessDeniedException e) {
@@ -106,7 +106,7 @@ public class AuthorizationHelper {
 	 * @throws AccessDeniedException
 	 * @return list of allowed user ids, empty means allowed to destination, but not for users
 	 */
-	public Collection<String> allowed(AclUser who, AclDestination where, Action what) {		
+	public Collection<String> allowed(AclUser<U, R> who, AclDestination where, Action what) {		
 		logger.debug("Access required: " + who + " -> " + where + " -> " + what);
 		
 		if (what == Action.FORBIDDEN || what == Action.UNDEFINED) {

@@ -1,7 +1,7 @@
 package interfaces;
 
-public interface AclRole {
+public interface AclRole<R> {
 
-	public String getId();
+	public R getId();
 	
 }

@@ -2,12 +2,12 @@ package interfaces;
 
 import java.util.List;
 
-public interface AclUser {
+public interface AclUser<U, R> {
 
-	public String getId();
+	public U getId();
 	
 	public int getRank();
 	
-	public List<AclRole> getRoles();
+	public List<AclRole<R>> getRoles();
 	
 }
