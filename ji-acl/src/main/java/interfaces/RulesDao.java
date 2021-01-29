@@ -2,7 +2,7 @@ package interfaces;
 
 import helper.Rules;
 
-public interface RulesDao {
+public interface RulesDao<U, R> {
 	
 	/**
 	 * Select rules for given user and his/her groups.
@@ -13,6 +13,6 @@ public interface RulesDao {
 	 * @param domain
 	 * @return
 	 */
-	Rules getRulesForUserAndGroups(AclUser user, AclDestination domain);
+	Rules getRulesForUserAndGroups(AclUser<U, R> user, AclDestination domain);
 	
 }

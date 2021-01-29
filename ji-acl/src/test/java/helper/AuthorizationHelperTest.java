@@ -391,6 +391,7 @@ public class AuthorizationHelperTest {
 		};
 	}
 	
+	@SuppressWarnings("unchecked")
 	private AclUser<String, String> getUser(String id, int rank, AclRole<String>... aclRoles) {
 		return new AclUser<String, String>() {
 			
