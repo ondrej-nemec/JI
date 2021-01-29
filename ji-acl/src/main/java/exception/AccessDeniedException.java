@@ -15,4 +15,8 @@ public class AccessDeniedException extends RuntimeException{
 	public AccessDeniedException(AclUser user, AclDestination destination, Action action) {
 		super(user + ":" + destination + ":" + action);
 	}
+	
+	public AccessDeniedException(AclUser user, AclDestination destination, Action action, AclUser owner) {
+		super(user + ":" + destination + ":" + action + "(" + owner + ")");
+	}
 }

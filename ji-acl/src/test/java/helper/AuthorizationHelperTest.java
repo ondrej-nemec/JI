@@ -4,13 +4,13 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import exception.AccessDeniedException;
 import exception.NotAllowedActionException;
 import interfaces.AclDestination;
 import interfaces.AclRole;
@@ -24,289 +24,325 @@ import common.Logger;
 public class AuthorizationHelperTest {
 	
 	@Test
-	@Parameters
-	public void testIsAllowedReturnFalseIfNoRulesGiven(Action action) {
+	@Parameters(method = "dataIsAllowedReturnFalseIfNoRulesMatch")
+	public void testIsAllowedReturnFalseIfNoRulesMatch(Rules rules) {
 		AclDestination domain = getDestination("undefined");
 		AclRole role = getRole("role");
 		AclUser user = getUser("user", 10, role);
 		
 		RulesDao mock = mock(RulesDao.class);
-		
-		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
-			new Rules(Action.UNDEFINED, Arrays.asList())
-		);
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(rules);
 		
 		AuthorizationHelper helper = getHelper(mock);
-		assertEquals(false, helper.isAllowed(user, domain, action));
+		
+		Action[] actions = new Action[] {Action.ALLOWED, Action.READ, Action.UPDATE, Action.CREATE, Action.DELETE, Action.ADMIN};
+		for (Action action : actions) {
+			assertEquals(false, helper.isAllowed(user, domain, action));
+		}
 	}
-	
-	public Object[] parametersForTestIsAllowedReturnFalseIfNoRulesGiven() {
+
+	public Object[] dataIsAllowedReturnFalseIfNoRulesMatch() {
 		return new Object[] {
-				new Object[]{
-						Action.READ,	
-				},
-				new Object[]{
-						Action.UPDATE,
-				},
-				new Object[]{
-						Action.CREATE,	
-				},
-				new Object[]{
-						Action.DELETE
-				},
-				new Object[]{
-						Action.ADMIN	
-				}
+				new Object[]{null},
+				new Object[]{Rules.forUserWithOwner(Action.UNDEFINED, null)},
+				new Object[]{Rules.forUserWithOwner(Action.FORBIDDEN, null)},
+				new Object[]{Rules.forUserGroupsAndLevels(null)},
+				new Object[]{Rules.forUserGroupsAndLevels(Arrays.asList(
+					AccessRule.withLevel(0, Action.UNDEFINED, null)
+				))},
+				new Object[]{Rules.forUserGroupsAndLevels(Arrays.asList(
+					AccessRule.withLevel(0, Action.FORBIDDEN, null)
+				))},
+				new Object[]{Rules.forUserGroupsAndLevels(Arrays.asList(
+					AccessRule.withoutLevel(Action.UNDEFINED, null)
+				))},
+				new Object[]{Rules.forUserGroupsAndLevels(Arrays.asList(
+					AccessRule.withoutLevel(Action.FORBIDDEN, null)
+				))},
 		};
 	}
 	
 	@Test(expected=NotAllowedActionException.class)
-	@Parameters
+	@Parameters(method = "dataIsAllowedThrowsIfNotAllowedActionIsGiven")
 	public void testIsAllowedThrowsIfNotAllowedActionIsGiven(Action act) {
 		AuthorizationHelper helper = getHelper(null);
 		helper.isAllowed(null, null, act);
 	}
 	
-	public Object[] parametersForTestIsAllowedThrowsIfNotAllowedActionIsGiven() {
+	public Object[] dataIsAllowedThrowsIfNotAllowedActionIsGiven() {
 		return new Object[] {
 				new Object[]{Action.UNDEFINED},
 				new Object[]{Action.FORBIDDEN},
 		};
 	}
+	
+	/*** SEPARATOR ***/
+	
+	public Object[] dataIsAllowedTest() {
+		return new Object[] {
+			new Object[]{Action.ALLOWED, null, true, true},
+			new Object[]{Action.ALLOWED, Arrays.asList("owner"), false, true},
+			new Object[]{Action.ALLOWED, Arrays.asList("not-owner"), false, false},
+				
+			new Object[]{Action.READ, null, true, true},
+			new Object[]{Action.READ, Arrays.asList("owner"), false, true},
+			new Object[]{Action.READ, Arrays.asList("not-owner"), false, false},
 
+			new Object[]{Action.UPDATE, null, true, true},
+			new Object[]{Action.UPDATE, Arrays.asList("owner"), false, true},
+			new Object[]{Action.UPDATE, Arrays.asList("not-owner"), false, false},
+
+			new Object[]{Action.CREATE, null, true, true},
+			new Object[]{Action.CREATE, Arrays.asList("owner"), false, true},
+			new Object[]{Action.CREATE, Arrays.asList("not-owner"), false, false},
+
+			new Object[]{Action.DELETE, null, false, false},
+			new Object[]{Action.DELETE, Arrays.asList("owner"), false, false},
+			new Object[]{Action.DELETE, Arrays.asList("not-owner"), false, false},
+
+			new Object[]{Action.ADMIN, null, false, false},
+			new Object[]{Action.ADMIN, Arrays.asList("owner"), false, false},
+			new Object[]{Action.ADMIN, Arrays.asList("not-owner"), false, false},
+		};
+	}
+	
 	@Test
-	@Parameters
-	public void testIsAllowedWithUserIdRules(Action action, boolean isAllowed) {
-		AclRole role = getRole("role");
-		AclUser disallowed = getUser("disalowed", 10, role);
-		AclUser allowed = getUser("allowed", 10, role);
-		AclUser forbidden = getUser("forbidden", 10, role);
-		AclDestination destination = getDestination("user-id-rule");
+	@Parameters(method = "dataIsAllowedTest")
+	public void testIsAllowedForUserId(Action action, List<String> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
+		AclDestination domain = getDestination("for-user-id");
+		AclUser user = getUser("user", 10);
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
-			new Rules(Action.CREATE)
-		);
-		
-		when(mock.getRulesForUserAndGroups(forbidden, destination)).thenReturn(
-			new Rules(Action.FORBIDDEN)
-		);
-		
-		when(mock.getRulesForUserAndGroups(disallowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED)
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.forUserWithOwner(Action.CREATE, owners)
 		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		
-		assertFalse(helper.isAllowed(disallowed, destination, action));
-		assertFalse(helper.isAllowed(forbidden, destination, action));
-		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));		
+		assertEquals(allowedWithoutOwner, helper.isAllowed(user, domain, action));
+		assertEquals(allowedWithOwner, helper.isAllowed(user, domain, action, "owner"));
 	}
 	
-	public Object[] parametersForTestIsAllowedWithUserIdRules() {
-		return new Object[] {
-				new Object[]{
-						Action.READ, true	
-				},
-				new Object[]{
-						Action.UPDATE, true
-				},
-				new Object[]{
-						Action.CREATE, true
-				},
-				new Object[]{
-						Action.DELETE, false
-				},
-				new Object[]{
-						Action.ADMIN, false	
-				}
-		};
-	}		
-
 	@Test
-	@Parameters(method = "dataIsAllowedWithAccessRules")
-	public void testIsAllowedWithAccessRules(Action action, boolean isAllowed, int rank) {
-		AclUser allowed = getUser("allowed", rank, getRole(""));
-		AclDestination destination = getDestination("user-id-rule");
+	@Parameters(method = "dataIsAllowedTest")
+	public void testIsAllowedForGroupId(Action action, List<String> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
+		AclDestination domain = getDestination("for-group-id");
+		AclUser user = getUser("user", 10);
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
-			new Rules(Arrays.asList(
-					new AccessRule(null, Action.UNDEFINED),
-					new AccessRule(null, Action.CREATE),
-					new AccessRule(15, Action.UNDEFINED),
-					new AccessRule(null, Action.UPDATE),
-					new AccessRule(15, Action.DELETE)
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.forUserGroupsAndLevels(Arrays.asList(
+				AccessRule.withoutLevel(Action.CREATE, owners),
+				AccessRule.withoutLevel(Action.READ, owners),
+				AccessRule.withoutLevel(Action.FORBIDDEN, owners)
 			))
 		);
 		
 		AuthorizationHelper helper = getHelper(mock);
-		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));
-	}
-	
-	public Object[] dataIsAllowedWithAccessRules() {
-		return new Object[] {
-				new Object[]{
-						Action.READ, true, 10	
-				},
-				new Object[]{
-						Action.UPDATE, true, 10
-				},
-				new Object[]{
-						Action.CREATE, true, 10
-				},
-				new Object[]{
-						Action.DELETE, false, 10
-				},
-				new Object[]{
-						Action.DELETE, true, 15
-				},
-				new Object[]{
-						Action.ADMIN, false	, 10
-				}
-		};
+		
+		assertEquals(allowedWithoutOwner, helper.isAllowed(user, domain, action));
+		assertEquals(allowedWithOwner, helper.isAllowed(user, domain, action, "owner"));
 	}
 	
 	@Test
-	@Parameters
-	public void testIsAllowedWithRoleIdRules(Action action, boolean isAllowed) {
-		AclRole disallowedRole = getRole("disallowed-role");
-		AclRole allowedRole = getRole("allowed-role");
-		AclRole allowedRole2 = getRole("allowed-role2");
-		AclRole forbiddenRole = getRole("forbidden-role");
-		
-		AclUser disallowed = getUser("disalowed", 10, disallowedRole);
-		AclUser allowed = getUser("allowed", 10, disallowedRole, allowedRole, disallowedRole, allowedRole2);
-		AclUser forbidden = getUser("forbidden", 10, forbiddenRole, disallowedRole);
-		AclDestination destination = getDestination("user-id-rule");
+	@Parameters(method = "dataIsAllowedTest")
+	public void testIsAllowedForGroupIdAndLevel(Action action, List<String> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
+		AclDestination domain = getDestination("for-group-id");
+		AclUser user = getUser("user", 10);
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Arrays.asList(
-					new AccessRule(null, Action.UNDEFINED),
-					new AccessRule(null, Action.CREATE),
-					new AccessRule(null, Action.UNDEFINED),
-					new AccessRule(null, Action.UPDATE)
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.forUserGroupsAndLevels(Arrays.asList(
+				AccessRule.withLevel(12, Action.ADMIN, owners),
+				AccessRule.withLevel(10, Action.CREATE, owners),
+				AccessRule.withLevel(10, Action.READ, owners),
+				AccessRule.withLevel(10, Action.FORBIDDEN, owners)
 			))
 		);
-		when(mock.getRulesForUserAndGroups(disallowed, destination)).thenReturn(
-			new Rules(Action.UNDEFINED, Arrays.asList(new AccessRule(null, Action.UNDEFINED)))
-		);
-		when(mock.getRulesForUserAndGroups(forbidden, destination)).thenReturn(
-			new Rules(Action.UNDEFINED,Arrays.asList(
-					new AccessRule(null, Action.UNDEFINED),
-					new AccessRule(null, Action.FORBIDDEN)
-				)
-			)
-		);
 		
 		AuthorizationHelper helper = getHelper(mock);
 		
-		assertFalse(helper.isAllowed(disallowed, destination, action));
-		assertFalse(helper.isAllowed(forbidden, destination, action));
-		assertEquals(isAllowed, helper.isAllowed(allowed, destination, action));
+		assertEquals(allowedWithoutOwner, helper.isAllowed(user, domain, action));
+		assertEquals(allowedWithOwner, helper.isAllowed(user, domain, action, "owner"));
 	}
 	
-	public Object[] parametersForTestIsAllowedWithRoleIdRules() {
-		return new Object[] {
-				new Object[]{
-						Action.READ, true	
-				},
-				new Object[]{
-						Action.UPDATE, true
-				},
-				new Object[]{
-						Action.CREATE, true
-				},
-				new Object[]{
-						Action.DELETE, false
-				},
-				new Object[]{
-						Action.ADMIN, false	
-				}
-		};
-	}
+	/*** SEPARATOR ***/
+		/*
+		 * rules ==null
+		 * rules...getOwner == null
+		 * final action == undefined | forbidden
+		 */
 	
 	@Test
-	@Ignore
-	@Parameters
-	public void testIsAllowedSelectBeetweenUserIdRankAndRoleId(
-			boolean isAllowed,
-			Action tested,
-			Action userId,
-			Action userRank,
-			Action roleId) {
+	@Parameters(method = "dataGetAllowedThrowsIfNoRulesMatch")
+	public void testGetAllowedThrowsIfNoRulesMatch(Rules rules) {
+		AclDestination domain = getDestination("undefined");
 		AclRole role = getRole("role");
-		AclUser user = getUser("allowed", 10, role);
-		AclDestination destination = getDestination("user-id-rule");
+		AclUser user = getUser("user", 10, role);
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUserAndGroups(user, destination)).thenReturn(
-			new Rules(userId, Arrays.asList(new AccessRule(10, userRank)))
-		);
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(rules);
 		
 		AuthorizationHelper helper = getHelper(mock);
-		assertEquals(isAllowed, helper.isAllowed(user, destination, tested));
+		for (Action action : Action.values()) {
+			try {
+				helper.allowed(user, domain, action);
+				fail("Exception required " + action);
+			} catch (NotAllowedActionException e) {
+				assertTrue(true);
+			}
+		}
 		
-	}	
-	
-	public Object[] parametersForTestIsAllowedSelectBeetweenUserIdRankAndRoleId() {
+	}
+
+	public Object[] dataGetAllowedThrowsIfNoRulesMatch() {
 		return new Object[] {
-				new Object[]{
-						Action.READ, true	
-				},
-				new Object[]{
-						Action.UPDATE, true
-				},
-				new Object[]{
-						Action.CREATE, true
-				},
-				new Object[]{
-						Action.DELETE, false
-				},
-				new Object[]{
-						Action.ADMIN, false	
-				}
+				new Object[]{null},
+				new Object[]{Rules.forUserGroupsAndLevels(Arrays.asList(
+					AccessRule.withoutLevel(Action.CREATE, null)
+				))},
+				new Object[]{Rules.forUserWithOwner(Action.CREATE, null)},
 		};
 	}
 	
-	@Test(expected=AccessDeniedException.class)
-	public void testThrowIfIsNotAllowedThrows() throws AccessDeniedException {
-		AclRole disallowedRole = getRole("disallowed-role");
-		AclUser disallowed = getUser("disallowed", 10, disallowedRole);
-		AclDestination destination = getDestination("user-id-rule");
+	@Test
+	@Parameters(method = "dataGetAllowedForUserId")
+	public void testGetAllowedForUserId(Action action, List<String> owners) {
+		AclDestination domain = getDestination("for-user-id");
+		AclUser user = getUser("user", 10);
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUserAndGroups(disallowed, destination)).thenReturn(
-			new Rules(Action.READ, Arrays.asList(new AccessRule(null, Action.UNDEFINED)))
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.forUserWithOwner(Action.CREATE, Arrays.asList("owner1", "owner2", "owner3"))
 		);
-				
+		
 		AuthorizationHelper helper = getHelper(mock);
-		helper.throwIfIsNotAllowed(
-				disallowed,
-				destination,
-				Action.CREATE
-		);
+		
+		if (owners == null) {
+			assertEquals(owners, helper.getAllowed(user, domain, action));
+		} else {
+			Set<String> expected = new HashSet<>();
+			expected.addAll(owners);
+			assertEquals(expected, helper.getAllowed(user, domain, action));
+		}
+		
+	}
+	
+	public Object[] dataGetAllowedForUserId() {
+		return new Object[] {
+			new Object[]{Action.ALLOWED, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.READ, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.UPDATE, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.CREATE, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.DELETE, null},
+			new Object[]{Action.ADMIN, null},
+		};
 	}
 	
 	@Test
-	public void testThrowIfIsNotAllowedNotThrowsWhenUserIsAllowed() {
-		AclRole role = getRole("disallowed-role");
-		AclUser allowed = getUser("allowed", 10, role);
-		AclDestination destination = getDestination("user-id-rule");
+	@Parameters(method = "dataGetAllowedForGroup")
+	public void testGetAllowedForGroup(Action action, List<String> owners) {
+		AclDestination domain = getDestination("for-user-id");
+		AclUser user = getUser("user", 10);
 		
 		RulesDao mock = mock(RulesDao.class);
-		when(mock.getRulesForUserAndGroups(allowed, destination)).thenReturn(
-			new Rules(Action.CREATE, Arrays.asList(new AccessRule(null, Action.UNDEFINED)))
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.forUserGroupsAndLevels(Arrays.asList(
+				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner6")),
+				AccessRule.withoutLevel(Action.FORBIDDEN, Arrays.asList("owner5", "owner6")),
+				AccessRule.withoutLevel(Action.READ, Arrays.asList("owner5")),
+				AccessRule.withoutLevel(Action.CREATE, Arrays.asList("owner1", "owner2")),
+				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner3")),
+				AccessRule.withLevel(12, Action.CREATE, Arrays.asList("owner4"))
+			))
 		);
-				
+		
 		AuthorizationHelper helper = getHelper(mock);
-		helper.throwIfIsNotAllowed(
-				allowed,
-				destination,
-				Action.READ
+		
+		if (owners == null) {
+			assertEquals(owners, helper.getAllowed(user, domain, action));
+		} else {
+			Set<String> expected = new HashSet<>();
+			expected.addAll(owners);
+			assertEquals(expected, helper.getAllowed(user, domain, action));
+		}
+		
+	}
+	
+	public Object[] dataGetAllowedForGroup() {
+		return new Object[] {
+			new Object[]{Action.ALLOWED, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.READ, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.UPDATE, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.CREATE, Arrays.asList("owner1", "owner2", "owner3")},
+			new Object[]{Action.DELETE, null},
+			new Object[]{Action.ADMIN, null},
+		};
+	}
+	
+
+	@Test
+	@Parameters(method = "dataGetAllowedFull")
+	public void testGetAllowedFull(Action action, List<String> owners) {
+		AclDestination domain = getDestination("for-user-id");
+		AclUser user = getUser("user", 10);
+		
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.full(Action.CREATE, Arrays.asList("owner5"), Arrays.asList(
+				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner6")),
+				AccessRule.withoutLevel(Action.FORBIDDEN, Arrays.asList("owner5", "owner6")),
+				AccessRule.withoutLevel(Action.READ, Arrays.asList("owner5")),
+				AccessRule.withoutLevel(Action.CREATE, Arrays.asList("owner1", "owner2")),
+				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner3")),
+				AccessRule.withLevel(12, Action.CREATE, Arrays.asList("owner4"))
+			))
 		);
-		assertTrue(true);
+		
+		AuthorizationHelper helper = getHelper(mock);
+		
+		if (owners == null) {
+			assertEquals(owners, helper.getAllowed(user, domain, action));
+		} else {
+			Set<String> expected = new HashSet<>();
+			expected.addAll(owners);
+			assertEquals(expected, helper.getAllowed(user, domain, action));
+		}
+	}
+	
+	@Test
+	public void testGetAllowedFullWithForbidden() {
+		AclDestination domain = getDestination("for-user-id");
+		AclUser user = getUser("user", 10);
+		
+		RulesDao mock = mock(RulesDao.class);
+		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
+			Rules.full(Action.FORBIDDEN, Arrays.asList("owner3"), Arrays.asList(
+				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner6")),
+				AccessRule.withoutLevel(Action.FORBIDDEN, Arrays.asList("owner5", "owner6")),
+				AccessRule.withoutLevel(Action.READ, Arrays.asList("owner5")),
+				AccessRule.withoutLevel(Action.CREATE, Arrays.asList("owner1", "owner2")),
+				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner3")),
+				AccessRule.withLevel(12, Action.CREATE, Arrays.asList("owner4"))
+			))
+		);
+		
+		AuthorizationHelper helper = getHelper(mock);
+		
+		Set<String> expected = new HashSet<>();
+		expected.addAll(Arrays.asList("owner1", "owner2"));
+		assertEquals(expected, helper.getAllowed(user, domain, Action.CREATE));
+	}
+	
+	public Object[] dataGetAllowedFull() {
+		return new Object[] {
+			new Object[]{Action.ALLOWED, Arrays.asList("owner1", "owner2", "owner3", "owner5")},
+			new Object[]{Action.READ, Arrays.asList("owner1", "owner2", "owner3", "owner5")},
+			new Object[]{Action.UPDATE, Arrays.asList("owner1", "owner2", "owner3", "owner5")},
+			new Object[]{Action.CREATE, Arrays.asList("owner1", "owner2", "owner3", "owner5")},
+			new Object[]{Action.DELETE, null},
+			new Object[]{Action.ADMIN, null},
+		};
 	}
 	
 	/*** SEPARATOR ***/
@@ -317,11 +353,33 @@ public class AuthorizationHelperTest {
 	}
 	
 	private AclDestination getDestination(String id) {
-		return ()->{return id;};
+		return new AclDestination() {
+			
+			@Override
+			public String getId() {
+				return id;
+			}
+			
+			@Override
+			public String toString() {
+				return String.format("Role #%s", id);
+			}
+		};
 	}
 	
 	private AclRole getRole(String id) {
-		return ()->{return id;};
+		return new AclRole() {
+			
+			@Override
+			public String getId() {
+				return id;
+			}
+			
+			@Override
+			public String toString() {
+				return String.format("Role #%s", id);
+			}
+		};
 	}
 	
 	private AclUser getUser(String id, int rank, AclRole... aclRoles) {
@@ -341,7 +399,11 @@ public class AuthorizationHelperTest {
 			public String getId() {
 				return id;
 			}
+			
+			@Override
+			public String toString() {
+				return String.format("User #%s(%s): %s", getId(), getRank(), getRoles());
+			}
 		};
 	}
-	
 }

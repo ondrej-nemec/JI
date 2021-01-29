@@ -9,5 +9,9 @@ public class NotAllowedActionException extends RuntimeException {
 	public NotAllowedActionException(Action action) {
 		super("Action: " + action + " is not allowed as rule.");
 	}
+
+	public NotAllowedActionException(String message) {
+		super(message);
+	}
 	
 }

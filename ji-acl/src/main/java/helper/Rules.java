@@ -6,20 +6,32 @@ import java.util.List;
 public class Rules {
 	
 	private final Action forUserId;
+	private final List<String> owners;
 	
 	private final List<AccessRule> access;
 	
-	public Rules(Action forUser) {
-		this(forUser, new LinkedList<>());
+	/**
+	 * Create Rules for user
+	 * @param forUser Action for user
+	 * @param owners where user is allowed, empty mean no one, null means everyone
+	 * @return
+	 */
+	public static Rules forUserWithOwner(Action forUser, List<String> owners) {
+		return new Rules(forUser, owners, new LinkedList<>());
 	}
 
-	public Rules(List<AccessRule> access) {
-		this(Action.UNDEFINED, access);
+	public static Rules forUserGroupsAndLevels(List<AccessRule> access) {
+		return new Rules(Action.UNDEFINED, null, access);
 	}
-
-	public Rules(Action forUserId, List<AccessRule> access) {
+	
+	public static Rules full(Action forUser, List<String> owners, List<AccessRule> access) {
+		return new Rules(forUser, owners, access);
+	}
+	
+	private Rules(Action forUserId, List<String> owners, List<AccessRule> access) {
 		this.forUserId = forUserId;
 		this.access = access;
+		this.owners = owners;
 	}
 
 	public Action getForUserId() {
@@ -28,6 +40,10 @@ public class Rules {
 
 	public List<AccessRule> getAccess() {
 		return access;
+	}
+
+	public List<String> getOwners() {
+		return owners;
 	}
 	
 }
