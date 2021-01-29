@@ -168,6 +168,43 @@ public class QueryBuilderEndToEndTest {
 				"postgresql"
 		));
 		//*/
+		//*
+		result.add(createParams(
+				(conn) -> {return new PostgreSqlQueryBuilder(conn);},
+				() -> {
+					try {
+						props.setProperty("user", "postgres");
+						props.setProperty("password", "1234");
+						return DriverManager.getConnection("jdbc:postgresql://localhost/" + DB_NAME, props);
+					} catch (SQLException e) {
+						fail("Connection not created: " + e.getMessage());
+						return null;
+					}
+				},
+				(ignored) -> {
+					//	props.setProperty("user", "postgres");
+					//	props.setProperty("password", "1234");
+						try {
+							DriverManager
+				    		.getConnection("jdbc:sqlserver://localhost/", props)
+				    		.createStatement()
+				    		.executeUpdate(String.format(
+				    			"IF NOT EXISTS ("
+				    			+ " SELECT  *"
+				    			+ " FROM sys.schemas"
+				    			+ " WHERE name = N'%s'"
+				    			+ ")"
+				    			+ " EXEC('CREATE SCHEMA [%s]'); ",
+				    			DB_NAME, DB_NAME
+				    		));
+						} catch (Exception e) {
+							fail("Connection not created: " + e.getMessage());
+						}
+					},
+				(ignored) -> {}, 
+				"sqlserver"
+		));
+		//*/
 		return result;
 	}
 	
