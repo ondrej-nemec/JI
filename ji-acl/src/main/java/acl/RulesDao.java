@@ -1,8 +1,10 @@
-package interfaces;
+package acl;
 
-import helper.Rules;
+import acl.structures.AclDestination;
+import acl.structures.AclUser;
+import acl.structures.Rules;
 
-public interface RulesDao<U, R> {
+public interface RulesDao {
 	
 	/**
 	 * Select rules for given user and his/her groups.
@@ -13,6 +15,6 @@ public interface RulesDao<U, R> {
 	 * @param domain
 	 * @return
 	 */
-	Rules getRulesForUserAndGroups(AclUser<U, R> user, AclDestination domain);
+	Rules getRulesForUserAndGroups(AclUser user, AclDestination domain);
 	
 }

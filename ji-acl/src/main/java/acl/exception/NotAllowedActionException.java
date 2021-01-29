@@ -1,6 +1,6 @@
-package exception;
+package acl.exception;
 
-import helper.Action;
+import acl.Action;
 
 public class NotAllowedActionException extends RuntimeException {
 

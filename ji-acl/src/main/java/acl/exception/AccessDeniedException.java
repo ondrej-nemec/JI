@@ -1,8 +1,8 @@
-package exception;
+package acl.exception;
 
-import helper.Action;
-import interfaces.AclDestination;
-import interfaces.AclUser;
+import acl.Action;
+import acl.structures.AclDestination;
+import acl.structures.AclUser;
 
 public class AccessDeniedException extends RuntimeException{
 
@@ -12,7 +12,7 @@ public class AccessDeniedException extends RuntimeException{
 		super();
 	}
 	
-	public AccessDeniedException(AclUser<?, ?> user, AclDestination destination, Action action) {
+	public AccessDeniedException(AclUser user, AclDestination destination, Action action) {
 		super(user + ":" + destination + ":" + action);
 	}
 	

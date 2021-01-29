@@ -1,6 +1,8 @@
-package helper;
+package acl.structures;
 
 import java.util.List;
+
+import acl.Action;
 
 public class AccessRule {
 
