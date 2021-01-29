@@ -358,12 +358,12 @@ public class AuthorizationHelperTest {
 	
 	private AclDestination getDestination(String id) {
 		return new AclDestination() {
-			/*
+			
 			@Override
-			public String getId() {
+			public Object getId() {
 				return id;
 			}
-			*/
+			
 			@Override
 			public String toString() {
 				return String.format("Role #%s", id);
@@ -373,12 +373,12 @@ public class AuthorizationHelperTest {
 	
 	private AclRole getRole(String id) {
 		return new AclRole() {
-			/*
+			
 			@Override
-			public String getId() {
+			public Object getId() {
 				return id;
 			}
-			*/
+			
 			@Override
 			public String toString() {
 				return String.format("Role #%s", id);
@@ -398,12 +398,12 @@ public class AuthorizationHelperTest {
 			public int getRank() {
 				return rank;
 			}
-			/*
+			
 			@Override
-			public String getId() {
+			public Object getId() {
 				return id;
 			}
-			*/
+			
 			@Override
 			public String toString() {
 				return String.format("User #%s(%s): %s", id, getRank(), getRoles());

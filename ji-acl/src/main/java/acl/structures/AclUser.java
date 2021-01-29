@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface AclUser {
 
-	// public String getId();
+	public Object getId();
 	
 	public int getRank();
 	
