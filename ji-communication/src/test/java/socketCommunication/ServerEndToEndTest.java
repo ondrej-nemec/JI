@@ -1,11 +1,16 @@
 package socketCommunication;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.function.Function;
 
 import common.Console;
 import core.text.Binary;
@@ -22,31 +27,41 @@ public class ServerEndToEndTest {
 
 	public static void main(String[] args) {
 		try {
-			//*	    	
-			ServerSecuredCredentials cred = new ServerSecuredCredentials(
-					"servercerts/keystore.jks",
-					"abc123",
-					Optional.empty(),
-					Optional.empty()
-			);
+			/*
+			Optional<ServerSecuredCredentials> cred = Optional.empty();
+			int port = 80;
+			/*/
+			Optional<ServerSecuredCredentials> cred = Optional.of(new ServerSecuredCredentials(
+				"certificates/p2/server-keystore.jks",
+				"123456",
+				Optional.empty(),
+				Optional.empty()
+			));
+			int port = 443;
+			//*/
 			
-			Server server = Server.create(
-					80,
+			//*	
+			Server server = Server.createWebServer(
+					port,
 					5,
 					120000,
 					apiResponse(),
-					//*
-					Optional.empty(),
-					/*/
-					Optional.of(cred),
-					//*/
+					cred,
 					10 * 1024, // 10 kB
 					Optional.empty(),
 					"UTF-8",
 					new LoggerImpl()
 			);
 			/*/
-			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
+			Server server = new Server(
+					port, 
+					5,
+					60000,
+					speakerFunction(), 
+					cred,
+					"UTF-8",
+					new LoggerImpl()
+			);
 			//*/
 			
 			server.start();
@@ -223,10 +238,53 @@ public class ServerEndToEndTest {
 		};
 	}
 	
-	protected static Function<String, String> speakerFunction() {
-		return (message)-> {
-			console.out("Message " + message);			
-            return "Received: " + message;
-        };
+	protected static Servant speakerFunction() {
+		return (socket, charset)->{
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+		           	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
+		           	 BufferedInputStream is = new BufferedInputStream(socket.getInputStream());
+		           	 BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());) {
+				for (int i = 0; i < 100; i++) {
+					bw.write("Int #" + i + "");
+					bw.newLine();
+					if (i%10 == 0) {
+						bw.write(SpeakerEndToEndTest.MESSAGE_END);
+						bw.flush();
+						
+						//StringBuilder message = new StringBuilder();
+						int c = br.read();
+						while((char)c != SpeakerEndToEndTest.MESSAGE_END && c != -1) {
+							System.out.println(i + "--> " + (char)c);
+							c = br.read();
+						}
+						
+						try {Thread.sleep(1000);
+						} catch (InterruptedException e) {e.printStackTrace();}
+					}
+				}
+				/*// V1
+				StringBuilder message = new StringBuilder();
+				char c;
+				while((c = (char)br.read()) != SpeakerEndToEndTest.MESSAGE_END) {
+					message.append(c);
+				}
+				System.out.println(message);
+				
+				bw.write("ahoj");
+				bw.newLine();
+				bw.write("rád tě slyším" + SpeakerEndToEndTest.MESSAGE_END);
+				bw.flush();
+				
+				message = new StringBuilder();
+				while((c = (char)br.read()) != SpeakerEndToEndTest.MESSAGE_END) {
+					message.append(c);
+				}
+				System.out.println(message);
+				
+				bw.write("Sbohem" + SpeakerEndToEndTest.MESSAGE_END);
+				bw.flush();
+				//*/  
+			}
+		};
 	}
 }

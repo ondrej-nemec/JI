@@ -22,7 +22,7 @@ public class ServerRestartEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			//*
-			Server server = Server.create(10123, 5, 60000, apiResponse(), Optional.empty(), 10 * 1024, Optional.empty(),  "UTF-8",  new LoggerImpl());
+			Server server = Server.createWebServer(10123, 5, 60000, apiResponse(), Optional.empty(), 10 * 1024, Optional.empty(),  "UTF-8",  new LoggerImpl());
 			/*/
 			Server server = Server.create(10123, 5, 60000, speakerFunction(), "UTF-8", new LoggerImpl());
 			//*/

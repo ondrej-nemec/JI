@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -28,7 +27,6 @@ import common.Logger;
 import core.text.InputStreamLoader;
 import socketCommunication.http.server.RestApiServerResponseFactory;
 import socketCommunication.http.server.RestApiServer;
-import socketCommunication.peerToPeer.Speaker;
 
 public class Server {
 	
@@ -51,7 +49,7 @@ public class Server {
     
     private final Servant servant;
         
-    public static Server create(int port,
+    public static Server createWebServer(int port,
     		int threadPool,
     		long readTimeout,
     		RestApiServerResponseFactory response,
@@ -69,16 +67,6 @@ public class Server {
     			charset,
     			logger
     	);
-    }
-    
-    public static Server create(int port,
-    		int threadPool,
-    		long readTimeout,
-    		Function<String, String> response,
-    		Optional<ServerSecuredCredentials> config,
-    		String charset,
-    		Logger logger) throws Exception {
-    	return new Server(port, threadPool, readTimeout, new Speaker(response, logger), config, charset, logger);
     }
     
     public Server(
@@ -127,7 +115,7 @@ public class Server {
 	        trustManager = tmf.getTrustManagers();
     	}
         /***/
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    	KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         InputStream kstore = InputStreamLoader.createInputStream(getClass(), config.getServerKeyStore());
         keyStore.load(kstore, config.getServerKeystorePassword().toCharArray());
         KeyManagerFactory kmf = KeyManagerFactory
