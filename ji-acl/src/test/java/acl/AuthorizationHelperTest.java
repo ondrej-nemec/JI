@@ -129,7 +129,7 @@ public class AuthorizationHelperTest {
 	
 	@Test
 	@Parameters(method = "dataIsAllowedTest")
-	public void testIsAllowedForGroupId(Action action, List<String> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
+	public void testIsAllowedForGroupId(Action action, List<Object> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
 		AclDestination domain = getDestination("for-group-id");
 		AclUser user = getUser("user", 10);
 		
@@ -150,7 +150,7 @@ public class AuthorizationHelperTest {
 	
 	@Test
 	@Parameters(method = "dataIsAllowedTest")
-	public void testIsAllowedForGroupIdAndLevel(Action action, List<String> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
+	public void testIsAllowedForGroupIdAndLevel(Action action, List<Object> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
 		AclDestination domain = getDestination("for-group-id");
 		AclUser user = getUser("user", 10);
 		

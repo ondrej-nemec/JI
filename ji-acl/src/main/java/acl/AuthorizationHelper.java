@@ -95,7 +95,7 @@ public class AuthorizationHelper {
 	 * @param what
 	 * @return list of allowed user ids, empty means allowed to destination, but not for users, null means not allowed
 	 */
-	public Collection<String> getAllowed(AclUser who, AclDestination where, Action what) {
+	public Collection<Object> getAllowed(AclUser who, AclDestination where, Action what) {
 		try {
 			return allowed(who, where, what);
 		} catch (AccessDeniedException e) {
@@ -111,7 +111,7 @@ public class AuthorizationHelper {
 	 * @throws AccessDeniedException
 	 * @return list of allowed user ids, empty means allowed to destination, but not for users
 	 */
-	public Collection<String> allowed(AclUser who, AclDestination where, Action what) {		
+	public Collection<Object> allowed(AclUser who, AclDestination where, Action what) {		
 		logger.debug("Access required: " + who + " -> " + where + " -> " + what);
 		
 		if (what == Action.FORBIDDEN || what == Action.UNDEFINED) {
@@ -123,8 +123,8 @@ public class AuthorizationHelper {
 			logger.warn("No access rule found for: " + who + " -> " + where + " -> " + what); 
 			throw new NotAllowedActionException("No rule found");
 		}
-		Set<String> allowedIds = new HashSet<>();
-		Set<String> forbidden = new HashSet<>();
+		Set<Object> allowedIds = new HashSet<>();
+		Set<Object> forbidden = new HashSet<>();
 		Action action = Action.UNDEFINED;
 		if (rules.getAccess() != null) {
 			for (AccessRule rule : rules.getAccess()) {
