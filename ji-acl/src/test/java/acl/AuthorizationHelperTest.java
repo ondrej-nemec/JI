@@ -112,7 +112,7 @@ public class AuthorizationHelperTest {
 	
 	@Test
 	@Parameters(method = "dataIsAllowedTest")
-	public void testIsAllowedForUserId(Action action, List<String> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
+	public void testIsAllowedForUserId(Action action, List<Object> owners, boolean allowedWithoutOwner, boolean allowedWithOwner) {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
@@ -211,7 +211,7 @@ public class AuthorizationHelperTest {
 	
 	@Test
 	@Parameters(method = "dataGetAllowedForUserId")
-	public void testGetAllowedForUserId(Action action, List<String> owners) {
+	public void testGetAllowedForUserId(Action action, List<Object> owners) {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
@@ -225,7 +225,7 @@ public class AuthorizationHelperTest {
 		if (owners == null) {
 			assertEquals(owners, helper.getAllowed(user, domain, action));
 		} else {
-			Set<String> expected = new HashSet<>();
+			Set<Object> expected = new HashSet<>();
 			expected.addAll(owners);
 			assertEquals(expected, helper.getAllowed(user, domain, action));
 		}
@@ -245,7 +245,7 @@ public class AuthorizationHelperTest {
 	
 	@Test
 	@Parameters(method = "dataGetAllowedForGroup")
-	public void testGetAllowedForGroup(Action action, List<String> owners) {
+	public void testGetAllowedForGroup(Action action, List<Object> owners) {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
@@ -266,7 +266,7 @@ public class AuthorizationHelperTest {
 		if (owners == null) {
 			assertEquals(owners, helper.getAllowed(user, domain, action));
 		} else {
-			Set<String> expected = new HashSet<>();
+			Set<Object> expected = new HashSet<>();
 			expected.addAll(owners);
 			assertEquals(expected, helper.getAllowed(user, domain, action));
 		}
