@@ -29,6 +29,12 @@ public class AuthorizationHelper {
 		}
 	}
 	
+	public void throwIfIsNotAllowed(AclUser who, AclDestination where, Action what, String owner) {
+		if(!isAllowed(who, where, what, owner)) {
+			throw new AccessDeniedException(who, where, what);
+		}
+	}
+	
 	public boolean isAllowed(AclUser who, AclDestination where, Action what) {
 		return isAllowed(who, where, what, null);
 	}
@@ -87,8 +93,7 @@ public class AuthorizationHelper {
 	 * @param who
 	 * @param where
 	 * @param what
-	 * @throws AccessDeniedException
-	 * @return list of allowed user ids, empty means allowed to destination, but not for users
+	 * @return list of allowed user ids, empty means allowed to destination, but not for users, null means not allowed
 	 */
 	public Collection<String> getAllowed(AclUser who, AclDestination where, Action what) {
 		try {
