@@ -30,6 +30,11 @@ public class PosgreSql implements DatabaseInstance {
 		this.runOnExternal = runOnExternal;
 		this.logger = logger;
 		this.name = name;
+		try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+        	this.logger.warn("MySQL driver could not be registered", e);
+        }
 	}
 
 	@Override
