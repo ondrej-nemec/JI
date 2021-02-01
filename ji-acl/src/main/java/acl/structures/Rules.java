@@ -8,7 +8,7 @@ import acl.Action;
 public class Rules {
 	
 	private final Action forUserId;
-	private final List<String> owners;
+	private final List<Object> owners;
 	
 	private final List<AccessRule> access;
 	
@@ -18,7 +18,7 @@ public class Rules {
 	 * @param owners where user is allowed, empty mean no one, null means everyone
 	 * @return
 	 */
-	public static Rules forUserWithOwner(Action forUser, List<String> owners) {
+	public static Rules forUserWithOwner(Action forUser, List<Object> owners) {
 		return new Rules(forUser, owners, new LinkedList<>());
 	}
 
@@ -26,11 +26,11 @@ public class Rules {
 		return new Rules(Action.UNDEFINED, null, access);
 	}
 	
-	public static Rules full(Action forUser, List<String> owners, List<AccessRule> access) {
+	public static Rules full(Action forUser, List<Object> owners, List<AccessRule> access) {
 		return new Rules(forUser, owners, access);
 	}
 	
-	private Rules(Action forUserId, List<String> owners, List<AccessRule> access) {
+	private Rules(Action forUserId, List<Object> owners, List<AccessRule> access) {
 		this.forUserId = forUserId;
 		this.access = access;
 		this.owners = owners;
@@ -44,7 +44,7 @@ public class Rules {
 		return access;
 	}
 
-	public List<String> getOwners() {
+	public List<Object> getOwners() {
 		return owners;
 	}
 	
