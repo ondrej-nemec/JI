@@ -29,7 +29,7 @@ public class AuthorizationHelper {
 		}
 	}
 	
-	public void throwIfIsNotAllowed(AclUser who, AclDestination where, Action what, String owner) {
+	public void throwIfIsNotAllowed(AclUser who, AclDestination where, Action what, Object owner) {
 		if(!isAllowed(who, where, what, owner)) {
 			throw new AccessDeniedException(who, where, what);
 		}
@@ -39,7 +39,7 @@ public class AuthorizationHelper {
 		return isAllowed(who, where, what, null);
 	}
 	
-	public boolean isAllowed(AclUser who, AclDestination where, Action what, String owner) {
+	public boolean isAllowed(AclUser who, AclDestination where, Action what, Object owner) {
 		logger.debug("Access required: " + who + " -> " + where + " -> " + what + " (" + owner + ")");
 		
 		if (what == Action.FORBIDDEN || what == Action.UNDEFINED) {
