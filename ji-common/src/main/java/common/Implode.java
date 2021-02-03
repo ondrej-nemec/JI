@@ -1,12 +1,19 @@
 package common;
 
+import java.util.function.Function;
+
 import common.exceptions.LogicException;
 
 public class Implode {
 
 	@SafeVarargs
 	public static <T> String implode(String glue, T... data) {
-		return implode(glue, data, 0, data.length - 1);
+		return implode((a)->a.toString(), glue, data);
+	}
+
+	@SafeVarargs
+	public static <T> String implode(Function<T, String> toString, String glue, T... data) {
+		return implode(glue, data, 0, data.length - 1, toString);
 	}
 
 	/**
@@ -18,6 +25,10 @@ public class Implode {
 	 * @return
 	 */
 	public static <T> String implode(String glue, T[] data, int from, int to) {
+		return implode(glue, data, from, to, (a)->a.toString());
+	}
+
+	public static <T> String implode(String glue, T[] data, int from, int to, Function<T, String> toString) {
 		String result = "";
 		if (to >= data.length || from < 0 || from > to) {
 			throw new LogicException(String.format(
@@ -29,8 +40,9 @@ public class Implode {
 			if (i != from) {
 				result += glue;
 			}
-			result += data[i];
+			result += toString.apply(data[i]);
 		}
 		return result;
 	}
+	
 }
