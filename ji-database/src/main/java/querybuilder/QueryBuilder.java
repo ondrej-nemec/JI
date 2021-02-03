@@ -40,7 +40,7 @@ public abstract class QueryBuilder {
 	 * @return
 	 */
 	public SelectQueryBuilder union(SelectQueryBuilder ...union) {
-		return query(Implode.implode(" UNION ", union));
+		return query(Implode.implode((sql)->sql.createSql(), " UNION ", union));
 	}
 	
 	/**
@@ -49,7 +49,7 @@ public abstract class QueryBuilder {
 	 * @return
 	 */
 	public SelectQueryBuilder intersect(SelectQueryBuilder ...intersect) {
-		return query(Implode.implode(" INTERSECT ", intersect));
+		return query(Implode.implode((sql)->sql.createSql(), " INTERSECT ", intersect));
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public abstract class QueryBuilder {
 	 * @return
 	 */
 	public SelectQueryBuilder except(SelectQueryBuilder ...except) {
-		return query(Implode.implode(" EXCEPT ", except));
+		return query(Implode.implode((sql)->sql.createSql(), " EXCEPT ", except));
 	}
 	
 	/***********************/
