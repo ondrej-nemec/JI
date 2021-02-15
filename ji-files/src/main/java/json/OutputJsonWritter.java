@@ -49,6 +49,7 @@ public class OutputJsonWritter {
 	
 	@SuppressWarnings("unchecked")
 	private void writeObject(OutputJsonStream stream, Object value, String name) throws JsonStreamException {
+		System.err.println("WriteObject " + name + " " + value);
 		if (value == null) {
 			if (name == null) {
 				stream.writeListValue(value);
