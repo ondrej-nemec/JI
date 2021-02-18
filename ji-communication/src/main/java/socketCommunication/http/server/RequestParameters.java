@@ -18,11 +18,6 @@ public class RequestParameters extends HashMap<String, Object> implements Dictio
 		}
 	}
 	
-	@Override
-	public Object getValue(String name) {
-		return get(name);
-	}
-	
 	public List<?> getList(String key) {
 		return List.class.cast(get(key));
 	}
@@ -30,7 +25,10 @@ public class RequestParameters extends HashMap<String, Object> implements Dictio
 	public Map<?, ?> getMap(String key) {
 		return Map.class.cast(get(key));
 	}
-
-
+	
+	@Override
+	public Object getValue(String name) {
+		return get(name);
+	}
 
 }

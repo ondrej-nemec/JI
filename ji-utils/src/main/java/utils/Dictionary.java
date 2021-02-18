@@ -8,11 +8,21 @@ public interface Dictionary {
 
 	Object getValue(String name);
 	
+	default <T> T getValue(String name, Class<T> clazz) {
+		Object value = getValue(name);
+		if (value == null) {
+			return null;
+		}
+		return clazz.cast(value);
+	}
+	
 	default <T> T getValue(String name, Function<String, T> create) {
 		Object value = getValue(name);
 		if (value == null) {
 			return null;
 		}
+	// TODO merge this two getValue to one 
+		// if (value instanceof String) {}
 		return create.apply(value.toString());
 	}
 	
@@ -36,12 +46,12 @@ public interface Dictionary {
 		return getValue(name, a->a);
 	}
 	
-	default List<String> getList(String name, String delimiter) {
-		return getValue(name, a->Arrays.asList(a.split(delimiter)));
-	}
-	
 	default <E extends Enum<E>> E getEnum(String name, Class<E> enumm) {
 		return getValue(name, a->E.valueOf(enumm, a));
+	}
+	
+	default List<String> getList(String name, String delimiter) {
+		return getValue(name, a->Arrays.asList(a.split(delimiter)));
 	}
 	
 }
