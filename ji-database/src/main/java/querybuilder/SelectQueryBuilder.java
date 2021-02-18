@@ -1,6 +1,7 @@
 package querybuilder;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,6 +41,12 @@ public interface SelectQueryBuilder extends Parameters<SelectQueryBuilder> {
 	
 	List<DatabaseRow> fetchAll() throws SQLException;
 	
-	List<String> fetchAll(Function<DatabaseRow, String> function) throws SQLException;
+	default <T> List<T> fetchAll(Function<DatabaseRow, T> function) throws SQLException {
+		List<T> result = new LinkedList<>();
+		for(DatabaseRow row : fetchAll()) {
+			result.add(function.apply(row));
+		}
+		return result;
+	}
 
 }

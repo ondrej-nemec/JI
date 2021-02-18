@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import common.Implode;
 import database.support.DatabaseRow;
@@ -152,40 +151,5 @@ public class SqlServerSelectBuilder implements SelectQueryBuilder {
     		return rows;
 		}
 	}
-/*
-	@Override
-	public void fetchAll(Consumer<DatabaseRow> consumer) throws SQLException {
-		try (Statement stat = connection.createStatement(); ResultSet res  = stat.executeQuery(createSql());) {
-			while (res.next()) {
-    			DatabaseRow row = new DatabaseRow();
-    			for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
-    				row.addValue(
-    					res.getMetaData().getColumnLabel(i),
-    					res.getString(i)
-    				);
-    			}
-    			consumer.accept(row);
-    		}
-		}
-	}
-*/
-	@Override
-	public List<String> fetchAll(Function<DatabaseRow, String> function) throws SQLException {
-		List<String> result = new LinkedList<>();
-		for(DatabaseRow row : fetchAll()) {
-			result.add(function.apply(row));
-		}
-		return result;
-	}
-/*	
-	protected String joinToString(final Join join) {
-		switch(join) {
-			case FULL_OUTER_JOIN: throw new RuntimeException("Full Outer Join is not supported by mysql");
-			case INNER_JOIN: return "JOIN";
-			case LEFT_OUTER_JOIN: return "LEFT JOIN";
-			case RIGHT_OUTER_JOIN: return "RIGHT JOIN";
-			default: throw new RuntimeException("Not implemented join: " + join);
-		}
-	}
-*/
+
 }
