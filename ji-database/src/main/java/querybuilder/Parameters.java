@@ -1,25 +1,21 @@
 package querybuilder;
 
-import java.util.List;
+import common.Implode;
 
 public interface Parameters<B> extends Batch {
 	
 	B addNotEscapedParameter(String name, String value);
 	
-	@SuppressWarnings("unchecked")
 	default B addParameter(String name, Object value) {
 		if (value == null) {
 			return addNotEscapedParameter(name, "null");
 		}
-		if (value instanceof List) {
-			StringBuilder b = new StringBuilder();
-			List.class.cast(value).forEach((item)->{
-				if (!b.toString().isEmpty()) {
-					b.append(",");
-				}
-				b.append(escapeParameterParameter(item));
-			});
-			return addNotEscapedParameter(name, b.toString());
+		if (value instanceof Iterable<?>) {
+			Iterable<?> iterable = Iterable.class.cast(value);
+			return addNotEscapedParameter(
+				name,
+				Implode.implode(item->escapeParameterParameter(item), ",", iterable)
+			);
 		} else {
 			return addNotEscapedParameter(name, escapeParameterParameter(value));
 		}

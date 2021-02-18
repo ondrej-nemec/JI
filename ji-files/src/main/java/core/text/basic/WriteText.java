@@ -24,7 +24,7 @@ public class WriteText {
 	
 	public static void write(BufferedWriter bw, final List<List<String>> table, final String split) throws IOException {
 		for(List<String> line : table) {
-			bw.write(Implode.implode(split, line.toArray()));			
+			bw.write(Implode.implode(split, line));			
 			bw.newLine();
 		}
 		bw.flush();
