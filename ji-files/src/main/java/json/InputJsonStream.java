@@ -70,10 +70,16 @@ public class InputJsonStream {
 					case '}':
 						level--;
 						if (level == 0) {
+							provider.close();
 							return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), level);
 						}
 						return new Event(EventType.OBJECT_END, name, ValueParser.parse(value, isValueQuoted), level);
 					case ']':
+						/*level--;
+						if (level == 0) {
+							provider.close();
+						   // TODO there will be document_end returned if document_start removed
+						}*/
 						return new Event(EventType.LIST_END, name, ValueParser.parse(value, isValueQuoted), --level);
 				}
 				continue;
@@ -105,7 +111,7 @@ public class InputJsonStream {
 					}
 					break;
 				case '[': return new Event(EventType.LIST_START, name, ValueParser.parse(value, isValueQuoted), level++);
-				case ']':					
+				case ']':
 					actualCache = actual;					
 					if (!name.isEmpty()) { // list has not name, value is in name
 						return new Event(EventType.LIST_ITEM, value, ValueParser.parse(name, isKeyQuoted), level);
@@ -120,6 +126,9 @@ public class InputJsonStream {
 					}
 					if (!value.isEmpty()) {
 						return new Event(EventType.LIST_ITEM, name, ValueParser.parse(value, isValueQuoted), level);
+					}
+					if (!name.isEmpty()) {
+						return new Event(EventType.LIST_ITEM, name, ValueParser.parse(name, true), level);
 					}
 					break;
 				case ':': isWaitingForValue = true; break;

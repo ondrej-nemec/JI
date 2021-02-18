@@ -19,7 +19,14 @@ public class InputJsonStreamTest {
 	@Test
 	@Parameters(method = "dataNextTestEventTypes")
 	public void testNextTestEventTypes(String json, Event[] events) throws JsonStreamException {
-		InputStringProvider provider = new InputStringProvider(json);
+		StringBuilder b = new StringBuilder();
+		InputStringProvider provider = new InputStringProvider(json) {
+			@Override
+			public void close() throws JsonStreamException {
+				b.append("closed");
+				super.close();
+			}
+		};
 		InputJsonStream stream = new InputJsonStream(provider);
 		
 		Event e = stream.next();
@@ -29,6 +36,7 @@ public class InputJsonStreamTest {
 		}
 		e = stream.next();
 		assertEquals(new Event(EventType.DOCUMENT_END, "", new Value<>("", ValueType.NULL), 0), e);
+		assertEquals("closed", b.toString());
 	}
 	
 	public Object[] dataNextTestEventTypes() {
@@ -123,10 +131,36 @@ public class InputJsonStreamTest {
 						new Event(EventType.OBJECT_ITEM, "a", new Value<>(false, ValueType.BOOLEAN), 2),
 						new Event(EventType.OBJECT_END, "", new Value<>("", ValueType.NULL), 1)
 				}
-			},
+			}
 		};
 	}
 
+	@Test
+	public void testNextTestEventTypesWithList() throws JsonStreamException {
+		StringBuilder b = new StringBuilder();
+		InputStringProvider provider = new InputStringProvider("[1, 2, 3]") {
+			@Override
+			public void close() throws JsonStreamException {
+				b.append("closed");
+				super.close();
+			}
+		};
+		InputJsonStream stream = new InputJsonStream(provider);
+		Event[] events = new Event[] {
+				new Event(EventType.LIST_START, "", new Value<>("", ValueType.NULL), 0),
+				new Event(EventType.LIST_ITEM, "", new Value<>(1, ValueType.INTEGER), 1),
+				new Event(EventType.LIST_ITEM, "", new Value<>(2, ValueType.INTEGER), 1),
+				new Event(EventType.LIST_ITEM, "", new Value<>(3, ValueType.INTEGER), 1),
+				new Event(EventType.LIST_END, "", new Value<>("", ValueType.NULL), 0),
+			};
+		for (Event expected : events) {
+			assertEquals(expected, stream.next());
+		}
+		Event e = stream.next();
+		assertEquals(new Event(EventType.DOCUMENT_END, "", new Value<>("", ValueType.NULL), -1), e);
+		assertEquals("closed", b.toString());
+	}
+	
 	@Test
 	public void testNextIfTextIsEmpty() throws JsonStreamException {
 		String testingJson = "";

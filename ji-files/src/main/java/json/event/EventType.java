@@ -8,7 +8,7 @@ public enum EventType {
 	LIST_START,
 	LIST_END,
 	LIST_ITEM,
-	DOCUMENT_START,
-	DOCUMENT_END;
+	DOCUMENT_START, // TODO can be removed and replaced with object start
+	DOCUMENT_END; // will be only for empty documents
 
 }
