@@ -7,14 +7,22 @@ import json.providers.OutputStringProvider;
 
 public class OutputJsonWritter {
 	
-	public String write(Map<String, Object> json) throws JsonStreamException {
+	public String write(Object json) {
 		OutputStringProvider provider = new OutputStringProvider();
 		OutputJsonStream stream = new OutputJsonStream(provider);
-		write(stream, json);
+		try {
+			write(stream, json);
+		} catch (JsonStreamException e) {
+			// ignored - no reason for it
+		}
 		return provider.getJson();
 	}
 
-	public void write(OutputJsonStream stream, Map<String, Object> json) throws JsonStreamException {
+	public void write(OutputJsonStream stream, Object json) throws JsonStreamException {
+		writeObject(stream, json, null);
+	}
+
+	public void writeJson(OutputJsonStream stream, Map<String, Object> json) throws JsonStreamException {
 		stream.startDocument();
 		for (String key : json.keySet()) {
 			writeObject(stream, json.get(key), key);
@@ -22,14 +30,16 @@ public class OutputJsonWritter {
 		stream.endDocument();
 	}
 	
+	/******************/
+	
 	private void write(OutputJsonStream stream, Map<String, Object> objects, String name) throws JsonStreamException {
 		if (name == null) {
 			stream.writeObjectStart();
 		} else {
 			stream.writeObjectStart(name);
 		}
-		for (String key : objects.keySet()) {
-			writeObject(stream, objects.get(key), key);
+		for (Object key : objects.keySet()) {
+			writeObject(stream, objects.get(key), key + "");
 		}
 		stream.writeObjectEnd();
 	}

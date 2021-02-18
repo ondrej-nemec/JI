@@ -2,7 +2,6 @@ package json;
 
 import java.util.LinkedList;
 
-import common.structures.Tuple2;
 import json.event.EventType;
 import json.providers.OutputProvider;
 
@@ -10,7 +9,7 @@ public class OutputJsonStream {
 
 	private final OutputProvider provider;
 	
-	private final LinkedList<Tuple2<EventType, Boolean>> parent = new LinkedList<>();
+	private final LinkedList<Boolean> parent = new LinkedList<>();
 	
 	private final boolean formated;
 	
@@ -24,11 +23,8 @@ public class OutputJsonStream {
 	}
 	
 	public void startDocument() throws JsonStreamException {
-		/*if (parentEvent != null) {
-			throw new JsonStreamException("TODO");
-		}*/
 		provider.write("{");
-		parent.add(new Tuple2<EventType, Boolean>(EventType.DOCUMENT_START, true));
+		parent.add(true);
 	}
 	
 	public void endDocument() throws JsonStreamException {
@@ -91,17 +87,24 @@ public class OutputJsonStream {
 	}
 	
 	private boolean checkFirst(EventType child) {
-		boolean isFirst = checkFirst();
-		parent.add(new Tuple2<>(child, true));
+		if (parent.size() == 0) {
+			parent.add(true);
+			return true;
+		}
+		boolean isFirst = parent.getLast();
+		if (isFirst) {
+			parent.removeLast();
+			parent.add(false);
+		}
+		parent.add(true);
 		return isFirst;
 	}
 	
 	private boolean checkFirst() {
-		boolean isFirst = parent.getLast()._2();
+		boolean isFirst = parent.getLast();
 		if (isFirst) {
-			EventType eventType = parent.getLast()._1();
 			parent.removeLast();
-			parent.add(new Tuple2<>(eventType, false));
+			parent.add(false);
 		}
 		return isFirst;
 	}
