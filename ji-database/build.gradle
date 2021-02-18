@@ -33,7 +33,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
 	// https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
-	compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.1.1.jre15-preview'
+	testCompile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.1.1.jre15-preview'
 
 }
 
