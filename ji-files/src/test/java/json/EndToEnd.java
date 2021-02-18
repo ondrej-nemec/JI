@@ -16,7 +16,7 @@ public class EndToEnd {
 		json1.put("list", list);
 		json1.put("json", json2);
 		
-		OutputJsonWritter writter = new OutputJsonWritter();
+		JsonWritter writter = new JsonWritter();
 		String text1 = writter.write(json1);
 		String text2 = writter.write(list);
 		System.out.println(text1);

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import json.providers.OutputStringProvider;
 
-public class OutputJsonWritter {
+public class JsonWritter {
 	
 	public String write(Object json) {
 		OutputStringProvider provider = new OutputStringProvider();
