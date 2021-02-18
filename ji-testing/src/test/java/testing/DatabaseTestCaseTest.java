@@ -135,15 +135,15 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	@Override
 	protected DatabaseConfig createConfig() {
 		return new DatabaseConfig(
-				env.getProperty("db.type"),
-				env.getProperty("db.pathOrUrl"),
-				env.getProperty("db.externalServer").equals("1") ? true : false,
-				env.getProperty("db.schema"),
-				env.getProperty("db.login"),
-				env.getProperty("db.password"),
-				Arrays.asList(env.getProperty("db.pathToMigrations").split(",")),
-				env.getProperty("app.timezone"),
-				Integer.parseInt(env.getProperty("db.poolSize"))
+				env.getString("db.type"),
+				env.getString("db.pathOrUrl"),
+				env.getString("db.externalServer").equals("1") ? true : false,
+				env.getString("db.schema"),
+				env.getString("db.login"),
+				env.getString("db.password"),
+				env.getList("db.pathToMigrations", ","),
+				env.getString("app.timezone"),
+				env.getInteger("db.poolSize")
 		);
 	}
 

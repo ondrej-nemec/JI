@@ -2,9 +2,10 @@ package database.support;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
-public class DatabaseRow {
+import utils.Dictionary;
+
+public class DatabaseRow implements Dictionary {
 
 	private Map<String, Object> values;
 	
@@ -12,36 +13,9 @@ public class DatabaseRow {
 		this.values = new HashMap<>();
 	}
 	
+	@Override
 	public Object getValue(final String name) {
 		return values.get(name);
-	}
-	
-	private <T> T getValue(String name, Function<String, T> create) {
-		Object value = getValue(name);
-		if (value == null) {
-			return null;
-		}
-		return create.apply(value.toString());
-	}
-	
-	public String getString(String name) {
-		return getValue(name, a->a);
-	}
-	
-	public Integer getInt(String name) {
-		return getValue(name, a->Integer.parseInt(a));
-	}
-	
-	public Boolean getBoolean(String name) {
-		return getValue(name, a->Boolean.parseBoolean(a));
-	}
-	
-	public Long getLong(String name) {
-		return getValue(name, a->Long.parseLong(a));
-	}
-	
-	public Double getDouble(String name) {
-		return getValue(name, a->Double.parseDouble(a));
 	}
 	
 	public void addValue(String key, Object value) {
