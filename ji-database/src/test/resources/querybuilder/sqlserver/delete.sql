@@ -5,7 +5,7 @@ CREATE TABLE delete_table (
 
 INSERT INTO delete_table
 	VALUES
-		(1, "delete this"),
-		(2, "delete this"),
-		(3, "this too"),
-		(4, "this not");
+		(1, 'delete this'),
+		(2, 'delete this'),
+		(3, 'this too'),
+		(4, 'this not');

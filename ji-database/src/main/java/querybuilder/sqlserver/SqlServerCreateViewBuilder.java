@@ -23,9 +23,10 @@ public class SqlServerCreateViewBuilder implements CreateViewQueryBuilder {
 		this.params = new HashMap<>();
 		this.query = new StringBuilder();
 		if (modify) {
-			query.append("DROP VIEW " + name + ";");
+			query.append("ALTER VIEW " + name + " AS");
+		} else {
+			query.append("CREATE VIEW " + name + " AS");
 		}
-		query.append("CREATE VIEW " + name + " AS");
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class SqlServerCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder limit(int limit, int offset) {
-		query.append(" LIMIT " + limit + " OFFSET " + offset);
+	    query.append(" OFFSET " + offset + "ROWS FETCH NEXT " + limit + " ROWS ONLY");
 		return this;
 	}
 
@@ -108,17 +109,6 @@ public class SqlServerCreateViewBuilder implements CreateViewQueryBuilder {
 		}
 		return query;
 	}
-/*
-	protected String joinToString(final Join join) {
-		switch(join) {
-			case FULL_OUTER_JOIN: throw new RuntimeException("Full Outer Join is not supported by mysql");
-			case INNER_JOIN: return "JOIN";
-			case LEFT_OUTER_JOIN: return "LEFT JOIN";
-			case RIGHT_OUTER_JOIN: return "RIGHT JOIN";
-			default: throw new RuntimeException("Not implemented join: " + join);
-		}
-	}
-*/	
 
 	@Override
 	public void execute() throws SQLException {

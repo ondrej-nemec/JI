@@ -82,7 +82,7 @@ public class SqlServerSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder limit(int limit, int offset) {
-		query.append(" LIMIT " + limit + " OFFSET " + offset);
+		query.append(" OFFSET " + offset + "ROWS FETCH NEXT " + limit + " ROWS ONLY");
 		return this;
 	}
 

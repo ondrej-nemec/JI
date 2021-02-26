@@ -1,3 +1,3 @@
 CREATE TABLE SecondTable (
-	second_id INT(10) PRIMARY KEY
+	second_id INT PRIMARY KEY
 );

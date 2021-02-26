@@ -1,11 +1,11 @@
 CREATE TABLE alter_table (
 	id INT,
 	name VARCHAR(50),
-	fKey INT(11),
-	Index (fKey)
+	fKey INT
 );
+CREATE INDEX myIndex ON alter_table (fKey);
 
 CREATE TABLE table_fk (
-	id INT(11),
-	Index (id)
+	id INT Primary key
 );
+CREATE INDEX myIndex2 ON table_fk (id);

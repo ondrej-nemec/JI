@@ -9,7 +9,7 @@ public class EnumToSqlServerString {
 	
 	public static String onActionToString(OnAction action) {
 		switch (action) {
-    		case RESTRICT: return "RESTRICT";
+    		case RESTRICT: throw new RuntimeException("Restrict is not supported by SqlServer");// "RESTRICT";
     		case CASCADE: return "CASCADE";
     		case SET_NULL: return "SET NULL";
     		case NO_ACTION: return "NO ACTION";
@@ -32,13 +32,16 @@ public class EnumToSqlServerString {
 		if (defaultValue == null) {
 			return "";
 		}
+		if (defaultValue instanceof Boolean) {
+		    return " DEFAULT " + ((boolean)defaultValue ? 1 : 0);
+		}
 		String value = (defaultValue instanceof String) ? String.format("'%s'", defaultValue) : defaultValue.toString();
 		return " DEFAULT " + value;
 	}
 
 	public static String settingToString(ColumnSetting setting, String column, StringBuilder append) {
 		switch (setting) {
-    		case AUTO_INCREMENT: return " AUTO INCREMENT";
+    		case AUTO_INCREMENT: return " IDENTITY(1,1)";
     		case UNIQUE: return " UNIQUE";
     		case NOT_NULL: return " NOT NULL";
     		case NULL: return "";
@@ -53,6 +56,7 @@ public class EnumToSqlServerString {
     			return String.format("VARCHAR(%s)", type.getSize());
     		case CHAR:
     			return String.format("CHAR(%s)", type.getSize());
+    		case BOOLEAN: return "BIT";
     		default: return type.getType().toString();
 		}
 	}

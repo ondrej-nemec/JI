@@ -78,7 +78,6 @@ public class EnumToStringTest {
 	
 	public Object[] dataOnActionToStringReturnsCorrectString() {
 		return new Object[] {
-			new Object[] {"RESTRICT", OnAction.RESTRICT},
 			new Object[] {"CASCADE", OnAction.CASCADE},
 			new Object[] {"SET NULL", OnAction.SET_NULL},
 			new Object[] {"NO ACTION", OnAction.NO_ACTION},
