@@ -35,7 +35,7 @@ public class SqlServer implements DatabaseInstance {
 		if (runOnExternal) {
 			logger.info("Signal Start DB server not sended because server is not under app manage");
 		} else {
-			throw new NotImplementedYet(); // TODO
+			throw new NotImplementedYet(); // TODO start mssql server if not external
 		}
 	}
 
@@ -44,7 +44,7 @@ public class SqlServer implements DatabaseInstance {
 		if (runOnExternal) {
 			logger.info("Signal Stop DB server not sended because server is not under app manage");
 		} else {
-			throw new NotImplementedYet(); // TODO
+			throw new NotImplementedYet(); // TODO stop mssql server if not external
 		}
 	}
 

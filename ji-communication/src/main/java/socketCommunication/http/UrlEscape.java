@@ -7,7 +7,7 @@ import common.structures.TwinList;
 public class UrlEscape {
 
 	private final static TwinList<String, String> ESCAPE = 
-			// TODO https://www.w3schools.com/tags/ref_urlencode.ASP
+			// https://www.w3schools.com/tags/ref_urlencode.ASP
 			TwinList.fromArray(
 					t("%25", "%"), // must be first
 					t("%3F", "\\?"),
