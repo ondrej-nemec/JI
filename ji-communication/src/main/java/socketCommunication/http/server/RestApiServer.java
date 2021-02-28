@@ -156,7 +156,8 @@ public class RestApiServer implements Servant {
 				String requestLine = new String(bytes).replace("\r", "").replace("\n", "");
 				if (requestLine.startsWith(boundary)) {
 					if (elementName != null && elementValue != null) {
-						params.put(elementName, elementValue);
+						parseParams(params, elementName, elementValue);
+						// params.put(elementName, elementValue);
 					} else if (elementName != null && fileContent != null) {
 						params.put(elementName, new UploadedFile(filename, contentType, fileContent));
 					}
@@ -277,11 +278,11 @@ public class RestApiServer implements Servant {
 				parseParams(prop, keyValue[0], keyValue[1]);
 				//prop.put(keyValue[0], keyValue[1]);
 			} else {
-	    		logger.warn("Invalid param " + param);
-	    	}
+		    	logger.warn("Invalid param " + param);
+		    }
 		}
 	}
-	
+
 	private void parseParams(RequestParameters params, String key, String value) throws UnsupportedEncodingException {
 		//key = key.replace("[]", "&=").replace("][", "&").replace("[", "&").replace("]", "&");
 		key = URLDecoder.decode(key, StandardCharsets.UTF_8.toString());
