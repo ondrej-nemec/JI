@@ -14,10 +14,13 @@ import java.util.Properties;
 
 import common.Console;
 import core.text.Binary;
+import core.text.Text;
+import core.text.basic.ReadText;
 import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.UploadedFile;
 import socketCommunication.http.server.RequestParameters;
 import socketCommunication.http.server.RestApiResponse;
 
@@ -27,7 +30,7 @@ public class ServerEndToEndTest {
 
 	public static void main(String[] args) {
 		try {
-			/*
+			//*
 			Optional<ServerSecuredCredentials> cred = Optional.empty();
 			int port = 80;
 			/*/
@@ -47,7 +50,7 @@ public class ServerEndToEndTest {
 					120000,
 					apiResponse(),
 					cred,
-					10 * 1024, // 10 kB
+					10 * 1024 * 1024, // 10 MB
 					Optional.empty(),
 					"UTF-8",
 					new LoggerImpl()
@@ -99,10 +102,14 @@ public class ServerEndToEndTest {
 					return getBinaryFile("favicon.ico", "image/ico");
 				}
 				if (url.equals("/file")) {
+					((UploadedFile)params.get("file")).save("index");
 					return getFile();
 				}
 				if (url.equals("/final.gif")) {
 					return getBinaryFile("final.gif", "image/gif");
+				}
+				if (url.equals("/fileindex")) {
+					return getFilePage();
 				}
 				return getHtml();
 			}
@@ -125,6 +132,21 @@ public class ServerEndToEndTest {
 							);
 						}
 					);
+			}
+			
+			private RestApiResponse getFilePage() {
+				return RestApiResponse.textResponse(
+					StatusCode.OK,
+					Arrays.asList(
+						"Access-Control-Allow-Origin: *", 
+						"Content-Type: text/html; charset=utf-8"
+					),
+					(bw)->{
+						bw.write(Text.read((br)->{
+							return ReadText.asString(br);
+						}, "index/index.html"));
+					}
+				);
 			}
 
 			private RestApiResponse getRedirect() {

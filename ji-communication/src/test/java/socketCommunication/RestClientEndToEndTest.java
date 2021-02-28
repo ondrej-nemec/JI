@@ -23,7 +23,6 @@ public class RestClientEndToEndTest {
 			RestApiResponse r = c.get("/entity/list", new Properties(), new Properties());
 			System.out.println(r);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

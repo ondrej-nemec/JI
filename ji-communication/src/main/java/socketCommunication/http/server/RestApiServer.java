@@ -128,6 +128,8 @@ public class RestApiServer implements Servant {
         String type = header.getProperty("Content-Type");
 		if (type != null && type.contains("multipart/form-data")) {
 			int contentLength = Integer.parseInt(header.getProperty("Content-Length"));
+			
+			boolean containsFile = bis.available() > 0;
 			String boundary = "--" + type.split(";")[1].split("=")[1].trim();
 			int readed = 0;
 			boolean isElementValue = false;
@@ -139,14 +141,13 @@ public class RestApiServer implements Servant {
 			while(readed < contentLength) {
 				List<Byte> reqLine = new LinkedList<>();
 				while (readed < contentLength) {
-					byte actual = (byte)bis.read();
+					byte actual = containsFile ? (byte)bis.read() : (byte)br.read();
 					readed++;
 					reqLine.add(actual);
 					if (actual == '\n') {
 						break;
 					}
 				}
-				
 				byte[] bytes = new byte[reqLine.size()];
 				for (int i = 0; i < reqLine.size(); i++) {
 					bytes[i] = reqLine.get(i);

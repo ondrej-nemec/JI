@@ -34,6 +34,9 @@ public class UploadedFile {
 	}
 	
 	public void save(String path, String name) throws IOException {
+		if (!path.endsWith("/")) {
+			path += "/";
+		}
 		Binary.write((stream)->{
 			for (int i = 0; i  < content.size(); i++) {
 				stream.write(content.get(i).byteValue());
