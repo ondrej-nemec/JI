@@ -6,22 +6,36 @@ import java.util.Properties;
 
 import common.structures.Tuple2;
 
-/**
- * For quick initialization use:
-	import static common.MapInit.*;
-	
-	Tuple2 factory - static t() method
- * @author Ond�ej N�mec
- *
- * @param <K>
- * @param <V>
- */
 public class MapInit<K, V> {
+	
+	private final Map<K, V> map;
+	
+	public MapInit() {
+		this.map = new HashMap<>();
+	}
+	
+	public MapInit<K, V> append(K key, V value) {
+		map.put(key, value);
+		return this;
+	}
+	
+	public Map<K, V> toMap() {
+		return map;
+	}
+	
+	public Properties toProperties() {
+		Properties prop = new Properties();
+		prop.putAll(map);
+		return prop;
+	}
+	
+	/**********************/
 	
 	public static <K, V> Tuple2<K, V> t(K key, V value) {
 		return new Tuple2<K, V>(key, value);
 	}
 	
+	@Deprecated
 	public static Tuple2<String, String> t(String key, Object value) {
 		if (value == null) {
 			return new Tuple2<>(key, null);
