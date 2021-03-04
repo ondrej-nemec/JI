@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
+import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -46,10 +47,10 @@ public class PropertiesTranslatorTest {
 				"Translated message", "translate-works", hashMap()
 			},
 			new Object[] {
-					"Variable: TEXT", "test.one.variable", hashMap(t("variable", "TEXT"))
+					"Variable: TEXT", "test.one.variable", hashMap(new Tuple2<>("variable", "TEXT"))
 				},
 			new Object[] {
-					"Variables: A, B", "test.two.variables", hashMap(t("a", "A"), t("b", "B"))
+					"Variables: A, B", "test.two.variables", hashMap(new Tuple2<>("a", "A"), new Tuple2<>("b", "B"))
 				}
 		};
 	}

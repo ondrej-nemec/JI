@@ -11,7 +11,6 @@ repositories {
 dependencies {
 	compile project(':ji-common')
 	compile project(':ji-files')
-	compile project(':ji-utils')
 	
 	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
 	// compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'

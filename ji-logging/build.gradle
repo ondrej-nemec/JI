@@ -11,7 +11,6 @@ repositories {
 dependencies {
 	compile project(':ji-common')
 	compile project(':ji-files')
-	compile project(':ji-utils')
 	compile project(':ji-database')
 	
 	// https://mvnrepository.com/artifact/log4j/log4j
