@@ -5,23 +5,21 @@
 
 Project contains some useful libraries, functions and structures
 
-## Contain
+## Contains
 
-* [Common](ji-common)
-	Mainly useful structures. Will be merged with Utils in the futute.
-* [Utils](ji-utils)
-	Mainly useful functions. Will be merged with Common in the future.
-* [Access control list](ji-acl)
-* [Translator](ji-translate)
-* [Logging](ji-logging)
-* [Database](ji-database)
-* [Database tests](ji-testing)
-* [Server-Client communication](ji-communication)
-* [File reading/writing](ji-files)
+* [Common](ji-common) - Mainly useful structures. Will be merged with Utils in the futute.
+* [Utils](ji-utils) - Mainly useful functions. Will be merged with Common in the future.
+* [Access control list](ji-acl) - For checking permissions. Not for sign in/out.
+* [Translator](ji-translate) - Package supports multy-language applications,
+* [Logging](ji-logging) - Implementation Logger interface from Common.
+* [Database](ji-database) - Contains: Sql query builder a database migrations.
+* [Database tests](ji-testing) - Allow create automatic tests with database.
+* [Server-Client communication](ji-communication) - Provide server/client communication (secured or not secured) using java sockets. Implements web server too. 
+* [File reading/writing](ji-files) - Factories for Buffered reader/writer and Json stream
 
-## Include in project
+## Include in your project
 
-JI uses for publication <a href="https://jitpack.io/">JitPack</a> service. Allow you include this project by using Gradle or Maven.
+JI uses for publication <a href="https://jitpack.io/">JitPack</a>. Allow you include this project by using Gradle or Maven.
 
 ### Include using Gradle
 
