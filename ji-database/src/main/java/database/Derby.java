@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import common.Logger;
+import common.functions.Terminal;
 import querybuilder.QueryBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
-import utils.Terminal;
 
 public class Derby implements DatabaseInstance {
 

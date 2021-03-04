@@ -30,6 +30,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import common.Logger;
+import common.functions.Terminal;
 import common.structures.ThrowingBiConsumer;
 import core.text.Text;
 import core.text.basic.ReadText;
@@ -39,7 +40,6 @@ import querybuilder.SelectQueryBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
 import querybuilder.postgresql.PostgreSqlQueryBuilder;
-import utils.Terminal;
 
 @RunWith(Parameterized.class)
 public class QueryBuilderEndToEndTest {

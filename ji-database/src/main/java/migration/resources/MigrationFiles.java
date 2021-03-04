@@ -9,7 +9,7 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-import common.FileExtension;
+import common.functions.FileExtension;
 import core.FilesList;
 
 public class MigrationFiles {

@@ -2,7 +2,7 @@ package querybuilder.sqlserver;
 
 import java.sql.Connection;
 
-import common.Implode;
+import common.functions.Implode;
 import querybuilder.AlterTableQueryBuilder;
 import querybuilder.CreateTableQueryBuilder;
 import querybuilder.CreateViewQueryBuilder;

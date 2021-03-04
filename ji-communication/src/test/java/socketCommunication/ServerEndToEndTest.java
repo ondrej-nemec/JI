@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 
-import common.Console;
+import common.functions.Console;
 import core.text.Binary;
 import core.text.Text;
 import core.text.basic.ReadText;

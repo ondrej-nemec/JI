@@ -3,7 +3,7 @@ package database.support;
 import java.util.HashMap;
 import java.util.Map;
 
-import utils.Dictionary;
+import common.structures.Dictionary;
 
 public class DatabaseRow implements Dictionary {
 

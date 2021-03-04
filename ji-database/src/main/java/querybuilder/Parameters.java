@@ -1,6 +1,6 @@
 package querybuilder;
 
-import common.Implode;
+import common.functions.Implode;
 
 public interface Parameters<B> extends Batch {
 	

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import common.Logger;
-import core.text.InputStreamLoader;
+import common.functions.InputStreamLoader;
 import logging.loggers.ConsoleLogger;
 import logging.loggers.Log4JLogger;
 import logging.loggers.NativeLogger;

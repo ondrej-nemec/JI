@@ -25,8 +25,8 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import common.Logger;
+import common.functions.InputStreamLoader;
 import core.text.Binary;
-import core.text.InputStreamLoader;
 import socketCommunication.ClientSecuredCredentials;
 import socketCommunication.http.HttpMethod;
 

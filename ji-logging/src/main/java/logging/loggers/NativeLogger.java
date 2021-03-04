@@ -3,7 +3,7 @@ package logging.loggers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import common.Console;
+import common.functions.Console;
 import logging.LoggerConfig;
 import logging.providers.NativeLoggerProvider;
 

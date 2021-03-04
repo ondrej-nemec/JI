@@ -1,5 +1,7 @@
 package common;
 
+import common.functions.Console;
+
 public class ConsoleEndToEndTest {
 
 	public static void main(String[] args) {

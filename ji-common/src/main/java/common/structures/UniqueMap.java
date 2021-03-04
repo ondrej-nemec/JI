@@ -1,4 +1,4 @@
-package common;
+package common.structures;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,16 @@ public class UniqueMap <T, S> {
 	private final Map<T, S> first;
 	
 	private final Map<S, T> second;
+	
+	@SafeVarargs
+	@Deprecated
+	public static <K, V> UniqueMap<K, V> fromArray(Tuple2<K, V> ...tuples) {
+		UniqueMap<K, V> map = new UniqueMap<>();
+		for (Tuple2<K, V> tuple : tuples) {
+			map.put(tuple._1(), tuple._2());
+		}
+		return map;
+	}
 	
 	public UniqueMap() {
 		this.first = new HashMap<>();

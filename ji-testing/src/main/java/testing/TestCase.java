@@ -2,7 +2,7 @@ package testing;
 
 import java.util.Properties;
 
-import utils.Env;
+import common.functions.Env;
 
 public class TestCase {
 

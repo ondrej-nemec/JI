@@ -3,7 +3,7 @@
 [![](https://jitpack.io/v/ondrej-nemec/javainit.svg)](https://jitpack.io/#ondrej-nemec/javainit)
 [![MIT License](http://img.shields.io/badge/license-MIT-green.svg) ](https://github.com/ondrej-nemec/javainit/blob/master/LICENSE)
 
-Mainly useful structures. Will be merged with Utils in the futute.
+Often used logic, useful structures and exceptions.
 
 * [Download](#include-in-your-project)
 * [Contains](#contains)
@@ -29,6 +29,7 @@ implementation 'com.github.ondrej-nemec:javainit:ji-common:Tag'
 	* LogicException
 	* NotImplementedYet
 * Structures
+	* Dictionary
 	* ThrowingConsumer
 	* ThrowingBiConsumer
 	* ThrowingFunction
@@ -44,3 +45,8 @@ implementation 'com.github.ondrej-nemec:javainit:ji-common:Tag'
 	* Implode
 	* MapInit
 	* OperationSystem
+	* Slugify
+	* Env
+	* Terminal
+	* PropertiesLoader
+	* InputStreamLoader

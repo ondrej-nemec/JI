@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import common.Implode;
+import common.functions.Implode;
 import querybuilder.CreateViewQueryBuilder;
 import querybuilder.Join;
 

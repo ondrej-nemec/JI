@@ -3,7 +3,7 @@ package migration.migrations;
 import java.io.IOException;
 import java.sql.Statement;
 
-import core.text.InputStreamLoader;
+import common.functions.InputStreamLoader;
 import core.text.Text;
 import core.text.basic.ReadText;
 import querybuilder.QueryBuilder;

@@ -2,7 +2,7 @@ package querybuilder;
 
 import java.sql.Connection;
 
-import common.Implode;
+import common.functions.Implode;
 
 public abstract class QueryBuilder {
 

@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import common.DateTime;
 import common.Logger;
+import common.functions.DateTime;
 import querybuilder.ColumnType;
 import querybuilder.SelectQueryBuilder;
 

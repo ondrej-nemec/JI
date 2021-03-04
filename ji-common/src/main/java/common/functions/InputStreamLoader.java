@@ -1,4 +1,4 @@
-package core.text;
+package common.functions;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

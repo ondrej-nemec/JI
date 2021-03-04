@@ -1,14 +1,14 @@
 package socketCommunication.http;
 
-import static common.MapInit.t;
+import static common.structures.MapInit.t;
 
-import common.structures.TwinList;
+import common.structures.UniqueMap;
 
 public class UrlEscape {
 
-	private final static TwinList<String, String> ESCAPE = 
+	private final static UniqueMap<String, String> ESCAPE = 
 			// https://www.w3schools.com/tags/ref_urlencode.ASP
-			TwinList.fromArray(
+			UniqueMap.fromArray(
 					t("%25", "%"), // must be first
 					t("%3F", "\\?"),
 					t("%2F", "/"),
@@ -48,8 +48,8 @@ public class UrlEscape {
 	@Deprecated
 	public static String unEscapeText(String text) {
 		text = text.replaceAll("\\+", " ");
-		for (String key : ESCAPE.getFirsts()) {
-			text = text.replaceAll(key, ESCAPE.getByFirst(key));
+		for (String key : ESCAPE.keySetA()) {
+			text = text.replaceAll(key, ESCAPE.getA(key));
 		}
 		return text;
 	}
@@ -61,8 +61,8 @@ public class UrlEscape {
 	 */
 	@Deprecated
 	public static String escapeText(String text) {
-		for (String key : ESCAPE.getSeconds()) {
-			text = text.replaceAll(key, ESCAPE.getBySecond(key));
+		for (String key : ESCAPE.keySetB()) {
+			text = text.replaceAll(key, ESCAPE.getB(key));
 		}
 		text = text.replaceAll(" ", "+");
 		return text;

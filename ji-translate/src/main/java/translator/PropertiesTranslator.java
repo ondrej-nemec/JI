@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import common.Logger;
-import utils.io.PropertiesLoader;
+import common.functions.PropertiesLoader;
 
 public class PropertiesTranslator implements Translator {
 		

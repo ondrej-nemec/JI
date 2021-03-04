@@ -1,7 +1,7 @@
 package socketCommunication;
 
-import common.DateTime;
 import common.Logger;
+import common.functions.DateTime;
 
 public class LoggerImpl implements Logger {
 

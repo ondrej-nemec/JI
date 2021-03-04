@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
-import common.Implode;
+import common.functions.Implode;
 
 public class WriteText {
 	

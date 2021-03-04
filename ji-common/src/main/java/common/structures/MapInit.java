@@ -1,10 +1,8 @@
-package common;
+package common.structures;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import common.structures.Tuple2;
 
 public class MapInit<K, V> {
 	

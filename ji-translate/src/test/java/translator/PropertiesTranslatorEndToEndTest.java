@@ -2,8 +2,8 @@ package translator;
 
 import java.util.Locale;
 
-import common.DateTime;
 import common.Logger;
+import common.functions.DateTime;
 
 public class PropertiesTranslatorEndToEndTest implements Logger {
 

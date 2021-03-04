@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import common.functions.Slugify;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import utils.security.Slugify;
 
 @RunWith(JUnitParamsRunner.class)
 public class SlugifyTest {

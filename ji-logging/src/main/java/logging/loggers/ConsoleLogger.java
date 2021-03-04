@@ -1,7 +1,7 @@
 package logging.loggers;
 
-import common.Console;
 import common.Logger;
+import common.functions.Console;
 
 public class ConsoleLogger implements Logger {
 	

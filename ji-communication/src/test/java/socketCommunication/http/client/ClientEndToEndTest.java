@@ -3,7 +3,7 @@ package socketCommunication.http.client;
 import java.util.Optional;
 import java.util.Properties;
 
-import common.Console;
+import common.functions.Console;
 import socketCommunication.LoggerImpl;
 import socketCommunication.http.client.RestApiClient;
 

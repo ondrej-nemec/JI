@@ -1,5 +1,8 @@
 package common;
 
+import common.functions.Console;
+import common.functions.OperationSystem;
+
 public class OperationSystemEndToEndTest {
 
 	public static void main(String[] args) {

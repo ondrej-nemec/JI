@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import common.functions.FileExtension;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

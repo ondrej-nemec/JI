@@ -1,6 +1,6 @@
 package migration.resources;
 
-import common.FileExtension;
+import common.functions.FileExtension;
 
 public class IdSeparator {
 	

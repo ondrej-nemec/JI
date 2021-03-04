@@ -1,8 +1,8 @@
 package socketCommunication.http.server;
 
+import static common.structures.MapInit.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static common.MapInit.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
-import common.MapInit;
+import common.structures.MapInit;
 import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;

@@ -1,11 +1,10 @@
-package utils;
+package common.functions;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import utils.enums.AppMode;
-import utils.io.PropertiesLoader;
+import common.structures.Dictionary;
 
 public class Env implements Dictionary {
 	
@@ -17,13 +16,6 @@ public class Env implements Dictionary {
 	
 	public Env(final Properties properties) {
 		this.properties = properties;
-	}
-	
-	public AppMode getAppMode() {
-		String mode = properties.getProperty("app.mode");
-		if (mode == null)
-			throw new RuntimeException("App mode is null");
-		return AppMode.valueOf(mode.toUpperCase());
 	}
 
 	protected Properties getProperties() {

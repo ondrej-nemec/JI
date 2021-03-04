@@ -20,8 +20,8 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import common.Logger;
+import common.functions.InputStreamLoader;
 import common.structures.ThrowingBiConsumer;
-import core.text.InputStreamLoader;
 import socketCommunication.ClientSecuredCredentials;
 
 public class SpeakerClient {

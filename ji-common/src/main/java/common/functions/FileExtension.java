@@ -1,4 +1,4 @@
-package common;
+package common.functions;
 
 public class FileExtension {
 	

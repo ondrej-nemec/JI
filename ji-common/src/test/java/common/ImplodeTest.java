@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import common.functions.Implode;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

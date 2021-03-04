@@ -1,4 +1,4 @@
-package utils.security;
+package common.functions;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;

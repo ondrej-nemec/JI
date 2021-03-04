@@ -1,4 +1,4 @@
-package common;
+package common.functions;
 
 public enum OperationSystem {
 	

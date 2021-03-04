@@ -3,9 +3,9 @@ package migration;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import common.DateTime;
-import common.FileExtension;
 import common.Logger;
+import common.functions.DateTime;
+import common.functions.FileExtension;
 import migration.migrations.JavaMigration;
 import migration.migrations.SqlMigration;
 import migration.resources.IdSeparator;

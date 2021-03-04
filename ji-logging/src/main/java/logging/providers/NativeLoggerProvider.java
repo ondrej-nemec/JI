@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import common.Console;
+import common.functions.Console;
 import core.text.Text;
 import core.text.basic.WriteText;
 import logging.LogLevel;

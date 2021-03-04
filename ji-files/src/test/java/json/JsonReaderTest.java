@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import common.MapInit;
+import common.structures.MapInit;
 
 public class JsonReaderTest {
 

@@ -1,10 +1,10 @@
-package utils.io;
+package common.functions;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import core.text.InputStreamLoader;
+import common.functions.InputStreamLoader;
 
 public class PropertiesLoader {
 	

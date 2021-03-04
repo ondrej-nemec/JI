@@ -1,4 +1,4 @@
-package utils;
+package common.functions;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -8,7 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
-import common.OperationSystem;
+import common.functions.OperationSystem;
+import common.functions.Terminal;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

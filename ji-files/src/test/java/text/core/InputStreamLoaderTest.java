@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import core.text.InputStreamLoader;
+import common.functions.InputStreamLoader;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

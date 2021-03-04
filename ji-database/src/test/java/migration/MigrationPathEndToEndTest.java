@@ -2,8 +2,8 @@ package migration;
 
 import java.util.Arrays;
 
-import common.DateTime;
 import common.Logger;
+import common.functions.DateTime;
 import database.Database;
 import database.DatabaseConfig;
 

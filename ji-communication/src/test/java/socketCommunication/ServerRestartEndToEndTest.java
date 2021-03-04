@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
 
-import common.Console;
+import common.functions.Console;
 import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;

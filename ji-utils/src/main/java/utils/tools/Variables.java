@@ -1,6 +1,6 @@
 package utils.tools;
 
-import common.Console;
+import common.functions.Console;
 
 public class Variables {
 	

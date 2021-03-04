@@ -24,7 +24,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import common.Logger;
-import core.text.InputStreamLoader;
+import common.functions.InputStreamLoader;
 import socketCommunication.http.server.RestApiServerResponseFactory;
 import socketCommunication.http.server.RestApiServer;
 
