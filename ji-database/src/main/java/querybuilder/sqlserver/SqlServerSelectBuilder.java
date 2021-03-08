@@ -82,6 +82,9 @@ public class SqlServerSelectBuilder implements SelectQueryBuilder {
 
 	@Override
 	public SelectQueryBuilder limit(int limit, int offset) {
+        if (!query.toString().contains("ORDER BY")) {
+            throw new RuntimeException("SQL Server requires 'order by' clause before limit and offset");
+        }
 		query.append(" OFFSET " + offset + "ROWS FETCH NEXT " + limit + " ROWS ONLY");
 		return this;
 	}

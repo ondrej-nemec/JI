@@ -79,7 +79,7 @@ public class SqlServerAlterTableBuilder implements AlterTableQueryBuilder {
 
 	@Override
 	public AlterTableQueryBuilder deleteForeingKey(String name) {
-	    separatedQueries.add(String.format(prefix + " DROP FOREIGN KEY FK_%s", name));
+	    separatedQueries.add(String.format(prefix + " DROP CONSTRAINT FK_%s", name)); // FOREIGN KEY
 		return this;
 	}
 

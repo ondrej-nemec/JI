@@ -85,7 +85,10 @@ public class SqlServerCreateViewBuilder implements CreateViewQueryBuilder {
 
 	@Override
 	public CreateViewQueryBuilder limit(int limit, int offset) {
-	    query.append(" OFFSET " + offset + "ROWS FETCH NEXT " + limit + " ROWS ONLY");
+	    if (!query.toString().contains("ORDER BY")) {
+	        throw new RuntimeException("SQL Server requires 'order by' clause before limit and offset");
+	    }
+	    query.append(" OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
 		return this;
 	}
 

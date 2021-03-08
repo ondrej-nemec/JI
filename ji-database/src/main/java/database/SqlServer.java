@@ -54,13 +54,13 @@ public class SqlServer implements DatabaseInstance {
     		.getConnection(connectionString, property)
     		.createStatement()
     		.executeUpdate(String.format(
-    			"IF NOT EXISTS ("
-    			+ " SELECT  *"
-    			+ " FROM sys.schemas"
-    			+ " WHERE name = N'%s'"
-    			+ ")"
-    			+ " EXEC('CREATE SCHEMA [%s]'); ",
-    			name, name
+    		     "IF NOT EXISTS("
+                 + "SELECT * FROM sys.databases WHERE name = '%s'"
+                 + ")"
+                 + " BEGIN" + 
+                 "    CREATE DATABASE %s" + 
+                 "  END",
+                 name, name
     		));
 	}
 

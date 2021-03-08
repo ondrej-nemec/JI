@@ -1,4 +1,5 @@
 CREATE TABLE alter_table (
+	primary_id INT primary key,
 	id INT,
 	name VARCHAR(50),
 	fKey INT
@@ -7,6 +8,6 @@ CREATE TABLE alter_table (
 CREATE INDEX myIndex ON alter_table (fKey);
 
 CREATE TABLE table_fk (
-	id INT
+	id INT primary key
 	-- Index myIndex2 (id)
 );

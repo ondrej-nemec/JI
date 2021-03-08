@@ -1,5 +1,3 @@
-CREATE VIEW test_view AS SELECT * FROM table1;
-
 CREATE TABLE table1 (
 	id INT,
 	name VARCHAR(50)
@@ -22,3 +20,5 @@ INSERT INTO table2
 		(2),
 		(3),
 		(4);
+
+CREATE VIEW test_view AS SELECT * FROM table1;

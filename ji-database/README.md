@@ -6,3 +6,8 @@
 Package supplyes common.
 
 ## Contain:
+
+
+Known issue:
+
+The operation 'ALTER TABLE DROP INDEX' is supported only with memory optimized tables.

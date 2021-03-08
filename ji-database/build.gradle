@@ -32,14 +32,13 @@ dependencies {
 	testCompile fileTree(dir: "libs/derby", includes: ['*.jar'])
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
-<<<<<<< HEAD
-	// https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
-	testCompile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.1.1.jre15-preview'
-=======
-// https://mvnrepository.com/artifact/com.microsoft.sqlserver/sqljdbc4
-testCompile group: 'com.microsoft.sqlserver', name: 'sqljdbc41', version: '4.1'
 
->>>>>>> wip2 sql server
+	// https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
+	//testCompile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.1.1.jre15-preview'
+
+	// https://mvnrepository.com/artifact/com.microsoft.sqlserver/sqljdbc4
+	testCompile group: 'com.microsoft.sqlserver', name: 'sqljdbc41', version: '4.1'
+
 
 }
 

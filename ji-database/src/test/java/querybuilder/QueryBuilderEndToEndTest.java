@@ -40,6 +40,7 @@ import querybuilder.SelectQueryBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
 import querybuilder.mysql.MySqlQueryBuilder;
 import querybuilder.postgresql.PostgreSqlQueryBuilder;
+import querybuilder.sqlserver.SqlServerQueryBuilder;
 
 @RunWith(Parameterized.class)
 public class QueryBuilderEndToEndTest {
@@ -170,31 +171,27 @@ public class QueryBuilderEndToEndTest {
 		//*/
 		//*
 		result.add(createParams(
-                (conn) -> {return new PostgreSqlQueryBuilder(conn);},
+                (conn) -> {return new SqlServerQueryBuilder(conn);},
                 () -> {
                     try {
-                        props.setProperty("user", "postgres");
-                        props.setProperty("password", "1234");
-                        return DriverManager.getConnection("jdbc:postgresql://localhost/" + DB_NAME, props);
+                        return DriverManager.getConnection("jdbc:sqlserver://localhost;Database=" + DB_NAME + ";integratedSecurity=true", props);
                     } catch (SQLException e) {
                         fail("Connection not created: " + e.getMessage());
                         return null;
                     }
                 },
                 (ignored) -> {
-                    //  props.setProperty("user", "postgres");
-                    //  props.setProperty("password", "1234");
                         try {
                             DriverManager
-                            .getConnection("jdbc:sqlserver://localhost/", props)
+                            .getConnection("jdbc:sqlserver://localhost" + ";integratedSecurity=true", props)
                             .createStatement()
                             .executeUpdate(String.format(
-                                "IF NOT EXISTS ("
-                                + " SELECT  *"
-                                + " FROM sys.schemas"
-                                + " WHERE name = N'%s'"
+                                "IF NOT EXISTS("
+                                + "SELECT * FROM sys.databases WHERE name = '%s'"
                                 + ")"
-                                + " EXEC('CREATE SCHEMA [%s]'); ",
+                                + " BEGIN" + 
+                                "    CREATE DATABASE %s" + 
+                                "  END",
                                 DB_NAME, DB_NAME
                             ));
                         } catch (Exception e) {
@@ -287,10 +284,13 @@ public class QueryBuilderEndToEndTest {
 		Statement stat = connection.createStatement();
 		String[] batches = sql.split(";");
 		for (String batch : batches) {
+            stat.execute(batch.trim());
+        }
+		/*for (String batch : batches) {
 		    stat.addBatch(batch.trim());
 		}
 		stat.executeBatch();
-		stat.close();
+		stat.close();*/
 	}
 
 	/*************************************/
@@ -367,7 +367,7 @@ public class QueryBuilderEndToEndTest {
 					.addValue("id", 1)
 					.addValue("name", "column_name")
 					.execute();
-				assertEquals(code, 1);
+				assertEquals(1, Integer.parseInt(code.toString()));
 				
 				ResultSet res = conn.createStatement().executeQuery("SELECT * FROM insert_table");
 				
@@ -574,7 +574,7 @@ public class QueryBuilderEndToEndTest {
 	@Test
 	public void testAlterView() throws Exception {
 		test("alterView", (conn, builder)->{
-			builder.alterView("test_view")
+		    builder.alterView("test_view")
     			.select("a.id a_id", "b.id b_id, a.name")
     			.from("table1 a")
     			.join("table2 b", Join.INNER_JOIN, "a.id = b.id")
@@ -583,6 +583,7 @@ public class QueryBuilderEndToEndTest {
     			.groupBy("a.id, b.id, a.name")
     			.having("b.id != :id2")
     			.addParameter(":id2", 0)
+    			.orderBy("a.id")
     			.limit(4, 0)
     			.execute();
     		
