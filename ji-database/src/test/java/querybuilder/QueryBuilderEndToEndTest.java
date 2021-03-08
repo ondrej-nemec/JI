@@ -170,40 +170,40 @@ public class QueryBuilderEndToEndTest {
 		//*/
 		//*
 		result.add(createParams(
-				(conn) -> {return new PostgreSqlQueryBuilder(conn);},
-				() -> {
-					try {
-						props.setProperty("user", "postgres");
-						props.setProperty("password", "1234");
-						return DriverManager.getConnection("jdbc:postgresql://localhost/" + DB_NAME, props);
-					} catch (SQLException e) {
-						fail("Connection not created: " + e.getMessage());
-						return null;
-					}
-				},
-				(ignored) -> {
-					//	props.setProperty("user", "postgres");
-					//	props.setProperty("password", "1234");
-						try {
-							DriverManager
-				    		.getConnection("jdbc:sqlserver://localhost/", props)
-				    		.createStatement()
-				    		.executeUpdate(String.format(
-				    			"IF NOT EXISTS ("
-				    			+ " SELECT  *"
-				    			+ " FROM sys.schemas"
-				    			+ " WHERE name = N'%s'"
-				    			+ ")"
-				    			+ " EXEC('CREATE SCHEMA [%s]'); ",
-				    			DB_NAME, DB_NAME
-				    		));
-						} catch (Exception e) {
-							fail("Connection not created: " + e.getMessage());
-						}
-					},
-				(ignored) -> {}, 
-				"sqlserver"
-		));
+                (conn) -> {return new PostgreSqlQueryBuilder(conn);},
+                () -> {
+                    try {
+                        props.setProperty("user", "postgres");
+                        props.setProperty("password", "1234");
+                        return DriverManager.getConnection("jdbc:postgresql://localhost/" + DB_NAME, props);
+                    } catch (SQLException e) {
+                        fail("Connection not created: " + e.getMessage());
+                        return null;
+                    }
+                },
+                (ignored) -> {
+                    //  props.setProperty("user", "postgres");
+                    //  props.setProperty("password", "1234");
+                        try {
+                            DriverManager
+                            .getConnection("jdbc:sqlserver://localhost/", props)
+                            .createStatement()
+                            .executeUpdate(String.format(
+                                "IF NOT EXISTS ("
+                                + " SELECT  *"
+                                + " FROM sys.schemas"
+                                + " WHERE name = N'%s'"
+                                + ")"
+                                + " EXEC('CREATE SCHEMA [%s]'); ",
+                                DB_NAME, DB_NAME
+                            ));
+                        } catch (Exception e) {
+                            fail("Connection not created: " + e.getMessage());
+                        }
+                    },
+                (ignored) -> {}, 
+                "sqlserver"
+        ));
 		//*/
 		return result;
 	}
@@ -287,7 +287,7 @@ public class QueryBuilderEndToEndTest {
 		Statement stat = connection.createStatement();
 		String[] batches = sql.split(";");
 		for (String batch : batches) {
-			stat.addBatch(batch);
+		    stat.addBatch(batch.trim());
 		}
 		stat.executeBatch();
 		stat.close();
@@ -501,12 +501,12 @@ public class QueryBuilderEndToEndTest {
 	@Test
 	public void testCreateTable() throws Exception {
 		test("createTable", (conn, builder)->{
-			builder
+		    builder
 				.createTable("create_table")
 				.addColumn("c1", ColumnType.bool(), true, ColumnSetting.NOT_NULL)
 				.addColumn("c2", ColumnType.integer())
 				.addColumn("c3", ColumnType.string(10), ColumnSetting.UNIQUE)
-				.addForeingKey("c2", "SecondTable", "second_id", OnAction.RESTRICT, OnAction.RESTRICT)
+				.addForeingKey("c2", "SecondTable", "second_id", OnAction.CASCADE, OnAction.CASCADE)
 				.execute();
 			
 			conn.createStatement().executeQuery("select c1, c2, c3 from create_table");
