@@ -27,7 +27,7 @@ public class SqlServerCreateTableBuilderTest {
 		
 		String expected = "CREATE TABLE Table1 ("
 				+ " Column_1 INT IDENTITY(1,1),"
-				+ " Column_2 BOOLEAN NOT NULL,"
+				+ " Column_2 BIT NOT NULL,"
 				+ " Column_3 DATETIME UNIQUE,"
 				+ " Column_4 TEXT,"
 				+ " Column_5 VARCHAR(50) DEFAULT 'some text' NOT NULL,"
