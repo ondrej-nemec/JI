@@ -83,7 +83,7 @@ public class OutputJsonStream {
 		if (value instanceof Number) {
 			return value.toString();
 		}
-		return String.format("\"%s\"", value);
+		return String.format("\"%s\"", value.toString().replace("\"", "\\\""));
 	}
 	
 	private boolean checkFirst(EventType child) {

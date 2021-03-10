@@ -21,6 +21,7 @@ public class OutputJsonStreamEndToEndTest {
 	public void createJson(OutputJsonStream stream) throws JsonStreamException {
 		stream.startDocument();
 		stream.writeObjectValue("name1", "value1");
+		stream.writeObjectValue("with-quotes", "\"");
 		stream.writeListStart("list1");
 		stream.writeListValue("list-value1");
 		stream.writeObjectStart();

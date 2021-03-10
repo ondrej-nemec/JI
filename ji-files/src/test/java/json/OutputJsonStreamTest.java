@@ -45,6 +45,15 @@ public class OutputJsonStreamTest {
 						false
 				},
 				new Object[] {
+						"{\"quotes\":\"--\\\"--\"}",
+						c((stream)->{
+							stream.startDocument();
+							stream.writeObjectValue("quotes", "--\"--");
+							stream.endDocument();
+						}),
+						false
+				},
+				new Object[] {
 						"{\"name\":\"value\",\"int\":12,\"special\":null,\"name2\":true}",
 						c((stream)->{
 							stream.startDocument();
