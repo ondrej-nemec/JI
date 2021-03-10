@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import common.structures.MapInit;
+import common.structures.Tuple2;
 
 public class JsonReaderTest {
 
@@ -17,7 +18,7 @@ public class JsonReaderTest {
 		Map<String, Object> expected = new HashMap<>();
 		expected.put("value", 123);
 		expected.put("list", Arrays.asList(1,2,3));
-		expected.put("object", MapInit.hashMap(MapInit.t("a", null), MapInit.t("b", "aaa")));
+		expected.put("object", MapInit.hashMap(new Tuple2<>("a", null), new Tuple2<>("b", "aaa")));
 		String json = "{\"value\":123, \"list\":[1,2,3],\"object\":{\"a\":null, \"b\": \"aaa\"}}";
 		assertEquals(expected, new JsonReader().readJson(json));
 		assertEquals(expected, new JsonReader().read(json));
