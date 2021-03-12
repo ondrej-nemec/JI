@@ -16,6 +16,8 @@ public interface Translator {
 
 	String translate(String key, Map<String, String> variables);
 
+	Locale getLocale();
+	
 	/**
 	 * key structure: <resource>.<key> OR <key>
 	 * if <resource> not exists returns <resource.key> as <key> from default

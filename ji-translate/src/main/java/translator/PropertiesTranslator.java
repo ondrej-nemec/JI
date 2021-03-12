@@ -85,7 +85,7 @@ public class PropertiesTranslator implements Translator {
 		if (prop == null) {
 			module = "messages";
 			prop = load(locale, "messages");
-		}	
+		}
 		
 		String value= prop.getProperty(key);
 		if (value == null) {
@@ -113,22 +113,30 @@ public class PropertiesTranslator implements Translator {
 			logger.warn("No path for module " + module);
 			return messages;
 		}
-		String name = String.format("%s.%s.properties", path, locale);
-		try {
-			Properties prop = PropertiesLoader.loadProperties(name);
-			messages.putAll(prop);
-		} catch (IOException e) {
-			logger.warn("Cannot load properies file: " + name);
-			String name2 = String.format("%s.properties", path);
-			try {
-				Properties prop = PropertiesLoader.loadProperties(name2);
-				messages.putAll(prop);
-			} catch (IOException e1) {
-				logger.error("Cannot load properies file: " + name2);
-			}
-		}
+		messages.putAll(loadFile(locale, path));
 		resources.put(localeKey, messages);
 		return messages;
+	}
+	
+	private Properties loadFile(Locale locale, String path) {
+		String[] names = new String [] {
+			String.format("%s.%s.properties", path, locale),
+			String.format("%s.%s.properties", path, locale.getLanguage()),
+			String.format("%s.properties", path)
+		};
+		for(String name : names) {
+			try {
+				return PropertiesLoader.loadProperties(name);
+			} catch (IOException e) {
+				logger.warn("Cannot load properies file: " + name);
+			}
+		}
+		return new Properties();
+	}
+
+	@Override
+	public Locale getLocale() {
+		return locale;
 	}
 
 }
