@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -137,27 +138,22 @@ public class RestApiServer implements Servant {
 			String elementValue = null;
 			String contentType = null;
 			String filename = null;
-			List<Byte> fileContent = null;
+			ByteArrayOutputStream fileContent = null;
 			while(readed < contentLength) {
-				List<Byte> reqLine = new LinkedList<>();
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				while (readed < contentLength) {
 					byte actual = containsFile ? (byte)bis.read() : (byte)br.read();
 					readed++;
-					reqLine.add(actual);
+					stream.write(actual);
 					if (actual == '\n') {
 						break;
 					}
 				}
-				byte[] bytes = new byte[reqLine.size()];
-				for (int i = 0; i < reqLine.size(); i++) {
-					bytes[i] = reqLine.get(i);
-				}
-				
+				byte[] bytes = stream.toByteArray();
 				String requestLine = new String(bytes).replace("\r", "").replace("\n", "");
 				if (requestLine.startsWith(boundary)) {
 					if (elementName != null && elementValue != null) {
 						parseParams(params, elementName, elementValue);
-						// params.put(elementName, elementValue);
 					} else if (elementName != null && fileContent != null) {
 						params.put(elementName, new UploadedFile(filename, contentType, fileContent));
 					}
@@ -169,6 +165,10 @@ public class RestApiServer implements Servant {
 					filename = null;
 					elementValue = null;
 					fileContent = null;
+				} else if (requestLine.isEmpty() && fileContent != null && isElementValue && bytes.length == 1) {
+					// if bytes.lenght == 2 => start or end
+					// if isElementValue == false => start
+					fileContent.write(bytes); // fix
 				} else if (requestLine.isEmpty()) {
 					isElementValue = true;
 				} else if (isElementValue) {
@@ -181,14 +181,13 @@ public class RestApiServer implements Servant {
 						elementValue += requestLine;
 					} else { // file
 						if (fileContent == null) {
-							fileContent = new LinkedList<>();
+							fileContent = new ByteArrayOutputStream();
 						}
-						for (byte b : reqLine) {
-							if (fileContent.size() > maxUploadFileSize) {
-								throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
-							}
-							fileContent.add(b);
+						if (bytes.length + fileContent.size() > maxUploadFileSize) {
+							throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
 						}
+						fileContent.write(bytes);
+						fileContent.flush();
 					}
 				} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isElementValue) {
 					Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")

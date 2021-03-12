@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -16,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
-import common.structures.MapInit;
 import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -51,22 +48,22 @@ public class RestApiServerTest {
 				new Object[] {
 						"method url protocol",
 						properties(
-								t(RestApiServer.METHOD, "method"),
-								t(RestApiServer.URL, "url"),
-								t(RestApiServer.FULL_URL, "url"),
-								t(RestApiServer.PROTOCOL, "protocol")
+								new Tuple2<>(RestApiServer.METHOD, "method"),
+								new Tuple2<>(RestApiServer.URL, "url"),
+								new Tuple2<>(RestApiServer.FULL_URL, "url"),
+								new Tuple2<>(RestApiServer.PROTOCOL, "protocol")
 						),
 						new RequestParameters()
 				},
 				new Object[] {
 						"method url?aa=bb protocol",
 						properties(
-								t(RestApiServer.METHOD, "method"),
-								t(RestApiServer.URL, "url"),
-								t(RestApiServer.FULL_URL, "url?aa=bb"),
-								t(RestApiServer.PROTOCOL, "protocol")
+								new Tuple2<>(RestApiServer.METHOD, "method"),
+								new Tuple2<>(RestApiServer.URL, "url"),
+								new Tuple2<>(RestApiServer.FULL_URL, "url?aa=bb"),
+								new Tuple2<>(RestApiServer.PROTOCOL, "protocol")
 						),
-						new RequestParameters(t("aa", "bb"))
+						new RequestParameters(new Tuple2<>("aa", "bb"))
 				},
 		};
 	}
@@ -83,7 +80,7 @@ public class RestApiServerTest {
 	public Object[] dataParseHeaderLineFillHeaderProperties() {
 		return new Object[] {
 			new Object[] {
-				properties(t("aa", "bb")),
+				properties(new Tuple2<>("aa", "bb")),
 				"aa: bb"
 			},
 			new Object[] {
@@ -95,15 +92,15 @@ public class RestApiServerTest {
 				": "
 			},
 			new Object[] {
-				properties(t("aa", "bb: ")),
+				properties(new Tuple2<>("aa", "bb: ")),
 				"aa: bb: "
 			},
 			new Object[] {
-				properties(t("aa", "")),
+				properties(new Tuple2<>("aa", "")),
 				"aa: "
 			},
 			new Object[] {
-				properties(t("aa", "")),
+				properties(new Tuple2<>("aa", "")),
 				"aa"
 			},
 		};
@@ -121,7 +118,7 @@ public class RestApiServerTest {
 	public Object[] dataParsePayloadFillParamsProperties() {
 		return new Object[] {
 			new Object[] {
-				new RequestParameters(t("aa", "bb")),
+				new RequestParameters(new Tuple2<>("aa", "bb")),
 				"aa=bb"
 			},
 			new Object[] {
@@ -137,23 +134,23 @@ public class RestApiServerTest {
 				"=&="
 			},
 			new Object[] {
-				new RequestParameters(t("aa", "bb")),
+				new RequestParameters(new Tuple2<>("aa", "bb")),
 				"aa=bb&"
 			},
 			new Object[] {
-				new RequestParameters(t("aa", "")),
+				new RequestParameters(new Tuple2<>("aa", "")),
 				"aa="
 			},
 			new Object[] {
-					new RequestParameters(t("aa", "")),
+					new RequestParameters(new Tuple2<>("aa", "")),
 					"aa"
 				},
 			new Object[] {
-				new RequestParameters(t("aa", "bb"), t("cc", "dd")),
+				new RequestParameters(new Tuple2<>("aa", "bb"), new Tuple2<>("cc", "dd")),
 				"aa=bb&cc=dd"
 			},
 			new Object[] {
-				new RequestParameters(t("dd", "ee")),
+				new RequestParameters(new Tuple2<>("dd", "ee")),
 				"aa=bb=cc&dd=ee"
 			},
 			/*************
@@ -174,7 +171,7 @@ public class RestApiServerTest {
 					"double=12.3"
 				},*/
 			new Object[] {
-					new RequestParameters(t("aa", "bb"), t("%", "&"), t("dd", "ee")),
+					new RequestParameters(new Tuple2<>("aa", "bb"), new Tuple2<>("%", "&"), new Tuple2<>("dd", "ee")),
 					"aa=bb&%25=%26&dd=ee"
 				},
 			new Object[] {
@@ -191,19 +188,19 @@ public class RestApiServerTest {
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("array", hashMap(
-						t("first", "true"),
-						t("second", "b"),
-						t("third", "3")
+						new Tuple2<>("first", "true"),
+						new Tuple2<>("second", "b"),
+						new Tuple2<>("third", "3")
 					))),
 					"array%5Bfirst%5D=true&array%5Bsecond%5D=b&array%5Bthird%5D=3"
 				},
 			new Object[] {
 					new RequestParameters(new Tuple2<>("array", hashMap(
 						new Tuple2<>("abc", hashMap(
-								t("first", true),
-								t("second", "b"),
-								t("third", 3),
-								t("four", "")
+								new Tuple2<>("first", true),
+								new Tuple2<>("second", "b"),
+								new Tuple2<>("third", 3),
+								new Tuple2<>("four", "")
 						))
 					))),
 					"array%5Babc%5D%5Bfirst%5D=true&array%5Babc%5D%5Bsecond%5D=b&array%5Babc%5D%5Bthird%5D=3&array%5Babc%5D%5Bfour%5D="

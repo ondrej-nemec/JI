@@ -50,7 +50,7 @@ public class ServerEndToEndTest {
 					120000,
 					apiResponse(),
 					cred,
-					10 * 1024 * 1024, // 10 MB
+					10 * 1000 * 1000, // 10 MB
 					Optional.empty(),
 					"UTF-8",
 					new LoggerImpl()
@@ -102,7 +102,9 @@ public class ServerEndToEndTest {
 					return getBinaryFile("favicon.ico", "image/ico");
 				}
 				if (url.equals("/file")) {
-					((UploadedFile)params.get("file")).save("index");
+					System.err.println("File to upload");
+					System.err.println(params.get("fileToUpload"));
+					((UploadedFile)params.get("fileToUpload")).save("index");
 					return getFile();
 				}
 				if (url.equals("/final.gif")) {

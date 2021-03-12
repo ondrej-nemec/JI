@@ -1,17 +1,16 @@
 package socketCommunication.http.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-
 import core.text.Binary;
 
 public class UploadedFile {
 
 	private final String fileName;
 	private final String contentType;
-	private final List<Byte> content;
-
-	public UploadedFile(String fileName, String contentType, List<Byte> content) {
+	private final ByteArrayOutputStream content;
+	
+	public UploadedFile(String fileName, String contentType, ByteArrayOutputStream content) {
 		this.fileName = fileName;
 		this.contentType = contentType;
 		this.content = content;
@@ -25,7 +24,7 @@ public class UploadedFile {
 		return contentType;
 	}
 
-	public List<Byte> getContent() {
+	public ByteArrayOutputStream getContent() {
 		return content;
 	}
 	
@@ -38,9 +37,8 @@ public class UploadedFile {
 			path += "/";
 		}
 		Binary.write((stream)->{
-			for (int i = 0; i  < content.size(); i++) {
-				stream.write(content.get(i).byteValue());
-			}
+			stream.write(content.toByteArray());
+			stream.flush();
 		}, path + name);
 	}
 	
