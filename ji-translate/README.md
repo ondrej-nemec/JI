@@ -58,13 +58,48 @@ translator.translate(key, variables, locale);
 
 ### Finding a key
 
-Expect key looks like: "first.second.third"
+The first step is load a translation file. The file is loaded only once, on first request on key 'module-locale'. Module is string before first dot in translation key or 'messages' as default. See:
 
-Firstly, translator tries load "*first*.*locale*.properties" file. If not exists, tries load "*first*.properties". If finds one of this files, returns value on "second.third" key.
+Firstly, translator tries load "*module*.*locale-with-country*.properties". If not exists, tries load "*module*.*locale*.properties". If fail, tries "*module*.properties". If still no file founded, tries it again but instead of *module* uses "messages". Otherwise use empty dataset (in this case, the translator returns translation key).
 
-Secondary, if no value founded, tries load "messages.*locale*.properties" file. If not exists, tries load "messages.properties". If finds one of this files, returns value on "first.second.third" key.
+#### Example
 
-The last step, if everything fail, returns key, that means "first.second.third".
+Suppose translation key looks like: "first.second.third" and "Locale" is 'xy_XY'. So module name is "first".
+
+<table>
+	<tr>
+		<th>Looking for file</th>
+		<th>Key in file</th>
+	</tr>
+	<tr>
+		<td>first.xy_XY.properties</td>
+		<td>second.third</td>
+	</tr>
+	<tr>
+		<td>first.xy.properties</td>
+		<td>second.third</td>
+	</tr>
+	<tr>
+		<td>first.properties</td>
+		<td>second.third</td>
+	</tr>
+	<tr>
+		<td>messages.xy_XY.properties</td>
+		<td>first.second.third</td>
+	</tr>
+	<tr>
+		<td>messages.xy.properties</td>
+		<td>first.second.third</td>
+	</tr>
+	<tr>
+		<td>messages.properties</td>
+		<td>first.second.third</td>
+	</tr>
+	<tr>
+		<td>*empty dataset*</td>
+		<td>*returns first.second.third*</td>
+	</tr>
+</table>
 
 ### Using variables
 
