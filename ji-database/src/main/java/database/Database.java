@@ -135,7 +135,7 @@ public class Database {
 		logger.info("DB schema was created");
 	}
 	
-	private void migrate() throws SQLException {
+	public void migrate() throws SQLException {
 		applyBuilder((builder)->{
 			MigrationTool tool = new MigrationTool(config.pathToMigrations, builder, logger);
 			try {
