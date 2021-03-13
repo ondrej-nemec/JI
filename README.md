@@ -9,7 +9,7 @@ Project contains some useful libraries, functions and structures
 
 * [Common](ji-common) - Often used logic, useful structures and exceptions.
 * [File reading/writing](ji-files) - Factories for Buffered reader/writer and JSON stream
-* [Access control list](ji-acl) - For checking permissions. Not for sign in/out.
+* [Access control layer](ji-acl) - For checking permissions. Not for sign in/out.
 * [Translator](ji-translate) - Package supports multi-language applications.
 * [Logging](ji-logging) - Implementation Logger interface from Common.
 * [Database](ji-database) - Contains: SQL query builder and database migrations.
