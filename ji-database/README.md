@@ -133,6 +133,11 @@ database.applyBuilder((builder)->{
 });
 ```
 
+### Known issues
+
+* Derby - alter table
+* SQL Server - alter table - The operation 'ALTER TABLE DROP INDEX' is supported only with memory optimized tables
+
 ### Migrations
 
 Database migrations or simply migrations are tool allowing you keep database in same state on production and on develop with your colleagues. In migrations folders (in `DatabaseConfig`) are scripts for updating current database. Every structure change have to by in this scripts so after migrating you have your database up to date to current code. After migrating each script this tool make note to special table and not migrate this script again.

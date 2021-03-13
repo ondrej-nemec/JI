@@ -6,7 +6,7 @@ apply plugin: 'java-library'
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
-    flatDir { dirs 'lib' }
+    flatDir { dirs 'libs' }
 }
 
 dependencies {
