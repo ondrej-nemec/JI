@@ -15,7 +15,7 @@ import querybuilder.QueryBuilder;
 public class MigrationTool {
 	
 	private final static String MIGRATION_TABLE = "migrations";
-	private final static String ALLWAYS_ID = "ALLWAYS";
+	private final static String ALLWAYS_ID = "ALWAYS";
 	private static final String SEPARATOR = "__";
 	
 	private final Logger logger;
