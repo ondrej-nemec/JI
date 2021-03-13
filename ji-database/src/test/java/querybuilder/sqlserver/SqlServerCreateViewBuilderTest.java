@@ -40,7 +40,7 @@ public class SqlServerCreateViewBuilderTest {
 	}
 	
 	public Object[] dataBuilderViaSql() {
-		String query = "CREATE VIEW View1 AS"
+		String query = " VIEW View1 AS"
 				+ " SELECT a.id ID, b.id ID_2"
 				+ " FROM table_name a"
 				+ " JOIN joined_table b ON a.id = b.id"
@@ -50,11 +50,11 @@ public class SqlServerCreateViewBuilderTest {
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > %id"
-				+ " LIMIT 0"
-				+ " OFFSET 0";
+				+ " OFFSET 0 ROWS"
+				+ " FETCH NEXT 0 ROWS ONLY";
 		return new Object[] {
-			new Object[] {false, query},
-			new Object[] {true, "DROP VIEW View1;" + query}
+			new Object[] {false, "CREATE" + query},
+			new Object[] {true, "ALTER" + query}
 		};
 	}
 

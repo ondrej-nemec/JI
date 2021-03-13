@@ -42,8 +42,8 @@ public class SqlServerSelectBuilderTest {
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > %id"
-				+ " LIMIT 0"
-				+ " OFFSET 0";
+				+ " OFFSET 0 ROWS"
+				+ " FETCH NEXT 0 ROWS ONLY";
 		
 		String created = "SELECT a.id, a.name, a.FK_id"
 				+ " FROM table_name a"
@@ -54,8 +54,8 @@ public class SqlServerSelectBuilderTest {
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > 10"
-				+ " LIMIT 0"
-				+ " OFFSET 0";
+				+ " OFFSET 0 ROWS"
+				+ " FETCH NEXT 0 ROWS ONLY";
 		
 		assertEquals(expected, builder.getSql());
 		assertEquals(created, builder.createSql());

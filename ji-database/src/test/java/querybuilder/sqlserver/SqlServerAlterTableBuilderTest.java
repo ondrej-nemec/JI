@@ -22,19 +22,30 @@ public class SqlServerAlterTableBuilderTest {
 				.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL)
 				.addColumn("Column2", ColumnType.integer(), 1)
 				.deleteColumn("Column3")
-				.addForeingKey("Column", "Table2", "id", OnAction.RESTRICT, OnAction.SET_DEFAULT)
+				.addForeingKey("Column", "Table2", "id", OnAction.CASCADE, OnAction.SET_DEFAULT)
 				.deleteForeingKey("Column")
 				.modifyColumnType("Column4", ColumnType.integer())
 				.renameColumn("Column5", "Column6", ColumnType.integer());
 		
 		String expected = "ALTER TABLE Table1"
-				+ " ADD Column1 INT NOT NULL,"
-				+ " Column2 INT DEFAULT 1,"
-				+ " DROP COLUMN Column3,"
-				+ " ADD CONSTRAINT FK_Column FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
-				+ " DROP FOREIGN KEY FK_Column,"
+				+ " ADD Column1 INT NOT NULL;"
+				
+				+ "ALTER TABLE Table1"
+				+ " ADD Column2 INT DEFAULT 1;"
+				
+				+ "ALTER TABLE Table1"
+				+ " DROP COLUMN Column3;"
+				
+				+ "ALTER TABLE Table1"
+				+ " ADD CONSTRAINT FK_Column FOREIGN KEY (Column) REFERENCES Table2(id) ON DELETE CASCADE ON UPDATE SET DEFAULT;"
+
+				+ "ALTER TABLE Table1"
+				+ " DROP CONSTRAINT FK_Column;"
+
+				+ "ALTER TABLE Table1"
 				+ " ALTER COLUMN Column4 INT;"
-				+ "sp_rename Column5, Column6, 'COLUMN'";
+				
+				+ "EXEC sp_rename 'Table1.Column5', 'Column6', 'COLUMN';";
 		
 		assertEquals(expected, builder.getSql());
 		verifyNoMoreInteractions(con);
