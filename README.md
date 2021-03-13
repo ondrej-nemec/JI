@@ -12,7 +12,7 @@ Project contains some useful libraries, functions and structures
 * [Access control list](ji-acl) - For checking permissions. Not for sign in/out.
 * [Translator](ji-translate) - Package supports multi-language applications.
 * [Logging](ji-logging) - Implementation Logger interface from Common.
-* [Database](ji-database) - Contains: SQL query builder a database migrations.
+* [Database](ji-database) - Contains: SQL query builder and database migrations.
 * [Database tests](ji-testing) - Allow create automatic tests with database.
 * [Server-Client communication](ji-communication) - Provide server/client communication (secured or not secured) using java sockets. Implements web server too. 
 
