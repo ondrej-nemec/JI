@@ -8,6 +8,6 @@ public interface Migration {
 	
 	void migrate(QueryBuilder builder) throws SQLException;
 	
-	void revert(QueryBuilder builder) throws SQLException;
+	default void revert(QueryBuilder builder) throws SQLException {}
 
 }
