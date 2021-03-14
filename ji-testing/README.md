@@ -6,6 +6,8 @@
 JI Testing library allow you to do tests with database in test environment. Before each test do DB migrations (using <a href="../ji-database">JI Database</a> is nessessary) for up to date structure and inserts data specified by you. After test clears database.
 
 * [Download](#include-in-your-project)
+* [Using](#using)
+	* [Dataset](#dataset)
 
 ## Include in your project
 
