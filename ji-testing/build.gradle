@@ -25,6 +25,8 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+	// https://mvnrepository.com/artifact/org.postgresql/postgresql
+	testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
 	
 }
 

@@ -19,8 +19,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import common.Logger;
+import common.functions.Env;
 import database.Database;
-import database.DatabaseConfig;
 import testing.entities.Row;
 import testing.entities.Table;
 
@@ -29,20 +29,22 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	private final Database realDatabase;
 	
 	public DatabaseTestCaseTest() {
-		super(getProperties(), mock(Logger.class));
-		this.realDatabase = new Database(createConfig(), mock(Logger.class));
+		super(new Env(getProperties()), mock(Logger.class));
+		this.realDatabase = new Database(config, mock(Logger.class));
 	}
 	
 	@Before
 	@Override
 	public void before() throws SQLException {
-		getDatabase().createDbAndMigrate();
+		getDatabase().migrate();
 		testDbEmptyOrNotExists();
 		applyDataSet();
 	}
 	
 	@After
+	@Override
 	public void after() throws SQLException {
+		super.after();
 		testDbEmpty();
 	}	
 	
@@ -99,9 +101,13 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	
 	private void testDbEmpty() throws SQLException {
 		realDatabase.applyQuery((con)->{
-			PreparedStatement stat = con.prepareStatement("select * from dbtc");
-			ResultSet res = stat.executeQuery();
-			assertFalse(res.next());
+			try {
+				PreparedStatement stat = con.prepareStatement("select * from dbtc");
+				ResultSet res = stat.executeQuery();
+				assertFalse(res.next());
+			} catch (SQLException e) {
+				assertTrue(e.getMessage().contains("ERROR: relation \"dbtc\" does not exist"));
+			}
 			return null;
 		});
 	}
@@ -116,35 +122,29 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	private static Properties getProperties() {
 		Properties prop = new Properties();
 		prop.put("app.mode", "test");
-		prop.put("app.timezone", "Europe/Prague");
+		prop.put("db.timezone", "Europe/Prague");
 		
+		prop.put("db.type", "postgresql");
+		prop.put("db.pathOrUrl", "//localhost");
+		prop.put("db.externalServer", true);
+		prop.put("db.schema", "javainit_testing_test");
+		prop.put("db.login", "postgres");
+		prop.put("db.password", "1234");
+		prop.put("db.pathToMigrations", "migrations");
+		prop.put("db.poolSize", 3);
+		/*
 		prop.put("db.type", "mysql");
 		prop.put("db.pathOrUrl", "//localhost:3306");
-		prop.put("db.externalServer", "1");
+		prop.put("db.externalServer", true);
 		prop.put("db.schema", "javainit_testing_test");
 		prop.put("db.login", "root");
 		prop.put("db.password", "");
 		prop.put("db.pathToMigrations", "testing");
-		prop.put("db.poolSize", "3");
-		
+		prop.put("db.poolSize", 3);
+		*/
 		prop.put("log.logFile", "log.txt");
 		prop.put("log.type", "null");
 		return prop;
-	}
-
-	@Override
-	protected DatabaseConfig createConfig() {
-		return new DatabaseConfig(
-				env.getString("db.type"),
-				env.getString("db.pathOrUrl"),
-				env.getString("db.externalServer").equals("1") ? true : false,
-				env.getString("db.schema"),
-				env.getString("db.login"),
-				env.getString("db.password"),
-				env.getList("db.pathToMigrations", ","),
-				env.getString("app.timezone"),
-				env.getInteger("db.poolSize")
-		);
 	}
 
 }

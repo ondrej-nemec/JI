@@ -9,6 +9,7 @@ import database.Database;
 import database.DatabaseConfig;
 import database.support.ConnectionFunction;
 import database.support.DoubleConsumer;
+import querybuilder.BatchBuilder;
 import querybuilder.InsertQueryBuilder;
 import testing.entities.Row;
 import testing.entities.Table;
@@ -23,6 +24,7 @@ public class DatabaseMock extends Database {
 		super(config, true, logger);
 		this.tables = tables;
 		try {
+			createDbIfNotExists();
 			this.connection = pool.getConnection();
 		} catch (SQLException e) {
 			throw new RuntimeException("Connection to database could not be created", e);
@@ -31,16 +33,18 @@ public class DatabaseMock extends Database {
 	}
 
 	public void applyDataSet() throws SQLException {
-		applyBuilder((querybuilder)->{
+		applyBuilder((builder)->{
+			BatchBuilder batch = builder.batch();
 			for(Table table : tables) {
 				for(Row row : table.getRows()) {
-					InsertQueryBuilder builder = querybuilder.insert(table.getName());
+					InsertQueryBuilder insert = builder.insert(table.getName());
     				for (String key : row.getColumns().keySet()) {
-    					builder = builder.addValue(key, row.getColumns().get(key));
+    					 insert.addValue(key, row.getColumns().get(key));
     				}
-    				builder.execute();
+    				batch.addBatch(insert);
 				}
 			}
+			batch.execute();
 			return null;
 		});
 	}

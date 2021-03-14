@@ -2,45 +2,64 @@ package testing;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
+import org.junit.After;
 import org.junit.Before;
 
 import common.Logger;
+import common.functions.Env;
 import database.Database;
 import database.DatabaseConfig;
+import logging.loggers.NullLogger;
 import testing.entities.Table;
 
-public abstract class DatabaseTestCase extends TestCase {
-
+public abstract class DatabaseTestCase {
+	
 	protected final DatabaseMock database;
+	protected final DatabaseConfig config;
 
-	public DatabaseTestCase(final Properties properties, Logger logger) {
-		super(properties);
+	public DatabaseTestCase(DatabaseConfig config, Logger logger) {
+		this.config = config;
 		this.database = new DatabaseMock(
-				createConfig(),
+				config,
 				getDataSet(),
 				logger
 		);
 	}
 
-	public DatabaseTestCase(final String propertiesPath, Logger logger) {
-		super(propertiesPath);
-		this.database = new DatabaseMock(
-				createConfig(),
-				getDataSet(),
-				logger
-		);
+	public DatabaseTestCase(DatabaseConfig config) {
+		this(config, new NullLogger());
+	}
+
+	public DatabaseTestCase(Env env, Logger logger) {
+		this(new DatabaseConfig(
+				env.getString("db.type"),
+				env.getString("db.pathOrUrl"),
+				env.getBoolean("db.externalServer"),
+				env.getString("db.schema"),
+				env.getString("db.login"),
+				env.getString("db.password"),
+				env.getList("db.pathToMigrations", ","),
+				env.getString("db.timezone"),
+				env.getInteger("db.poolSize")
+		), logger);
 	}
 	
-	protected abstract DatabaseConfig createConfig();
+	public DatabaseTestCase(Env env) {
+		this(env, new NullLogger());
+	}
 
 	protected abstract List<Table> getDataSet();
 	
 	@Before
 	public void before() throws SQLException {
-		database.createDbAndMigrate();
+		database.migrate();
 		applyDataSet();
+	}
+	
+	@After
+	public void after() throws SQLException {
+		database.rollback();
 	}
 	
 	protected Database getDatabase() {

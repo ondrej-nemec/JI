@@ -9,7 +9,6 @@ repositories {
 dependencies {
 	compile project(':ji-common')
 	compile project(':ji-logging')
-	compile project(':ji-utils')
 	compile project(':ji-translate')
 	compile project(':ji-acl')
 	compile project(':ji-communication')
