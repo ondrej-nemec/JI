@@ -21,7 +21,7 @@ public class InputJsonStreamEndToEndTest {
 	}
 	
 	public void parse(InputStream is) throws IOException, JsonStreamException {
-		String json = Text.read((br)->{return ReadText.asString(br);}, is);
+		String json = Text.get().read((br)->{return ReadText.get().asString(br);}, is);
 		InputJsonStream stream = new InputJsonStream(new InputStringProvider(json));
 		Event e = stream.next();
 		while(e.getType() != EventType.DOCUMENT_END) {

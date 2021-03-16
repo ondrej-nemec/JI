@@ -53,6 +53,7 @@ public class NativeLoggerProvider {
     		case WARNING: return Level.INFO;
     		case INFO: return Level.CONFIG;
     		case DEBUG: return Level.FINE;
+    		case TRACE: return Level.FINEST;
     		case ALL:
     		default: return Level.ALL;
 		}
@@ -69,8 +70,8 @@ public class NativeLoggerProvider {
 			@Override
 			public synchronized void publish(LogRecord record) {
 				try {
-					Text.write((bw)->{
-						WriteText.write(bw, makeMessage(record));
+					Text.get().write((bw)->{
+						WriteText.get().write(bw, makeMessage(record));
 					}, pathToLogger, true);
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -1,4 +1,4 @@
-package core;
+package common.functions;
 
 public class FilesListEndToEndTest {
 

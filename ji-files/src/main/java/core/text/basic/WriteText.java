@@ -8,13 +8,17 @@ import common.functions.Implode;
 
 public class WriteText {
 	
-	public static void write(BufferedWriter bw, final String string) throws IOException {
+	public static WriteText get() {
+		return new WriteText();
+	}
+	
+	public void write(BufferedWriter bw, final String string) throws IOException {
 		bw.write(string);
 		bw.newLine();
 		bw.flush();
 	}
 	
-	public static void write(BufferedWriter bw, final List<String> list) throws IOException {
+	public void write(BufferedWriter bw, final List<String> list) throws IOException {
 		for (String line : list) {
 			bw.write(line);
 			bw.newLine();
@@ -22,7 +26,7 @@ public class WriteText {
 		bw.flush();
 	}
 	
-	public static void write(BufferedWriter bw, final List<List<String>> table, final String split) throws IOException {
+	public void write(BufferedWriter bw, final List<List<String>> table, final String split) throws IOException {
 		for(List<String> line : table) {
 			bw.write(Implode.implode(split, line));			
 			bw.newLine();

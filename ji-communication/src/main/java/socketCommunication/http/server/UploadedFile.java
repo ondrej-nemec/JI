@@ -9,11 +9,17 @@ public class UploadedFile {
 	private final String fileName;
 	private final String contentType;
 	private final ByteArrayOutputStream content;
+	private final Binary binary;
 	
 	public UploadedFile(String fileName, String contentType, ByteArrayOutputStream content) {
+		this(fileName, contentType, content, Binary.get());
+	}
+	
+	protected UploadedFile(String fileName, String contentType, ByteArrayOutputStream content, Binary binary) {
 		this.fileName = fileName;
 		this.contentType = contentType;
 		this.content = content;
+		this.binary = binary;
 	}
 
 	public String getFileName() {
@@ -36,7 +42,7 @@ public class UploadedFile {
 		if (!path.endsWith("/")) {
 			path += "/";
 		}
-		Binary.write((stream)->{
+		binary.write((stream)->{
 			stream.write(content.toByteArray());
 			stream.flush();
 		}, path + name);

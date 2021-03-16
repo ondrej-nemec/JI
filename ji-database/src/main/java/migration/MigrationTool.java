@@ -5,6 +5,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 import common.Logger;
+import core.text.Text;
 import migration.migrations.JavaMigration;
 import migration.migrations.SqlMigration;
 import migration.resources.IdSeparator;
@@ -72,7 +73,7 @@ public class MigrationTool {
 			
 			// each migration
 			try (URLClassLoader loader = new URLClassLoader(urls);) {
-	    		SqlMigration sql = new SqlMigration(folder, isRevert);
+	    		SqlMigration sql = new SqlMigration(folder, isRevert, Text.get());
 	    		JavaMigration java = new JavaMigration(folder, loader, isRevert/*, files.isInClasspath()*/);
 				SingleMigrationTool tool = new SingleMigrationTool(folder, MIGRATION_TABLE, ALLWAYS_ID, SEPARATOR, java, sql, logger);
 	    		process.process(filesToMigrate, tool, builder);

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import core.text.Text;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import querybuilder.QueryBuilder;
@@ -31,7 +32,7 @@ public class SqlMigrationTest {
 		QueryBuilder builder = mock(QueryBuilder.class);
 		when(builder.getConnection()).thenReturn(con);
 		
-		SqlMigration m = new SqlMigration(path, isRevert/*, isInclasspath*/);
+		SqlMigration m = new SqlMigration(path, isRevert, Text.get()); // TODO use mock
 		m.migrate("Sql.sql", builder);
 		
 		verify(stat, times(1)).addBatch("select '" + selectText + "1'");

@@ -5,11 +5,11 @@ import java.io.Writer;
 
 import json.JsonStreamException;
 
-public class OutputReaderProvider implements OutputProvider {
+public class OutputWriterProvider implements OutputProvider {
 
 	private final Writer writer;
 	
-	public OutputReaderProvider(Writer writer) {
+	public OutputWriterProvider(Writer writer) {
 		this.writer = writer;
 	}
 	

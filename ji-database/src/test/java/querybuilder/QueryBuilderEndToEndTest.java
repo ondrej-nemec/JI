@@ -278,8 +278,8 @@ public class QueryBuilderEndToEndTest {
 	}
 	
 	private void loadDb(Connection connection, String file) throws IOException, SQLException {
-		String sql = Text.read((br)->{
-			return ReadText.asString(br);
+		String sql = Text.get().read((br)->{
+			return ReadText.get().asString(br);
 		}, getClass().getResourceAsStream("/querybuilder/" + type + "/" + file + ".sql"));
 		Statement stat = connection.createStatement();
 		String[] batches = sql.split(";");

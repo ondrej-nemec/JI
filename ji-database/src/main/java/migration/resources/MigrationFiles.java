@@ -10,7 +10,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import common.functions.FileExtension;
-import core.FilesList;
+import common.functions.FilesList;
 
 public class MigrationFiles {
 	

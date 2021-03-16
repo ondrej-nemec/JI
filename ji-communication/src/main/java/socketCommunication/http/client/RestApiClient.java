@@ -38,13 +38,20 @@ public class RestApiClient {
 	
 	private final String charset;
 	
+	private final Binary binary;
+	
 	private final Optional<ClientSecuredCredentials> config;
 	
 	public RestApiClient(String serverUrl, Optional<ClientSecuredCredentials> config, String charset, Logger logger) {
+		this(serverUrl, config, charset, logger, Binary.get());
+	}
+	
+	protected RestApiClient(String serverUrl, Optional<ClientSecuredCredentials> config, String charset, Logger logger, Binary binary) {
 		this.serverUrl = serverUrl;
 		this.logger = logger;
 		this.charset = charset;
 		this.config = config;
+		this.binary = binary;
 	}
 	
 	public RestApiResponse get(String uri, Properties header, Properties params) throws Exception {
@@ -155,7 +162,7 @@ public class RestApiClient {
 	private void addParams(HttpMethod method, Properties params, HttpURLConnection con) throws IOException {
 		if (!HttpMethod.GET.equals(method)) {
 			con.setDoOutput(true);
-			Binary.write((bos)->{
+			binary.write((bos)->{
 				bos.write(getParamsString(params).getBytes());
 				bos.flush();
 			}, con.getOutputStream());

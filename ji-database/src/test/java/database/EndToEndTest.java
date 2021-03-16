@@ -109,8 +109,8 @@ public class EndToEndTest {
 		String[] files = new String[] {"V1__update", "V2__insert", "V3__delete", "V4__select"};
 		for (String file : files) {
 			String migration = "/migrations/" + config.type + "/" + file + ".sql";
-			String sql = Text.read((br)->{
-				return ReadText.asString(br);
+			String sql = Text.get().read((br)->{
+				return ReadText.get().asString(br);
 			}, getClass().getResourceAsStream(migration));
 			database.applyQuery((conn)->{
 				Statement stat = conn.createStatement();

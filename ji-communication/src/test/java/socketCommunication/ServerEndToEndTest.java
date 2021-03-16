@@ -144,8 +144,8 @@ public class ServerEndToEndTest {
 						"Content-Type: text/html; charset=utf-8"
 					),
 					(bw)->{
-						bw.write(Text.read((br)->{
-							return ReadText.asString(br);
+						bw.write(Text.get().read((br)->{
+							return ReadText.get().asString(br);
 						}, "index/index.html"));
 					}
 				);
@@ -187,7 +187,7 @@ public class ServerEndToEndTest {
 							"X-XSS-Protection: 1; mode=block"
 					),
 					(bos)->{
-							Binary.read((dis)->{
+							Binary.get().read((dis)->{
 								/*
 								int c;
 								while ((c = dis.read()) != -1) {

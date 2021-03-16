@@ -33,20 +33,22 @@ implementation 'com.github.ondrej-nemec:javainit:ji-common:Tag'
 	* ThrowingConsumer
 	* ThrowingBiConsumer
 	* ThrowingFunction
+	* ThrowingBiFunction
 	* ThrowingSupplier
 	* Tuple2
 	* Tuple3
 	* UniqueMap
-	* Logger
+	* Logger - interface used in all libraries of this project
 * Functions
 	* Console
 	* DateTime
-	* FileExtension
-	* Implode
+	* Implode - from Iterable or array make string with given glue. Like `implode` function from PHP 
 	* MapInit
 	* OperationSystem
-	* Slugify
 	* Env
 	* Terminal
-	* PropertiesLoader
-	* InputStreamLoader
+	* Slugify
+	* FileExtension - can extract extension from file name
+	* FilesList - get list of file names from given folder. Folder can be in file system or in jar.
+	* InputStreamLoader - create input stream from given path. Firstly try load from resources, if not file found, tries file system
+	* PropertiesLoader - load properties from file using `InputStreamLoader`
