@@ -32,15 +32,7 @@ public class MapInit<K, V> {
 	public static <K, V> Tuple2<K, V> t(K key, V value) {
 		return new Tuple2<K, V>(key, value);
 	}
-	
-	@Deprecated
-	public static Tuple2<String, String> t(String key, Object value) {
-		if (value == null) {
-			return new Tuple2<>(key, null);
-		}
-		return new Tuple2<>(key, value.toString());
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Map<K, V> map(Map<K, V>map, Tuple2<K, V>... kvs) {
 		for (Tuple2<K, V> tuple : kvs) {
