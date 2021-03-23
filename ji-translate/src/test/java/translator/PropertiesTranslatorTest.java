@@ -33,7 +33,7 @@ public class PropertiesTranslatorTest {
 
 	@Test
 	@Parameters(method = "dataTranslateReplaceVariable")
-	public void testTranslateReplaceVariable(String expected, String key, Map<String, String> params) {
+	public void testTranslateReplaceVariable(String expected, String key, Map<String, Object> params) {
 		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "messages");
 		assertEquals(expected, t.translate(key, params, Locale.getDefault()));
 	}

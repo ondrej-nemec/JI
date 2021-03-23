@@ -50,19 +50,20 @@ public class PropertiesTranslator implements Translator {
 	}
 	
 	@Override
-	public String translate(String key, Map<String, String> variables) {
+	public String translate(String key, Map<String, Object> variables) {
 		return trans(key, variables, locale);
 	}
 
 	@Override
-	public String translate(String key, Map<String, String> variables, Locale locale) {
+	public String translate(String key, Map<String, Object> variables, Locale locale) {
 		return trans(key, variables, locale);
 	}
 	
-	private String trans(String key, Map<String, String> variables, Locale locale) {
+	private String trans(String key, Map<String, Object> variables, Locale locale) {
 		String value = trans(key, locale);
 		for (String varName : variables.keySet()) {
-			value = value.replaceAll("\\%" + varName + "\\%", variables.get(varName));
+		    Object variable = variables.get(varName);
+			value = value.replaceAll("\\%" + varName + "\\%", variable == null ? "" : variable.toString());
 		}
 		return value;
 	}

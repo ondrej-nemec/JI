@@ -14,11 +14,7 @@ public interface Translator {
 		return translate(key, new HashMap<>(), locale);
 	}
 
-	String translate(String key, Map<String, String> variables);
-
-	default String translate(String key, Map<String, Object> variables) {
-		return traslate(key, variables.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e->e.getValue()== null ? null : e.getValue().toString())));
-	}
+	String translate(String key, Map<String, Object> variables);
 	
 	Locale getLocale();
 	
@@ -28,7 +24,7 @@ public interface Translator {
 	 * if no message for <key> founded, <key> returned 
 	 * message structure: "text %variable% %another-variable%"
 	 */
-	String translate(String key, Map<String, String> variables, Locale locale);
+	String translate(String key, Map<String, Object> variables, Locale locale);
 	
 	Translator withLocale(Locale locale);
 	
