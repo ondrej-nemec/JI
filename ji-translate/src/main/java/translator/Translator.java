@@ -16,6 +16,10 @@ public interface Translator {
 
 	String translate(String key, Map<String, String> variables);
 
+	default String translate(String key, Map<String, Object> variables) {
+		return traslate(key, variables.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e->e.getValue()== null ? null : e.getValue().toString())));
+	}
+	
 	Locale getLocale();
 	
 	/**
