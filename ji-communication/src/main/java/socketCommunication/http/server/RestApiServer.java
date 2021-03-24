@@ -127,84 +127,8 @@ public class RestApiServer implements Servant {
         	line = br.readLine();
         }
         String type = header.getProperty("Content-Type");
-		if (type != null && type.contains("multipart/form-data")) {
-			int contentLength = Integer.parseInt(header.getProperty("Content-Length"));
-			
-			boolean containsFile = bis.available() > 0;
-			String boundary = "--" + type.split(";")[1].split("=")[1].trim();
-			int readed = 0;
-			boolean isElementValue = false;
-			String elementName = null;
-			String elementValue = null;
-			String contentType = null;
-			String filename = null;
-			ByteArrayOutputStream fileContent = null;
-			while(readed < contentLength) {
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				while (readed < contentLength) {
-					byte actual = containsFile ? (byte)bis.read() : (byte)br.read();
-					readed++;
-					stream.write(actual);
-					if (actual == '\n') {
-						break;
-					}
-				}
-				byte[] bytes = stream.toByteArray();
-				String requestLine = new String(bytes).replace("\r", "").replace("\n", "");
-				if (requestLine.startsWith(boundary)) {
-					if (elementName != null && elementValue != null) {
-						parseParams(params, elementName, elementValue);
-					} else if (elementName != null && fileContent != null) {
-						params.put(elementName, new UploadedFile(filename, contentType, fileContent));
-					}
-				}
-				if (boundary.equals(requestLine)) {
-					isElementValue = false;
-					elementName = null;
-					contentType = null;
-					filename = null;
-					elementValue = null;
-					fileContent = null;
-				} else if (requestLine.isEmpty() && fileContent != null && isElementValue && bytes.length == 1) {
-					// if bytes.lenght == 2 => start or end
-					// if isElementValue == false => start
-					fileContent.write(bytes); // fix
-				} else if (requestLine.isEmpty()) {
-					isElementValue = true;
-				} else if (isElementValue) {
-					if (filename == null) { // text element
-						if (elementValue == null) {
-							elementValue = "";
-						} else {
-							elementValue += "\n";
-						}
-						elementValue += requestLine;
-					} else { // file
-						if (fileContent == null) {
-							fileContent = new ByteArrayOutputStream();
-						}
-						if (bytes.length + fileContent.size() > maxUploadFileSize) {
-							throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
-						}
-						fileContent.write(bytes);
-						fileContent.flush();
-					}
-				} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isElementValue) {
-					Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
-							.matcher(requestLine);
-					m.find();
-					elementName = m.group(1);
-					filename = m.group(5);
-					if (filename != null && (filename.contains("..") || filename.contains("/") || filename.contains("\\"))) {
-						throw new IOException("Filename is probably corrupted " + filename);
-					}
-				} else if (requestLine.startsWith("Content-Type: ") && !isElementValue) {
-					contentType = requestLine.replace("Content-Type: ", "");
-					if (allowedFileTypes.isPresent() && !allowedFileTypes.get().contains(contentType)) {
-						throw new IOException("Uploading file content type is not allowed " + contentType);
-					}
-				}
-            }
+        if (type != null && type.contains("multipart/form-data")) {
+			parseFileForm(type, header, params, br, bis);
 		} else {
 	        // payload
 	        StringBuilder payload = new StringBuilder();
@@ -221,6 +145,114 @@ public class RestApiServer implements Servant {
 	        }
 	        parsePayload(params, payload.toString());
 		}
+	}
+	
+	protected void parseFileForm(
+			String type,
+			Properties header, RequestParameters params,
+			BufferedReader br, BufferedInputStream bis) throws IOException {
+		int contentLength = Integer.parseInt(header.getProperty("Content-Length"));
+		
+		boolean containsFile = bis.available() > 0;
+		String boundary = "--" + type.split(";")[1].split("=")[1].trim();
+		
+		int readed = 0;
+		boolean isElementValue = false;
+		String elementName = null;
+		String elementValue = null;
+		String contentType = null;
+		String filename = null;
+		ByteArrayOutputStream fileContent = null;
+		while(readed < contentLength) {
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			byte[] bytes;
+			String requestLine;
+			if (containsFile) {
+				while (readed < contentLength) {
+					if (bis.available() == 0) {
+						throw new IOException("Content length not match expecation. Expected: " + contentLength + ", actual: " + readed);
+	                }
+					byte actual = (byte)bis.read();
+					readed++;
+					stream.write(actual);
+					if (actual == '\n') {
+						break;
+					}
+				}
+				bytes = stream.toByteArray();
+				requestLine = new String(bytes);
+			} else {
+				StringBuilder builder = new StringBuilder();
+				while (readed < contentLength) {
+					if (!br.ready()) {
+						throw new IOException("Content length not match expecation. Expected: " + contentLength + ", actual: " + readed);
+	                }
+					char actual = (char)br.read();
+					readed += (actual+"").getBytes().length;
+					builder.append(actual);
+					if (actual == '\n') {
+						break;
+					}
+				}
+				requestLine = builder.toString();
+				bytes = null;
+			}
+			requestLine = requestLine.replace("\r", "").replace("\n", "");
+			
+			if (requestLine.startsWith(boundary)) {
+				if (elementName != null && elementValue != null) {
+					parseParams(params, elementName, elementValue);
+				} else if (elementName != null && fileContent != null) {
+					params.put(elementName, new UploadedFile(filename, contentType, fileContent));
+				}
+			}
+			if (boundary.equals(requestLine)) {
+				isElementValue = false;
+				elementName = null;
+				contentType = null;
+				filename = null;
+				elementValue = null;
+				fileContent = null;
+			} else if (requestLine.isEmpty() && fileContent != null && isElementValue && bytes.length == 1) {
+				// if bytes.lenght == 2 => start or end
+				// if isElementValue == false => start
+				fileContent.write(bytes); // fix
+			} else if (requestLine.isEmpty()) {
+				isElementValue = true;
+			} else if (isElementValue) {
+				if (filename == null) { // text element
+					if (elementValue == null) {
+						elementValue = "";
+					} else {
+						elementValue += "\n";
+					}
+					elementValue += requestLine;
+				} else { // file
+					if (fileContent == null) {
+						fileContent = new ByteArrayOutputStream();
+					}
+					if (bytes.length + fileContent.size() > maxUploadFileSize) {
+						throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
+					}
+					fileContent.write(bytes);
+					fileContent.flush();
+				}
+			} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isElementValue) {
+				Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
+						.matcher(requestLine);
+				m.find();
+				elementName = m.group(1);
+				filename = m.group(5);
+				if (filename != null && (filename.contains("..") || filename.contains("/") || filename.contains("\\"))) {
+					throw new IOException("Filename is probably corrupted " + filename);
+				}
+			} else if (requestLine.startsWith("Content-Type: ") && !isElementValue) {
+				contentType = requestLine.replace("Content-Type: ", "");
+				if (allowedFileTypes.isPresent() && !allowedFileTypes.get().contains(contentType)) {
+					throw new IOException("Uploading file content type is not allowed " + contentType);
+				}
+			}
+        }
 	}
 
 	/** protected for test only */

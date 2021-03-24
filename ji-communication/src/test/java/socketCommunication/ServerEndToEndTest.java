@@ -253,6 +253,20 @@ public class ServerEndToEndTest {
 								+ "	<input type=\"submit\">"
 								+ "</form>"
 								+ ""
+								+ "<form method=\"post\">" // 
+								+ "Fill the name"
+								+ "<input type='text' name='some-form-text'/><br>"
+								+ "<input type=\"submit\" value=\"Diakritic\" name=\"submit\">"
+								+ "</form>"
+								+ ""
+								+ "<form method=\"post\" enctype=\"multipart/form-data\" >" // accept-charset=\"utf-8\"
+								+ "Fill the name"
+								+ "<input type='text' name='some-form-text'/><br>"
+								+ "Select image to upload:"
+								+ " <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload-id\"> <br>"
+								+ "<input type=\"submit\" value=\"Diakritic\" name=\"submit\">"
+								+ "</form>"
+								+ "" // štěstí
 								+ "</body></html>", today.toString()
 						));
 					}
