@@ -367,7 +367,6 @@ public class RestApiServer implements Servant {
 			sub = new HashMap<>();
 		}
 		if (needInsert && o instanceof Map) {
-			// Map.class.cast(o).put(URLDecoder.decode(keys[index], StandardCharsets.UTF_8.toString()), sub);
 			Map.class.cast(o).put(keys[index], sub);
 		} else if (needInsert && o instanceof List) {
 			List.class.cast(o).add(sub);

@@ -30,5 +30,10 @@ public class RequestParameters extends HashMap<String, Object> implements Dictio
 	public Object getValue(String name) {
 		return get(name);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
 
 }

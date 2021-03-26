@@ -197,9 +197,9 @@ public class RestApiServerTest {
 			new Object[] {
 					new RequestParameters(new Tuple2<>("array", hashMap(
 						new Tuple2<>("abc", hashMap(
-								new Tuple2<>("first", true),
+								new Tuple2<>("first", "true"),
 								new Tuple2<>("second", "b"),
-								new Tuple2<>("third", 3),
+								new Tuple2<>("third", "3"),
 								new Tuple2<>("four", "")
 						))
 					))),
