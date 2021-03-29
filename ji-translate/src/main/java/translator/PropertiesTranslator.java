@@ -51,16 +51,16 @@ public class PropertiesTranslator implements Translator {
 	
 	@Override
 	public String translate(String key, Map<String, Object> variables) {
-		return trans(key, variables, locale);
+		return transWithVars(key, variables, locale);
 	}
 
 	@Override
 	public String translate(String key, Map<String, Object> variables, Locale locale) {
-		return trans(key, variables, locale);
+		return transWithVars(key, variables, locale);
 	}
 	
-	private String trans(String key, Map<String, Object> variables, Locale locale) {
-		String value = trans(key, locale);
+	private String transWithVars(String key, Map<String, Object> variables, Locale locale) {
+		String value = trans(key, locale, variables);
 		for (String varName : variables.keySet()) {
 		    Object variable = variables.get(varName);
 			value = value.replaceAll("\\%" + varName + "\\%", variable == null ? "" : variable.toString());
@@ -68,7 +68,7 @@ public class PropertiesTranslator implements Translator {
 		return value;
 	}
 
-	private String trans(String key, Locale locale) {
+	private String trans(String key, Locale locale, Map<String, Object> variables) {
 		String[] split = key.split("\\.", 2);
 		
 		Properties prop = null;
@@ -91,10 +91,11 @@ public class PropertiesTranslator implements Translator {
 		String value= prop.getProperty(key);
 		if (value == null) {
 			logger.warn(String.format(
-				"Missing translation [%s] in %s: %s",
+				"Missing translation [%s] in %s: %s (%s)",
 				locale,
 				module,
-				key
+				key,
+				variables
 			));
 			return key;
 		}
