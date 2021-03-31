@@ -55,14 +55,14 @@ public class Server {
     		RestApiServerResponseFactory response,
     		Optional<ServerSecuredCredentials> config,
     		int maxUploadFileSize,
-    		Optional<List<String>> allowedFileContentType,
+    		Optional<List<String>> allowedFileContentTypes,
     		String charset,
     		Logger logger) throws Exception {
     	return new Server(
     			port, 
     			threadPool,
     			readTimeout,
-    			new RestApiServer(response, maxUploadFileSize, allowedFileContentType, logger),
+    			new RestApiServer(response, maxUploadFileSize, allowedFileContentTypes, logger),
     			config,
     			charset,
     			logger

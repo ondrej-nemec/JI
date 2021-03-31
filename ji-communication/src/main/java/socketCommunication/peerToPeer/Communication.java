@@ -10,7 +10,6 @@ public class Communication {
 	
 	public static final String NEW_LINE = "\r\n";
 
-	@Deprecated
 	public static String readMessage(BufferedReader br) throws IOException {
         StringBuilder builder = new StringBuilder();
 		String line = br.readLine();
@@ -22,7 +21,6 @@ public class Communication {
         return builder.toString();
     }
 
-	@Deprecated
     public static void writeMessage(BufferedWriter bw, String... messages) throws IOException {
         for (String message : messages) {
             bw.write(message);

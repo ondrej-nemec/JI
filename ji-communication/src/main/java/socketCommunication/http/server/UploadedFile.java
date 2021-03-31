@@ -34,10 +34,21 @@ public class UploadedFile {
 		return content;
 	}
 	
+	/**
+	 * Save file on given path. The filename will be same as uploaded name.
+	 * @param path
+	 * @throws IOException
+	 */
 	public void save(String path) throws IOException {
 		save(path, fileName);
 	}
 	
+	/**
+	 * Save file to given path. The name will be the given name.
+	 * @param path
+	 * @param name
+	 * @throws IOException
+	 */
 	public void save(String path, String name) throws IOException {
 		if (!path.endsWith("/")) {
 			path += "/";

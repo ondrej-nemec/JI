@@ -18,6 +18,10 @@ public class RequestParameters extends HashMap<String, Object> implements Dictio
 		}
 	}
 	
+	public UploadedFile getUploadedFile(String key) {
+		return UploadedFile.class.cast(get(key));
+	}
+	
 	public List<?> getList(String key) {
 		return List.class.cast(get(key));
 	}
