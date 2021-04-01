@@ -108,12 +108,54 @@ Most of values are stored as String (although you can get value as f.e. integer)
 
 ## Create Client
 
+For connecting to some server, JI Communication provide `SpeakerClient`. Constructor parameters:
+
+* `String ip` - server IP address
+* `int port` - port
+* `int connectionTimeout` - connection timeout
+* `int readTimeout` - read timeout
+* `Optional<ClientSecuredCredentials>` - if `Optional.empty` then connection will be unsecured. See [Client credentials](#client-credentials)
+* `String charset` - charset
+* `Logger logger`
+
+After that you can `connect` or `disconnect`. For communication with server - between this two methods - use `communicate` method. This method required `ThrowingBiConsumer` that provide you `BufferedReader` and `BufferedWriter`. You can read from one and write to other one.
+
 ### HTTP Client
+
+If you wish make Rest API request on server, use `RestApiClient`. Constructor parameters:
+
+* `String serverUrl` - server URL or IP, f.e. `http://example.com` or `http://127.0.0.1:12`
+* `Optional<ClientSecuredCredentials>` - if `Optional.empty` then connection will be unsecured. See [Client credentials](#client-credentials)
+* `String charset` - charset
+* `Logger logger`
+
+`RestApiClient` has 4 methods: `get`, `post`, `put`, `delete`. All need same parameters: `String uri` - f.e. `/api/some/data`, `Properties header` - request headers and `Properties params` - request parameters.
+
+This four methods return `RestApiResponse`. It contains response code, response message and content.
 
 ## Secured connection
 
 ### Server credentials
 
+`ServerSecuredCredentials` required path to key store and key store password. In that key store will be saved your server certificate.
+
+If you wish use user certificates (for connection to your server, user need certificate) fill client trust store and client trust store password. Otherwise let it `Optional.empty`.
+
 ### Client credentials
 
+Well, sorry. This needs refactoring. So please use `Optional.empty`.
+
 ### Generate self-signed certificate
+
+Before you need `keytool` program. Is in `java-path/bin/keytool`.
+
+```
+openssl genrsa -des3 -out private.key 2048   ## generate private key
+
+openssl req -new -key private.key -out request.csr  ## sign request
+openssl x509 -req -days 9999 -in request.csr -signkey private.key -out server.cert.pem  ## sign certificate
+
+openssl pkcs12 -export -in server.cert.pem -inkey private.key -name localhost -out certificate-PKCS-12.p12
+--path-to-keytool-program-- -importkeystore -destkeystore server-keystore.jks -srckeystore certificate-PKCS-12.p12 -srcstoretype PKCS12
+```
+
