@@ -8,13 +8,13 @@ Project contains some useful libraries, functions and structures
 ## Contains
 
 * [Common](ji-common) - Often used logic, useful structures and exceptions.
-* [File reading/writing](ji-files) - Factories for Buffered reader/writer and JSON stream
+* [File reading/writing](ji-files) - Factories for Buffered Reader/Writer and JSON stream
 * [Access control layer](ji-acl) - For checking permissions. Not for sign in/out.
-* [Translator](ji-translate) - Package supports multi-language applications.
+* [Translator](ji-translate) - Package supports multilingual applications.
 * [Logging](ji-logging) - Implementation Logger interface from Common.
-* [Database](ji-database) - Contains: SQL query builder and database migrations.
-* [Database tests](ji-testing) - Extends jUnit. For testing with database.
-* [Server-Client communication](ji-communication) - Provide server/client communication (secured or not secured) using java sockets. Implements web server too. 
+* [Database](ji-database) - Contains: SQL Query Builder and database migrations.
+* [Database tests](ji-testing) - Extends jUnit for testing with database.
+* [Server-Client communication](ji-communication) - Provide server/client communication (secured or not secured) using Java sockets. Implements web server too. 
 
 ## Include in your project
 
