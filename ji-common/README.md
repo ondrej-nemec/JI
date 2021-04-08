@@ -10,7 +10,7 @@ Often used logic, useful structures and exceptions.
 
 ## Include in your project
 
-JI uses for publication <a href="https://jitpack.io/">JitPack</a>. Allow you include this project by using Gradle or Maven.
+JI uses for publication <a href="https://jitpack.io/">JitPack</a>. It allows you to include this project by using Gradle or Maven.
 
 ### Include using Gradle
 

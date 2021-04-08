@@ -14,11 +14,11 @@ Project contains some useful libraries, functions and structures
 * [Logging](ji-logging) - Implementation Logger interface from Common.
 * [Database](ji-database) - Contains: SQL Query Builder and database migrations.
 * [Database tests](ji-testing) - Extends jUnit for testing with database.
-* [Server-Client communication](ji-communication) - Provide server/client communication (secured or not secured) using Java sockets. Implements web server too. 
+* [Server-Client communication](ji-communication) - Provide server/client communication (secured or unsecured) using Java sockets. Implements web server too. 
 
 ## Include in your project
 
-JI uses for publication <a href="https://jitpack.io/">JitPack</a>. Allow you include this project by using Gradle or Maven.
+JI uses for publication <a href="https://jitpack.io/">JitPack</a>. It allows you to include this project by using Gradle or Maven.
 
 ### Include using Gradle
 
