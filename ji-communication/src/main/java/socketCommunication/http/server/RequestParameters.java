@@ -2,7 +2,6 @@ package socketCommunication.http.server;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import common.structures.Dictionary;
 import common.structures.Tuple2;
@@ -22,12 +21,22 @@ public class RequestParameters extends HashMap<String, Object> implements Dictio
 		return UploadedFile.class.cast(get(key));
 	}
 	
-	public List<?> getList(String key) {
+	@Deprecated
+	public List<?> getList2(String key) {
 		return List.class.cast(get(key));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getList(String key) {
+		return List.class.cast(get(key));
+	}
+	/*
 	public Map<?, ?> getMap(String key) {
 		return Map.class.cast(get(key));
+	}
+	*/
+	public RequestParameters getMap(String key) {
+		return RequestParameters.class.cast(get(key));
 	}
 	
 	@Override
