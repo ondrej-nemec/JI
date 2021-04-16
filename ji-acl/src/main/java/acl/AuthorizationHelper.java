@@ -14,22 +14,22 @@ import common.Logger;
 
 public class AuthorizationHelper {
 
-	private RulesDao rulesDao;
+	private Permissions permissions;
 	
 	private final Logger logger;
 	
-	public AuthorizationHelper(final RulesDao rulesDao, Logger logger) {
-		this.rulesDao = rulesDao;
+	public AuthorizationHelper(final Permissions permissions, Logger logger) {
+		this.permissions = permissions;
 		this.logger = logger;
 	}
 	
-	public void throwIfIsNotAllowed(AclUser who, AclDestination where, Action what) {
+	public void authenticate(AclUser who, AclDestination where, Action what) {
 		if(!isAllowed(who, where, what)) {
 			throw new AccessDeniedException(who, where, what);
 		}
 	}
 	
-	public void throwIfIsNotAllowed(AclUser who, AclDestination where, Action what, Object owner) {
+	public void authenticate(AclUser who, AclDestination where, Action what, Object owner) {
 		if(!isAllowed(who, where, what, owner)) {
 			throw new AccessDeniedException(who, where, what);
 		}
@@ -46,7 +46,7 @@ public class AuthorizationHelper {
 			throw new NotAllowedActionException(what);
 		}
 		
-		Rules rules = rulesDao.getRulesForUserAndGroups(who, where);
+		Rules rules = permissions.getRulesForUserAndGroups(who, where);
 		if (rules == null) {
 			logger.warn("No access rule found for: " + who + " -> " + where + " -> " + what + " (" + owner + ")"); 
 			return false;
@@ -118,7 +118,7 @@ public class AuthorizationHelper {
 			throw new NotAllowedActionException(what);
 		}
 		
-		Rules rules = rulesDao.getRulesForUserAndGroups(who, where);
+		Rules rules = permissions.getRulesForUserAndGroups(who, where);
 		if (rules == null) {
 			logger.warn("No access rule found for: " + who + " -> " + where + " -> " + what); 
 			throw new NotAllowedActionException("No rule found");

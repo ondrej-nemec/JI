@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 
 import acl.Action;
 import acl.AuthorizationHelper;
-import acl.RulesDao;
+import acl.Permissions;
 import acl.exception.NotAllowedActionException;
 import acl.structures.AccessRule;
 import acl.structures.AclDestination;
@@ -34,7 +34,7 @@ public class AuthorizationHelperTest {
 		AclRole role = getRole("role");
 		AclUser user = getUser("user", 10, role);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(rules);
 		
 		AuthorizationHelper helper = getHelper(mock);
@@ -116,7 +116,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.forUserWithOwner(Action.CREATE, owners)
 		);
@@ -133,7 +133,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-group-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.forUserGroupsAndLevels(Arrays.asList(
 				AccessRule.withoutLevel(Action.CREATE, owners),
@@ -154,7 +154,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-group-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.forUserGroupsAndLevels(Arrays.asList(
 				AccessRule.withLevel(12, Action.ADMIN, owners),
@@ -184,7 +184,7 @@ public class AuthorizationHelperTest {
 		AclRole role = getRole("role");
 		AclUser user = getUser("user", 10, role);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(rules);
 		
 		AuthorizationHelper helper = getHelper(mock);
@@ -215,7 +215,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.forUserWithOwner(Action.CREATE, Arrays.asList("owner1", "owner2", "owner3"))
 		);
@@ -249,7 +249,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.forUserGroupsAndLevels(Arrays.asList(
 				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner6")),
@@ -291,7 +291,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.full(Action.CREATE, Arrays.asList("owner5"), Arrays.asList(
 				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner6")),
@@ -319,7 +319,7 @@ public class AuthorizationHelperTest {
 		AclDestination domain = getDestination("for-user-id");
 		AclUser user = getUser("user", 10);
 		
-		RulesDao mock = mock(RulesDao.class);
+		Permissions mock = mock(Permissions.class);
 		when(mock.getRulesForUserAndGroups(user, domain)).thenReturn(
 			Rules.full(Action.FORBIDDEN, Arrays.asList("owner3"), Arrays.asList(
 				AccessRule.withLevel(9, Action.CREATE, Arrays.asList("owner6")),
@@ -352,7 +352,7 @@ public class AuthorizationHelperTest {
 	/*** SEPARATOR ***/
 	
 	
-	private AuthorizationHelper getHelper(RulesDao rules) {
+	private AuthorizationHelper getHelper(Permissions rules) {
 		return new AuthorizationHelper(rules, mock(Logger.class));
 	}
 	

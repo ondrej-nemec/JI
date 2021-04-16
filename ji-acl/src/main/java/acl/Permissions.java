@@ -4,7 +4,7 @@ import acl.structures.AclDestination;
 import acl.structures.AclUser;
 import acl.structures.Rules;
 
-public interface RulesDao {
+public interface Permissions {
 	
 	/**
 	 * Select rules for given user and his/her groups.
