@@ -9,7 +9,11 @@ public class MapInit<K, V> {
 	private final Map<K, V> map;
 	
 	public MapInit() {
-		this.map = new HashMap<>();
+		this(new HashMap<>());
+	}
+	
+	public MapInit(Map<K, V> map) {
+		this.map = map;
 	}
 	
 	public MapInit<K, V> append(K key, V value) {
@@ -28,12 +32,14 @@ public class MapInit<K, V> {
 	}
 	
 	/**********************/
-	
+
+	@Deprecated
 	public static <K, V> Tuple2<K, V> t(K key, V value) {
 		return new Tuple2<K, V>(key, value);
 	}
 
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	private Map<K, V> map(Map<K, V>map, Tuple2<K, V>... kvs) {
 		for (Tuple2<K, V> tuple : kvs) {
 			map.put(tuple._1(), tuple._2());
@@ -42,6 +48,7 @@ public class MapInit<K, V> {
 	}
 
 	@SafeVarargs
+	@Deprecated
 	public static <K, V> UniqueMap<K, V> uniqueMap(Tuple2<K, V>... kvs) {
 		UniqueMap<K, V> map = new UniqueMap<>();
 		for (Tuple2<K, V> kv : kvs) {
@@ -51,12 +58,14 @@ public class MapInit<K, V> {
 	}
 	
 	@SafeVarargs
+	@Deprecated
 	public static <K, V> Map<K, V> hashMap(Tuple2<K, V>... kvs) {
 		MapInit<K, V> init = new MapInit<>();
 		return init.map(new HashMap<>(), kvs);
 	}
 
 	@SafeVarargs
+	@Deprecated
 	public static Properties properties(Tuple2<?, ?>... kvs) {
 		Properties prop = new Properties();
 		for (Tuple2<?, ?> tuple : kvs) {
