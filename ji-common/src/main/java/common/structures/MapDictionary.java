@@ -38,6 +38,10 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		return this;
 	}
 	
+	public V remove(K key) {
+		return map.remove(key);
+	}
+	
 	public Set<K> keySet() {
 		return map.keySet();
 	}

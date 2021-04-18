@@ -41,6 +41,10 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 		return this;
 	}
 	
+	public boolean remove(Integer index) {
+		return list.remove(index);
+	}
+	
 	public List<S> toList() {
 		return list;
 	}
