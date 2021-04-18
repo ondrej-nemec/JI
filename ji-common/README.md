@@ -43,7 +43,9 @@ implementation 'com.github.ondrej-nemec:javainit:ji-common:Tag'
 	* Console
 	* DateTime
 	* Implode - from Iterable or array make string with given glue. Like `implode` function from PHP 
-	* MapInit
+	* Dictionary
+	* ListDictionary
+	* MapDictionary
 	* OperationSystem
 	* Env
 	* Terminal

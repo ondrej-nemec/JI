@@ -21,19 +21,24 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 		this.list = list;
 	}
 	
+	@Override
+	public Object getValue(Integer key) {
+		return list.get(key);
+	}
+	
 	public ListDictionary<S> add(Integer index, S value) {
 		list.add(index, value);
+		return this;
+	}
+	
+	public ListDictionary<S> addAll(List<S> values) {
+		list.addAll(values);
 		return this;
 	}
 	
 	public ListDictionary<S> add(S value) {
 		list.add(value);
 		return this;
-	}
-	
-	@Override
-	public Object getValue(Integer key) {
-		return list.get(key);
 	}
 	
 	public List<S> toList() {

@@ -1,8 +1,10 @@
 package common.structures;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class MapDictionary<K, V> implements Dictionary<K> {
@@ -21,14 +23,27 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		this.map = map;
 	}
 	
+	@Override
+	public Object getValue(K name) {
+		return map.get(name);
+	}
+	
 	public MapDictionary<K, V> put(K key, V value) {
 		map.put(key, value);
 		return this;
 	}
+
+	public MapDictionary<K, V> putAll(Map<K, V> values) {
+		map.putAll(values);
+		return this;
+	}
 	
-	@Override
-	public Object getValue(K name) {
-		return map.get(name);
+	public Set<K> keySet() {
+		return map.keySet();
+	}
+	
+	public Collection<V> values() {
+		return map.values();
 	}
 	
 	public Map<K, V> toMap() {

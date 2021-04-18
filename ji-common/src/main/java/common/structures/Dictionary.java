@@ -8,6 +8,10 @@ import java.util.function.Function;
 public interface Dictionary<S> {
 
 	Object getValue(S name);
+
+	default Object get(S name) {
+		return getValue(name);
+	}
 	
 	default <T> T getValue(S name, Class<T> clazz) {
 		Object value = getValue(name);
