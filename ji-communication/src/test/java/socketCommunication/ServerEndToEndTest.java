@@ -103,8 +103,8 @@ public class ServerEndToEndTest {
 				}
 				if (url.equals("/file")) {
 					System.err.println("File to upload");
-					System.err.println(params.get("fileToUpload"));
-					((UploadedFile)params.get("fileToUpload")).save("index");
+					System.err.println(params.getValue("fileToUpload"));
+					((UploadedFile)params.getValue("fileToUpload")).save("index");
 					return getFile();
 				}
 				if (url.equals("/final.gif")) {

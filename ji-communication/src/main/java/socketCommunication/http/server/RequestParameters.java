@@ -3,47 +3,44 @@ package socketCommunication.http.server;
 import java.util.HashMap;
 import java.util.List;
 
-import common.structures.Dictionary;
+import common.structures.MapDictionary;
 import common.structures.Tuple2;
 
-public class RequestParameters extends HashMap<String, Object> implements Dictionary {
-
-	private static final long serialVersionUID = 1L;
+public class RequestParameters extends MapDictionary<String, Object> {
 	
 	@SafeVarargs
+	@Deprecated
 	public RequestParameters(Tuple2<String, ?> ...tuples) {
+		super(new HashMap<>());
 		for (Tuple2<String, ?> tuple : tuples) {
 			put(tuple._1(), tuple._2());
 		}
 	}
 	
+	public RequestParameters() {
+		super(new HashMap<>());
+	}
+	
 	public UploadedFile getUploadedFile(String key) {
-		return UploadedFile.class.cast(get(key));
+		return UploadedFile.class.cast(getValue(key));
 	}
 	
 	@Deprecated
 	public List<?> getList2(String key) {
-		return List.class.cast(get(key));
+		return List.class.cast(getValue(key));
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public <T> List<T> getList(String key) {
-		return List.class.cast(get(key));
+		return List.class.cast(getValue(key));
 	}
-	/*
-	public Map<?, ?> getMap(String key) {
-		return Map.class.cast(get(key));
-	}
-	*/
+
+	@Deprecated
 	public RequestParameters getMap(String key) {
-		return RequestParameters.class.cast(get(key));
+		return RequestParameters.class.cast(getValue(key));
 	}
-	
-	@Override
-	public Object getValue(String name) {
-		return get(name);
-	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		return super.equals(o);

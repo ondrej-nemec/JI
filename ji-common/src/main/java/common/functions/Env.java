@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import common.structures.Dictionary;
 
-public class Env implements Dictionary {
+public class Env implements Dictionary<String> {
 	
 	private final Properties properties;
 		

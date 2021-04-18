@@ -330,13 +330,13 @@ public class RestApiServer implements Servant {
 
 	private void parseParams(RequestParameters params, String[] keys, String value) throws UnsupportedEncodingException {
 		String key = keys[0]; // URLDecoder.decode(keys[0], StandardCharsets.UTF_8.toString());
-		Object o = params.get(key);
+		Object o = params.getValue(key);
 		if (o == null && keys[1].equals("=")) {
 			params.put(key, new LinkedList<>());
 		} else if (o == null) {
 			params.put(key, new HashMap<>());
 		}
-		parseParams(params.get(key), keys, 1, value);
+		parseParams(params.getValue(key), keys, 1, value);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

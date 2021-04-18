@@ -2,13 +2,14 @@ package common.structures;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
-public interface Dictionary {
+public interface Dictionary<S> {
 
-	Object getValue(String name);
+	Object getValue(S name);
 	
-	default <T> T getValue(String name, Class<T> clazz) {
+	default <T> T getValue(S name, Class<T> clazz) {
 		Object value = getValue(name);
 		if (value == null) {
 			return null;
@@ -16,7 +17,7 @@ public interface Dictionary {
 		return clazz.cast(value);
 	}
 	
-	default <T> T getValue(String name, Function<String, T> create) {
+	default <T> T getValue(S name, Function<String, T> create) {
 		Object value = getValue(name);
 		if (value == null) {
 			return null;
@@ -26,32 +27,62 @@ public interface Dictionary {
 		return create.apply(value.toString());
 	}
 	
-	default Boolean getBoolean(String name) {
+	default Boolean getBoolean(S name) {
 		return getValue(name, a->Boolean.parseBoolean(a));
 	}
 	
-	default Integer getInteger(String name) {
+	default Integer getInteger(S name) {
 		return getValue(name, a->Integer.parseInt(a));
 	}
 	
-	default Double getDouble(String name) {
+	default Double getDouble(S name) {
 		return getValue(name, a->Double.parseDouble(a));
 	}
 	
-	default Long getLong(String name) {
+	default Long getLong(S name) {
 		return getValue(name, a->Long.parseLong(a));
 	}
 	
-	default String getString(String name) {
+	default String getString(S name) {
 		return getValue(name, a->a);
 	}
 	
-	default <E extends Enum<E>> E getEnum(String name, Class<E> enumm) {
+	default <E extends Enum<E>> E getEnum(S name, Class<E> enumm) {
 		return getValue(name, a->E.valueOf(enumm, a));
 	}
 	
-	default List<String> getList(String name, String delimiter) {
+	default List<String> getList(S name, String delimiter) {
 		return getValue(name, a->Arrays.asList(a.split(delimiter)));
 	}
+
+	@SuppressWarnings("unchecked")
+	default <T> ListDictionary<T> getAsDictionaryList(S name) {
+		return new ListDictionary<T>(getValue(name, a->List.class.cast(a)));
+	}
+
+	@SuppressWarnings("unchecked")
+	default <T, E> MapDictionary<T, E> getAsDictionaryMap(S name) {
+		return new MapDictionary<T, E>(getValue(name, a->Map.class.cast(a)));
+	}
+
+	@SuppressWarnings("unchecked")
+	default <T> ListDictionary<T> getDictionaryList(S name) {
+		return getValue(name, a->ListDictionary.class.cast(a));
+	}
+
+	@SuppressWarnings("unchecked")
+	default <T, E> MapDictionary<T, E> getDictionaryMap(S name) {
+		return getValue(name, a->MapDictionary.class.cast(a));
+	}
 	
+/*	
+	@SuppressWarnings("unchecked")
+	default <T> List<T> getList(S name) {
+		return getValue(name, a->List.class.cast(a));
+	}
+	
+	default Dictionary getMap(S name) {
+		return getValue(name, a->Dictionary.class.cast(a));
+	}
+*/
 }
