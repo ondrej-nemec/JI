@@ -2,6 +2,8 @@ package json;
 
 import java.util.Map;
 
+import common.structures.ListDictionary;
+import common.structures.MapDictionary;
 import json.providers.OutputStringProvider;
 
 public class JsonWritter {
@@ -70,6 +72,10 @@ public class JsonWritter {
 			write(stream, (Iterable<Object>)value, name);
 		} else if (value instanceof Map) {
 			write(stream, (Map<String, Object>)value, name);
+		} else if (value instanceof MapDictionary<?, ?>) {
+			write(stream, MapDictionary.class.cast(value).toMap(), name);
+		} else if (value instanceof ListDictionary<?>) {
+			write(stream, ListDictionary.class.cast(value).toList(), name);
 		} else {
 			if (name == null) {
 				stream.writeListValue(value);

@@ -4,14 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * @deprecated use MapDictionary instead
- * @author Ondřej Němec
- *
- * @param <K>
- * @param <V>
- */
-@Deprecated
 public class MapInit<K, V> {
 	
 	private final Map<K, V> map;
