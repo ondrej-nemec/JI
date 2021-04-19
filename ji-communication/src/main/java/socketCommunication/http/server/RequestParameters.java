@@ -24,22 +24,6 @@ public class RequestParameters extends MapDictionary<String, Object> {
 	public UploadedFile getUploadedFile(String key) {
 		return UploadedFile.class.cast(getValue(key));
 	}
-	
-	@Deprecated
-	public List<?> getList2(String key) {
-		return List.class.cast(getValue(key));
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public <T> List<T> getList(String key) {
-		return List.class.cast(getValue(key));
-	}
-
-	@Deprecated
-	public RequestParameters getMap(String key) {
-		return RequestParameters.class.cast(getValue(key));
-	}
 
 	@Override
 	public boolean equals(Object o) {
