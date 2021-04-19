@@ -13,11 +13,12 @@ public interface Dictionary<S> {
 		return getValue(name);
 	}
 	
-	default <T> T getValue(S name, Class<T> clazz) {
+	default <T> T getValue(S name, Class<T> clazz, Function<Object, Object> prepare) {
 		Object value = getValue(name);
 		if (value == null) {
 			return null;
 		}
+		value = prepare.apply(value);
 		return clazz.cast(value);
 	}
 	
@@ -58,35 +59,55 @@ public interface Dictionary<S> {
 	default List<String> getList(S name, String delimiter) {
 		return getValue(name, a->Arrays.asList(a.split(delimiter)));
 	}
-
+/*
 	@SuppressWarnings("unchecked")
 	default <T> ListDictionary<T> getAsDictionaryList(S name) {
-		return new ListDictionary<T>(getValue(name, a->List.class.cast(a)));
+		return new ListDictionary<T>(getValue(name, List.class));
 	}
 
 	@SuppressWarnings("unchecked")
 	default <T, E> MapDictionary<T, E> getAsDictionaryMap(S name) {
-		return new MapDictionary<T, E>(getValue(name, a->Map.class.cast(a)));
+		return new MapDictionary<T, E>(getValue(name, Map.class));
 	}
-
+*/
 	@SuppressWarnings("unchecked")
 	default <T> ListDictionary<T> getDictionaryList(S name) {
-		return getValue(name, a->ListDictionary.class.cast(a));
+		return getValue(name, ListDictionary.class, (value)->{
+			if (value instanceof List<?>) {
+				return new ListDictionary<T>(List.class.cast(value));
+			}
+			return value;
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	default <T, E> MapDictionary<T, E> getDictionaryMap(S name) {
-		return getValue(name, a->MapDictionary.class.cast(a));
+		return getValue(name, MapDictionary.class, (value)->{
+			if (value instanceof Map<?, ?>) {
+				return new MapDictionary<T, E>(Map.class.cast(value));
+			}
+			return value;
+		});
 	}
 	
-/*	
 	@SuppressWarnings("unchecked")
 	default <T> List<T> getList(S name) {
-		return getValue(name, a->List.class.cast(a));
+		return getValue(name, List.class, (value)-> {
+			if (value instanceof ListDictionary<?>) {
+				return ListDictionary.class.cast(value).toList();
+			}
+			return value;
+		});
 	}
-	
-	default Dictionary getMap(S name) {
-		return getValue(name, a->Dictionary.class.cast(a));
+
+	@SuppressWarnings("unchecked")
+	default <K, V> Map<K, V> getMap(S name) {
+		return getValue(name, Map.class, (value)-> {
+			if (value instanceof MapDictionary<?, ?>) {
+				return MapDictionary.class.cast(value).toMap();
+			}
+			return value;
+		});
 	}
-*/
+
 }

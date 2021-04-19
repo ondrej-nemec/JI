@@ -50,17 +50,21 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		return map.values();
 	}
 	
+	public int size() {
+		return map.size();
+	}
+	
 	public Map<K, V> toMap() {
 		return map;
 	}
 	
-	public void forEach(BiConsumer<K, V> action) {
+	public void forEach2(BiConsumer<K, V> action) {
 		map.forEach(action);
 	}
 	
-	public <E extends Throwable> void forEachThrowable(ThrowingBiConsumer<K, V, E> action) throws E {
+	public <E extends Throwable> void forEach(ThrowingBiConsumer<K, DictionaryValue, E> action) throws E {
 		for (K k : map.keySet()) {
-			action.accept(k, map.get(k));
+			action.accept(k, new DictionaryValue(map.get(k)));
 		}
 	}
 	

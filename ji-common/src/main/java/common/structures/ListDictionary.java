@@ -45,17 +45,21 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 		return list.remove(index);
 	}
 	
+	public int size() {
+		return list.size();
+	}
+	
 	public List<S> toList() {
 		return list;
 	}
 	
-	public void forEach(Consumer<S> action) {
+	public void forEach2(Consumer<S> action) {
 		list.forEach(action);
 	}
 	
-	public <E extends Throwable> void forEachThrowable(ThrowingConsumer<S, E> action) throws E {
+	public <E extends Throwable> void forEach(ThrowingConsumer<DictionaryValue, E> action) throws E {
 		for (S s : list) {
-			action.accept(s);
+			action.accept(new DictionaryValue(s));
 		}
 	}
 	
