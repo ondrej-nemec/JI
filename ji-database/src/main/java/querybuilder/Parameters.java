@@ -1,6 +1,7 @@
 package querybuilder;
 
 import common.functions.Implode;
+import common.structures.ListDictionary;
 
 public interface Parameters<B> extends Batch {
 	
@@ -15,6 +16,12 @@ public interface Parameters<B> extends Batch {
 			return addNotEscapedParameter(
 				name,
 				Implode.implode(item->escapeParameterParameter(item), ",", iterable)
+			);
+		} else if (value instanceof ListDictionary) {
+			ListDictionary<?> iterable = ListDictionary.class.cast(value);
+			return addNotEscapedParameter(
+				name,
+				Implode.implode(item->escapeParameterParameter(item), ",", iterable.toList())
 			);
 		} else {
 			return addNotEscapedParameter(name, escapeParameterParameter(value));
