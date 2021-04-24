@@ -1,4 +1,4 @@
-package utils.security;
+package common.functions;
 
 import static org.junit.Assert.assertEquals;
 
