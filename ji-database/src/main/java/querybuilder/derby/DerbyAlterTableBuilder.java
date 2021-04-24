@@ -3,6 +3,8 @@ package querybuilder.derby;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import querybuilder.AlterTableQueryBuilder;
 import querybuilder.ColumnSetting;
@@ -15,11 +17,16 @@ public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
 	
 	private final StringBuilder sql;
 	
+	private final String tableName;
+	
+	private final List<String> separatedQueries = new LinkedList<>();
+	
 	private boolean first = true;
 
 	public DerbyAlterTableBuilder(Connection connection, String name) {
 		this.connection = connection;
-		this.sql = new StringBuilder("ALTER TABLE " + name);
+		this.tableName = name;
+		this.sql = new StringBuilder();
 	}
 	
 	@Override
@@ -90,30 +97,55 @@ public class DerbyAlterTableBuilder implements AlterTableQueryBuilder {
 
 	@Override
 	public AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type) {
-		first();
+		// first();
 		//sql.append(String.format("RENAME COLUMN %s %s %s", originName, newName, EnumToDerbyString.typeToString(type)));
-		sql.append(String.format("RENAME COLUMN %s %s", originName, newName));
+		separatedQueries.add(String.format(" RENAME COLUMN %s.%s TO %s", tableName, originName, newName));
 		return this;
 	}
 
 	@Override
 	public void execute() throws SQLException {
 		try (Statement stat = connection.createStatement();) {
+		    String mainSql = createMainSql();
+		    if (!mainSql.isEmpty()) {
+		    	stat.addBatch(mainSql);
+		    }
+		    for (String batch : separatedQueries) {
+		        stat.addBatch(batch);
+		    }
+		    stat.executeBatch();
+		}
+		/*try (Statement stat = connection.createStatement();) {
 			System.out.println(getSql());
 			stat.execute(getSql());
-		}
+		}*/
 	}
 
 	@Override
 	public String getSql() {
-		return sql.toString();
+	    StringBuilder b = new StringBuilder();
+	    String mainSql = createMainSql();
+	    if (!mainSql.isEmpty()) {
+	    	b.append(mainSql).append(";");
+	    }
+	    separatedQueries.forEach((q)->{
+	        b.append(q).append(";");
+	    });
+		return b.toString();
+	}
+	
+	private String createMainSql() {
+		if (!sql.toString().isEmpty()) {
+			return String.format("ALTER TABLE %s %s" , tableName, sql.toString());
+	    }
+		return "";
 	}
 	
 	private void first() {
 		if (!first) {
 			sql.append(", ");
 		} else {
-			sql.append(" ");
+			sql.append("");
 		}
 		first = false;
 	}

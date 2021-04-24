@@ -506,7 +506,7 @@ public class QueryBuilderEndToEndTest {
 				.addColumn("c1", ColumnType.bool(), true, ColumnSetting.NOT_NULL)
 				.addColumn("c2", ColumnType.integer())
 				.addColumn("c3", ColumnType.string(10), ColumnSetting.UNIQUE)
-				.addForeingKey("c2", "SecondTable", "second_id", OnAction.CASCADE, OnAction.CASCADE)
+				.addForeingKey("c2", "SecondTable", "second_id", OnAction.NO_ACTION, OnAction.NO_ACTION)
 				.execute();
 			
 			conn.createStatement().executeQuery("select c1, c2, c3 from create_table");

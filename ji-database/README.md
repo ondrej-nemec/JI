@@ -122,7 +122,7 @@ database.applyBuilder((builder)->{
 });
 ```
 
-Query with Iterable parameter:
+Query with `Iterable` parameter:
 
 ```java
 database.applyBuilder((builder)->{
@@ -135,7 +135,7 @@ database.applyBuilder((builder)->{
 
 ### Known issues
 
-* Derby - alter table
+* Derby - alter table create/delete foreign key
 * SQL Server - alter table - The operation 'ALTER TABLE DROP INDEX' is supported only with memory optimized tables
 
 ### Migrations
