@@ -69,15 +69,15 @@ public class SingleMigrationTool {
 			logger.warn("Migration reverted: " + id);
 			builder.delete(migrationTable)
 				.where("id = :id").addParameter(":id", id)
-				.andWhere("Module = :module").addParameter(":module", module)
+				.andWhere("module = :module").addParameter(":module", module)
 				.execute();
 		} else {
 			builder
 	    		.insert(migrationTable)
+	    		.addValue("module", module)
 	    		.addValue("id", id)
-	    		.addValue("Description", description)
-	    		.addValue("DateTime", DateTime.format("YYYY-mm-dd H:m:s"))
-	    		.addValue("Module", module)
+	    		.addValue("description", description)
+	    		.addValue("date_time", DateTime.format("YYYY-mm-dd H:m:s"))
 	    		.execute();
 		}
 	}

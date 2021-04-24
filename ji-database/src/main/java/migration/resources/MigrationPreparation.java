@@ -60,19 +60,20 @@ public class MigrationPreparation {
 			return builder
 				.select("id")
 				.from(migrationTable)
-				.where("Module = :module")
+				.where("module = :module")
 				.addParameter(":module", module)
 				.fetchAll((row)->{
 					return row.getValue("id").toString();
 				});
 		} catch (Exception ignored) {
 			builder.getConnection().rollback();
+			// TODO add multi column primary key
 			builder
 				.createTable(migrationTable)
-				.addColumn("id", ColumnType.string(100), ColumnSetting.NOT_NULL, ColumnSetting.PRIMARY_KEY)
-				.addColumn("Description", ColumnType.string(100), ColumnSetting.NOT_NULL)
-				.addColumn("DateTime", ColumnType.string(100), ColumnSetting.NOT_NULL)
-				.addColumn("Module", ColumnType.string(400), ColumnSetting.NULL)
+				.addColumn("module", ColumnType.string(400), ColumnSetting.NULL)
+				.addColumn("id", ColumnType.string(100), ColumnSetting.NOT_NULL)
+				.addColumn("description", ColumnType.string(100), ColumnSetting.NOT_NULL)
+				.addColumn("date_time", ColumnType.string(100), ColumnSetting.NOT_NULL)
 				.execute();
 		}
 		return new LinkedList<>();

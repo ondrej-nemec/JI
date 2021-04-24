@@ -115,6 +115,28 @@ public class MigrationToolEndToEndTest {
 		};
 	}
 	
+	@Test
+	public void testMigrateModulesMakeMigrations() throws Exception {
+		Connection c = createConnection();
+		c.setAutoCommit(false);
+		
+		QueryBuilder queryBuilder = new MySqlQueryBuilder(c);
+		MigrationTool tool = new MigrationTool(
+			Arrays.asList("migration/endToEndModule1", "migration/endToEndModule2"), 
+			queryBuilder, 
+			Mockito.mock(Logger.class)
+		);
+		
+		testStates(c, false);
+		tool.migrate();
+		testStates(c, true);
+		tool.revert();
+		testStates(c, false);
+		
+		c.rollback();
+		c.close();
+	}
+	
 	@Test(expected = IOException.class)
 	public void testMigrateThrowsIfNotExistingFolderGiven() throws Exception {
 		try (Connection c = createConnection()) {
