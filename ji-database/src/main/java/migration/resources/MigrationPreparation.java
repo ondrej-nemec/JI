@@ -73,7 +73,7 @@ public class MigrationPreparation {
 				.addColumn("module", ColumnType.string(400), ColumnSetting.NULL)
 				.addColumn("id", ColumnType.string(100), ColumnSetting.NOT_NULL)
 				.addColumn("description", ColumnType.string(100), ColumnSetting.NOT_NULL)
-				.addColumn("date_time", ColumnType.string(100), ColumnSetting.NOT_NULL)
+				.addColumn("datetime", ColumnType.string(100), ColumnSetting.NOT_NULL)
 				.execute();
 		}
 		return new LinkedList<>();

@@ -77,7 +77,7 @@ public class SingleMigrationTool {
 	    		.addValue("module", module)
 	    		.addValue("id", id)
 	    		.addValue("description", description)
-	    		.addValue("date_time", DateTime.format("YYYY-mm-dd H:m:s"))
+	    		.addValue("datetime", DateTime.format("YYYY-mm-dd H:m:s"))
 	    		.execute();
 		}
 	}
