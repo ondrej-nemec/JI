@@ -101,4 +101,14 @@ public class DictionaryValue {
 			return value;
 		});
 	}
+	
+	@Override
+	public String toString() {
+		return value.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return value.equals(obj);
+	}
 }
