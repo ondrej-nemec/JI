@@ -66,8 +66,6 @@ public class JsonWritter {
 			} else {
 				stream.writeObjectValue(name, value);
 			}
-		} else if (value instanceof Jsonable) {
-			writeObject(stream, ((Jsonable)value).toJson(), name);
 		} else if (value instanceof Iterable) {
 			write(stream, (Iterable<Object>)value, name);
 		} else if (value instanceof Map) {
@@ -76,6 +74,8 @@ public class JsonWritter {
 			write(stream, MapDictionary.class.cast(value).toMap(), name);
 		} else if (value instanceof ListDictionary<?>) {
 			write(stream, ListDictionary.class.cast(value).toList(), name);
+		} else if (value instanceof Jsonable) {
+			writeObject(stream, ((Jsonable)value).toJson(), name);
 		} else {
 			if (name == null) {
 				stream.writeListValue(value);
