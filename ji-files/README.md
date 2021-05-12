@@ -184,12 +184,16 @@ stream.endDocument();
 
 Using Streams for reading/writing JSON can be useful but there is easiest way to do it. JI Files allow you parse Object to JSON and JSON to Object. There are rules:
 
-* `java.utils.Map` is JSON Oject
-* `java.utils.List` is JSON List
-* primitives (excepts byte) and Strings stay as they are
+* `java.utils.Map` and `MapDictionary` are JSON Oject
+* `java.utils.List` and `ListDictionary` are JSON List
+* primitives (excepts byte), object for primitives (Integer, Double, Boolean, ...) and Strings stay as they are
 * for writing only:
 	* object that implements `Jsonable` are saved with `Jsonable::toJson`
-	* others are saved as string using `toString()` method
+	* for others object the java reflection is used
+	
+#### Reflection for writing
+
+By default, all class parameters are saved with their names. If you wish exclude some parameter, just annotate it with `JsonIgnored`. If you wish use another name, annotate it with `JsonParameter`.
 
 #### Reading
 

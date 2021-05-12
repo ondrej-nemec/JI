@@ -1,9 +1,13 @@
 package json;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import common.structures.ListDictionary;
 import common.structures.MapDictionary;
+import json.annotations.JsonIgnored;
+import json.annotations.JsonParameter;
 import json.providers.OutputStringProvider;
 
 public class JsonWritter {
@@ -77,11 +81,49 @@ public class JsonWritter {
 		} else if (value instanceof Jsonable) {
 			writeObject(stream, ((Jsonable)value).toJson(), name);
 		} else {
+			Object valueToWrite = getValue(value);
 			if (name == null) {
-				stream.writeListValue(value);
+				stream.writeListValue(valueToWrite);
 			} else {
-				stream.writeObjectValue(name, value);
+				stream.writeObjectValue(name, valueToWrite);
 			}
 		}	
+	}
+	
+	private Object getValue(Object value) {
+		if (value instanceof Number) {
+			return value.toString();
+		}
+		if (value instanceof String) {
+			return value;
+		}
+		if (value instanceof Character) {
+			return value.toString();
+		}
+		return refrectionObject(value);
+	}
+	
+	protected Object refrectionObject(Object value) {
+		try {
+			Map<String, Object> json = new HashMap<>();
+			Field[] fields = value.getClass().getDeclaredFields();
+			for (Field field : fields) {
+				if (field.getName().equals("this$0")) {
+					continue;
+				}
+				if (field.isAnnotationPresent(JsonIgnored.class)) {
+					continue;
+				}
+				field.setAccessible(true);
+				String name = field.getName();
+				if (field.isAnnotationPresent(JsonParameter.class)) {
+					name = field.getAnnotation(JsonParameter.class).value();
+				}
+				json.put(name, field.get(value));
+			}
+			return json;
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
