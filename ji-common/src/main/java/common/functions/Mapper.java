@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import common.annotations.ParseIgnored;
-import common.annotations.ParseParameter;
+import common.annotations.MapperIgnored;
+import common.annotations.MapperParameter;
 import common.structures.DictionaryValue;
 import common.structures.MapDictionary;
 
@@ -27,13 +27,13 @@ public class Mapper {
 				if (field.getName().equals("this$0")) {
 					continue;
 				}
-				if (field.isAnnotationPresent(ParseIgnored.class)) {
+				if (field.isAnnotationPresent(MapperIgnored.class)) {
 					continue;
 				}
 				field.setAccessible(true);
 				String name = field.getName();
-				if (field.isAnnotationPresent(ParseParameter.class)) {
-					name = field.getAnnotation(ParseParameter.class).value();
+				if (field.isAnnotationPresent(MapperParameter.class)) {
+					name = field.getAnnotation(MapperParameter.class).value();
 				}
 				json.put(name, field.get(value));
 			}
@@ -56,8 +56,8 @@ public class Mapper {
 			for (Field field : fields) {
 				field.setAccessible(true);
 				String parameterName = null;
-				if (field.isAnnotationPresent(ParseParameter.class)) {
-					parameterName = field.getAnnotation(ParseParameter.class).value();
+				if (field.isAnnotationPresent(MapperParameter.class)) {
+					parameterName = field.getAnnotation(MapperParameter.class).value();
 				} else {
 					parameterName = field.getName();
 				}

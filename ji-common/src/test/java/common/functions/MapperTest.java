@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import common.annotations.ParseIgnored;
-import common.annotations.ParseParameter;
+import common.annotations.MapperIgnored;
+import common.annotations.MapperParameter;
 import common.functions.testingClasses.Main;
 import common.structures.MapInit;
 
@@ -42,9 +42,9 @@ public class MapperTest {
 			private int second = 42;
 			@SuppressWarnings("unused")
 			private List<String> list = Arrays.asList("a", "b", "c");
-			@ParseIgnored
+			@MapperIgnored
 			private double ignored = 12.3;
-			@ParseParameter("realName")
+			@MapperParameter("realName")
 			private String anotherName = "renamed";
 		};
 		Map<String, Object> expected = new MapInit<String, Object>()
