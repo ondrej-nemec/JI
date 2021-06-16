@@ -9,19 +9,18 @@ import java.util.Map;
 import org.junit.Test;
 
 import common.structures.MapInit;
-import common.structures.Tuple2;
 
 public class JsonReaderTest {
-
+	
 	@Test
 	public void testReadWorks() throws JsonStreamException {
 		Map<String, Object> expected = new HashMap<>();
 		expected.put("value", 123);
 		expected.put("list", Arrays.asList(1,2,3));
-		expected.put("object", MapInit.hashMap(new Tuple2<>("a", null), new Tuple2<>("b", "aaa")));
+		expected.put("object", new MapInit<String, Object>().append("a", null).append("b", "aaa").toMap());
 		String json = "{\"value\":123, \"list\":[1,2,3],\"object\":{\"a\":null, \"b\": \"aaa\"}}";
-		assertEquals(expected, new JsonReader().readJson(json));
 		assertEquals(expected, new JsonReader().read(json));
+	//	assertEquals(expected, new JsonReader().read(json));
 	}
 
 	@Test
@@ -29,8 +28,8 @@ public class JsonReaderTest {
 		Map<String, Object> expected = new HashMap<>();
 		expected.put("list", Arrays.asList("a","b","c"));
 		String json = "{\"list\":[\"a\",\"b\",\"c\"]}";
-		assertEquals(expected, new JsonReader().readJson(json));
 		assertEquals(expected, new JsonReader().read(json));
+	//	assertEquals(expected, new JsonReader().read(json));
 	}
 
 	@Test

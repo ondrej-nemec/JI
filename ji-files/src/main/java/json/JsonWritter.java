@@ -1,13 +1,10 @@
 package json;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
+import common.functions.Mapper;
 import common.structures.ListDictionary;
 import common.structures.MapDictionary;
-import json.annotations.JsonIgnored;
-import json.annotations.JsonParameter;
 import json.providers.OutputStringProvider;
 
 public class JsonWritter {
@@ -100,30 +97,7 @@ public class JsonWritter {
 		if (value instanceof Character) {
 			return value.toString();
 		}
-		return refrectionObject(value);
+		return Mapper.get().serialize(value);
 	}
 	
-	protected Object refrectionObject(Object value) {
-		try {
-			Map<String, Object> json = new HashMap<>();
-			Field[] fields = value.getClass().getDeclaredFields();
-			for (Field field : fields) {
-				if (field.getName().equals("this$0")) {
-					continue;
-				}
-				if (field.isAnnotationPresent(JsonIgnored.class)) {
-					continue;
-				}
-				field.setAccessible(true);
-				String name = field.getName();
-				if (field.isAnnotationPresent(JsonParameter.class)) {
-					name = field.getAnnotation(JsonParameter.class).value();
-				}
-				json.put(name, field.get(value));
-			}
-			return json;
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }
