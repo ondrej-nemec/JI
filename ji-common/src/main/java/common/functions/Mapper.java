@@ -13,9 +13,13 @@ import common.annotations.ParseParameter;
 import common.structures.DictionaryValue;
 import common.structures.MapDictionary;
 
-public class Parse {
+public class Mapper {
+	
+	public static Mapper get() {
+		return new Mapper();
+	}
 
-	public static Map<String, Object> stringify(Object value) {
+	public Map<String, Object> serialize(Object value) {
 		try {
 			Map<String, Object> json = new HashMap<>();
 			Field[] fields = value.getClass().getDeclaredFields();
@@ -39,11 +43,11 @@ public class Parse {
 		}
 	}
 	
-	public static <T> T read(Class<T> clazz, Object source) throws Exception {
+	public <T> T parse(Class<T> clazz, Object source) throws Exception {
 		return read(clazz, source, null, null);
 	}
 	
-	private static <T> T read(Class<T> clazz, Object source, Object valueCandidate, Type generic) throws Exception {
+	private <T> T read(Class<T> clazz, Object source, Object valueCandidate, Type generic) throws Exception {
 		DictionaryValue parameterValue = new DictionaryValue(source);
 		T target = valueCandidate == null ? clazz.newInstance() : new DictionaryValue(valueCandidate).getValue(clazz);
 		if ( Map.class.isAssignableFrom(source.getClass()) && !Map.class.isAssignableFrom(clazz)) {
@@ -84,7 +88,7 @@ public class Parse {
 		return target;
 	}
 	
-	private static Class<?> getGenericClass(Type field, int index) {
+	private Class<?> getGenericClass(Type field, int index) {
 		return Class.class.cast(
 			ParameterizedType.class.cast(
 				field
@@ -92,50 +96,17 @@ public class Parse {
 		);
 	}
 	
-	private static Method getMethod(String prefix, String parameterName, Class<?> clazz, Class<?>...classes) {
+	private Method getMethod(String prefix, String parameterName, Class<?> clazz, Class<?>...classes) {
 		String name = prefix + (parameterName.charAt(0) + "").toUpperCase() + parameterName.substring(1);
 		return getMethod(name, clazz, classes);
 	}
 	
-	private static Method getMethod(String name, Class<?> clazz, Class<?>...classes) {
+	private Method getMethod(String name, Class<?> clazz, Class<?>...classes) {
 		try {
 			return clazz.getMethod(name, classes);
 		} catch (NoSuchMethodException | SecurityException e) {
 			return null;
 		}
 	}
-	
-/*	
-	public <T> T read(Class<T> clazz, InputJsonStream stream) throws JsonStreamException {
-		if (clazz.isAssignableFrom(Collection.class)) {
-			return clazz.cast(readList(stream));
-		}
-		if (clazz.isAssignableFrom(Map.class)) {
-			return clazz.cast(readMap(stream));
-		}
-		Field[] fields = clazz.getDeclaredFields();
-		Map<String, String> mapping = new HashMap<>();
-		for (Field field : fields) {
-			if (field.isAnnotationPresent(JsonParameter.class)) {
-				mapping.put(field.getAnnotation(JsonParameter.class).value(), field.getName());
-			}
-		}
-		T object = clazz.newInstance();
-		Event event = stream.next(); // document start
-		while((event = stream.next()).getType() != EventType.DOCUMENT_END) {
-			String name = event.getName();
-			if (mapping.get(name) != null) {
-				name = mapping.get(name);
-			}
-			Field field = clazz.getField(name);
-			field.setAccessible(true);
-			if (event.getType() == EventType.OBJECT_ITEM) {
-				field.set(object, field.getDeclaringClass().cast(event.getValue().get()));
-			}
-			
-		}
-		return null;
-	}
-*/
-	
+
 }

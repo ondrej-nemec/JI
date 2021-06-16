@@ -13,10 +13,10 @@ import common.annotations.ParseParameter;
 import common.functions.testingClasses.Main;
 import common.structures.MapInit;
 
-public class ParseTest {
+public class MapperTest {
 
 	@Test
-	public void testToJsonAllAttributes() { // TODO rename
+	public void testSerializeAddAllParameters() {
 		Object actual = new Object() {
 			@SuppressWarnings("unused")
 			private String first = "first value";
@@ -30,11 +30,11 @@ public class ParseTest {
 				.append("second", 42)
 				.append("list", Arrays.asList("a", "b", "c"))
 				.toMap();
-		assertEquals(expected, Parse.stringify(actual));
+		assertEquals(expected, Mapper.get().serialize(actual));
 	}
 
 	@Test
-	public void testToJsonAnnotatedAttributes() { // TODO rename
+	public void testSerializeAnnotatedAttributes() {
 		Object actual = new Object() {
 			@SuppressWarnings("unused")
 			private String first = "first value";
@@ -53,12 +53,12 @@ public class ParseTest {
 				.append("list", Arrays.asList("a", "b", "c"))
 				.append("realName", "renamed")
 				.toMap();
-		assertEquals(expected, Parse.stringify(actual));
+		assertEquals(expected, Mapper.get().serialize(actual));
 	}
 	
 	@Test
-	public void testReadObject() throws Exception { // TODO rename
-		assertEquals(new Main(true), Parse.read(
+	public void testParseObject() throws Exception {
+		assertEquals(new Main(true), Mapper.get().parse(
 			Main.class, 
 			new MapInit<String, Object>()
 				.append("first", 42)
