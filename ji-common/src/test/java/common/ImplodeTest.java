@@ -21,7 +21,7 @@ public class ImplodeTest {
 	}
 	
 	public Object[] dataImplodeReturnsCorrectResult() {
-		String[] array = new String[] {};
+		String[] array = new String[] {"a", "b", "c","d"};
 		return new Object[] {
 			new Object[] {
 				"a b c d", " ", array
@@ -34,7 +34,7 @@ public class ImplodeTest {
 	
 	@Test
 	public void testImplodeReturnsCorrectResult() {
-		assertEquals("a, b, c, d", Implode.implode(" ", Arrays.asList("a", "b", "c","d")));
+		assertEquals("a, b, c, d", Implode.implode(", ", Arrays.asList("a", "b", "c","d")));
 	}
 	
 }
