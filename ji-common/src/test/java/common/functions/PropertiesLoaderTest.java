@@ -24,7 +24,7 @@ public class PropertiesLoaderTest {
 	@Parameters({"conf","env"})
 	public void testConstructorWorks(String path) throws FileNotFoundException, IOException {
 		Properties prop = PropertiesLoader.loadProperties(path + "/app.properties");
-		assertEquals("dev", prop.get("app.mode"));
+		assertEquals("DEV", prop.get("app.mode"));
 	}
 
 }
