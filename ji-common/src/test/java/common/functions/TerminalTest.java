@@ -25,6 +25,8 @@ public class TerminalTest {
 			OperationSystem.PATH_SEPARATOR +
 			"resources" +
 			OperationSystem.PATH_SEPARATOR +
+			"functions" + 
+			OperationSystem.PATH_SEPARATOR +
 			"terminal" +
 			OperationSystem.PATH_SEPARATOR;
 	

@@ -19,11 +19,11 @@ public class EnvTest {
 	
 	@Test(expected = IOException.class)
 	public void testConstructorForFilesThrowIfNoFileInDir() throws FileNotFoundException, IOException {
-		new Env("env/not-existing.properties");
+		new Env("functions/env/not-existing.properties");
 	}
 	
 	@Test
-	@Parameters({"conf","env"})
+	@Parameters({"tests/functions/env","functions/env"})
 	public void testConstructorForFilesWorksForClasspathAndPathOnly(String path) throws FileNotFoundException, IOException {
 		new Env(path + "/app.properties");
 		assertTrue(true);
@@ -33,7 +33,7 @@ public class EnvTest {
 	@Parameters
 	public void testConstructorForFileFindCorrectProperties(final String subDir)
 			throws FileNotFoundException, IOException {
-		Env e = new Env("env/env." + subDir + ".properties");
+		Env e = new Env("functions/env/env." + subDir + ".properties");
 		assertEquals("value", e.getProperties().getProperty("key"));
 	}
 	

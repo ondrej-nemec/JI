@@ -17,11 +17,11 @@ public class PropertiesLoaderTest {
 
 	@Test(expected = IOException.class)
 	public void testConstructorForFilesThrowIfNoFileInDir() throws FileNotFoundException, IOException {
-		PropertiesLoader.loadProperties("env/not-existing.properties");
+		PropertiesLoader.loadProperties("functions/env/env/not-existing.properties");
 	}
 
 	@Test
-	@Parameters({"conf","env"})
+	@Parameters({"tests/functions/env","functions/env"})
 	public void testConstructorWorks(String path) throws FileNotFoundException, IOException {
 		Properties prop = PropertiesLoader.loadProperties(path + "/app.properties");
 		assertEquals("DEV", prop.get("app.mode"));

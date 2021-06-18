@@ -16,7 +16,7 @@ public class FilesListTest {
 			"Empty.class",
 			"subDir/env.properties"
 		);
-		assertEquals(folders, FilesList.get("core/filesList", true).getFiles());
+		assertEquals(folders, FilesList.get("functions/filesList", true).getFiles());
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class FilesListTest {
 			"Empty.java",
 			"subDir/env.properties"
 		);
-		assertEquals(folders, FilesList.get("tests/core/filesList", true).getFiles());
+		assertEquals(folders, FilesList.get("tests/functions/filesList", true).getFiles());
 	}
 	
 	// TODO add test for jar
