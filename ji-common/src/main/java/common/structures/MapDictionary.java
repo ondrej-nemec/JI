@@ -7,6 +7,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import common.functions.Mapper;
+
 public class MapDictionary<K, V> implements Dictionary<K> {
 	
 	private final Map<K, V> map;
@@ -81,4 +83,8 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		return map.equals(dictionary.map);
 	}
 
+	public <T> T parse(Class<T> clazz) throws Exception {
+		return Mapper.get().parse(clazz, map);
+	}
+	
 }
