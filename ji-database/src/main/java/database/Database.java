@@ -8,9 +8,12 @@ import common.Logger;
 import database.support.ConnectionFunction;
 import database.support.DoubleConsumer;
 import database.support.QueryBuilderFunction;
+import database.support.SqlQueryProfiler;
 import migration.MigrationTool;
 
 public class Database {
+	
+	public static SqlQueryProfiler PROFILER = null;
 	
 	private final DatabaseConfig config;
 	

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import common.Logger;
-import database.support.SqlQueryProfiler;
 import database.wrappers.ConnectionWrapper;
 
 public class ConnectionPool {
@@ -49,7 +48,7 @@ public class ConnectionPool {
 	}
 	
 	private Connection createConnection(Connection c) {
-		if (SqlQueryProfiler.PROFILER == null) {
+		if (Database.PROFILER == null) {
 			return c;
 		}
 		return new ConnectionWrapper(c);

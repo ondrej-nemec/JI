@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
-import database.support.SqlQueryProfiler;
+import database.Database;
 
 public class CallableStatementWrapper extends PreparedStatementWrapper implements CallableStatement {
 
@@ -34,91 +34,91 @@ public class CallableStatementWrapper extends PreparedStatementWrapper implement
 
 	@Override
 	public void setURL(String parameterName, URL val) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, val);
+		Database.PROFILER.addParam(parameterName, val);
 		statement.setURL(parameterName, val);
 	}
 
 	@Override
 	public void setNull(String parameterName, int sqlType) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, null);
+		Database.PROFILER.addParam(parameterName, null);
 		statement.setNull(parameterName, sqlType);
 	}
 
 	@Override
 	public void setBoolean(String parameterName, boolean x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setBoolean(parameterName, x);
 	}
 
 	@Override
 	public void setByte(String parameterName, byte x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setByte(parameterName, x);
 	}
 
 	@Override
 	public void setShort(String parameterName, short x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setShort(parameterName, x);
 	}
 
 	@Override
 	public void setInt(String parameterName, int x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setInt(parameterName, x);
 	}
 
 	@Override
 	public void setLong(String parameterName, long x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setLong(parameterName, x);
 	}
 
 	@Override
 	public void setFloat(String parameterName, float x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setFloat(parameterName, x);
 	}
 
 	@Override
 	public void setDouble(String parameterName, double x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setDouble(parameterName, x);
 	}
 
 	@Override
 	public void setBigDecimal(String parameterName, BigDecimal x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setBigDecimal(parameterName, x);
 	}
 
 	@Override
 	public void setString(String parameterName, String x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setString(parameterName, x);
 	}
 
 	@Override
 	public void setBytes(String parameterName, byte[] x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setBytes(parameterName, x);
 	}
 
 	@Override
 	public void setDate(String parameterName, Date x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setDate(parameterName, x);
 	}
 
 	@Override
 	public void setTime(String parameterName, Time x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setTime(parameterName, x);
 	}
 
 	@Override
 	public void setTimestamp(String parameterName, Timestamp x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setTimestamp(parameterName, x);
 	}
 
@@ -134,19 +134,19 @@ public class CallableStatementWrapper extends PreparedStatementWrapper implement
 
 	@Override
 	public void setObject(String parameterName, Object x, int targetSqlType, int scale) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setObject(parameterName, x, targetSqlType, scale);
 	}
 
 	@Override
 	public void setObject(String parameterName, Object x, int targetSqlType) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setObject(parameterName, x, targetSqlType);
 	}
 
 	@Override
 	public void setObject(String parameterName, Object x) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setObject(parameterName, x);
 	}
 
@@ -157,25 +157,25 @@ public class CallableStatementWrapper extends PreparedStatementWrapper implement
 
 	@Override
 	public void setDate(String parameterName, Date x, Calendar cal) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setDate(parameterName, x, cal);
 	}
 
 	@Override
 	public void setTime(String parameterName, Time x, Calendar cal) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setTime(parameterName, x, cal);
 	}
 
 	@Override
 	public void setTimestamp(String parameterName, Timestamp x, Calendar cal) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, x);
+		Database.PROFILER.addParam(parameterName, x);
 		statement.setTimestamp(parameterName, x, cal);
 	}
 
 	@Override
 	public void setNull(String parameterName, int sqlType, String typeName) throws SQLException {
-		SqlQueryProfiler.PROFILER.addParam(parameterName, null);
+		Database.PROFILER.addParam(parameterName, null);
 		statement.setNull(parameterName, sqlType, typeName);
 	}
 	
