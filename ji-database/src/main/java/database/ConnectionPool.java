@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import common.Logger;
+import database.support.SqlQueryProfiler;
+import database.wrappers.ConnectionWrapper;
 
 public class ConnectionPool {
 	
@@ -40,10 +42,17 @@ public class ConnectionPool {
 			try {Thread.sleep(WAIT_TIME);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		
-		Connection c = DriverManager.getConnection(connectionString, prop);
+		Connection c = createConnection(DriverManager.getConnection(connectionString, prop));
 		c.setAutoCommit(!isTemp);
 		pool.put(c.hashCode(), c);
 		return c;
+	}
+	
+	private Connection createConnection(Connection c) {
+		if (SqlQueryProfiler.PROFILER == null) {
+			return c;
+		}
+		return new ConnectionWrapper(c);
 	}
 	
 	public void returnAllConnections() throws SQLException {		
