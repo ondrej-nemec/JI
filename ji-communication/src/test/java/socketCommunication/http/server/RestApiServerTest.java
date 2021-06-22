@@ -1,6 +1,5 @@
 package socketCommunication.http.server;
 
-import static common.structures.MapInit.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -14,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
-import common.structures.Tuple2;
+import common.structures.MapInit;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import socketCommunication.http.server.RestApiServerResponseFactory;
@@ -42,28 +41,28 @@ public class RestApiServerTest {
 		return new Object[] {
 				new Object[] {
 						"",
-						properties(),
+						new MapInit<>().toProperties(),
 						new RequestParameters()
 				},
 				new Object[] {
 						"method url protocol",
-						properties(
-								new Tuple2<>(RestApiServer.METHOD, "method"),
-								new Tuple2<>(RestApiServer.URL, "url"),
-								new Tuple2<>(RestApiServer.FULL_URL, "url"),
-								new Tuple2<>(RestApiServer.PROTOCOL, "protocol")
-						),
+						new MapInit<>()
+							.append(RestApiServer.METHOD, "method")
+							.append(RestApiServer.URL, "url")
+							.append(RestApiServer.FULL_URL, "url")
+							.append(RestApiServer.PROTOCOL, "protocol")
+							.toProperties(),
 						new RequestParameters()
 				},
 				new Object[] {
 						"method url?aa=bb protocol",
-						properties(
-								new Tuple2<>(RestApiServer.METHOD, "method"),
-								new Tuple2<>(RestApiServer.URL, "url"),
-								new Tuple2<>(RestApiServer.FULL_URL, "url?aa=bb"),
-								new Tuple2<>(RestApiServer.PROTOCOL, "protocol")
-						),
-						new RequestParameters(new Tuple2<>("aa", "bb"))
+						new MapInit<>()
+							.append(RestApiServer.METHOD, "method")
+							.append(RestApiServer.URL, "url")
+							.append(RestApiServer.FULL_URL, "url?aa=bb")
+							.append(RestApiServer.PROTOCOL, "protocol")
+							.toProperties(),
+						new RequestParameters().put("aa", "bb")
 				},
 		};
 	}
@@ -80,27 +79,27 @@ public class RestApiServerTest {
 	public Object[] dataParseHeaderLineFillHeaderProperties() {
 		return new Object[] {
 			new Object[] {
-				properties(new Tuple2<>("aa", "bb")),
+				new MapInit<>().append("aa", "bb").toProperties(),
 				"aa: bb"
 			},
 			new Object[] {
-				properties(),
+				new MapInit<>().toProperties(),
 				""
 			},
 			new Object[] {
-				properties(),
+				new MapInit<>().toProperties(),
 				": "
 			},
 			new Object[] {
-				properties(new Tuple2<>("aa", "bb: ")),
+				new MapInit<>().append("aa", "bb: ").toProperties(),
 				"aa: bb: "
 			},
 			new Object[] {
-				properties(new Tuple2<>("aa", "")),
+				new MapInit<>().append("aa", "").toProperties(),
 				"aa: "
 			},
 			new Object[] {
-				properties(new Tuple2<>("aa", "")),
+				new MapInit<>().append("aa", "").toProperties(),
 				"aa"
 			},
 		};
@@ -118,7 +117,7 @@ public class RestApiServerTest {
 	public Object[] dataParsePayloadFillParamsProperties() {
 		return new Object[] {
 			new Object[] {
-				new RequestParameters(new Tuple2<>("aa", "bb")),
+				new MapInit<>().append("aa", "bb").toProperties(),
 				"aa=bb"
 			},
 			new Object[] {
@@ -134,23 +133,23 @@ public class RestApiServerTest {
 				"=&="
 			},
 			new Object[] {
-				new RequestParameters(new Tuple2<>("aa", "bb")),
+				new RequestParameters().put("aa", "bb"),
 				"aa=bb&"
 			},
 			new Object[] {
-				new RequestParameters(new Tuple2<>("aa", "")),
+				new RequestParameters().put("aa", ""),
 				"aa="
 			},
 			new Object[] {
-					new RequestParameters(new Tuple2<>("aa", "")),
-					"aa"
-				},
+				new RequestParameters().put("aa", ""),
+				"aa"
+			},
 			new Object[] {
-				new RequestParameters(new Tuple2<>("aa", "bb"), new Tuple2<>("cc", "dd")),
+				new RequestParameters().put("aa", "bb").put("cc", "dd"),
 				"aa=bb&cc=dd"
 			},
 			new Object[] {
-				new RequestParameters(new Tuple2<>("dd", "ee")),
+				new RequestParameters().put("dd", "ee"),
 				"aa=bb=cc&dd=ee"
 			},
 			/*************
@@ -171,38 +170,40 @@ public class RestApiServerTest {
 					"double=12.3"
 				},*/
 			new Object[] {
-					new RequestParameters(new Tuple2<>("aa", "bb"), new Tuple2<>("%", "&"), new Tuple2<>("dd", "ee")),
+					new RequestParameters().put("aa", "bb").put("%", "&").put("dd", "ee"),
 					"aa=bb&%25=%26&dd=ee"
 				},
 			new Object[] {
-					new RequestParameters(new Tuple2<>("list", Arrays.asList("true", "b", "3"))),
+					new RequestParameters().put("list", Arrays.asList("true", "b", "3")),
 					"list%5B%5D=true&list%5B%5D=b&list%5B%5D=3"
 				},
 			new Object[] {
-					new RequestParameters(new Tuple2<>("list", Arrays.asList("true", "b", "3", ""))),
+					new RequestParameters().put("list", Arrays.asList("true", "b", "3", "")),
 					"list%5B%5D=true&list%5B%5D=b&list%5B%5D=3&list%5B%5D="
 				},
 			new Object[] {
-					new RequestParameters(new Tuple2<>("list", Arrays.asList(Arrays.asList("true", "b", "3")))),
+					new RequestParameters().put("list", Arrays.asList(Arrays.asList("true", "b", "3"))),
 					"list%5B%5D%5B%5D=true&list%5B%5D%5B%5D=b&list%5B%5D%5B%5D=3"
 				},
 			new Object[] {
-					new RequestParameters(new Tuple2<>("array", hashMap(
-						new Tuple2<>("first", "true"),
-						new Tuple2<>("second", "b"),
-						new Tuple2<>("third", "3")
-					))),
+					new RequestParameters().put("array", new MapInit<>()
+						.append("first", "true")
+						.append("second", "b")
+						.append("third", "3")
+						.toMap()
+					),
 					"array%5Bfirst%5D=true&array%5Bsecond%5D=b&array%5Bthird%5D=3"
 				},
 			new Object[] {
-					new RequestParameters(new Tuple2<>("array", hashMap(
-						new Tuple2<>("abc", hashMap(
-								new Tuple2<>("first", "true"),
-								new Tuple2<>("second", "b"),
-								new Tuple2<>("third", "3"),
-								new Tuple2<>("four", "")
-						))
-					))),
+					new RequestParameters().put("array", new MapInit<>()
+						.append("abc", new MapInit<>()
+							.append("first", "true")
+							.append("second", "b")
+							.append("third", "3")
+							.append("four", "")
+							.toMap()
+						).toMap()
+					),
 					"array%5Babc%5D%5Bfirst%5D=true&array%5Babc%5D%5Bsecond%5D=b&array%5Babc%5D%5Bthird%5D=3&array%5Babc%5D%5Bfour%5D="
 				}
 		};
