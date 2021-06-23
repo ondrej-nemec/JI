@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import common.annotations.MapperIgnored;
@@ -49,7 +50,7 @@ public class Mapper {
 	
 	private <T> T read(Class<T> clazz, Object source, Object valueCandidate, Type generic) throws Exception {
 		DictionaryValue parameterValue = new DictionaryValue(source);
-		T target = valueCandidate == null ? clazz.newInstance() : new DictionaryValue(valueCandidate).getValue(clazz);
+		T target = createNewInstance(valueCandidate, clazz);
 		if ( Map.class.isAssignableFrom(source.getClass()) && !Map.class.isAssignableFrom(clazz)) {
 			Field[] fields = clazz.getDeclaredFields();
 			MapDictionary<String, Object> values = parameterValue.getDictionaryMap();
@@ -88,6 +89,20 @@ public class Mapper {
 		return target;
 	}
 	
+	@SuppressWarnings("unchecked")
+	private <T> T createNewInstance(Object valueCandidate, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+		if (valueCandidate != null) {
+			return new DictionaryValue(valueCandidate).getValue(clazz);
+		}
+		if (clazz.equals(Map.class)) {
+			return (T)new HashMap<>();
+		}
+		if (clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
+			return (T)new LinkedList<>();
+		}
+		return clazz.newInstance();
+	}
+
 	private Class<?> getGenericClass(Type field, int index) {
 		return Class.class.cast(
 			ParameterizedType.class.cast(
