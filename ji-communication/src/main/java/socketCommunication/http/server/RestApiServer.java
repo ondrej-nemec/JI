@@ -31,7 +31,7 @@ import socketCommunication.http.server.profiler.HttpServerProfilerEvent;
 
 public class RestApiServer implements Servant {
 	
-	public HttpServerProfiler PROFILER = null;
+	public static HttpServerProfiler PROFILER = null;
 	
 	protected final static String METHOD = "method";
 	protected final static String PROTOCOL = "protocol";
