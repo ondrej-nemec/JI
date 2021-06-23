@@ -26,8 +26,12 @@ import org.apache.commons.lang3.StringUtils;
 import common.Logger;
 import socketCommunication.Servant;
 import socketCommunication.http.HttpMethod;
+import socketCommunication.http.server.profiler.HttpServerProfiler;
+import socketCommunication.http.server.profiler.HttpServerProfilerEvent;
 
 public class RestApiServer implements Servant {
+	
+	public HttpServerProfiler PROFILER = null;
 	
 	protected final static String METHOD = "method";
 	protected final static String PROTOCOL = "protocol";
@@ -66,10 +70,12 @@ public class RestApiServer implements Servant {
 			BufferedInputStream is,
 			BufferedOutputStream os,
 			String clientIp) throws IOException {
+		profile(HttpServerProfilerEvent.REQUEST_ACCEPT);
 		RequestParameters params = new RequestParameters();
 		Properties header = new Properties();
 		Properties request = new Properties();
 		parseRequest(request, header, params, br, is);
+		profile(HttpServerProfilerEvent.REQUEST_PARSED);
 		/***********/
 		logger.debug("Request: " + request);
 		RestApiResponse response = createResponce.accept(
@@ -81,7 +87,15 @@ public class RestApiServer implements Servant {
 			params,
 			clientIp
 		);
+		profile(HttpServerProfilerEvent.RESPONSE_CREATED);
 		sendResponse(response, request, bw, os);
+		profile(HttpServerProfilerEvent.RESPONSE_CREATED);
+	}
+	
+	private void profile(HttpServerProfilerEvent event) {
+		if (PROFILER != null) {
+			PROFILER.log(event);
+		}
 	}
 	
 	private void sendResponse(
