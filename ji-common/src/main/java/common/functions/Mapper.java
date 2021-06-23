@@ -62,7 +62,12 @@ public class Mapper {
 				} else {
 					parameterName = field.getName();
 				}
-				Object value = read(field.getType(), values.get(parameterName), field.get(target), field.getGenericType());
+				Object newCandidate = values.get(parameterName);
+				if (newCandidate == null) {
+					System.err.println("Missing value " + parameterName);
+					continue;
+				}
+				Object value = read(field.getType(), newCandidate, field.get(target), field.getGenericType());
 				Method m = getMethod("set", parameterName, clazz, field.getType());
 				if (m == null) {
 					field.set(target, value);
