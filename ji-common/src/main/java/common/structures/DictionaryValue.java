@@ -68,6 +68,8 @@ public class DictionaryValue {
 			return getDictionaryList();
 		} else if (clazz.isEnum()) {
 			return getEnum((Class<E>)clazz);
+		} else if (value instanceof MapDictionary || value instanceof Map) { // TODO check very carefully if there is no recursion !
+			return getDictionaryMap().parse(clazz);
 		} else {
 			return value;
 		}
@@ -107,11 +109,11 @@ public class DictionaryValue {
 	}
 	
 	public Character getCharacter() {
-		return parseValue(Character.class, a->a.charAt(0));
+		return parseValue(Character.class, a->a.charAt(0), a->a.toString());
 	}
 	
 	public String getString() {
-		return parseValue(String.class, a->a);
+		return parseValue(String.class, a->a, a->a.toString());
 	}
 	
 	public <E extends Enum<E>> E getEnum(Class<E> enumm) {
