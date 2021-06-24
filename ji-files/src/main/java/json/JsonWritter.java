@@ -77,27 +77,15 @@ public class JsonWritter {
 			write(stream, ListDictionary.class.cast(value).toList(), name);
 		} else if (value instanceof Jsonable) {
 			writeObject(stream, ((Jsonable)value).toJson(), name);
-		} else {
-			Object valueToWrite = getValue(value);
+		} else if (value instanceof Number || value instanceof Boolean || value instanceof Character || value instanceof String) {
 			if (name == null) {
-				stream.writeListValue(valueToWrite);
+				stream.writeListValue(value);
 			} else {
-				stream.writeObjectValue(name, valueToWrite);
+				stream.writeObjectValue(name, value);
 			}
+		} else {
+			writeObject(stream, Mapper.get().serialize(value), name);
 		}	
-	}
-	
-	private Object getValue(Object value) {
-		if (value instanceof Number) {
-			return value.toString();
-		}
-		if (value instanceof String) {
-			return value;
-		}
-		if (value instanceof Character) {
-			return value.toString();
-		}
-		return Mapper.get().serialize(value);
 	}
 	
 }
