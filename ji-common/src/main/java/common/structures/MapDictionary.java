@@ -83,8 +83,12 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		return map.equals(dictionary.map);
 	}
 
-	public <T> T parse(Class<T> clazz) throws Exception {
-		return Mapper.get().parse(clazz, map);
+	public <T> T parse(Class<T> clazz) {
+		try {
+			return Mapper.get().parse(clazz, map);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }
