@@ -12,7 +12,9 @@ import java.util.Map;
 import common.annotations.MapperIgnored;
 import common.annotations.MapperParameter;
 import common.structures.DictionaryValue;
+import common.structures.ListDictionary;
 import common.structures.MapDictionary;
+import common.structures.Tuple2;
 
 public class Mapper {
 	
@@ -64,7 +66,6 @@ public class Mapper {
 				}
 				Object newCandidate = values.get(parameterName);
 				if (newCandidate == null) {
-					System.err.println("Missing value " + parameterName);
 					continue;
 				}
 				Object value = read(field.getType(), newCandidate, field.get(target), field.getGenericType());
@@ -75,18 +76,20 @@ public class Mapper {
 					m.invoke(target, value);
 				}
 			}
-		} else if (Collection.class.isAssignableFrom(clazz)) {
-			Class<?> collectionItemClass = getGenericClass(generic, 0);
+		} else if (Collection.class.isAssignableFrom(clazz) || ListDictionary.class.isAssignableFrom(clazz)) {
+			Tuple2<Class<?>, Type> types = getGenericClass(generic, 0);
+			Class<?> collectionItemClass = types._1();
 			Method m = getMethod("add", clazz, Object.class);
 			parameterValue.getDictionaryList().forEach((item)->{
-				m.invoke(target, read(collectionItemClass, item.getValue(), null, null));
+				m.invoke(target, read(collectionItemClass, item.getValue(), null, types._2()));
 			});
-		} else if (Map.class.isAssignableFrom(clazz)) {
+		} else if (Map.class.isAssignableFrom(clazz) || MapDictionary.class.isAssignableFrom(clazz)) {
 		//	Class<?> mapKeyClass = getGenericClass(generic, 0);
-			Class<?> mapValueClass = getGenericClass(generic, 1);
+			Tuple2<Class<?>, Type> types = getGenericClass(generic, 1);
+			Class<?> mapValueClass = types._1();
 			Method m = getMethod("put", clazz, Object.class, Object.class);
 			parameterValue.getDictionaryMap().forEach((key, item)->{
-				m.invoke(target, key, read(mapValueClass, item.getValue(), null, null));
+				m.invoke(target, key, read(mapValueClass, item.getValue(), null, types._2()));
 			});
 		} else {
 			return parameterValue.getValue(clazz);
@@ -108,12 +111,14 @@ public class Mapper {
 		return clazz.newInstance();
 	}
 
-	private Class<?> getGenericClass(Type field, int index) {
-		return Class.class.cast(
-			ParameterizedType.class.cast(
-				field
-			).getActualTypeArguments()[index]
-		);
+	private Tuple2<Class<?>, Type> getGenericClass(Type field, int index) {
+		Type type = ParameterizedType.class.cast(field)
+				.getActualTypeArguments()[index];
+		if (ParameterizedType.class.isInstance(type)) {
+			ParameterizedType parametrized = ParameterizedType.class.cast(type);
+			return new Tuple2<>(Class.class.cast(parametrized.getRawType()),parametrized);
+		}
+		return new Tuple2<>(Class.class.cast(type), null);
 	}
 	
 	private Method getMethod(String prefix, String parameterName, Class<?> clazz, Class<?>...classes) {

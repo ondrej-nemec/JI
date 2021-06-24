@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import common.annotations.MapperIgnored;
 import common.annotations.MapperParameter;
+import common.functions.testingClasses.Generic;
 import common.functions.testingClasses.Main;
 import common.structures.MapInit;
 
@@ -86,6 +87,24 @@ public class MapperTest {
 						.append("text2", "text2")
 						.toMap()))
 				.toMap())
+		);
+	}
+	
+	@Test
+	public void testParseGenericInGeneric() throws Exception {
+		assertEquals(new Generic(true), Mapper.get().parse(
+			Generic.class, 
+			new MapInit<String, Object>()
+				.append(
+					"generic",
+					Arrays.asList(
+						new MapInit<String, String>()
+						.append("a", "b")
+						.toMap()
+					)
+				)
+				.toMap()
+			)
 		);
 	}
 }
