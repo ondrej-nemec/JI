@@ -55,6 +55,8 @@ public class Database {
 			return new MySql(config.runOnExternalServer, createDatabaseConnectionString(), createProperties(), name, logger);
 		case "postgresql":
 			return new PosgreSql(config.runOnExternalServer, createDatabaseConnectionString(), createProperties(), name, logger);
+		case "sqlserver":
+			return new SqlServer(config.runOnExternalServer, createDatabaseConnectionString(), createProperties(), name, logger);
 		default:
 			throw new RuntimeException("Unsupported type " + config.type);
 		}
