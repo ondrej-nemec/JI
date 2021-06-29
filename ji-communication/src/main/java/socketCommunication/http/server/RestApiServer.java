@@ -89,7 +89,7 @@ public class RestApiServer implements Servant {
 		);
 		profile(HttpServerProfilerEvent.RESPONSE_CREATED);
 		sendResponse(response, request, bw, os);
-		profile(HttpServerProfilerEvent.RESPONSE_CREATED);
+		profile(HttpServerProfilerEvent.RESPONSE_SENDED);
 	}
 	
 	private void profile(HttpServerProfilerEvent event) {
