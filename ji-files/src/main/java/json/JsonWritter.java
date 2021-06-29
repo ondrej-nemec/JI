@@ -77,7 +77,9 @@ public class JsonWritter {
 			write(stream, ListDictionary.class.cast(value).toList(), name);
 		} else if (value instanceof Jsonable) {
 			writeObject(stream, ((Jsonable)value).toJson(), name);
-		} else if (value instanceof Number || value instanceof Boolean || value instanceof Character || value instanceof String) {
+		} else if (value instanceof Number || value instanceof Boolean
+				|| value instanceof Character || value instanceof String
+				|| value instanceof Enum) {
 			if (name == null) {
 				stream.writeListValue(value);
 			} else {
