@@ -40,7 +40,9 @@ public class DictionaryValue {
 	
 	@SuppressWarnings("unchecked")
 	private <E extends Enum<E>, T> Object getParsedVal(Class<T> clazz) {
-		if (clazz.isAssignableFrom(Object.class)) {
+		if (clazz.isInstance(value)) {
+			return value;
+		} else if (clazz.isAssignableFrom(Object.class)) {
 			return value;
 		} else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
 			return getBoolean();
