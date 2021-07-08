@@ -9,8 +9,16 @@ public class DictionaryValue {
 
 	private final Object value;
 	
-	private Function<String, Object> fromStringToListCallback = null;
-	private Function<String, Object> fromStringToMapCallback = null;
+	private Function<String, Object> stringMapping = (v)->{
+		try {
+			Object reader = Class.forName("json.JsonReader").newInstance();
+			return reader.getClass().getMethod("read", String.class).invoke(reader, v);
+		} catch (Exception e) {
+			return v;
+		}
+	};
+	private Function<String, Object> fromStringToListCallback = stringMapping;
+	private Function<String, Object> fromStringToMapCallback = stringMapping;
 	
 	public DictionaryValue(Object value) {
 		this.value = value;
