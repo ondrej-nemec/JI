@@ -84,9 +84,10 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, RequestParameters params, String ip) throws IOException {
-				System.err.println("Params");
+				System.err.println("Params:");
+				System.err.println("> Body: " + params.getPlainBody());
 				params.forEach((key, value)->{
-					System.err.println(key + ": " + value);
+					System.err.println("* " + key + ": " + value);
 				});
 				System.err.println();
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
