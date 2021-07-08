@@ -7,6 +7,8 @@ import common.structures.Tuple2;
 
 public class RequestParameters extends MapDictionary<String, Object> {
 	
+	private String plainBody;
+	
 	@SafeVarargs
 	@Deprecated
 	public RequestParameters(Tuple2<String, ?> ...tuples) {
@@ -24,9 +26,22 @@ public class RequestParameters extends MapDictionary<String, Object> {
 		return UploadedFile.class.cast(getValue(key));
 	}
 
+	public String getPlainBody() {
+		return plainBody;
+	}
+	
+	public void setPlainBody(String plainText) {
+		this.plainBody = plainText;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		return super.equals(o);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("RequestParameters [%s, %s]", plainBody, super.toString());
+	}
+	
 }

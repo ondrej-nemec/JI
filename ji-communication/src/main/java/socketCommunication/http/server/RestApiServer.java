@@ -24,6 +24,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 import common.Logger;
+import common.structures.DictionaryValue;
+import json.JsonReader;
+import json.JsonStreamException;
 import socketCommunication.Servant;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.server.profiler.HttpServerProfiler;
@@ -133,6 +136,10 @@ public class RestApiServer implements Servant {
 			BufferedReader br, BufferedInputStream bis) throws IOException {
 		// url, method, protocol
 		String first = br.readLine();
+		if (first == null) {
+			logger.warn("Wrong request - empty first line");
+			return;
+		}
 		parseFirst(request, params, first);
         // header
         String line = br.readLine();
@@ -157,7 +164,23 @@ public class RestApiServer implements Servant {
 	                }
 	            }
 	        }
-	        parsePayload(params, payload.toString());
+	        if (type != null && type.contains("application/json")) {
+	        	try {
+					params.putAll(new DictionaryValue(new JsonReader().read(payload.toString())).getMap());
+				} catch (JsonStreamException e) {
+					throw new IOException(e);
+				}
+	        } else if (type != null && type.contains("text/plain")) {
+	        	params.setPlainBody(payload.toString());
+	        } else if (type != null && type.contains("application/javascript")) { // TODO parser
+	        	params.setPlainBody(payload.toString());
+	        } else if (type != null && type.contains("text/html")) { // TODO parser
+	        	params.setPlainBody(payload.toString());
+	        } else if (type != null && type.contains("application/xml")) { // TODO parser
+	        	params.setPlainBody(payload.toString());
+	        } else {
+	        	parsePayload(params, payload.toString());
+	        }
 		}
 	}
 	
