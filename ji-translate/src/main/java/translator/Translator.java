@@ -29,7 +29,7 @@ public interface Translator {
 	 */
 	String translate(String key, Map<String, Object> variables, String locale);
 	
-	Translator withLocale(String locale);
+	Translator withLocale(Locale locale);
 	
 	void setLocale(String locale);
 

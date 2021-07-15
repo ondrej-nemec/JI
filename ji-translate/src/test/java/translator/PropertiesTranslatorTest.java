@@ -3,6 +3,7 @@ package translator;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class PropertiesTranslatorTest {
 	public void testTranslateUseCorrectLocale(String expected, Locale locale) {
 		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "langs/messages");
 		assertEquals(expected, t.translate("key", locale.toString()));
-		assertEquals(expected, t.withLocale(locale.toString()).translate("key"));
+		assertEquals(expected, t.withLocale(new translator.Locale(locale.toString(), true, Arrays.asList())).translate("key"));
 	}
 	
 	public Object[] dataTranslateUseCorrectLocale() {

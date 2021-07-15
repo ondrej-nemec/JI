@@ -1,7 +1,6 @@
 package translator;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class LocaleTranslator implements Translator {
 		this(settings.getDefaultLang(), settings, paths, logger);
 	}
 	
-	public LocaleTranslator(String selectedLang, LanguageSettings settings, List<String> paths, Logger logger) {
+	public LocaleTranslator(Locale selectedLang, LanguageSettings settings, List<String> paths, Logger logger) {
 		this.logger = logger;
 		this.paths = paths;
 		this.resources = new HashMap<>();
@@ -40,15 +39,7 @@ public class LocaleTranslator implements Translator {
 				substitution.put(subst, locale);
 			});
 		});
-		if (substitution.get(selectedLang) == null) {
-			if (settings.getLocales().size() == 0) {
-				this.selectedLang = new Locale(selectedLang, true, Arrays.asList());
-			} else {
-				this.selectedLang = settings.getLocales().get(0);
-			}
-		} else {
-			this.selectedLang = substitution.get(selectedLang);
-		}
+		this.selectedLang = selectedLang;
 	}
 	
 	@Override
@@ -57,7 +48,7 @@ public class LocaleTranslator implements Translator {
 	}
 
 	@Override
-	public Translator withLocale(String locale) {
+	public Translator withLocale(Locale locale) {
 		return new LocaleTranslator(locale, settings, paths, logger);
 	}
 
@@ -94,20 +85,17 @@ public class LocaleTranslator implements Translator {
 	}
 	
 	private Properties getProperties(String locale, String domain) {
-		Locale resourceLocale = substitution.get(locale);
-		String resourceKey;
-		if (resourceLocale == null) {
+		Locale resourceKey = substitution.get(locale);
+		if (resourceKey == null) {
 			logger.info("Given locale not found (including substitutions): " + locale + ", default used");
 			resourceKey = settings.getDefaultLang();
-		} else {
-			resourceKey = resourceLocale.getLang();
 		}
 	
-		Map<String, Properties> domainsResource = resources.get(resourceKey);
+		Map<String, Properties> domainsResource = resources.get(resourceKey.getLang());
 		if (domainsResource == null) {
 			logger.info("Resources for locale not loaded yet. Loading " + resourceKey);
 			domainsResource = new HashMap<>();
-			resources.put(resourceKey, domainsResource);
+			resources.put(resourceKey.getLang(), domainsResource);
 		}
 		
 		Properties resource = domainsResource.get(domain);

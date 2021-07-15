@@ -40,8 +40,8 @@ public class PropertiesTranslator implements Translator {
 	}
 	
 	@Override
-	public Translator withLocale(String locale) {
-		return new PropertiesTranslator(logger, locale, resources, files);
+	public Translator withLocale(Locale locale) {
+		return new PropertiesTranslator(logger, locale.getLang(), resources, files);
 	}
 	
 	@Override

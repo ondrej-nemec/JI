@@ -1,5 +1,7 @@
 package translator;
 
+import java.util.Arrays;
+
 public class PropertiesTranslatorEndToEndTest {
 
 	public static void main(String[] args) {
@@ -27,7 +29,7 @@ public class PropertiesTranslatorEndToEndTest {
 		PropertiesTranslator t = PropertiesTranslator.create(new LoggerImpl(), "langs/messages");
 		System.out.println(t.translate("key", "cs"));
 		System.out.println(t.translate("key", "cs"));
-		Translator t2 = t.withLocale("en");
+		Translator t2 = t.withLocale(new Locale("en", true, Arrays.asList()));
 		System.out.println(t2.translate("key"));
 		System.out.println(t2.translate("key", "cs"));
 		System.out.println(t.translate("key", "en"));
