@@ -18,19 +18,19 @@ public class PropertiesTranslator implements Translator {
 	
 	private final Map<String, String> files;
 	
-	private Locale locale;
+	private String locale;
 	
 	public static PropertiesTranslator create(Logger logger, String... files) {
 		Map<String, String> filesMap = new HashMap<>();
 		for (String file : files) {
 			filesMap.put(new File(file).getName(), file);
 		}
-		return new PropertiesTranslator(logger, Locale.getDefault(), new HashMap<>(), filesMap);
+		return new PropertiesTranslator(logger, Locale.getDefault().toString(), new HashMap<>(), filesMap);
 	}
 	
 	private PropertiesTranslator(
 			Logger logger,
-			Locale locale,
+			String locale,
 			Map<String, Properties> resources,
 			Map<String, String> files) {
 		this.logger = logger;
@@ -40,21 +40,21 @@ public class PropertiesTranslator implements Translator {
 	}
 	
 	@Override
-	public Translator withLocale(Locale locale) {
+	public Translator withLocale(String locale) {
 		return new PropertiesTranslator(logger, locale, resources, files);
 	}
 	
 	@Override
-	public void setLocale(Locale locale) {
+	public void setLocale(String locale) {
 		this.locale = locale;
 	}
 
 	@Override
-	public String translate(String key, Map<String, Object> variables, Locale locale) {
+	public String translate(String key, Map<String, Object> variables, String locale) {
 		return transWithVars(key, variables, locale);
 	}
 	
-	private String transWithVars(String key, Map<String, Object> variables, Locale locale) {
+	private String transWithVars(String key, Map<String, Object> variables, String locale) {
 		String value = trans(key, locale, variables);
 		for (String varName : variables.keySet()) {
 		    Object variable = variables.get(varName);
@@ -63,7 +63,7 @@ public class PropertiesTranslator implements Translator {
 		return value;
 	}
 
-	private String trans(String key, Locale locale, Map<String, Object> variables) {
+	private String trans(String key, String locale, Map<String, Object> variables) {
 		String[] split = key.split("\\.", 2);
 		
 		Properties prop = null;
@@ -97,7 +97,7 @@ public class PropertiesTranslator implements Translator {
 		return value;
 	}
 	
-	private Properties load(Locale locale, String module) {
+	private Properties load(String locale, String module) {
 		String localeKey = locale + "--" + module;
 		if (resources.get(localeKey) != null) {
 			return resources.get(localeKey);
@@ -115,10 +115,9 @@ public class PropertiesTranslator implements Translator {
 		return messages;
 	}
 	
-	private Properties loadFile(Locale locale, String path) {
+	private Properties loadFile(String locale, String path) {
 		String[] names = new String [] {
 			String.format("%s.%s.properties", path, locale),
-			String.format("%s.%s.properties", path, locale.getLanguage()),
 			String.format("%s.properties", path)
 		};
 		for(String name : names) {
@@ -132,7 +131,7 @@ public class PropertiesTranslator implements Translator {
 	}
 
 	@Override
-	public Locale getLocale() {
+	public String getLocale() {
 		return locale;
 	}
 

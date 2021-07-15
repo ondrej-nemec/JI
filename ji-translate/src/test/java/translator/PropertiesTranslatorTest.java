@@ -33,8 +33,8 @@ public class PropertiesTranslatorTest {
 	@Test
 	@Parameters(method = "dataTranslateReplaceVariable")
 	public void testTranslateReplaceVariable(String expected, String key, Map<String, Object> params) {
-		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "messages");
-		assertEquals(expected, t.translate(key, params, Locale.getDefault()));
+		PropertiesTranslator t = PropertiesTranslator.create( mock(Logger.class), "messages");
+		assertEquals(expected, t.translate(key, params, Locale.getDefault().toString()));
 	}
 	
 	public Object[] dataTranslateReplaceVariable() {
@@ -58,8 +58,8 @@ public class PropertiesTranslatorTest {
 	@Parameters(method = "dataTranslateUseCorrectLocale")
 	public void testTranslateUseCorrectLocale(String expected, Locale locale) {
 		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "langs/messages");
-		assertEquals(expected, t.translate("key", locale));
-		assertEquals(expected, t.withLocale(locale).translate("key"));
+		assertEquals(expected, t.translate("key", locale.toString()));
+		assertEquals(expected, t.withLocale(locale.toString()).translate("key"));
 	}
 	
 	public Object[] dataTranslateUseCorrectLocale() {

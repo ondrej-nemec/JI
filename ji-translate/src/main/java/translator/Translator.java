@@ -1,7 +1,6 @@
 package translator;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public interface Translator {
@@ -10,7 +9,7 @@ public interface Translator {
 		return translate(key, new HashMap<>(), getLocale());
 	}
 	
-	default String translate(String key, Locale locale) {
+	default String translate(String key, String locale) {
 		return translate(key, new HashMap<>(), locale);
 	}
 
@@ -18,7 +17,7 @@ public interface Translator {
 		return translate(key, variables, getLocale());
 	}
 	
-	Locale getLocale();
+	String getLocale();
 	
 	/**
 	 * key structure: <resource>.<key> OR <key>
@@ -26,11 +25,11 @@ public interface Translator {
 	 * if no message for <key> founded, <key> returned 
 	 * message structure: "text %variable% %another-variable%"
 	 */
-	String translate(String key, Map<String, Object> variables, Locale locale);
+	String translate(String key, Map<String, Object> variables, String locale);
 	
-	Translator withLocale(Locale locale);
+	Translator withLocale(String locale);
 	
-	void setLocale(Locale locale);
+	void setLocale(String locale);
 
 	/**
 	 * key structure: <resource>.<key> OR <key>

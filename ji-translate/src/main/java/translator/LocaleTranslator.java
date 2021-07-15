@@ -3,7 +3,6 @@ package translator;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -47,23 +46,18 @@ public class LocaleTranslator implements Translator {
 	}
 	
 	@Override
-	public Locale getLocale() {
-		return new Locale(selectedLang);
+	public String getLocale() {
+		return selectedLang;
 	}
 
 	@Override
-	public Translator withLocale(Locale locale) {
-		return new LocaleTranslator(locale.getLanguage(), settings, paths, logger);
+	public Translator withLocale(String locale) {
+		return new LocaleTranslator(locale, settings, paths, logger);
 	}
 
 	@Override
-	public void setLocale(Locale locale) {
-		this.selectedLang = locale.getLanguage();
-	}
-
-	@Override
-	public String translate(String key, Map<String, Object> variables, Locale locale) {
-		return translate(key, variables, locale.getLanguage());
+	public void setLocale(String locale) {
+		this.selectedLang = locale;
 	}
 	
 	public String translate(String key, Map<String, Object> variables, String locale) {

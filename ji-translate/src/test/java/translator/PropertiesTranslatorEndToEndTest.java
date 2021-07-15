@@ -1,7 +1,5 @@
 package translator;
 
-import java.util.Locale;
-
 public class PropertiesTranslatorEndToEndTest {
 
 	public static void main(String[] args) {
@@ -27,12 +25,12 @@ public class PropertiesTranslatorEndToEndTest {
 		}
 		/*/
 		PropertiesTranslator t = PropertiesTranslator.create(new LoggerImpl(), "langs/messages");
-		System.out.println(t.translate("key", new Locale("cs")));
-		System.out.println(t.translate("key", new Locale("cs")));
-		Translator t2 = t.withLocale(new Locale("en"));
+		System.out.println(t.translate("key", "cs"));
+		System.out.println(t.translate("key", "cs"));
+		Translator t2 = t.withLocale("en");
 		System.out.println(t2.translate("key"));
-		System.out.println(t2.translate("key", new Locale("cs")));
-		System.out.println(t.translate("key", new Locale("en")));
+		System.out.println(t2.translate("key", "cs"));
+		System.out.println(t.translate("key", "en"));
 		//*/
 	}
 
