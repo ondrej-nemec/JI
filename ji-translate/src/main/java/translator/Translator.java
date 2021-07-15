@@ -7,14 +7,16 @@ import java.util.Map;
 public interface Translator {
 
 	default String translate(String key) {
-		return translate(key, new HashMap<>());
+		return translate(key, new HashMap<>(), getLocale());
 	}
 	
 	default String translate(String key, Locale locale) {
 		return translate(key, new HashMap<>(), locale);
 	}
 
-	String translate(String key, Map<String, Object> variables);
+	default String translate(String key, Map<String, Object> variables) {
+		return translate(key, variables, getLocale());
+	}
 	
 	Locale getLocale();
 	

@@ -48,11 +48,6 @@ public class PropertiesTranslator implements Translator {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-	
-	@Override
-	public String translate(String key, Map<String, Object> variables) {
-		return transWithVars(key, variables, locale);
-	}
 
 	@Override
 	public String translate(String key, Map<String, Object> variables, Locale locale) {

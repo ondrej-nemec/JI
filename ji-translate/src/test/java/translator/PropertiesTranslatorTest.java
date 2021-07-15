@@ -1,6 +1,5 @@
 package translator;
 
-import static common.structures.MapInit.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -12,13 +11,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import common.Logger;
-import common.structures.Tuple2;
+import common.structures.MapInit;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
 public class PropertiesTranslatorTest {
-
+/*
 	@Test
 	public void testTranslateLoadFileFromClasspath() {
 		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "trans/mess-classpath");
@@ -30,7 +29,7 @@ public class PropertiesTranslatorTest {
 		PropertiesTranslator t = PropertiesTranslator.create(mock(Logger.class), "trans/mess-tree");
 		assertEquals("Translated message", t.translate("mess-tree.translate.works", new HashMap<>(), Locale.getDefault()));
 	}
-
+*/
 	@Test
 	@Parameters(method = "dataTranslateReplaceVariable")
 	public void testTranslateReplaceVariable(String expected, String key, Map<String, Object> params) {
@@ -40,18 +39,18 @@ public class PropertiesTranslatorTest {
 	
 	public Object[] dataTranslateReplaceVariable() {
 		return new Object[] {
-				new Object[] {
-						"Translated message", "translate.works", hashMap()
-					},
 			new Object[] {
-				"Translated message", "translate-works", hashMap()
+				"Translated message", "translate.works", new HashMap<>()
 			},
 			new Object[] {
-					"Variable: TEXT", "test.one.variable", hashMap(new Tuple2<>("variable", "TEXT"))
-				},
+				"Translated message", "translate-works", new HashMap<>()
+			},
 			new Object[] {
-					"Variables: A, B", "test.two.variables", hashMap(new Tuple2<>("a", "A"), new Tuple2<>("b", "B"))
-				}
+				"Variable: TEXT", "test.one.variable", new MapInit<>("variable", "TEXT").toMap()
+			},
+			new Object[] {
+				"Variables: A, B", "test.two.variables", new MapInit<>("a", "A").append("b", "B").toMap()
+			}
 		};
 	}
 
