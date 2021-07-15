@@ -12,6 +12,11 @@ public class MapInit<K, V> {
 		this(new HashMap<>());
 	}
 	
+	public MapInit(K k, V v) {
+		this.map = new HashMap<>();
+		map.put(k, v);
+	}
+	
 	public MapInit(Map<K, V> map) {
 		this.map = map;
 	}
