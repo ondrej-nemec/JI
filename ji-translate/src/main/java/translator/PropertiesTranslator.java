@@ -2,8 +2,8 @@ package translator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -25,7 +25,7 @@ public class PropertiesTranslator implements Translator {
 		for (String file : files) {
 			filesMap.put(new File(file).getName(), file);
 		}
-		return new PropertiesTranslator(logger, Locale.getDefault().toString(), new HashMap<>(), filesMap);
+		return new PropertiesTranslator(logger, java.util.Locale.getDefault().toString(), new HashMap<>(), filesMap);
 	}
 	
 	private PropertiesTranslator(
@@ -131,8 +131,8 @@ public class PropertiesTranslator implements Translator {
 	}
 
 	@Override
-	public String getLocale() {
-		return locale;
+	public Locale getLocale() {
+		return new Locale(locale, true, Arrays.asList());
 	}
 
 }

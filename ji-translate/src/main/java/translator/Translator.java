@@ -6,7 +6,7 @@ import java.util.Map;
 public interface Translator {
 
 	default String translate(String key) {
-		return translate(key, new HashMap<>(), getLocale());
+		return translate(key, new HashMap<>(), getLocale().getLang());
 	}
 	
 	default String translate(String key, String locale) {
@@ -14,10 +14,10 @@ public interface Translator {
 	}
 
 	default String translate(String key, Map<String, Object> variables) {
-		return translate(key, variables, getLocale());
+		return translate(key, variables, getLocale().getLang());
 	}
 	
-	String getLocale();
+	Locale getLocale();
 	
 	/**
 	 * key structure: <resource>.<key> OR <key>

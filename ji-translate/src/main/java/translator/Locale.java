@@ -27,5 +27,10 @@ public class Locale {
 	public List<String> getSubstitution() {
 		return substitution;
 	}
+
+	@Override
+	public String toString() {
+		return "Locale [lang=" + lang + ", isLeftToRight=" + isLeftToRight + ", substitution=" + substitution + "]";
+	}
 	
 }

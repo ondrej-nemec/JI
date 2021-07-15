@@ -1,6 +1,7 @@
 package translator;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +14,13 @@ public class LocaleTranslator implements Translator {
 	
 	private final Logger logger;
 
-	private String selectedLang;
-	
-	private final String defaultLang;
+	private Locale selectedLang;
 	
 	private final Map<String, Map<String, Properties>> resources;
 	
 	private final List<String> paths;
 	
-	private final Map<String, String> substitution;
+	private final Map<String, Locale> substitution;
 	
 	private final LanguageSettings settings;
 	
@@ -30,23 +29,30 @@ public class LocaleTranslator implements Translator {
 	}
 	
 	public LocaleTranslator(String selectedLang, LanguageSettings settings, List<String> paths, Logger logger) {
-		this.selectedLang = settings.getDefaultLang();
 		this.logger = logger;
 		this.paths = paths;
 		this.resources = new HashMap<>();
 		this.substitution = new HashMap<>();
-		this.defaultLang = selectedLang;
 		this.settings = settings;
 		settings.getLocales().forEach((locale)->{
-			substitution.put(locale.getLang(), locale.getLang());
+			substitution.put(locale.getLang(), locale);
 			locale.getSubstitution().forEach((subst)->{
-				substitution.put(subst, locale.getLang());
+				substitution.put(subst, locale);
 			});
 		});
+		if (substitution.get(selectedLang) == null) {
+			if (settings.getLocales().size() == 0) {
+				this.selectedLang = new Locale(selectedLang, true, Arrays.asList());
+			} else {
+				this.selectedLang = settings.getLocales().get(0);
+			}
+		} else {
+			this.selectedLang = substitution.get(selectedLang);
+		}
 	}
 	
 	@Override
-	public String getLocale() {
+	public Locale getLocale() {
 		return selectedLang;
 	}
 
@@ -57,7 +63,7 @@ public class LocaleTranslator implements Translator {
 
 	@Override
 	public void setLocale(String locale) {
-		this.selectedLang = locale;
+		this.selectedLang = substitution.get(locale);
 	}
 	
 	public String translate(String key, Map<String, Object> variables, String locale) {
@@ -83,30 +89,34 @@ public class LocaleTranslator implements Translator {
 	}
 	
 	private Properties getProperties(String locale, String domain) {
-		String resourceKey = substitution.get(locale);
-		if (resourceKey == null) {
-			logger.info("Given locale not found (including substitutions): " + resourceKey + ", default used");
-			resourceKey = defaultLang;
+		Locale resourceLocale = substitution.get(locale);
+		String resourceKey;
+		if (resourceLocale == null) {
+			logger.info("Given locale not found (including substitutions): " + locale + ", default used");
+			resourceKey = settings.getDefaultLang();
+		} else {
+			resourceKey = resourceLocale.getLang();
 		}
-		
+	
 		Map<String, Properties> domainsResource = resources.get(resourceKey);
 		if (domainsResource == null) {
 			logger.info("Resources for locale not loaded yet. Loading " + resourceKey);
-			domainsResource = loadDomainResource(locale, domain);
+			domainsResource = new HashMap<>();
 			resources.put(resourceKey, domainsResource);
 		}
 		
 		Properties resource = domainsResource.get(domain);
 		if (resource == null) {
-			logger.warn("No properties for domain: " + domain);
-			resource = new Properties();
+			logger.info("No properties for domain: " + domain + ". Loading");
+			resource = loadDomainResource(locale, domain);
 			domainsResource.put(domain, resource);
 		}
+		
 		return resource;
 	}
 
-	private Map<String, Properties> loadDomainResource(String locale, String domain) {
-		Map<String, Properties> domainsResource = new HashMap<>();
+	private Properties loadDomainResource(String locale, String domain) {
+		Properties moduleProperties = new Properties();
 		for(String path : paths) {
 			String name = String.format(
 				"%s%s%s.properties",
@@ -115,16 +125,13 @@ public class LocaleTranslator implements Translator {
 				locale.isEmpty() ? locale : String.format(".%s", locale)
 			);
 			try {
-				Properties moduleProperties = PropertiesLoader.loadProperties(name);
-				if (!domainsResource.containsKey(domain)) {
-					domainsResource.put(domain, new Properties());
-				}
-				domainsResource.get(domain).putAll(moduleProperties);
+				Properties prop = PropertiesLoader.loadProperties(name);
+				moduleProperties.putAll(prop);
 			} catch (IOException e) {
 				logger.warn("Cannot load properies file: " + name);
 			}
 		}
-		return domainsResource;
+		return moduleProperties;
 	}
 	
 }

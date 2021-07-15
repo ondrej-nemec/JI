@@ -20,5 +20,10 @@ public class LanguageSettings {
 	public List<Locale> getLocales() {
 		return locales;
 	}
+
+	@Override
+	public String toString() {
+		return "LanguageSettings [defaultLang=" + defaultLang + ", locales=" + locales + "]";
+	}
 	
 }

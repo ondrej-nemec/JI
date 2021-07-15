@@ -8,6 +8,7 @@ public class LocalTranslatorEndToEndTest {
 	public static void main(String[] args) {
 		LocaleTranslator translator = new LocaleTranslator(
 			new LanguageSettings("", Arrays.asList(
+				new Locale("", true, Arrays.asList()),
 				new Locale("cs", true, Arrays.asList("cs_CZ")),
 				new Locale("ru", true, Arrays.asList()),
 				new Locale("zh", true, Arrays.asList()),
