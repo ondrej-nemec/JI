@@ -65,6 +65,11 @@ public class LocaleTranslator implements Translator {
 	public void setLocale(String locale) {
 		this.selectedLang = substitution.get(locale);
 	}
+
+	@Override
+	public Locale getLocale(String locale) {
+		return substitution.get(locale);
+	}
 	
 	public String translate(String key, Map<String, Object> variables, String locale) {
 		String[] split = key.split("\\.", 2);

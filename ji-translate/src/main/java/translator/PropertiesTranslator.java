@@ -135,4 +135,9 @@ public class PropertiesTranslator implements Translator {
 		return new Locale(locale, true, Arrays.asList());
 	}
 
+	@Override
+	public Locale getLocale(String locale) {
+		return new Locale(locale, true, Arrays.asList());
+	}
+
 }

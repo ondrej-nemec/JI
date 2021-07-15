@@ -19,6 +19,8 @@ public interface Translator {
 	
 	Locale getLocale();
 	
+	Locale getLocale(String locale);
+	
 	/**
 	 * key structure: <resource>.<key> OR <key>
 	 * if <resource> not exists returns <resource.key> as <key> from default
