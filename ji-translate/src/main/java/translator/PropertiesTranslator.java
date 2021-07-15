@@ -45,8 +45,8 @@ public class PropertiesTranslator implements Translator {
 	}
 	
 	@Override
-	public void setLocale(String locale) {
-		this.locale = locale;
+	public void setLocale(Locale locale) {
+		this.locale = locale.getLang();
 	}
 
 	@Override

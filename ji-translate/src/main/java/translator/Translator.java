@@ -31,7 +31,15 @@ public interface Translator {
 	
 	Translator withLocale(Locale locale);
 	
-	void setLocale(String locale);
+	default Translator withLocale(String locale) {
+		return withLocale(getLocale(locale));
+	}
+	
+	void setLocale(Locale locale);
+	
+	default void setLocale(String locale) {
+		setLocale(getLocale(locale));
+	}
 
 	/**
 	 * key structure: <resource>.<key> OR <key>

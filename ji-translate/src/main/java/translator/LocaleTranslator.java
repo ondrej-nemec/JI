@@ -53,8 +53,8 @@ public class LocaleTranslator implements Translator {
 	}
 
 	@Override
-	public void setLocale(String locale) {
-		this.selectedLang = substitution.get(locale);
+	public void setLocale(Locale locale) {
+		this.selectedLang = locale;
 	}
 
 	@Override
