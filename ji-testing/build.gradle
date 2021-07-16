@@ -10,9 +10,8 @@ repositories {
 
 dependencies {
 	compile project(':ji-common')
-	compile project(':ji-utils')
 	compile project(':ji-database')
-	compile project(':ji-logging')
+	//compile project(':ji-logging')
 	
 	// https://mvnrepository.com/artifact/junit/junit
 	compile group: 'junit', name: 'junit', version: '4.12'

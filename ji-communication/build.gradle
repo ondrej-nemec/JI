@@ -9,7 +9,6 @@ repositories {
 
 dependencies {
 	compile project(':ji-common')
-	compile project(':ji-utils')
 	compile project(':ji-files')
 	
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3

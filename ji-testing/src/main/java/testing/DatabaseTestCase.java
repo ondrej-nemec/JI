@@ -10,7 +10,6 @@ import common.Logger;
 import common.functions.Env;
 import database.Database;
 import database.DatabaseConfig;
-import logging.loggers.NullLogger;
 import testing.entities.Table;
 
 public abstract class DatabaseTestCase {
@@ -27,10 +26,6 @@ public abstract class DatabaseTestCase {
 		);
 	}
 
-	public DatabaseTestCase(DatabaseConfig config) {
-		this(config, new NullLogger());
-	}
-
 	public DatabaseTestCase(Env env, Logger logger) {
 		this(new DatabaseConfig(
 				env.getString("db.type"),
@@ -43,10 +38,6 @@ public abstract class DatabaseTestCase {
 				env.getString("db.timezone"),
 				env.getInteger("db.poolSize")
 		), logger);
-	}
-	
-	public DatabaseTestCase(Env env) {
-		this(env, new NullLogger());
 	}
 
 	protected abstract List<Table> getDataSet();
