@@ -1,6 +1,9 @@
 package json;
 
+import java.util.Date;
 import java.util.Map;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import common.functions.Mapper;
 import common.structures.ListDictionary;
@@ -84,6 +87,13 @@ public class JsonWritter {
 				stream.writeListValue(value);
 			} else {
 				stream.writeObjectValue(name, value);
+			}
+		} else if (value instanceof Date) {
+			String date = DateFormatUtils.format(Date.class.cast(value).getTime(), "yyyy-MM-dd HH:mm:ss.SSS");
+			if (name == null) {
+				stream.writeListValue(date);
+			} else {
+				stream.writeObjectValue(name, date);
 			}
 		} else {
 			writeObject(stream, Mapper.get().serialize(value), name);

@@ -1,5 +1,6 @@
 package common.structures;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,10 @@ public interface Dictionary<S> {
 	
 	default String getString(S name) {
 		return getDictionaryValue(name).getString();
+	}
+	
+	default Date getDate(S name) {
+		return getDictionaryValue(name).getDate();
 	}
 	
 	default <E extends Enum<E>> E getEnum(S name, Class<E> enumm) {

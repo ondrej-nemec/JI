@@ -108,6 +108,9 @@ public class Mapper {
 		if (clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
 			return (T)new LinkedList<>();
 		}
+		if (clazz.isEnum()) {
+			return null;
+		}
 		return clazz.newInstance();
 	}
 

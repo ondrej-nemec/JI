@@ -1,6 +1,9 @@
 package common.structures;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -19,6 +22,45 @@ public class DictionaryValue {
 	};
 	private Function<String, Object> fromStringToListCallback = stringMapping;
 	private Function<String, Object> fromStringToMapCallback = stringMapping;
+	private Function<String, Object> fromStringToDate = (v)->{
+		// 2021-07-19 13:29:33.283058
+		// UTC 2021-07-19T12:16:40Z
+		// ISO-8601 2021-07-19T12:16:40+0000
+		// yyyy-MM-dd HH:mm:ss.SSS;
+		
+		// 2021-07-19 11:19:06.471
+		// 2021-07-19T11:19:06.471
+		// Mon Jul 19 13:19:06 CEST 2021
+		String date = v;
+		StringBuilder pattern = new StringBuilder();
+		if (date.length() >= 10 && date.charAt(4) == '-' && date.charAt(7) == '-') {
+			pattern.append("yyyy-MM-dd");
+			date = date.substring(10).trim();
+		}
+		// TODO maybe 'T'
+		if (date.length() >= 8 && date.charAt(2) == ':' && date.charAt(5) == ':') {
+			if (!pattern.toString().isEmpty()) {
+				pattern.append(" ");
+			}
+			pattern.append("HH:mm:ss");
+			date = date.substring(8);
+			if (date.length() > 0 && date.charAt(0) == '.') {
+				pattern.append(".");
+				for (int i = 0; i < date.length(); i++) {
+					pattern.append("S");
+				}
+			}
+		}
+		//TODO timezone
+		// TODO Mon Jul 19 13:19:06 CEST 2021
+		
+		SimpleDateFormat format = new SimpleDateFormat(pattern.toString());
+		try {
+			return format.parse(v);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	};
 	
 	public DictionaryValue(Object value) {
 		this.value = value;
@@ -78,6 +120,8 @@ public class DictionaryValue {
 			return getDictionaryList();
 		} else if (clazz.isEnum()) {
 			return getEnum((Class<E>)clazz);
+		} else if (clazz.isAssignableFrom(Date.class)) {
+			return getDate();
 		} else if (value instanceof MapDictionary || value instanceof Map) { // TODO check very carefully if there is no recursion !
 			return getDictionaryMap().parse(clazz);
 		} else {
@@ -124,6 +168,21 @@ public class DictionaryValue {
 	
 	public String getString() {
 		return parseValue(String.class, a->a, a->a.toString());
+	}
+	
+	public Date getDate() {
+		return parseValue(
+			Date.class,
+			(string)->{
+				return fromStringToDate.apply(string);
+			},
+			(object)->{
+				if (Long.class.isInstance(object) || long.class.isInstance(object)) {
+					return new Date(Long.class.cast(object));
+				}
+				return fromStringToDate.apply(object.toString());
+			}
+		);
 	}
 	
 	public <E extends Enum<E>> E getEnum(Class<E> enumm) {
