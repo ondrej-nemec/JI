@@ -42,6 +42,21 @@ public class LocaleTranslator implements Translator {
 		this.selectedLang = selectedLang;
 	}
 	
+	private LocaleTranslator(
+			Locale selectedLang, 
+			LanguageSettings settings, 
+			List<String> paths,
+			Map<String, Locale> substitution,
+			Map<String, Map<String, Properties>> resources,
+			Logger logger) {
+		this.logger = logger;
+		this.paths = paths;
+		this.resources = resources;
+		this.substitution = substitution;
+		this.settings = settings;
+		this.selectedLang = selectedLang;
+	}
+	
 	@Override
 	public Locale getLocale() {
 		return selectedLang;
@@ -49,7 +64,7 @@ public class LocaleTranslator implements Translator {
 
 	@Override
 	public Translator withLocale(Locale locale) {
-		return new LocaleTranslator(locale, settings, paths, logger);
+		return new LocaleTranslator(locale, settings, paths, substitution, resources, logger);
 	}
 
 	@Override
