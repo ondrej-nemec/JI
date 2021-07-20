@@ -21,8 +21,11 @@ public class Mapper {
 	public static Mapper get() {
 		return new Mapper();
 	}
-
 	public Map<String, Object> serialize(Object value) {
+		return serialize(value, null);
+	}
+	
+	public Map<String, Object> serialize(Object value, String key) {
 		try {
 			Map<String, Object> json = new HashMap<>();
 			Field[] fields = value.getClass().getDeclaredFields();
@@ -31,7 +34,10 @@ public class Mapper {
 					continue;
 				}
 				if (field.isAnnotationPresent(MapperIgnored.class)) {
-					continue;
+					String annotationKey = field.getAnnotation(MapperIgnored.class).value();
+					if (key == null || annotationKey.equals("") || !annotationKey.equals(key)) {
+						continue;
+					}
 				}
 				field.setAccessible(true);
 				String name = field.getName();
@@ -102,15 +108,21 @@ public class Mapper {
 		if (valueCandidate != null) {
 			return new DictionaryValue(valueCandidate).getValue(clazz);
 		}
+		try {
+			clazz.getConstructor();
+		} catch (NoSuchMethodException e) {
+			// not non-parameters constructor - enum, primitives, numbers, ...
+			return null;
+		}
 		if (clazz.equals(Map.class)) {
 			return (T)new HashMap<>();
 		}
 		if (clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
 			return (T)new LinkedList<>();
 		}
-		if (clazz.isEnum()) {
+		/*if (clazz.isEnum()) {
 			return null;
-		}
+		}*/
 		return clazz.newInstance();
 	}
 

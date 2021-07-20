@@ -7,4 +7,6 @@ import java.lang.annotation.Retention;
 @Retention(RUNTIME)
 public @interface MapperIgnored {
 
+	String value() default "";
+	
 }
