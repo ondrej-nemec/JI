@@ -24,6 +24,7 @@ public class DictionaryValue {
 	private Function<String, Object> fromStringToListCallback = stringMapping;
 	private Function<String, Object> fromStringToMapCallback = stringMapping;
 	private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+	private String onlyKey = null;
 	
 	public DictionaryValue(Object value) {
 		this.value = value;
@@ -41,6 +42,11 @@ public class DictionaryValue {
 	
 	public DictionaryValue setDateTimeFormat(String dateTimeFormat) {
 		this.dateTimeFormat = dateTimeFormat;
+		return this;
+	}
+	
+	public DictionaryValue setOnlyKey(String onlyKey) {
+		this.onlyKey = onlyKey;
 		return this;
 	}
 	
@@ -93,7 +99,7 @@ public class DictionaryValue {
 		} else if (clazz.isAssignableFrom(LocalDateTime.class)) {
 			return getDate();
 		} else if (value instanceof MapDictionary || value instanceof Map) { // TODO check very carefully if there is no recursion !
-			return getDictionaryMap().parse(clazz);
+			return getDictionaryMap().parse(clazz, onlyKey);
 		} else {
 			return value;
 		}

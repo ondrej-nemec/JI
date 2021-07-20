@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import common.annotations.MapperDateTimeFormat;
+import common.annotations.MapperType;
 import common.annotations.MapperIgnored;
 import common.annotations.MapperParameter;
 import common.structures.DictionaryValue;
@@ -44,7 +44,18 @@ public class Mapper {
 				field.setAccessible(true);
 				String name = field.getName();
 				if (field.isAnnotationPresent(MapperParameter.class)) {
-					name = field.getAnnotation(MapperParameter.class).value();
+					MapperType toUse = null;
+					for (MapperType mapperType : field.getAnnotation(MapperParameter.class).value()) {
+						if (mapperType.key().equals("")) {
+							toUse = mapperType; // default
+						} else if (key != null && mapperType.key().equals(key)) {
+							toUse = mapperType; // key match
+						}
+					}
+					if (toUse == null) {
+						continue;
+					}
+					name = toUse.value();
 				}
 				json.put(name, field.get(value));
 			}
@@ -55,10 +66,14 @@ public class Mapper {
 	}
 	
 	public <T> T parse(Class<T> clazz, Object source) throws Exception {
-		return read(clazz, source, null, null, (v)->{});
+		return read(clazz, source, null, null, null, (v)->{});
 	}
 	
-	private <T> T read(Class<T> clazz, Object source, Object valueCandidate, Type generic, Consumer<DictionaryValue> onValue) throws Exception {
+	public <T> T parse(Class<T> clazz, Object source, String key) throws Exception {
+		return read(clazz, source, key, null, null, (v)->{});
+	}
+	
+	private <T> T read(Class<T> clazz, Object source, String only, Object valueCandidate, Type generic, Consumer<DictionaryValue> onValue) throws Exception {
 		DictionaryValue parameterValue = new DictionaryValue(source);
 		onValue.accept(parameterValue);
 		T target = createNewInstance(valueCandidate, clazz);
@@ -68,21 +83,29 @@ public class Mapper {
 			for (Field field : fields) {
 				field.setAccessible(true);
 				String parameterName = null;
+				
+				MapperType toUse = null;
 				if (field.isAnnotationPresent(MapperParameter.class)) {
-					parameterName = field.getAnnotation(MapperParameter.class).value();
+					for (MapperType mapperType : field.getAnnotation(MapperParameter.class).value()) {
+						if (mapperType.key().equals("")) {
+							toUse = mapperType; // default
+						} else if (only != null && mapperType.key().equals(only)) {
+							toUse = mapperType; // key match
+						}
+					}
+					if (toUse != null) {
+						parameterName = toUse.value();
+					}
 				} else {
 					parameterName = field.getName();
 				}
+				
 				Object newCandidate = values.get(parameterName);
 				if (newCandidate == null) {
 					continue;
 				}
 				
-				Object value = read(field.getType(), newCandidate, field.get(target), field.getGenericType(), (v)->{
-					if (field.isAnnotationPresent(MapperDateTimeFormat.class)) {
-						v.setDateTimeFormat(field.getAnnotation(MapperDateTimeFormat.class).value());
-					}
-				});
+				Object value = read(field.getType(), newCandidate, only, field.get(target), field.getGenericType(), setDV(toUse));
 				Method m = getMethod("set", parameterName, clazz, field.getType());
 				if (m == null) {
 					field.set(target, value);
@@ -95,7 +118,7 @@ public class Mapper {
 			Class<?> collectionItemClass = types._1();
 			Method m = getMethod("add", clazz, Object.class);
 			parameterValue.getDictionaryList().forEach((item)->{
-				m.invoke(target, read(collectionItemClass, item.getValue(), null, types._2(), onValue));
+				m.invoke(target, read(collectionItemClass, item.getValue(), only, null, types._2(), onValue));
 			});
 		} else if (Map.class.isAssignableFrom(clazz) || MapDictionary.class.isAssignableFrom(clazz)) {
 		//	Class<?> mapKeyClass = getGenericClass(generic, 0);
@@ -103,7 +126,7 @@ public class Mapper {
 			Class<?> mapValueClass = types._1();
 			Method m = getMethod("put", clazz, Object.class, Object.class);
 			parameterValue.getDictionaryMap().forEach((key, item)->{
-				m.invoke(target, key, read(mapValueClass, item.getValue(), null, types._2(), onValue));
+				m.invoke(target, key, read(mapValueClass, item.getValue(), only, null, types._2(), onValue));
 			});
 		} else {
 			return parameterValue.getValue(clazz);
@@ -111,22 +134,33 @@ public class Mapper {
 		return target;
 	}
 	
+	private Consumer<DictionaryValue> setDV(MapperType toUse) {
+		return (v)->{
+			if (toUse != null) {
+				v.setDateTimeFormat(toUse.dateTimeFormat());
+				if (!toUse.key().equals("")) {
+					v.setOnlyKey(toUse.key());
+				}
+			}
+		};
+	}
+		
 	@SuppressWarnings("unchecked")
 	private <T> T createNewInstance(Object valueCandidate, Class<T> clazz) throws InstantiationException, IllegalAccessException {
 		if (valueCandidate != null) {
 			return new DictionaryValue(valueCandidate).getValue(clazz);
-		}
-		try {
-			clazz.getConstructor();
-		} catch (NoSuchMethodException e) {
-			// not non-parameters constructor - enum, primitives, numbers, ...
-			return null;
 		}
 		if (clazz.equals(Map.class)) {
 			return (T)new HashMap<>();
 		}
 		if (clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
 			return (T)new LinkedList<>();
+		}
+		try {
+			clazz.getConstructor();
+		} catch (NoSuchMethodException e) {
+			// not non-parameters constructor - enum, primitives, numbers, ...
+			return null;
 		}
 		/*if (clazz.isEnum()) {
 			return null;

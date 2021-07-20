@@ -84,8 +84,12 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	}
 
 	public <T> T parse(Class<T> clazz) {
+		return parse(clazz, null);
+	}
+
+	public <T> T parse(Class<T> clazz, String key) {
 		try {
-			return Mapper.get().parse(clazz, map);
+			return Mapper.get().parse(clazz, map, key);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -10,8 +10,10 @@ import org.junit.Test;
 
 import common.annotations.MapperIgnored;
 import common.annotations.MapperParameter;
+import common.annotations.MapperType;
 import common.functions.testingClasses.Generic;
 import common.functions.testingClasses.Main;
+import common.functions.testingClasses.Parse;
 import common.structures.MapInit;
 
 public class MapperTest {
@@ -45,7 +47,7 @@ public class MapperTest {
 			private List<String> list = Arrays.asList("a", "b", "c");
 			@MapperIgnored
 			private double ignored = 12.3;
-			@MapperParameter("realName")
+			@MapperParameter({@MapperType("realName")})
 			private String anotherName = "renamed";
 		};
 		Map<String, Object> expected = new MapInit<String, Object>()
@@ -55,6 +57,29 @@ public class MapperTest {
 				.append("realName", "renamed")
 				.toMap();
 		assertEquals(expected, Mapper.get().serialize(actual));
+	}
+
+	@Test
+	public void testSerializeAnnotatedAttributesWithSwitch() {
+		Object actual = new Object() {
+			@SuppressWarnings("unused")
+			private String first = "first value";
+			@MapperParameter({@MapperType(value = "second", key = "used")})
+			private int second = 42;
+			@MapperParameter({@MapperType(value = "--list--", key = "not-used")})
+			private List<String> list = Arrays.asList("a", "b", "c");
+			@MapperIgnored
+			private double ignored = 12.3;
+			@MapperParameter({@MapperType("realName")})
+			private String anotherName = "renamed";
+		};
+		Map<String, Object> expected = new MapInit<String, Object>()
+				.append("first", "first value")
+				.append("second", 42)
+			//	.append("--list--", Arrays.asList("a", "b", "c"))
+				.append("realName", "renamed")
+				.toMap();
+		assertEquals(expected, Mapper.get().serialize(actual, "used"));
 	}
 	
 	@Test
@@ -106,5 +131,16 @@ public class MapperTest {
 				.toMap()
 			)
 		);
+	}
+
+	@Test
+	public void testParseAnnotation() throws Exception {
+		Map<String, Object> actual = new MapInit<String, Object>()
+				.append("first", "first value")
+				.append("second", 42)
+				.append("--list--", Arrays.asList("a", "b", "c"))
+				.append("realName", "renamed")
+				.toMap();
+		assertEquals(new Parse("first value", 42, "renamed"), Mapper.get().parse(Parse.class, actual, "used"));
 	}
 }
