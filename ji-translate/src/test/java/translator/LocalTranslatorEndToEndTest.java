@@ -3,6 +3,8 @@ package translator;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import common.structures.ListInit;
+
 public class LocalTranslatorEndToEndTest {
 
 	public static void main(String[] args) {
@@ -14,7 +16,7 @@ public class LocalTranslatorEndToEndTest {
 				new Locale("zh", true, Arrays.asList()),
 				new Locale("en", true, Arrays.asList())
 			)),
-			Arrays.asList("modules", "modules2", "langs"),
+			new ListInit<String>().add("modules").add("modules2").add("langs").toSet(),
 			new LoggerImpl()
 		);
 		

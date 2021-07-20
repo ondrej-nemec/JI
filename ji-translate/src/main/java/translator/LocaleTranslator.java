@@ -2,9 +2,9 @@ package translator;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import common.Logger;
 import common.functions.PropertiesLoader;
@@ -17,17 +17,17 @@ public class LocaleTranslator implements Translator {
 	
 	private final Map<String, Map<String, Properties>> resources;
 	
-	private final List<String> paths;
+	private final Set<String> paths;
 	
 	private final Map<String, Locale> substitution;
 	
 	private final LanguageSettings settings;
 	
-	public LocaleTranslator(LanguageSettings settings, List<String> paths, Logger logger) {
+	public LocaleTranslator(LanguageSettings settings, Set<String> paths, Logger logger) {
 		this(settings.getDefaultLang(), settings, paths, logger);
 	}
 	
-	public LocaleTranslator(Locale selectedLang, LanguageSettings settings, List<String> paths, Logger logger) {
+	public LocaleTranslator(Locale selectedLang, LanguageSettings settings, Set<String> paths, Logger logger) {
 		this.logger = logger;
 		this.paths = paths;
 		this.resources = new HashMap<>();
@@ -45,7 +45,7 @@ public class LocaleTranslator implements Translator {
 	private LocaleTranslator(
 			Locale selectedLang, 
 			LanguageSettings settings, 
-			List<String> paths,
+			Set<String> paths,
 			Map<String, Locale> substitution,
 			Map<String, Map<String, Properties>> resources,
 			Logger logger) {

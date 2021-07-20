@@ -3,6 +3,7 @@ package translator;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -15,7 +16,7 @@ public class LocaleTranslatorTest {
 	public void testTranslateSimple() {
 		LocaleTranslator translator = new LocaleTranslator(
 			new LanguageSettings("", Arrays.asList()),
-			Arrays.asList("modules", "modules2", "langs"),
+			new HashSet<>(Arrays.asList("modules", "modules2", "langs")),
 			Mockito.mock(Logger.class)
 		);
 		assertEquals("Common text", translator.translate("common.some.key"));
