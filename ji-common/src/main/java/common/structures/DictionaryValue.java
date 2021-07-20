@@ -1,7 +1,5 @@
 package common.structures;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -145,7 +143,8 @@ public class DictionaryValue {
 	public LocalDateTime getDate() {
 		Function<String, LocalDateTime> toDateTime = (string)->{
 			try {
-				return LocalDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
+				// TODO not will be here
+				return LocalDateTime.parse(string.replace(" ", "T"), DateTimeFormatter.ISO_DATE_TIME);
 			} catch (Exception e) {
 				return LocalDateTime.parse(string, DateTimeFormatter.ofPattern(dateTimeFormat));
 			}
