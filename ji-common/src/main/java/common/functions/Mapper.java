@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import common.annotations.MapperDateTimeFormat;
 import common.annotations.MapperIgnored;
 import common.annotations.MapperParameter;
 import common.structures.DictionaryValue;
@@ -35,7 +37,7 @@ public class Mapper {
 				}
 				if (field.isAnnotationPresent(MapperIgnored.class)) {
 					String annotationKey = field.getAnnotation(MapperIgnored.class).value();
-					if (key == null || annotationKey.equals("") || !annotationKey.equals(key)) {
+					if (key == null || annotationKey.equals("") || annotationKey.equals(key)) {
 						continue;
 					}
 				}
@@ -53,11 +55,12 @@ public class Mapper {
 	}
 	
 	public <T> T parse(Class<T> clazz, Object source) throws Exception {
-		return read(clazz, source, null, null);
+		return read(clazz, source, null, null, (v)->{});
 	}
 	
-	private <T> T read(Class<T> clazz, Object source, Object valueCandidate, Type generic) throws Exception {
+	private <T> T read(Class<T> clazz, Object source, Object valueCandidate, Type generic, Consumer<DictionaryValue> onValue) throws Exception {
 		DictionaryValue parameterValue = new DictionaryValue(source);
+		onValue.accept(parameterValue);
 		T target = createNewInstance(valueCandidate, clazz);
 		if ( Map.class.isAssignableFrom(source.getClass()) && !Map.class.isAssignableFrom(clazz)) {
 			Field[] fields = clazz.getDeclaredFields();
@@ -74,7 +77,12 @@ public class Mapper {
 				if (newCandidate == null) {
 					continue;
 				}
-				Object value = read(field.getType(), newCandidate, field.get(target), field.getGenericType());
+				
+				Object value = read(field.getType(), newCandidate, field.get(target), field.getGenericType(), (v)->{
+					if (field.isAnnotationPresent(MapperDateTimeFormat.class)) {
+						v.setDateTimeFormat(field.getAnnotation(MapperDateTimeFormat.class).value());
+					}
+				});
 				Method m = getMethod("set", parameterName, clazz, field.getType());
 				if (m == null) {
 					field.set(target, value);
@@ -87,7 +95,7 @@ public class Mapper {
 			Class<?> collectionItemClass = types._1();
 			Method m = getMethod("add", clazz, Object.class);
 			parameterValue.getDictionaryList().forEach((item)->{
-				m.invoke(target, read(collectionItemClass, item.getValue(), null, types._2()));
+				m.invoke(target, read(collectionItemClass, item.getValue(), null, types._2(), onValue));
 			});
 		} else if (Map.class.isAssignableFrom(clazz) || MapDictionary.class.isAssignableFrom(clazz)) {
 		//	Class<?> mapKeyClass = getGenericClass(generic, 0);
@@ -95,7 +103,7 @@ public class Mapper {
 			Class<?> mapValueClass = types._1();
 			Method m = getMethod("put", clazz, Object.class, Object.class);
 			parameterValue.getDictionaryMap().forEach((key, item)->{
-				m.invoke(target, key, read(mapValueClass, item.getValue(), null, types._2()));
+				m.invoke(target, key, read(mapValueClass, item.getValue(), null, types._2(), onValue));
 			});
 		} else {
 			return parameterValue.getValue(clazz);

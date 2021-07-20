@@ -1,6 +1,6 @@
 package common.structures;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public interface Dictionary<S> {
 		return getDictionaryValue(name).getString();
 	}
 	
-	default Date getDate(S name) {
+	default LocalDateTime getDate(S name) {
 		return getDictionaryValue(name).getDate();
 	}
 	
