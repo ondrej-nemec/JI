@@ -62,7 +62,7 @@ public class MigrationPreparation {
 				.from(migrationTable)
 				.where("module = :module")
 				.addParameter(":module", module)
-				.orderBy("id")
+				.orderBy("datetime, id")
 				.fetchAll((row)->{
 					return row.getValue("id").toString();
 				});
