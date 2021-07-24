@@ -92,11 +92,19 @@ public class LocaleTranslator implements Translator {
 				value = key;
 				prop.put(transKey, value);
 			}
-			return value;
+			return replaceVariables(value, variables);
 		} catch (Exception e) {
 			logger.fatal("Problem with translating " + key, e);
 			return key;
 		}
+	}
+	
+	private String replaceVariables(String value, Map<String, Object> variables) {
+		for (String varName : variables.keySet()) {
+		    Object variable = variables.get(varName);
+			value = value.replaceAll("\\%" + varName + "\\%", variable == null ? "" : variable.toString());
+		}
+		return value;
 	}
 	
 	private Properties getProperties(String locale, String domain) {
