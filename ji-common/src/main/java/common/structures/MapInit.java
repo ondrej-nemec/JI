@@ -36,6 +36,10 @@ public class MapInit<K, V> {
 		return prop;
 	}
 	
+	public MapDictionary<K, V> toDictionaryMap() {
+		return new MapDictionary<>(map);
+	}
+	
 	/**********************/
 
 	@Deprecated
