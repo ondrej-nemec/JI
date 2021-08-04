@@ -41,4 +41,8 @@ public class ListInit<S> {
 		return new HashSet<>(list);
 	}
 	
+	public ListDictionary<S> toDictionaryList() {
+		return new ListDictionary<>(toList());
+	}
+	
 }
