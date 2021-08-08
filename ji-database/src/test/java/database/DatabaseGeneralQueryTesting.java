@@ -21,19 +21,19 @@ public class DatabaseGeneralQueryTesting {
 			//*
 			new DatabaseConfig(
 				"mysql", "//localhost", true, dbName, 
-				"root", "", migrationPath, "Europe/Prague", 5
+				"root", "", migrationPath, 5
 			),
 			//*/
 			//*
 			new DatabaseConfig(
 				"derby", "C:\\software\\DerbyDB\\bin", false, dbName, 
-				"root", "", migrationPath, "Europe/Prague", 5
+				"root", "", migrationPath, 5
 			),
 			//*/
 			//*	
 			new DatabaseConfig(
 				"postgresql", "//localhost", true, dbName, 
-				"postgres", "1234", migrationPath, "Europe/Prague", 5
+				"postgres", "1234", migrationPath, 5
 			)
 			//*/
 		);

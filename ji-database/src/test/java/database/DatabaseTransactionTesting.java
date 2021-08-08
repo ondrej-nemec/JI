@@ -17,7 +17,6 @@ public class DatabaseTransactionTesting {
 				"root", 
 				"",
 				Arrays.asList(),
-				"Europe/Prague",
 				5
 		);
 		Database db = new Database(config, getLogger());

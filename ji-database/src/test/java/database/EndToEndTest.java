@@ -92,7 +92,6 @@ public class EndToEndTest {
 				username,
 				password,
 				Arrays.asList("migrations"),
-				"Europe/Prague",
 				5
 		);
 		

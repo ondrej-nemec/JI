@@ -35,7 +35,6 @@ public abstract class DatabaseTestCase {
 				env.getString("db.login"),
 				env.getString("db.password"),
 				env.getList("db.pathToMigrations", ","),
-				env.getString("db.timezone"),
 				env.getInteger("db.poolSize")
 		), logger);
 	}

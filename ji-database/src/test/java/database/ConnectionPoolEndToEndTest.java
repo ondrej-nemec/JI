@@ -19,7 +19,6 @@ public class ConnectionPoolEndToEndTest {
 				"root",
 				"",
 				Arrays.asList("migrations"),
-				"Europe/Prague",
 				2
 		);
 		

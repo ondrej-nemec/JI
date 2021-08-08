@@ -17,7 +17,7 @@ public class MigrationPathEndToEndTest {
 					"migration/path_files_src",
 					"migration/path_files_res",
 					"test/path_files_dir"
-				), "Europe/Prague", 5
+				), 5
 			);
 		Database db = new Database(config, getLogger());
 		db.createDbAndMigrate();

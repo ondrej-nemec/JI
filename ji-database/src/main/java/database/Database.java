@@ -2,6 +2,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Properties;
 
 import common.Logger;
@@ -115,7 +116,7 @@ public class Database {
 		Properties props = new Properties();
 		props.setProperty("user", config.login);
 		props.setProperty("password", config.password);
-		props.setProperty("serverTimezone", config.timezone);
+		props.setProperty("serverTimezone", ZoneId.systemDefault().toString());
 		props.setProperty("create", "true");
 		props.setProperty("allowMultiQueries", "true");
 		return props;
