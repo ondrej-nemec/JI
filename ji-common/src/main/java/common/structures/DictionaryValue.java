@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -214,20 +215,24 @@ public class DictionaryValue {
 		return parseValue(
 			clazz,
 			(string)->{
-				return fromString.apply(string);
+				try {
+					return fromString.apply(string);
+					//return LocalDateTime.parse(string.replace(" ", "T"), DateTimeFormatter.ISO_DATE_TIME);
+				} catch (Exception e) {
+					return fromString.apply(string.replace(" ", "T"));
+				}
 			},
 			(object)->{
 				if (Long.class.isInstance(object) || long.class.isInstance(object)) {
 					return fromTime.apply(Instant.ofEpochMilli(Long.class.cast(object)).atZone(ZoneId.systemDefault()));
 				}
-				// TODO 
-				/*if (TemporalAccessor.class.isInstance(object)) {
+				if (TemporalAccessor.class.isInstance(object)) {
 					return fromTime.apply(TemporalAccessor.class.cast(object));
 				}
 				if (Date.class.isInstance(object)) {
 					return fromTime.apply(Date.class.cast(object).toInstant().atZone(ZoneId.systemDefault()));
 					// Instant.ofEpochMilli(Date.class.cast(object).getTime())
-				}*/
+				}
 				return fromString.apply(object.toString());
 			}
 		);
