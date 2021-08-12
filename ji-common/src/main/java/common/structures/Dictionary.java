@@ -1,6 +1,9 @@
 package common.structures;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -47,10 +50,39 @@ public interface Dictionary<S> {
 	default String getString(S name) {
 		return getDictionaryValue(name).getString();
 	}
+
+	default LocalTime getTime(S name) {
+		return getDictionaryValue(name).getTime();
+	}
 	
-	default LocalDateTime getDate(S name) {
+	default LocalTime getTime(S name, String pattern) {
+		return getDictionaryValue(name).getTime(pattern);
+	}
+	
+	default LocalDate getDate(S name) {
 		return getDictionaryValue(name).getDate();
 	}
+	
+	default LocalDate getDate(S name, String pattern) {
+		return getDictionaryValue(name).getDate(pattern);
+	}
+	
+	default LocalDateTime getDateTime(S name) {
+		return getDictionaryValue(name).getDateTime();
+	}
+	
+	default LocalDateTime getDateTime(S name, String pattern) {
+		return getDictionaryValue(name).getDateTime(pattern);
+	}
+	
+	default ZonedDateTime getDateTimeZone(S name) {
+		return getDictionaryValue(name).getDateTimeZone();
+	}
+	
+	default ZonedDateTime getDateTimeZone(S name, String pattern) {
+		return getDictionaryValue(name).getDateTimeZone(pattern);
+	}
+	
 	
 	default <E extends Enum<E>> E getEnum(S name, Class<E> enumm) {
 		return getDictionaryValue(name).getEnum(enumm);

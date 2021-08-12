@@ -1,12 +1,16 @@
 package common.structures;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.function.Function;
 
 public class DictionaryValue {
@@ -23,7 +27,7 @@ public class DictionaryValue {
 	};
 	private Function<String, Object> fromStringToListCallback = stringMapping;
 	private Function<String, Object> fromStringToMapCallback = stringMapping;
-	private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+	private String dateTimePattern = null;
 	private String onlyKey = null;
 	
 	public DictionaryValue(Object value) {
@@ -39,12 +43,12 @@ public class DictionaryValue {
 		this.fromStringToMapCallback = fromStringToMapCallback;
 		return this;
 	}
-	
-	public DictionaryValue setDateTimeFormat(String dateTimeFormat) {
-		this.dateTimeFormat = dateTimeFormat;
+
+	public DictionaryValue setDateTimeFormat(String dateTimePattern) {
+		this.dateTimePattern = dateTimePattern;
 		return this;
 	}
-	
+
 	public DictionaryValue setOnlyKey(String onlyKey) {
 		this.onlyKey = onlyKey;
 		return this;
@@ -96,8 +100,14 @@ public class DictionaryValue {
 			return getDictionaryList();
 		} else if (clazz.isEnum()) {
 			return getEnum((Class<E>)clazz);
-		} else if (clazz.isAssignableFrom(LocalDateTime.class)) {
+		} else if (clazz.isAssignableFrom(LocalDate.class)) {
 			return getDate();
+		} else if (clazz.isAssignableFrom(LocalTime.class)) {
+			return getTime();
+		} else if (clazz.isAssignableFrom(LocalDateTime.class)) {
+			return getDateTime();
+		} else if (clazz.isAssignableFrom(ZonedDateTime.class)) {
+			return getDateTimeZone();
 		} else if (value instanceof MapDictionary || value instanceof Map) { // TODO check very carefully if there is no recursion !
 			return getDictionaryMap().parse(clazz, onlyKey);
 		} else {
@@ -146,13 +156,89 @@ public class DictionaryValue {
 		return parseValue(String.class, a->a, a->a.toString());
 	}
 	
-	public LocalDateTime getDate() {
+	public <E extends Enum<E>> E getEnum(Class<E> enumm) {
+		return parseValue(enumm, a->E.valueOf(enumm, a));
+	}
+	
+	/*****************/
+	
+	public LocalTime getTime() {
+		return getTime(dateTimePattern == null ? "HH:mm:ss" : dateTimePattern);
+	}
+	
+	public LocalTime getTime(String pattern) {
+		return getTimestamp(
+			LocalTime.class, 
+			time->LocalTime.from(time),
+			string->LocalTime.parse(string, DateTimeFormatter.ofPattern(pattern))
+		);
+	}
+	
+	public LocalDate getDate() {
+		return getDate(dateTimePattern == null ? "yyyy-MM-dd" : dateTimePattern);
+	}
+	
+	public LocalDate getDate(String pattern) {
+		return getTimestamp(
+			LocalDate.class, 
+			time->LocalDate.from(time),
+			string->LocalDate.parse(string, DateTimeFormatter.ofPattern(pattern))
+		);
+	}
+	
+	public LocalDateTime getDateTime() {
+		return getDateTime(dateTimePattern == null ? "yyyy-MM-dd'T'HH-mm-ss.SSS" : dateTimePattern);
+	}
+	
+	public LocalDateTime getDateTime(String pattern) {
+		return getTimestamp(
+			LocalDateTime.class, 
+			time->LocalDateTime.from(time), 
+			(string)->LocalDateTime.parse(string, DateTimeFormatter.ofPattern(pattern))
+		);
+	}
+	
+	public ZonedDateTime getDateTimeZone() {
+		return getDateTimeZone(dateTimePattern == null ? "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" : dateTimePattern);
+	}
+	
+	public ZonedDateTime getDateTimeZone(String pattern) {
+		return getTimestamp(
+			ZonedDateTime.class, 
+			time->ZonedDateTime.from(time), 
+			(string)->ZonedDateTime.parse(string, DateTimeFormatter.ofPattern(pattern))
+		);
+	}
+	
+	private <T> T getTimestamp(Class<T> clazz, Function<TemporalAccessor, T> fromTime, Function<String, T> fromString) {
+		return parseValue(
+			clazz,
+			(string)->{
+				return fromString.apply(string);
+			},
+			(object)->{
+				if (Long.class.isInstance(object) || long.class.isInstance(object)) {
+					return fromTime.apply(Instant.ofEpochMilli(Long.class.cast(object)).atZone(ZoneId.systemDefault()));
+				}
+				// TODO 
+				/*if (TemporalAccessor.class.isInstance(object)) {
+					return fromTime.apply(TemporalAccessor.class.cast(object));
+				}
+				if (Date.class.isInstance(object)) {
+					return fromTime.apply(Date.class.cast(object).toInstant().atZone(ZoneId.systemDefault()));
+					// Instant.ofEpochMilli(Date.class.cast(object).getTime())
+				}*/
+				return fromString.apply(object.toString());
+			}
+		);
+	}
+/*
+	public LocalDateTime getDate2() {
 		Function<String, LocalDateTime> toDateTime = (string)->{
 			try {
-				// TODO not will be here
 				return LocalDateTime.parse(string.replace(" ", "T"), DateTimeFormatter.ISO_DATE_TIME);
 			} catch (Exception e) {
-				return LocalDateTime.parse(string, DateTimeFormatter.ofPattern(dateTimeFormat));
+				return LocalDateTime.parse(string, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 			}
 		};
 		return parseValue(
@@ -168,17 +254,13 @@ public class DictionaryValue {
 			}
 		);
 	}
-	
-	public <E extends Enum<E>> E getEnum(Class<E> enumm) {
-		return parseValue(enumm, a->E.valueOf(enumm, a));
-	}
+*/
+	/************/
 
 	@SuppressWarnings("unchecked")
 	public List<String> getList(String delimiter) {
 		return parseValue(List.class, a->Arrays.asList(a.split(delimiter)));
 	}
-	
-	/************/
 
 	@SuppressWarnings("unchecked")
 	public <T> ListDictionary<T> getDictionaryList() {

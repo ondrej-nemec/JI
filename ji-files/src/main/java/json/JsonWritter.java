@@ -1,6 +1,9 @@
 package json;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -83,7 +86,9 @@ public class JsonWritter {
 			writeObject(stream, ((Jsonable)value).toJson(), name);
 		} else if (value instanceof Number || value instanceof Boolean
 				|| value instanceof Character || value instanceof String
-				|| value instanceof Enum || value instanceof LocalDateTime) {
+				|| value instanceof Enum 
+				|| value instanceof LocalDateTime|| value instanceof ZonedDateTime
+				|| value instanceof LocalTime || value instanceof LocalDate) {
 			if (name == null) {
 				stream.writeListValue(value);
 			} else {
