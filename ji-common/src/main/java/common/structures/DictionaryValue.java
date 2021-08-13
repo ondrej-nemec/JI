@@ -231,7 +231,6 @@ public class DictionaryValue {
 				}
 				if (Date.class.isInstance(object)) {
 					return fromTime.apply(Date.class.cast(object).toInstant().atZone(ZoneId.systemDefault()));
-					// Instant.ofEpochMilli(Date.class.cast(object).getTime())
 				}
 				return fromString.apply(object.toString());
 			}
