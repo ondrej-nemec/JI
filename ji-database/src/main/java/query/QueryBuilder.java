@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import query.wrappers.AlterTableBuilder;
 import query.wrappers.CreateTableBuilder;
+import query.wrappers.CreateViewBuilder;
 import query.wrappers.DeleteBuilder;
 import query.wrappers.ExecuteBuilder;
 import query.wrappers.InsertBuilder;
@@ -94,12 +95,12 @@ public class QueryBuilder implements QueryBuilderFactory {
 	}
 
 	@Override
-	public SelectBuilder createView(String name) {
+	public CreateViewBuilder createView(String name) {
 		return factory.createView(name);
 	}
 
 	@Override
-	public SelectBuilder alterView(String name) {
+	public CreateViewBuilder alterView(String name) {
 		return factory.alterView(name);
 	}
 

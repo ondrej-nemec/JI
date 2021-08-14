@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
+import query.wrappers.SelectBuilder;
 import querybuilder.Join;
-import querybuilder.SelectQueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class MySqlSelectBuilderTest {
@@ -19,7 +19,7 @@ public class MySqlSelectBuilderTest {
 	@Test
 	public void testBuilderViaGetSql() {
 		Connection mock = mock(Connection.class);
-		SelectQueryBuilder builder = new MySqlSelectBuilder(mock, "a.id", "a.name", "a.FK_id")
+		SelectBuilder builder = new MySqlSelectBuilder(mock, "a.id", "a.name", "a.FK_id")
 					.from("table_name a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
 					.where("b.id = 1")

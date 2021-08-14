@@ -8,7 +8,7 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
-import querybuilder.AlterTableQueryBuilder;
+import query.wrappers.AlterTableBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.OnAction;
@@ -18,7 +18,7 @@ public class MySqlAlterTableBuilderTest {
 	@Test
 	public void testBuilderViaSql() {
 		Connection con = mock(Connection.class);
-		AlterTableQueryBuilder builder = new MySqlAlterTableBuilder(con, "Table1")
+		AlterTableBuilder builder = new MySqlAlterTableBuilder(con, "Table1")
 				.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL)
 				.addColumn("Column2", ColumnType.integer(), 1)
 				.deleteColumn("Column3")

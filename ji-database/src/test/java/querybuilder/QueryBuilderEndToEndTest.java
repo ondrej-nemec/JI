@@ -35,6 +35,9 @@ import common.structures.ThrowingBiConsumer;
 import core.text.Text;
 import core.text.basic.ReadText;
 import database.support.DatabaseRow;
+import query.QueryBuilder;
+import query.QueryBuilderFactory;
+import query.wrappers.SelectBuilder;
 import querybuilder.Join;
 import querybuilder.SelectQueryBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
@@ -58,12 +61,12 @@ public class QueryBuilderEndToEndTest {
 	private final String type;
 	
 	public QueryBuilderEndToEndTest(
-			Function<Connection, QueryBuilder> createBuilder,
+			Function<Connection, QueryBuilderFactory> createBuilder,
 			Supplier<Connection> createConnection,
 			Consumer<Void> startDbAndCreateSchema,
 			Consumer<Void> stopDb,
 			String type) {
-		this.createBuilder = createBuilder;
+		this.createBuilder = (c)->new QueryBuilder(c, createBuilder.apply(c));
 		this.createConnection = createConnection;
 		this.startDbAndCreateSchema = startDbAndCreateSchema;
 		this.stopDb = stopDb;
@@ -111,7 +114,7 @@ public class QueryBuilderEndToEndTest {
 				"mysql"
 		));
 		//*/
-		//*
+		/*
 	  	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
 				(conn) -> {return new DerbyQueryBuilder(conn);},
@@ -137,7 +140,7 @@ public class QueryBuilderEndToEndTest {
 				"derby"
 		));
 		//*/
-		//*
+		/*
 		result.add(createParams(
 				(conn) -> {return new PostgreSqlQueryBuilder(conn);},
 				() -> {
@@ -169,7 +172,7 @@ public class QueryBuilderEndToEndTest {
 				"postgresql"
 		));
 		//*/
-		//*
+		/*
 		result.add(createParams(
                 (conn) -> {return new SqlServerQueryBuilder(conn);},
                 () -> {
@@ -207,7 +210,7 @@ public class QueryBuilderEndToEndTest {
 	
 	
 	private static Object[] createParams(
-			Function<Connection, QueryBuilder> createBuilder,
+			Function<Connection, QueryBuilderFactory> createBuilder,
 			Supplier<Connection> createConnection,
 			Consumer<Void> startDbAndCreateSchema,
 			Consumer<Void> stopDb,
@@ -386,7 +389,7 @@ public class QueryBuilderEndToEndTest {
 	@Ignore
 	public void testExecuteSelectWithoutGroupBy() throws Exception {
 		test("select", (conn, builder) -> {
-			SelectQueryBuilder res = builder
+			SelectBuilder res = builder
 					.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 					.from("select_table a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
@@ -422,7 +425,7 @@ public class QueryBuilderEndToEndTest {
 	@Test
 	public void testExecuteSelect() throws Exception {
 		test("select", (conn, builder) -> {
-			SelectQueryBuilder res = builder
+			SelectBuilder res = builder
 					.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 					.from("select_table a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
@@ -452,7 +455,7 @@ public class QueryBuilderEndToEndTest {
 				expectedRow2.addValue("a_name", "name_a");
 				expectedRow2.addValue("b_name", "name 5");
 				
-				assertEquals(expectedSingle, res.fetchSingle());
+				assertEquals(expectedSingle, res.fetchSingle().getValue());
 				assertEquals(expectedRow, res.fetchRow());
 				assertEquals(Arrays.asList(expectedRow, expectedRow2), res.fetchAll());	
 		}, Arrays.asList("select_table", "joined_table"));

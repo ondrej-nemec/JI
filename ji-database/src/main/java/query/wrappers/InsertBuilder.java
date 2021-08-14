@@ -9,7 +9,7 @@ public interface InsertBuilder extends InsertExecute<InsertBuilder> {
 	
 	InsertBuilder addNotEscapedValue(String columnName, String value);
 	
-	default InsertBuilder addValue(String columnName, String value) {
+	default InsertBuilder addValue(String columnName, Object value) {
 		// TODO use some static func here and in parametrized to remove this anonymous class ??
 		new ParametrizedBuilder<InsertBuilder>() {
 			@Override public String getSql() { return null; }
@@ -18,7 +18,7 @@ public interface InsertBuilder extends InsertExecute<InsertBuilder> {
 				addNotEscapedValue(name, val);
 				return null;
 			}
-		}.addNotEscapedParameter(columnName, value);
+		}.addParameter(columnName, value);
 		return this;
 	}
 

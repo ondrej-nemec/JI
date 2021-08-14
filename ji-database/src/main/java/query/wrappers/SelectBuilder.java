@@ -1,10 +1,9 @@
 package query.wrappers;
 
 import query.executors.SelectExecute;
-import querybuilder.Join;
 
-public interface SelectBuilder extends SelectExecute<SelectBuilder> {
-
+public interface SelectBuilder extends SelectExecute<SelectBuilder>, Select<SelectBuilder> {
+/*
 	SelectBuilder from(String table);
 	
 	default SelectBuilder from(SelectBuilder builder) {
@@ -30,5 +29,5 @@ public interface SelectBuilder extends SelectExecute<SelectBuilder> {
 	SelectBuilder having(String having);
 	
 	SelectBuilder limit(int limit, int offset);
-	
+	*/
 }

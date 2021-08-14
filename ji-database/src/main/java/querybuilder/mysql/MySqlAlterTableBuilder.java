@@ -1,58 +1,56 @@
 package querybuilder.mysql;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 
-import querybuilder.AlterTableQueryBuilder;
+import query.buildersparent.Builder;
+import query.buildersparent.QueryBuilderParent;
+import query.wrappers.AlterTableBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.OnAction;
 
-public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
-	
-	private final Connection connection;
-	
-	private final StringBuilder sql;
+public class MySqlAlterTableBuilder extends QueryBuilderParent implements AlterTableBuilder {
 	
 	private boolean first = true;
 
 	public MySqlAlterTableBuilder(Connection connection, String name) {
-		this.connection = connection;
-		this.sql = new StringBuilder("ALTER TABLE " + name);
+		super(connection);
+		query.append("ALTER TABLE " + name);
 	}
 	
 	@Override
-	public AlterTableQueryBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
+	public AlterTableBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
 		addColumn(name, type, null, settings);
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
+	public AlterTableBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
 		first();
-		sql.append("ADD ").append(name).append(" ");
-		sql.append(EnumToMysqlString.typeToString(type));
-		sql.append(EnumToMysqlString.defaultValueToString(defaultValue));
+		query.append("ADD ").append(name).append(" ");
+		query.append(EnumToMysqlString.typeToString(type));
+		query.append(EnumToMysqlString.defaultValueToString(defaultValue));
 		StringBuilder append = new StringBuilder();
 		for (ColumnSetting setting : settings) {
-			sql.append(EnumToMysqlString.settingToString(setting, name, append));
+			query.append(EnumToMysqlString.settingToString(setting, name, append));
 		}
-		sql.append(append.toString());
+		query.append(append.toString());
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn) {
+	public AlterTableBuilder addForeingKey(String column, String referedTable, String referedColumn) {
 		first();
-		sql.append(String.format("ADD CONSTRAINT FK_%s FOREIGN KEY (%s) REFERENCES %s(%s)", column, column, referedTable, referedColumn));
+		query.append(String.format("ADD CONSTRAINT FK_%s FOREIGN KEY (%s) REFERENCES %s(%s)", column, column, referedTable, referedColumn));
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
+	public AlterTableBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
 		addForeingKey(column, referedTable, referedColumn);
-		sql.append(String.format(
+		query.append(String.format(
 				" ON DELETE %s ON UPDATE %s",
 				EnumToMysqlString.onActionToString(onDelete),
 				EnumToMysqlString.onActionToString(onUpdate)
@@ -61,52 +59,51 @@ public class MySqlAlterTableBuilder implements AlterTableQueryBuilder {
 	}
 
 	@Override
-	public AlterTableQueryBuilder deleteColumn(String name) {
+	public AlterTableBuilder deleteColumn(String name) {
 		first();
-		sql.append(String.format("DROP COLUMN %s", name));
+		query.append(String.format("DROP COLUMN %s", name));
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder deleteForeingKey(String name) {
+	public AlterTableBuilder deleteForeingKey(String name) {
 		first();
-		sql.append(String.format("DROP FOREIGN KEY FK_%s", name));
+		query.append(String.format("DROP FOREIGN KEY FK_%s", name));
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder modifyColumnType(String name, ColumnType type) {
+	public AlterTableBuilder modifyColumnType(String name, ColumnType type) {
 		first();
-		sql.append(String.format("MODIFY %s %s", name, EnumToMysqlString.typeToString(type)));
+		query.append(String.format("MODIFY %s %s", name, EnumToMysqlString.typeToString(type)));
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type) {
+	public AlterTableBuilder renameColumn(String originName, String newName, ColumnType type) {
 		first();
-		sql.append(String.format("CHANGE COLUMN %s %s %s", originName, newName, EnumToMysqlString.typeToString(type)));
+		query.append(String.format("CHANGE COLUMN %s %s %s", originName, newName, EnumToMysqlString.typeToString(type)));
 		return this;
-	}
-
-	@Override
-	public void execute() throws SQLException {
-		try (Statement stat = connection.createStatement();) {
-			stat.execute(getSql());
-		}
-	}
-
-	@Override
-	public String getSql() {
-		return sql.toString();
 	}
 	
 	private void first() {
 		if (!first) {
-			sql.append(", ");
+			query.append(", ");
 		} else {
-			sql.append(" ");
+			query.append(" ");
 		}
 		first = false;
+	}
+
+	@Override
+	public List<Builder> _getBuilders() {
+		return Arrays.asList(this);
+	}
+
+	@Override
+	public AlterTableBuilder addNotEscapedParameter(String name, String value) {
+		_addNotEscaped(name, value);
+		return this;
 	}
 
 }

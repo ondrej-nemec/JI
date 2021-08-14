@@ -2,6 +2,7 @@ package query;
 
 import query.wrappers.AlterTableBuilder;
 import query.wrappers.CreateTableBuilder;
+import query.wrappers.CreateViewBuilder;
 import query.wrappers.DeleteBuilder;
 import query.wrappers.ExecuteBuilder;
 import query.wrappers.InsertBuilder;
@@ -31,9 +32,9 @@ public interface QueryBuilderFactory {
 	
 	 ExecuteBuilder deleteView(String table);
 	
-	 SelectBuilder createView(String name);
+	 CreateViewBuilder createView(String name);
 	
-	 SelectBuilder alterView(String name);
+	 CreateViewBuilder alterView(String name);
 	
 	/***********************/
 	

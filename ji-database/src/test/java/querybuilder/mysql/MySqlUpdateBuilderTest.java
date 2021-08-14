@@ -6,14 +6,14 @@ import static org.mockito.Mockito.*;
 import org.junit.Test;
 
 import database.support.DoubleConsumer;
-import querybuilder.UpdateQueryBuilder;
+import query.wrappers.UpdateBuilder;
 
 public class MySqlUpdateBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
 		DoubleConsumer<?> mock = mock(DoubleConsumer.class);
-		UpdateQueryBuilder builder = new MySqlUpdateBuilder(null, "table_name")
+		UpdateBuilder builder = new MySqlUpdateBuilder(null, "table_name")
 					.set("name = :name")
 					.set("value = :value")
 					.where("id = :id")

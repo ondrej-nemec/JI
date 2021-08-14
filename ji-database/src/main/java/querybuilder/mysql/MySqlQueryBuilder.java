@@ -3,92 +3,23 @@ package querybuilder.mysql;
 import java.sql.Connection;
 
 import common.functions.Implode;
-import querybuilder.AlterTableQueryBuilder;
-import querybuilder.CreateTableQueryBuilder;
-import querybuilder.CreateViewQueryBuilder;
-import querybuilder.DeleteQueryBuilder;
-import querybuilder.ExecuteQueryBuilder;
+import query.QueryBuilderFactory;
+import query.wrappers.AlterTableBuilder;
+import query.wrappers.CreateTableBuilder;
+import query.wrappers.CreateViewBuilder;
+import query.wrappers.DeleteBuilder;
+import query.wrappers.ExecuteBuilder;
+import query.wrappers.InsertBuilder;
+import query.wrappers.SelectBuilder;
+import query.wrappers.UpdateBuilder;
 import querybuilder.Functions;
-import querybuilder.InsertQueryBuilder;
-import querybuilder.QueryBuilder;
-import querybuilder.SelectQueryBuilder;
-import querybuilder.UpdateQueryBuilder;
 
-public class MySqlQueryBuilder extends QueryBuilder {
+public class MySqlQueryBuilder implements QueryBuilderFactory {
 
-	public MySqlQueryBuilder(Connection connection) {
-		super(connection);
-	}
+	private final Connection connection;
 	
-	@Override
-	protected SelectQueryBuilder query(String query) {
-		return new MySqlSelectBuilder(query, connection);
-	}
-
-	@Override
-	public DeleteQueryBuilder delete(String table) {
-		return new MySqlDeleteBuilder(connection, table);
-	}
-
-	@Override
-	public InsertQueryBuilder insert(String table) {
-		return new MySqlInsertBuilder(connection, table);
-	}
-
-	@Override
-	public UpdateQueryBuilder update(String table) {
-		return new MySqlUpdateBuilder(connection, table);
-	}
-
-	@Override
-	public SelectQueryBuilder select(String select) {
-		return new MySqlSelectBuilder(connection, select);
-	}
-
-	@Override
-	public ExecuteQueryBuilder deleteTable(String table) {
-		return new MySqlExecuteBuilder(connection, String.format("DROP TABLE %s", table));
-	}
-
-	@Override
-	public CreateTableQueryBuilder createTable(String name) {
-		return new MySqlCreateTableBuilder(connection, name);
-	}
-
-	@Override
-	public AlterTableQueryBuilder alterTable(String name) {
-		return new MySqlAlterTableBuilder(connection, name);
-	}
-
-	@Override
-	public ExecuteQueryBuilder deleteView(String table) {
-		return new MySqlExecuteBuilder(connection, String.format("DROP VIEW %s", table));
-	}
-
-	@Override
-	public CreateViewQueryBuilder createView(String name) {
-		return new MySqlCreateViewBuilder(connection, name, false);
-	}
-
-	@Override
-	public CreateViewQueryBuilder alterView(String name) {
-		return new MySqlCreateViewBuilder(connection, name, true);
-	}
-
-	@Override
-	public ExecuteQueryBuilder createIndex(String name, String table, String... colums) {
-		return new MySqlExecuteBuilder(
-			connection,
-			String.format("CREATE INDEX %s ON %s(%s)", name, table, Implode.implode(", ", colums))
-		);
-	}
-
-	@Override
-	public ExecuteQueryBuilder deleteIndex(String name, String table) {
-		return new MySqlExecuteBuilder(
-				connection,
-				String.format("ALTER TABLE %s DROP INDEX %s", table, name)
-			);
+	public MySqlQueryBuilder(Connection connection) {
+		this.connection = connection;
 	}
 
 	@Override
@@ -96,4 +27,69 @@ public class MySqlQueryBuilder extends QueryBuilder {
 		return new MySqlFunctions();
 	}
 
+	@Override
+	public DeleteBuilder delete(String table) {
+		return new MySqlDeleteBuilder(connection, table);
+	}
+
+	@Override
+	public InsertBuilder insert(String table) {
+		return new MySqlInsertBuilder(connection, table);
+	}
+
+	@Override
+	public UpdateBuilder update(String table) {
+		return new MySqlUpdateBuilder(connection, table);
+	}
+
+	@Override
+	public SelectBuilder select(String select) {
+		return new MySqlSelectBuilder(connection, select);
+	}
+
+	@Override
+	public ExecuteBuilder deleteTable(String table) {
+		return new ExecuteBuilder(connection, String.format("DROP TABLE %s", table));
+	}
+
+	@Override
+	public CreateTableBuilder createTable(String name) {
+		return new MySqlCreateTableBuilder(connection, name);
+	}
+
+	@Override
+	public AlterTableBuilder alterTable(String name) {
+		return new MySqlAlterTableBuilder(connection, name);
+	}
+
+	@Override
+	public ExecuteBuilder deleteView(String table) {
+		return new ExecuteBuilder(connection, String.format("DROP VIEW %s", table));
+	}
+
+	@Override
+	public CreateViewBuilder createView(String name) {
+		return new MySqlCreateViewBuilder(connection, name, false);
+	}
+
+	@Override
+	public CreateViewBuilder alterView(String name) {
+		return new MySqlCreateViewBuilder(connection, name, true);
+	}
+
+	@Override
+	public ExecuteBuilder createIndex(String name, String table, String... colums) {
+		return new ExecuteBuilder(
+			connection,
+			String.format("CREATE INDEX %s ON %s(%s)", name, table, Implode.implode(", ", colums))
+		);
+	}
+
+	@Override
+	public ExecuteBuilder deleteIndex(String name, String table) {
+		return new ExecuteBuilder(
+			connection,
+			String.format("ALTER TABLE %s DROP INDEX %s", table, name)
+		);
+	}
 }

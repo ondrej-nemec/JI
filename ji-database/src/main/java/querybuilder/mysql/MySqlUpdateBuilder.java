@@ -1,84 +1,52 @@
 package querybuilder.mysql;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
-import querybuilder.UpdateQueryBuilder;
+import query.buildersparent.QueryBuilderParent;
+import query.wrappers.UpdateBuilder;
 
-public class MySqlUpdateBuilder implements UpdateQueryBuilder {
-
-	private final String update;
+public class MySqlUpdateBuilder extends QueryBuilderParent implements UpdateBuilder {
 	
-	private final StringBuilder set;
-	
-	private final Map<String, String> params;
-	
-	private final Connection connection;
+	private boolean isFirst = true;
 	
 	public MySqlUpdateBuilder(final Connection connection, final String table) {
-		this.connection = connection;
-		this.update = "UPDATE " + table;
-		this.set = new StringBuilder();
-		this.params = new HashMap<>();
+		super(connection);
+		this.query.append("UPDATE " + table);
 	}
 
 	@Override
-	public UpdateQueryBuilder set(String set) {
-		if (this.set.toString().isEmpty()) {
-			this.set.append(" SET " + set);
+	public UpdateBuilder set(String set) {
+		if (isFirst) {
+			query.append(" SET " + set);
+			isFirst = false;
 		} else {
-			this.set.append(", " + set);
+			query.append(", " + set);
 		}
 		return this;
 	}
 
 	@Override
-	public UpdateQueryBuilder where(String where) {
-		set.append(" WHERE (" + where + ")");
+	public UpdateBuilder where(String where) {
+		query.append(" WHERE (" + where + ")");
 		return this;
 	}
 
 	@Override
-	public UpdateQueryBuilder andWhere(String where) {
-		set.append(" AND (" + where + ")");
+	public UpdateBuilder andWhere(String where) {
+		query.append(" AND (" + where + ")");
 		return this;
 	}
 
 	@Override
-	public UpdateQueryBuilder orWhere(String where) {
-		set.append( " OR (" + where + ")");
+	public UpdateBuilder orWhere(String where) {
+		query.append( " OR (" + where + ")");
 		return this;
 	}
 
 	@Override
-	public UpdateQueryBuilder addNotEscapedParameter(String name, String value) {
-		params.put(name, value);
+	public UpdateBuilder addNotEscapedParameter(String name, String value) {
+		_addNotEscaped(name, value);
 		return this;
-	}
-
-	@Override
-	public int execute() throws SQLException {
-		try (Statement stat = connection.createStatement();) {
-			return stat.executeUpdate(createSql());
-		}
-	}
-
-	@Override
-	public String getSql() {
-		return update + set;
-	}
-
-	@Override
-	public String createSql() {
-		String query = getSql();
-		for (String name : params.keySet()) {
-			String value = params.get(name);
-			query = query.replaceAll(name, value);
-		}
-		return query;
 	}
 
 }
