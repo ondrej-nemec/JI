@@ -1,7 +1,10 @@
 package querybuilder.mysql;
 
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
 
+import query.buildersparent.Builder;
 import query.wrappers.CreateViewBuilder;
 
 public class MySqlCreateViewBuilder extends SelectWrapper<CreateViewBuilder> implements CreateViewBuilder {
@@ -28,6 +31,11 @@ public class MySqlCreateViewBuilder extends SelectWrapper<CreateViewBuilder> imp
 	@Override
 	protected CreateViewBuilder get() {
 		return this;
+	}
+
+	@Override
+	public List<Builder> _getBuilders() {
+		return Arrays.asList(this);
 	}
 
 }

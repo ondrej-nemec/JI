@@ -16,7 +16,9 @@ public interface MultipleExecute<B> extends Execute, ParametrizedBuilder<B> {
 			for (Builder b : _getBuilders()) {
 				String query = b.createSql(getParameters());
 				// TODO log.log(parametrized.getSql(), getParameters());
-		        stat.execute(query);
+				if (!query.isEmpty()) {
+					stat.execute(query);
+				}
 			}
 		}
 	}

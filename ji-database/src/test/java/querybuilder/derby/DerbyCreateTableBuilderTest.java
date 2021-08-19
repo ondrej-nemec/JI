@@ -7,9 +7,9 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
+import query.wrappers.CreateTableBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
-import querybuilder.CreateTableQueryBuilder;
 import querybuilder.OnAction;
 
 public class DerbyCreateTableBuilderTest {
@@ -17,7 +17,7 @@ public class DerbyCreateTableBuilderTest {
 	@Test
 	public void testBuilderViaSql() {
 		Connection con = mock(Connection.class);
-		CreateTableQueryBuilder builder = new DerbyCreateTableBuilder(con, "Table1")
+		CreateTableBuilder builder = new DerbyCreateTableBuilder(con, "Table1")
 					.addColumn("Column_1", ColumnType.integer(), ColumnSetting.AUTO_INCREMENT, ColumnSetting.PRIMARY_KEY)
 					.addColumn("Column_2", ColumnType.bool(), ColumnSetting.NOT_NULL)
 					.addColumn("Column_3", ColumnType.datetime(), ColumnSetting.UNIQUE)

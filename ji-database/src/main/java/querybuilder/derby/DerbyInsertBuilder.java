@@ -1,47 +1,23 @@
 package querybuilder.derby;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
-import querybuilder.InsertQueryBuilder;
+import query.buildersparent.QueryBuilderParent;
+import query.wrappers.InsertBuilder;
 
-public class DerbyInsertBuilder implements InsertQueryBuilder {
+public class DerbyInsertBuilder extends QueryBuilderParent implements InsertBuilder {
 
-	private final String query;
-	
-	private final Map<String, String> params;
-	
-	private final Connection connection;
-	
 	public DerbyInsertBuilder(final Connection connection, final String table) {
-		this.connection = connection;
-		this.query = "INSERT INTO " + table;
-		this.params = new HashMap<>();
+		super(connection);
+		query.append("INSERT INTO " + table);
 	}
 
 	@Override
-	public InsertQueryBuilder addNotEscapedValue(String columnName, String value) {
+	public InsertBuilder addNotEscapedValue(String columnName, String value) {
 		params.put(columnName, value);
 		return this;
 	}
 
-	@Override
-	public Object execute() throws SQLException {
-		try (PreparedStatement stat = connection.prepareStatement(getSql(), Statement.RETURN_GENERATED_KEYS)) {
-			stat.executeUpdate();
-			try(ResultSet rs = stat.getGeneratedKeys();){
-				if (rs.next()) {
-					return rs.getObject(1);
-				}
-				return -1; // if no key generated - can be valid state
-			}
-		}
-	}
 
 	@Override
 	public String getSql() {

@@ -1,8 +1,8 @@
 package query.wrappers;
 
-import query.executors.SingleExecute;
+import query.executors.MultipleExecute;
 
-public interface CreateViewBuilder extends SingleExecute<CreateViewBuilder>, Select<CreateViewBuilder> {
+public interface CreateViewBuilder extends MultipleExecute<CreateViewBuilder>, Select<CreateViewBuilder> {
 	
 	CreateViewBuilder select(String... params);
 
