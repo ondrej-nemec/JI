@@ -18,11 +18,6 @@ public class MySqlCreateViewBuilder extends SelectWrapper<CreateViewBuilder> imp
 	}
 
 	@Override
-	public CreateViewBuilder select(String... select) {
-		return super.select(select);
-	}
-
-	@Override
 	public CreateViewBuilder addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;

@@ -13,13 +13,11 @@ import querybuilder.OnAction;
 
 public class DerbyCreateTableBuilder extends QueryBuilderParent implements CreateTableBuilder {
 
-	private final StringBuilder append;
 	private boolean first = true;
 	
 	public DerbyCreateTableBuilder(Connection connection, String table) {
-		super(connection);
+		super(connection, Type.APPEND);
 		query.append("CREATE TABLE " + table + " (");
-		this.append = new StringBuilder();
 	}
 	
 	@Override
@@ -61,11 +59,6 @@ public class DerbyCreateTableBuilder extends QueryBuilderParent implements Creat
 				EnumToDerbyString.onActionToString(onUpdate)
 		));
 		return this;
-	}
-	
-	@Override
-	public String getSql() {
-		return new StringBuilder().append(query.toString()).append(append.toString()).append(")").toString();
 	}
 
 	@Override

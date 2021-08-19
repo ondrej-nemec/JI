@@ -14,10 +14,9 @@ import querybuilder.OnAction;
 public class MySqlCreateTableBuilder extends QueryBuilderParent implements CreateTableBuilder {
 
 	private boolean first = true;
-	private final StringBuilder append = new StringBuilder();
 	
 	public MySqlCreateTableBuilder(Connection connection, String table) {
-		super(connection);
+		super(connection, Type.APPEND);
 		query.append("CREATE TABLE " + table + " (");
 	}
 	
@@ -71,11 +70,6 @@ public class MySqlCreateTableBuilder extends QueryBuilderParent implements Creat
 	public CreateTableBuilder addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
-	}
-	
-	@Override
-	public String getSql() {
-		return new StringBuilder().append(query.toString()).append(append.toString()).append(")").toString();
 	}
 	
 }
