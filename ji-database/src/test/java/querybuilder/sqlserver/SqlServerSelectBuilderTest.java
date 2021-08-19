@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
+import query.wrappers.SelectBuilder;
 import querybuilder.Join;
-import querybuilder.SelectQueryBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class SqlServerSelectBuilderTest {
@@ -19,7 +19,7 @@ public class SqlServerSelectBuilderTest {
 	@Test
 	public void testBuilderViaGetSql() {
 		Connection mock = mock(Connection.class);
-		SelectQueryBuilder builder = new SqlServerSelectBuilder(mock, "a.id", "a.name", "a.FK_id")
+		SelectBuilder builder = new SqlServerSelectBuilder(mock, "a.id", "a.name", "a.FK_id")
 					.from("table_name a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
 					.where("b.id = 1")
@@ -43,7 +43,7 @@ public class SqlServerSelectBuilderTest {
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > %id"
 				+ " OFFSET 0 ROWS"
-				+ " FETCH NEXT 0 ROWS ONLY";
+				+ " FETCH NEXT 0 ROWS ONLY;";
 		
 		String created = "SELECT a.id, a.name, a.FK_id"
 				+ " FROM table_name a"
@@ -55,7 +55,7 @@ public class SqlServerSelectBuilderTest {
 				+ " ORDER BY a.id DESC"
 				+ " HAVING a.id > 10"
 				+ " OFFSET 0 ROWS"
-				+ " FETCH NEXT 0 ROWS ONLY";
+				+ " FETCH NEXT 0 ROWS ONLY;";
 		
 		assertEquals(expected, builder.getSql());
 		assertEquals(created, builder.createSql());

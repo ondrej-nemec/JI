@@ -1,38 +1,32 @@
 package querybuilder.sqlserver;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
 
-import querybuilder.AlterTableQueryBuilder;
+import query.buildersparent.MultyBuilderParent;
+import query.wrappers.AlterTableBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
 import querybuilder.OnAction;
 
-public class SqlServerAlterTableBuilder implements AlterTableQueryBuilder {
-	
-	private final Connection connection;
-	
-	private final List<String> separatedQueries = new LinkedList<>();
+public class SqlServerAlterTableBuilder extends MultyBuilderParent implements AlterTableBuilder {
+
 	private final String prefix;
 	private final String tableName;
-
+	
 	public SqlServerAlterTableBuilder(Connection connection, String name) {
-		this.connection = connection;
+		super(connection);
 		this.prefix = "ALTER TABLE " + name;
 		this.tableName = name;
 	}
 	
 	@Override
-	public AlterTableQueryBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
+	public AlterTableBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
 		addColumn(name, type, null, settings);
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
+	public AlterTableBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
 		StringBuilder sql = new StringBuilder(prefix);
 		sql.append(" ADD ").append(name).append(" ");
 		sql.append(EnumToSqlServerString.typeToString(type));
@@ -42,13 +36,13 @@ public class SqlServerAlterTableBuilder implements AlterTableQueryBuilder {
 			sql.append(EnumToSqlServerString.settingToString(setting, name, append));
 		}
 		sql.append(append.toString());
-		separatedQueries.add(sql.toString());
+		addBuilder(sql.toString());
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn) {
-		separatedQueries.add(getAddFkString(column, referedTable, referedColumn));
+	public AlterTableBuilder addForeingKey(String column, String referedTable, String referedColumn) {
+		addBuilder(getAddFkString(column, referedTable, referedColumn));
 		return this;
 	}
 	
@@ -61,8 +55,8 @@ public class SqlServerAlterTableBuilder implements AlterTableQueryBuilder {
 	}
 
 	@Override
-	public AlterTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
-		separatedQueries.add(String.format(
+	public AlterTableBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
+		addBuilder(String.format(
 		        getAddFkString(column, referedTable, referedColumn)
 				+ " ON DELETE %s ON UPDATE %s",
 				EnumToSqlServerString.onActionToString(onDelete),
@@ -72,46 +66,33 @@ public class SqlServerAlterTableBuilder implements AlterTableQueryBuilder {
 	}
 
 	@Override
-	public AlterTableQueryBuilder deleteColumn(String name) {
-	    separatedQueries.add(String.format(prefix + " DROP COLUMN %s", name));
+	public AlterTableBuilder deleteColumn(String name) {
+		addBuilder(String.format(prefix + " DROP COLUMN %s", name));
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder deleteForeingKey(String name) {
-	    separatedQueries.add(String.format(prefix + " DROP CONSTRAINT FK_%s", name)); // FOREIGN KEY
+	public AlterTableBuilder deleteForeingKey(String name) {
+		addBuilder(String.format(prefix + " DROP CONSTRAINT FK_%s", name)); // FOREIGN KEY
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder modifyColumnType(String name, ColumnType type) {
-	    separatedQueries.add(String.format(prefix + " ALTER COLUMN %s %s", name, EnumToSqlServerString.typeToString(type)));
+	public AlterTableBuilder modifyColumnType(String name, ColumnType type) {
+		addBuilder(String.format(prefix + " ALTER COLUMN %s %s", name, EnumToSqlServerString.typeToString(type)));
 		return this;
 	}
 
 	@Override
-	public AlterTableQueryBuilder renameColumn(String originName, String newName, ColumnType type) {
-		separatedQueries.add(String.format("EXEC sp_rename '%s.%s', '%s', 'COLUMN'", tableName, originName, newName, EnumToSqlServerString.typeToString(type)));
+	public AlterTableBuilder renameColumn(String originName, String newName, ColumnType type) {
+		addBuilder(String.format("EXEC sp_rename '%s.%s', '%s', 'COLUMN'", tableName, originName, newName, EnumToSqlServerString.typeToString(type)));
 		return this;
 	}
 
 	@Override
-	public void execute() throws SQLException {
-		try (Statement stat = connection.createStatement();) {
-		    for (String batch : separatedQueries) {
-		        stat.addBatch(batch);
-		    }
-		    stat.executeBatch();
-		}
-	}
-
-	@Override
-	public String getSql() {
-	    StringBuilder b = new StringBuilder();
-	    separatedQueries.forEach((q)->{
-	        b.append(q).append(";");
-	    });
-		return b.toString();
+	public AlterTableBuilder addNotEscapedParameter(String name, String value) {
+		_addNotEscaped(name, value);
+		return this;
 	}
 
 }

@@ -7,14 +7,14 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
-import querybuilder.DeleteQueryBuilder;
+import query.wrappers.DeleteBuilder;
 
 public class SqlServerDeleteBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
 		Connection mock = mock(Connection.class);
-		DeleteQueryBuilder builder = new SqlServerDeleteBuilder(mock, "table_name")
+		DeleteBuilder builder = new SqlServerDeleteBuilder(mock, "table_name")
 					.where("id > 1")
 					.andWhere("id < %id")
 					.orWhere("id = %id")

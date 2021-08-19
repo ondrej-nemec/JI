@@ -8,14 +8,14 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
-import querybuilder.InsertQueryBuilder;
+import query.wrappers.InsertBuilder;
 
 public class SqlServerInsertBuilderTest {
 	
 	@Test
 	public void testBuilderViaGetSql() {
 		Connection mock = mock(Connection.class);
-		InsertQueryBuilder builder = new SqlServerInsertBuilder(mock, "table_name")
+		InsertBuilder builder = new SqlServerInsertBuilder(mock, "table_name")
 					.addValue("column1", "value1")
 					.addValue("column2", 1);
 		
