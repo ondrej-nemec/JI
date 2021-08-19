@@ -1,64 +1,58 @@
 package querybuilder.postgresql;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
+import java.util.List;
 
+import query.buildersparent.Builder;
+import query.buildersparent.QueryBuilderParent;
+import query.wrappers.CreateTableBuilder;
 import querybuilder.ColumnSetting;
 import querybuilder.ColumnType;
-import querybuilder.CreateTableQueryBuilder;
 import querybuilder.OnAction;
 
-public class PostgreSqlCreateTableBuilder implements CreateTableQueryBuilder {
-
-	private final StringBuilder sql;
-	
-	private final StringBuilder append;
+public class PostgreSqlCreateTableBuilder extends QueryBuilderParent implements CreateTableBuilder {
 	
 	private boolean first = true;
 	
-	private final Connection connection;
-	
 	public PostgreSqlCreateTableBuilder(Connection connection, String table) {
-		this.connection = connection;
-		this.sql = new StringBuilder("CREATE TABLE " + table + " (");
-		this.append = new StringBuilder();
+		super(connection, Type.APPEND);
+		query.append("CREATE TABLE " + table + " (");
 	}
 	
 	@Override
-	public CreateTableQueryBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
+	public CreateTableBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
 		addColumn(name, type, null, settings);
 		return this;
 	}
 
 	@Override
-	public CreateTableQueryBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
+	public CreateTableBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
 		if (!first) {
-			sql.append(",");
+			query.append(",");
 		}
 		first = false;
-		sql.append(" ").append(name);
+		query.append(" ").append(name);
 		if (!Arrays.asList(settings).contains(ColumnSetting.AUTO_INCREMENT)) {
-			sql.append(" ").append(EnumToPostgresqlString.typeToString(type));
+			query.append(" ").append(EnumToPostgresqlString.typeToString(type));
 		}
-		sql.append(EnumToPostgresqlString.defaultValueToString(defaultValue));
+		query.append(EnumToPostgresqlString.defaultValueToString(defaultValue));
 		for (ColumnSetting setting : settings) {
-			sql.append(EnumToPostgresqlString.settingToString(setting, name, append));
+			query.append(EnumToPostgresqlString.settingToString(setting, name, append));
 		}
 		
 		return this;
 	}
 
 	@Override
-	public CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn) {
-		sql.append(String.format(", FOREIGN KEY (%s) REFERENCES %s(%s)", column, referedTable, referedColumn));
+	public CreateTableBuilder addForeingKey(String column, String referedTable, String referedColumn) {
+		query.append(String.format(", FOREIGN KEY (%s) REFERENCES %s(%s)", column, referedTable, referedColumn));
 		return this;
 	}
 
 	@Override
-	public CreateTableQueryBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
-		sql.append(String.format(
+	public CreateTableBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate) {
+		query.append(String.format(
 				", CONSTRAINT FK_%s FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s ON UPDATE %s",
 				column, column,
 				referedTable,
@@ -70,17 +64,14 @@ public class PostgreSqlCreateTableBuilder implements CreateTableQueryBuilder {
 	}
 
 	@Override
-	public void execute() throws SQLException {
-		try (Statement stat = connection.createStatement();) {
-			stat.executeUpdate(getSql());
-		}
+	public List<Builder> _getBuilders() {
+		return Arrays.asList(this);
 	}
 
 	@Override
-	public String getSql() {
-		sql.append(append.toString());
-		sql.append(")");
-		return sql.toString();
+	public CreateTableBuilder addNotEscapedParameter(String name, String value) {
+		_addNotEscaped(name, value);
+		return this;
 	}
 
 }

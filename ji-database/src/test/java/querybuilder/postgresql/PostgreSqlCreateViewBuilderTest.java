@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import querybuilder.CreateViewQueryBuilder;
+import query.wrappers.CreateViewBuilder;
 import querybuilder.Join;
 
 @RunWith(JUnitParamsRunner.class)
@@ -21,7 +21,7 @@ public class PostgreSqlCreateViewBuilderTest {
 	@Parameters(method = "dataBuilderViaSql")
 	public void testBuilderViaSql(boolean modify, String expected) {
 		Connection con = mock(Connection.class);
-		CreateViewQueryBuilder builder = new PostgreSqlCreateViewBuilder(con, "View1", modify)
+		CreateViewBuilder builder = new PostgreSqlCreateViewBuilder(con, "View1", modify)
 				.select("a.id ID", "b.id ID_2")
 				.from("table_name a")
 				.join("joined_table b", Join.INNER_JOIN, "a.id = b.id")
@@ -44,8 +44,8 @@ public class PostgreSqlCreateViewBuilderTest {
 				+ " SELECT a.id ID, b.id ID_2"
 				+ " FROM table_name a"
 				+ " JOIN joined_table b ON a.id = b.id"
-				+ " WHERE b.id = 1"
-				+ " AND b.name = %name"
+				+ " WHERE (b.id = 1)"
+				+ " AND (b.name = %name)"
 				+ " OR (b.name = %nname)"
 				+ " GROUP BY a.id"
 				+ " ORDER BY a.id DESC"

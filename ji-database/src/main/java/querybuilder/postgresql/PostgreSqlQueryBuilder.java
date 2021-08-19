@@ -3,97 +3,94 @@ package querybuilder.postgresql;
 import java.sql.Connection;
 
 import common.functions.Implode;
-import querybuilder.AlterTableQueryBuilder;
-import querybuilder.CreateTableQueryBuilder;
-import querybuilder.CreateViewQueryBuilder;
-import querybuilder.DeleteQueryBuilder;
-import querybuilder.ExecuteQueryBuilder;
+import query.QueryBuilderFactory;
+import query.wrappers.AlterTableBuilder;
+import query.wrappers.CreateTableBuilder;
+import query.wrappers.CreateViewBuilder;
+import query.wrappers.DeleteBuilder;
+import query.wrappers.ExecuteBuilder;
+import query.wrappers.InsertBuilder;
+import query.wrappers.SelectBuilder;
+import query.wrappers.UpdateBuilder;
 import querybuilder.Functions;
-import querybuilder.InsertQueryBuilder;
-import querybuilder.QueryBuilder;
-import querybuilder.SelectQueryBuilder;
-import querybuilder.UpdateQueryBuilder;
 
-public class PostgreSqlQueryBuilder extends QueryBuilder {
+public class PostgreSqlQueryBuilder implements QueryBuilderFactory {
 
-	public PostgreSqlQueryBuilder(Connection connection) {
-		super(connection);
-	}
+	private final Connection connection;
 	
-	@Override
-	protected SelectQueryBuilder query(String query) {
-		return new PostgreSqlSelectBuilder(query, connection);
+	public PostgreSqlQueryBuilder(Connection connection) {
+		this.connection = connection;
 	}
 
 	@Override
-	public DeleteQueryBuilder delete(String table) {
+	public Functions getSqlFunctions() {
+		return new PostgeSqlFunctions();
+	}
+
+	@Override
+	public DeleteBuilder delete(String table) {
 		return new PostgreSqlDeleteBuilder(connection, table);
 	}
 
 	@Override
-	public InsertQueryBuilder insert(String table) {
+	public InsertBuilder insert(String table) {
 		return new PostgreSqlInsertBuilder(connection, table);
 	}
 
 	@Override
-	public UpdateQueryBuilder update(String table) {
+	public UpdateBuilder update(String table) {
 		return new PostgreSqlUpdateBuilder(connection, table);
 	}
 
 	@Override
-	public SelectQueryBuilder select(String select) {
+	public SelectBuilder select(String select) {
 		return new PostgreSqlSelectBuilder(connection, select);
 	}
 
 	@Override
-	public ExecuteQueryBuilder deleteTable(String table) {
-		return new PostgreSqlExecuteBuilder(connection, String.format("DROP TABLE %s", table));
+	public ExecuteBuilder deleteTable(String table) {
+		return new ExecuteBuilder(connection, String.format("DROP TABLE %s", table));
 	}
 
 	@Override
-	public CreateTableQueryBuilder createTable(String name) {
+	public CreateTableBuilder createTable(String name) {
 		return new PostgreSqlCreateTableBuilder(connection, name);
 	}
 
 	@Override
-	public AlterTableQueryBuilder alterTable(String name) {
+	public AlterTableBuilder alterTable(String name) {
 		return new PostgreSqlAlterTableBuilder(connection, name);
 	}
 
 	@Override
-	public ExecuteQueryBuilder deleteView(String table) {
-		return new PostgreSqlExecuteBuilder(connection, String.format("DROP VIEW %s", table));
+	public ExecuteBuilder deleteView(String table) {
+		return new ExecuteBuilder(connection, String.format("DROP VIEW %s", table));
 	}
 
 	@Override
-	public CreateViewQueryBuilder createView(String name) {
+	public CreateViewBuilder createView(String name) {
 		return new PostgreSqlCreateViewBuilder(connection, name, false);
 	}
 
 	@Override
-	public CreateViewQueryBuilder alterView(String name) {
+	public CreateViewBuilder alterView(String name) {
 		return new PostgreSqlCreateViewBuilder(connection, name, true);
 	}
 
 	@Override
-	public ExecuteQueryBuilder createIndex(String name, String table, String... colums) {
-		return new PostgreSqlExecuteBuilder(
+	public ExecuteBuilder createIndex(String name, String table, String... colums) {
+		return new ExecuteBuilder(
 			connection,
 			String.format("CREATE INDEX %s ON %s(%s)", name, table, Implode.implode(", ", colums))
 		);
 	}
 
 	@Override
-	public ExecuteQueryBuilder deleteIndex(String name, String table) {
-		return new PostgreSqlExecuteBuilder(
-				connection,
-				String.format("DROP INDEX %s", name)
-			);
-	}
-
-	@Override
-	public Functions getSqlFunctions() {
-		return new PostgeSqlFunctions();
+	public ExecuteBuilder deleteIndex(String name, String table) {
+		return new ExecuteBuilder(
+			connection,
+			String.format("DROP INDEX %s", name)
+		);
 	}
 
 }
