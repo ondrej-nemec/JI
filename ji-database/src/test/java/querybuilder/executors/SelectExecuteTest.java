@@ -63,6 +63,9 @@ public class SelectExecuteTest {
 				new Timestamp(0), "2021-08-12 04:17:22", LocalDateTime.of(2021, 8, 12, 4, 17, 22)
 			},
 			new Object[] {
+				new Timestamp(0), "2021-08-12T04:17:22", LocalDateTime.of(2021, 8, 12, 4, 17, 22)
+			},
+			new Object[] {
 				new Timestamp(0), "2021-08-12 04:17:22.1", LocalDateTime.of(2021, 8, 12, 4, 17, 22, 100000000)
 			},
 			new Object[] {
@@ -70,6 +73,18 @@ public class SelectExecuteTest {
 			},
 			new Object[] {
 				new Timestamp(0), "2021-08-12 04:17:22.821364+01:00",
+				ZonedDateTime.of(2021, 8, 12, 4, 17, 22, 821364000, ZoneId.of("+1"))
+			},
+			new Object[] {
+				new Timestamp(0), "2021-08-12T04:17:22.821364+01:00",
+				ZonedDateTime.of(2021, 8, 12, 4, 17, 22, 821364000, ZoneId.of("+1"))
+			},
+			new Object[] {
+				new Timestamp(0), "2021-08-12 04:17:22.821364-01:00",
+				ZonedDateTime.of(2021, 8, 12, 4, 17, 22, 821364000, ZoneId.of("-1"))
+			},
+			new Object[] {
+				new Timestamp(0), "2021-08-12 04:17:22.821364+01",
 				ZonedDateTime.of(2021, 8, 12, 4, 17, 22, 821364000, ZoneId.of("+1"))
 			},
 			new Object[] {

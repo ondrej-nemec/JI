@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.StringUtils;
+
 import common.structures.DictionaryValue;
 import common.structures.ThrowingFunction;
 import database.support.DatabaseRow;
@@ -53,7 +55,10 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 		if (value instanceof Timestamp) {
 			String text = rs.getString(index);
 			text = text.replaceFirst(" ", "T").replaceFirst(" ", "");
-			if (text.contains("+")) {
+			if (text.contains("+") || StringUtils.countMatches(text, "-") > 3) {
+				if (StringUtils.countMatches(text, ":") == 2) {
+					text += ":00";
+				}
 				return ZonedDateTime.parse(text, DateTimeFormatter.ISO_ZONED_DATE_TIME);
 			} else {
 				return LocalDateTime.parse(text, DateTimeFormatter.ISO_DATE_TIME);
