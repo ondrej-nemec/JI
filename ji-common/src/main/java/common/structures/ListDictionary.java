@@ -76,4 +76,9 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 		return list.equals(dictionary.list);
 	}
 
+	@Override
+	public void clear() {
+		list.clear();
+	}
+
 }

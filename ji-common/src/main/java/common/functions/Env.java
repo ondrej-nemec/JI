@@ -27,4 +27,9 @@ public class Env implements Dictionary<String> {
 		return properties.get(name);
 	}
 
+	@Override
+	public void clear() {
+		properties.clear();
+	}
+
 }

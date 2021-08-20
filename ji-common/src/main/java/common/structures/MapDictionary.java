@@ -94,5 +94,10 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void clear() {
+		map.clear();
+	}
 	
 }

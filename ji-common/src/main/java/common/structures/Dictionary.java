@@ -11,6 +11,8 @@ public interface Dictionary<S> {
 
 	Object getValue(S name);
 	
+	void clear();
+	
 	default DictionaryValue getDictionaryValue(S name) {
 		return new DictionaryValue(getValue(name));
 	}
