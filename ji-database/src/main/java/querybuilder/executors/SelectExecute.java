@@ -1,8 +1,16 @@
 package querybuilder.executors;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -27,9 +35,31 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 	default DatabaseRow _parseRow(ResultSet res) throws SQLException {
 		DatabaseRow row = new DatabaseRow();
 		for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
-			row.addValue(res.getMetaData().getColumnLabel(i), res.getObject(i));
+			row.addValue(res.getMetaData().getColumnLabel(i), _parseValue(res, i));
 		}
 		return row;
+	}
+	
+	/** INTERNAL 
+	 * @throws SQLException */
+	default Object _parseValue(ResultSet rs, int index) throws SQLException {
+		Object value = rs.getObject(index);
+		if (value instanceof Date) {
+			return LocalDate.parse(value.toString());
+		}
+		if (value instanceof Time) {
+			return LocalTime.parse(value.toString());
+		}
+		if (value instanceof Timestamp) {
+			String text = rs.getString(index);
+			text = text.replaceFirst(" ", "T").replaceFirst(" ", "");
+			if (text.contains("+")) {
+				return ZonedDateTime.parse(text, DateTimeFormatter.ISO_ZONED_DATE_TIME);
+			} else {
+				return LocalDateTime.parse(text, DateTimeFormatter.ISO_DATE_TIME);
+			}
+		}
+		return value;
 	}
 	
 	/************/
@@ -37,7 +67,7 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 	default DictionaryValue fetchSingle() throws SQLException {
 		return _execute((rs)->{
 			if (rs.next()) {
-				return new DictionaryValue(rs.getObject(1));
+				return new DictionaryValue(_parseValue(rs, 1));
 			}
 			return null;
 		});
