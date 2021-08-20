@@ -164,50 +164,50 @@ public class DictionaryValue {
 	/*****************/
 	
 	public LocalTime getTime() {
-		return getTime(dateTimePattern == null ? "HH:mm:ss" : dateTimePattern);
+		return getTime(dateTimePattern); // dateTimePattern == null ? "HH:mm:ss" : 
 	}
 	
 	public LocalTime getTime(String pattern) {
 		return getTimestamp(
 			LocalTime.class, 
 			time->LocalTime.from(time),
-			string->LocalTime.parse(string, DateTimeFormatter.ofPattern(pattern))
+			string->LocalTime.parse(string, pattern == null ? DateTimeFormatter.ISO_TIME : DateTimeFormatter.ofPattern(pattern))
 		);
 	}
 	
 	public LocalDate getDate() {
-		return getDate(dateTimePattern == null ? "yyyy-MM-dd" : dateTimePattern);
+		return getDate(dateTimePattern); // dateTimePattern == null ? "yyyy-MM-dd" : 
 	}
 	
 	public LocalDate getDate(String pattern) {
 		return getTimestamp(
 			LocalDate.class, 
 			time->LocalDate.from(time),
-			string->LocalDate.parse(string, DateTimeFormatter.ofPattern(pattern))
+			string->LocalDate.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE : DateTimeFormatter.ofPattern(pattern))
 		);
 	}
 	
 	public LocalDateTime getDateTime() {
-		return getDateTime(dateTimePattern == null ? "yyyy-MM-dd'T'HH-mm-ss.SSS" : dateTimePattern);
+		return getDateTime(dateTimePattern); // dateTimePattern == null ? "yyyy-MM-dd'T'HH-mm-ss.SSS" : 
 	}
 	
 	public LocalDateTime getDateTime(String pattern) {
 		return getTimestamp(
 			LocalDateTime.class, 
 			time->LocalDateTime.from(time), 
-			(string)->LocalDateTime.parse(string, DateTimeFormatter.ofPattern(pattern))
+			(string)->LocalDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE_TIME : DateTimeFormatter.ofPattern(pattern))
 		);
 	}
 	
 	public ZonedDateTime getDateTimeZone() {
-		return getDateTimeZone(dateTimePattern == null ? "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" : dateTimePattern);
+		return getDateTimeZone(dateTimePattern); // dateTimePattern == null ? "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" : 
 	}
 	
 	public ZonedDateTime getDateTimeZone(String pattern) {
 		return getTimestamp(
 			ZonedDateTime.class, 
 			time->ZonedDateTime.from(time), 
-			(string)->ZonedDateTime.parse(string, DateTimeFormatter.ofPattern(pattern))
+			(string)->ZonedDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_ZONED_DATE_TIME : DateTimeFormatter.ofPattern(pattern))
 		);
 	}
 	
@@ -217,9 +217,8 @@ public class DictionaryValue {
 			(string)->{
 				try {
 					return fromString.apply(string);
-					//return LocalDateTime.parse(string.replace(" ", "T"), DateTimeFormatter.ISO_DATE_TIME);
 				} catch (Exception e) {
-					return fromString.apply(string.replace(" ", "T"));
+					return fromString.apply(string.replaceFirst(" ", "T"));
 				}
 			},
 			(object)->{
@@ -227,7 +226,7 @@ public class DictionaryValue {
 					return fromTime.apply(Instant.ofEpochMilli(Long.class.cast(object)).atZone(ZoneId.systemDefault()));
 				}
 				if (TemporalAccessor.class.isInstance(object)) {
-					return fromTime.apply(TemporalAccessor.class.cast(object));
+					return fromTime.apply(createZoneDateTime(object));
 				}
 				if (Date.class.isInstance(object)) {
 					return fromTime.apply(Date.class.cast(object).toInstant().atZone(ZoneId.systemDefault()));
@@ -236,29 +235,23 @@ public class DictionaryValue {
 			}
 		);
 	}
-/*
-	public LocalDateTime getDate2() {
-		Function<String, LocalDateTime> toDateTime = (string)->{
-			try {
-				return LocalDateTime.parse(string.replace(" ", "T"), DateTimeFormatter.ISO_DATE_TIME);
-			} catch (Exception e) {
-				return LocalDateTime.parse(string, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-			}
-		};
-		return parseValue(
-			LocalDateTime.class,
-			(string)->{
-				return toDateTime.apply(string);
-			},
-			(object)->{
-				if (Long.class.isInstance(object) || long.class.isInstance(object)) {
-					return LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.class.cast(object)), TimeZone.getDefault().toZoneId());
-				}
-				return toDateTime.apply(object.toString());
-			}
-		);
+
+	private ZonedDateTime createZoneDateTime(Object object) {
+		if (LocalTime.class.isInstance(object)) {
+			return ZonedDateTime.of(LocalDate.of(1970, 1, 1), LocalTime.class.cast(object), ZoneId.systemDefault());
+		}
+		if (LocalDate.class.isInstance(object)) {
+			return ZonedDateTime.of(LocalDate.class.cast(object), LocalTime.of(0, 0), ZoneId.systemDefault());
+		}
+		if (LocalDateTime.class.isInstance(object)) {
+			return ZonedDateTime.of(LocalDateTime.class.cast(object), ZoneId.systemDefault());
+		}
+		if (ZonedDateTime.class.isInstance(object)) {
+			return ZonedDateTime.class.cast(object);
+		}
+		return null;
 	}
-*/
+
 	/************/
 
 	@SuppressWarnings("unchecked")
