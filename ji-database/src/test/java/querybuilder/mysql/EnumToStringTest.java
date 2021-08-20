@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import querybuilder.ColumnSetting;
-import querybuilder.ColumnType;
-import querybuilder.Join;
-import querybuilder.OnAction;
+import querybuilder.enums.ColumnSetting;
+import querybuilder.enums.ColumnType;
+import querybuilder.enums.Join;
+import querybuilder.enums.OnAction;
 
 @RunWith(JUnitParamsRunner.class)
 public class EnumToStringTest {

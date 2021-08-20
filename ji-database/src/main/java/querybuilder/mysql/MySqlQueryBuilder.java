@@ -3,16 +3,16 @@ package querybuilder.mysql;
 import java.sql.Connection;
 
 import common.functions.Implode;
-import query.QueryBuilderFactory;
-import query.wrappers.AlterTableBuilder;
-import query.wrappers.CreateTableBuilder;
-import query.wrappers.CreateViewBuilder;
-import query.wrappers.DeleteBuilder;
-import query.wrappers.ExecuteBuilder;
-import query.wrappers.InsertBuilder;
-import query.wrappers.SelectBuilder;
-import query.wrappers.UpdateBuilder;
-import querybuilder.Functions;
+import querybuilder.QueryBuilderFactory;
+import querybuilder.builders.AlterTableBuilder;
+import querybuilder.builders.CreateTableBuilder;
+import querybuilder.builders.CreateViewBuilder;
+import querybuilder.builders.DeleteBuilder;
+import querybuilder.builders.ExecuteBuilder;
+import querybuilder.builders.Functions;
+import querybuilder.builders.InsertBuilder;
+import querybuilder.builders.SelectBuilder;
+import querybuilder.builders.UpdateBuilder;
 
 public class MySqlQueryBuilder implements QueryBuilderFactory {
 

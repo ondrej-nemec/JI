@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import common.Logger;
 import common.functions.Terminal;
-import querybuilder.QueryBuilder;
+import querybuilder.QueryBuilderFactory;
 import querybuilder.derby.DerbyQueryBuilder;
 
 public class Derby implements DatabaseInstance {
@@ -62,7 +62,7 @@ public class Derby implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder(Connection connection) {
+	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
 		return new DerbyQueryBuilder(connection);
 	}
 

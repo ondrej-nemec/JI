@@ -2,8 +2,8 @@ package querybuilder.mysql;
 
 import java.sql.Connection;
 
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.DeleteBuilder;
+import querybuilder.builders.DeleteBuilder;
+import querybuilder.buildersparent.QueryBuilderParent;
 
 public class MySqlDeleteBuilder extends QueryBuilderParent implements DeleteBuilder {
 	

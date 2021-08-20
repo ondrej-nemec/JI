@@ -2,7 +2,7 @@ package querybuilder.sqlserver;
 
 import java.sql.Connection;
 
-import query.wrappers.CreateViewBuilder;
+import querybuilder.builders.CreateViewBuilder;
 
 public class SqlServerCreateViewBuilder extends SqlServerSelectWrapper<CreateViewBuilder> implements CreateViewBuilder {
 

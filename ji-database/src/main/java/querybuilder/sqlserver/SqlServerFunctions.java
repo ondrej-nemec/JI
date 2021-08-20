@@ -1,7 +1,7 @@
 package querybuilder.sqlserver;
 
-import querybuilder.ColumnType;
-import querybuilder.Functions;
+import querybuilder.builders.Functions;
+import querybuilder.enums.ColumnType;
 
 public class SqlServerFunctions implements Functions {
 

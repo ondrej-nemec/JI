@@ -8,10 +8,10 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
-import query.wrappers.AlterTableBuilder;
-import querybuilder.ColumnSetting;
-import querybuilder.ColumnType;
-import querybuilder.OnAction;
+import querybuilder.builders.AlterTableBuilder;
+import querybuilder.enums.ColumnSetting;
+import querybuilder.enums.ColumnType;
+import querybuilder.enums.OnAction;
 
 public class PostgreSqlAlterTableBuilderTest {
 	

@@ -35,12 +35,14 @@ import common.structures.ThrowingBiConsumer;
 import core.text.Text;
 import core.text.basic.ReadText;
 import database.support.DatabaseRow;
-import query.QueryBuilder;
-import query.QueryBuilderFactory;
-import query.wrappers.SelectBuilder;
-import querybuilder.Join;
-import querybuilder.SelectQueryBuilder;
+import querybuilder.QueryBuilder;
+import querybuilder.QueryBuilderFactory;
+import querybuilder.builders.SelectBuilder;
 import querybuilder.derby.DerbyQueryBuilder;
+import querybuilder.enums.ColumnSetting;
+import querybuilder.enums.ColumnType;
+import querybuilder.enums.Join;
+import querybuilder.enums.OnAction;
 import querybuilder.mysql.MySqlQueryBuilder;
 import querybuilder.postgresql.PostgreSqlQueryBuilder;
 import querybuilder.sqlserver.SqlServerQueryBuilder;
@@ -114,7 +116,7 @@ public class QueryBuilderEndToEndTest {
 				"mysql"
 		));
 		//*/
-		/*
+		//*
 	  	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
 				(conn) -> {return new DerbyQueryBuilder(conn);},
@@ -140,7 +142,7 @@ public class QueryBuilderEndToEndTest {
 				"derby"
 		));
 		//*/
-		/*
+		//*
 		result.add(createParams(
 				(conn) -> {return new PostgreSqlQueryBuilder(conn);},
 				() -> {
@@ -172,7 +174,7 @@ public class QueryBuilderEndToEndTest {
 				"postgresql"
 		));
 		//*/
-		/*
+		//*
 		result.add(createParams(
                 (conn) -> {return new SqlServerQueryBuilder(conn);},
                 () -> {

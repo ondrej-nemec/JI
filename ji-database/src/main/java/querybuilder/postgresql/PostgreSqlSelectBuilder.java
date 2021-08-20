@@ -1,7 +1,8 @@
 package querybuilder.postgresql;
 
 import java.sql.Connection;
-import query.wrappers.SelectBuilder;
+
+import querybuilder.builders.SelectBuilder;
 
 public class PostgreSqlSelectBuilder extends PostgresSqlSelectWrapper<SelectBuilder> implements SelectBuilder {
 	

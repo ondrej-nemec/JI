@@ -2,8 +2,8 @@ package querybuilder.derby;
 
 import java.sql.Connection;
 
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.InsertBuilder;
+import querybuilder.builders.InsertBuilder;
+import querybuilder.buildersparent.QueryBuilderParent;
 
 public class DerbyInsertBuilder extends QueryBuilderParent implements InsertBuilder {
 

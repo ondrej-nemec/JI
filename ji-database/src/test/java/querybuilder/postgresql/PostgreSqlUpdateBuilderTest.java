@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import org.junit.Test;
 
 import database.support.DoubleConsumer;
-import query.wrappers.UpdateBuilder;
+import querybuilder.builders.UpdateBuilder;
 
 public class PostgreSqlUpdateBuilderTest {
 	

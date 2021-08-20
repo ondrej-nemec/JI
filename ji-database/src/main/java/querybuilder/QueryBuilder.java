@@ -1,86 +1,117 @@
 package querybuilder;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
-import common.functions.Implode;
+import querybuilder.builders.AlterTableBuilder;
+import querybuilder.builders.BatchBuilder;
+import querybuilder.builders.CreateTableBuilder;
+import querybuilder.builders.CreateViewBuilder;
+import querybuilder.builders.DeleteBuilder;
+import querybuilder.builders.ExecuteBuilder;
+import querybuilder.builders.Functions;
+import querybuilder.builders.InsertBuilder;
+import querybuilder.builders.MultipleSelectBuilder;
+import querybuilder.builders.SelectBuilder;
+import querybuilder.builders.UpdateBuilder;
 
-public abstract class QueryBuilder {
+public class QueryBuilder implements QueryBuilderFactory {
 
-	protected Connection connection;
+	private final Connection connection;
+	private final QueryBuilderFactory factory;
 	
-	public QueryBuilder(final Connection connection) {
+	public QueryBuilder(Connection connection, QueryBuilderFactory factory) {
 		this.connection = connection;
+		this.factory = factory;
 	}
-	
+
 	public Connection getConnection() {
 		return connection;
+	}
+	
+	public void transaction() throws SQLException {
+		connection.setAutoCommit(false);
+	}
+
+	public void commit() throws SQLException {
+		connection.commit();
+	}
+	
+	public void rollback() throws SQLException {
+		connection.rollback();
 	}
 	
 	public BatchBuilder batch() {
 		return new BatchBuilder(connection);
 	}
 	
-	/***********************/
-	
-	public abstract Functions getSqlFunctions();
-	
-	public abstract DeleteQueryBuilder delete(String table);
-	
-	public abstract InsertQueryBuilder insert(String table);
-	
-	public abstract UpdateQueryBuilder update(String table);
-	
-	public abstract SelectQueryBuilder select(String select);
-	
-	protected abstract SelectQueryBuilder query(String query);
-		
-	/**
-	 * A ∪ B   Set union: Combine two sets into one
-	 * @param union
-	 * @return
-	 */
-	public SelectQueryBuilder union(SelectQueryBuilder ...union) {
-		return query(Implode.implode((sql)->sql.createSql(), " UNION ", union));
+	public MultipleSelectBuilder multiSelect(SelectBuilder builder) {
+		return new MultipleSelectBuilder(connection, builder);
 	}
-	
-	/**
-	 * A ∩ B   Set intersection: The members that A and B have in common
-	 * @param select
-	 * @return
-	 */
-	public SelectQueryBuilder intersect(SelectQueryBuilder ...intersect) {
-		return query(Implode.implode((sql)->sql.createSql(), " INTERSECT ", intersect));
-	}
-	
-	/**
-	 * A − B   Set difference: The members of A that are not in B
-	 * @param select
-	 * @return
-	 */
-	public SelectQueryBuilder except(SelectQueryBuilder ...except) {
-		return query(Implode.implode((sql)->sql.createSql(), " EXCEPT ", except));
-	}
-	
-	/***********************/
-	
-	public abstract ExecuteQueryBuilder deleteTable(String table);
-	
-	public abstract CreateTableQueryBuilder createTable(String name);
-	
-	public abstract AlterTableQueryBuilder alterTable(String name);
-	
-	/***********************/
-	
-	public abstract ExecuteQueryBuilder deleteView(String table);
-	
-	public abstract CreateViewQueryBuilder createView(String name);
-	
-	public abstract CreateViewQueryBuilder alterView(String name);
-	
-	/***********************/
-	
-	public abstract ExecuteQueryBuilder createIndex(String name, String table, String... colums);
-	
-	public abstract ExecuteQueryBuilder deleteIndex(String name, String table);
 
+	@Override
+	public Functions getSqlFunctions() {
+		return factory.getSqlFunctions();
+	}
+
+	@Override
+	public DeleteBuilder delete(String table) {
+		return factory.delete(table);
+	}
+
+	@Override
+	public InsertBuilder insert(String table) {
+		return factory.insert(table);
+	}
+
+	@Override
+	public UpdateBuilder update(String table) {
+		return factory.update(table);
+	}
+
+	@Override
+	public SelectBuilder select(String select) {
+		return factory.select(select);
+	}
+
+	@Override
+	public ExecuteBuilder deleteTable(String table) {
+		return factory.deleteTable(table);
+	}
+
+	@Override
+	public CreateTableBuilder createTable(String name) {
+		return factory.createTable(name);
+	}
+
+	@Override
+	public AlterTableBuilder alterTable(String name) {
+		return factory.alterTable(name);
+	}
+
+	@Override
+	public ExecuteBuilder deleteView(String table) {
+		return factory.deleteView(table);
+	}
+
+	@Override
+	public CreateViewBuilder createView(String name) {
+		return factory.createView(name);
+	}
+
+	@Override
+	public CreateViewBuilder alterView(String name) {
+		return factory.alterView(name);
+	}
+
+	@Override
+	public ExecuteBuilder createIndex(String name, String table, String... colums) {
+		return factory.createIndex(name, table, colums);
+	}
+
+	@Override
+	public ExecuteBuilder deleteIndex(String name, String table) {
+		return factory.deleteIndex(name, table);
+	}
+	
 }

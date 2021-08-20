@@ -27,7 +27,7 @@ public class MigrationFilesTest {
 		return new Object[] {
 			new Object[] {
 				"migration/files",
-				"javainit/ji-database/bin/migration/files"
+				"javainit/ji-database/bin/test/migration/files"
 			},
 			new Object[] {
 				"test/migration/files",

@@ -2,8 +2,8 @@ package querybuilder.sqlserver;
 
 import java.sql.Connection;
 
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.InsertBuilder;
+import querybuilder.builders.InsertBuilder;
+import querybuilder.buildersparent.QueryBuilderParent;
 
 public class SqlServerInsertBuilder extends QueryBuilderParent implements InsertBuilder {
 	

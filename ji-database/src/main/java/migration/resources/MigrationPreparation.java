@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import migration.MigrationException;
-import querybuilder.ColumnSetting;
-import querybuilder.ColumnType;
+import querybuilder.enums.ColumnSetting;
+import querybuilder.enums.ColumnType;
 import querybuilder.QueryBuilder;
 
 public class MigrationPreparation {
@@ -67,7 +67,7 @@ public class MigrationPreparation {
 					return row.getValue("id").toString();
 				});
 		} catch (Exception ignored) {
-			builder.getConnection().rollback();
+			builder.rollback();
 			// TODO add multi column primary key
 			builder
 				.createTable(migrationTable)

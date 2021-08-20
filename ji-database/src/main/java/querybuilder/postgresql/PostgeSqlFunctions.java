@@ -1,7 +1,7 @@
 package querybuilder.postgresql;
 
-import querybuilder.ColumnType;
-import querybuilder.Functions;
+import querybuilder.builders.Functions;
+import querybuilder.enums.ColumnType;
 
 public class PostgeSqlFunctions implements Functions {
 

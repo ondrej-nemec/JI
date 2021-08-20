@@ -3,7 +3,7 @@ package migration.endToEnd;
 import java.sql.SQLException;
 
 import migration.Migration;
-import querybuilder.ColumnType;
+import querybuilder.enums.ColumnType;
 import querybuilder.QueryBuilder;
 
 public class V1__AddedFirstTable implements Migration {

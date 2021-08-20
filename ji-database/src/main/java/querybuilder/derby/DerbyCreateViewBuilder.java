@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 
-import query.buildersparent.Builder;
-import query.buildersparent.SimpleBuilder;
-import query.wrappers.CreateViewBuilder;
+import querybuilder.builders.CreateViewBuilder;
+import querybuilder.buildersparent.Builder;
+import querybuilder.buildersparent.SimpleBuilder;
 
 public class DerbyCreateViewBuilder extends SelectWrapper<CreateViewBuilder> implements CreateViewBuilder {
 	

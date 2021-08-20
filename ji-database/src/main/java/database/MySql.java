@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import common.Logger;
 import common.exceptions.NotImplementedYet;
-import querybuilder.QueryBuilder;
+import querybuilder.QueryBuilderFactory;
 import querybuilder.mysql.MySqlQueryBuilder;
 
 public class MySql implements DatabaseInstance {
@@ -62,7 +62,7 @@ public class MySql implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder(Connection connection) {
+	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
 		return new MySqlQueryBuilder(connection);
 	}
 

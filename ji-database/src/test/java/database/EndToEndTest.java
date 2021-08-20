@@ -12,12 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-/*
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;*/
 import org.junit.runners.Parameterized.Parameters;
 
 import common.Logger;
@@ -26,9 +20,9 @@ import core.text.basic.ReadText;
 import database.Database;
 import database.DatabaseConfig;
 import database.support.DatabaseRow;
-import querybuilder.Join;
-import querybuilder.SelectQueryBuilder;
-import querybuilder.mysql.MySqlQueryBuilder;
+import querybuilder.builders.SelectBuilder;
+import querybuilder.enums.Join;
+import querybuilder.mysql.MySqlFunctions;
 
 //@RunWith(Parameterized.class)
 public class EndToEndTest {
@@ -150,7 +144,7 @@ public class EndToEndTest {
 	//@Test
 	public void testQueryBuilderInstance() throws SQLException {
 		database.applyBuilder((builder) -> {
-			assertTrue(builder instanceof MySqlQueryBuilder);
+			assertTrue(builder.getSqlFunctions() instanceof MySqlFunctions);
 			return null;
 		});
 	}	
@@ -261,7 +255,7 @@ public class EndToEndTest {
 	//@Test
 	public void testExecuteSelect() throws SQLException {
 		database.applyBuilder((builder) -> {
-			SelectQueryBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
+			SelectBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
 			   .from("select_table a")
 			   .join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
 			   .where("a.id > %id")

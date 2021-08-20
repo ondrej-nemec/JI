@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import common.Logger;
 import common.exceptions.NotImplementedYet;
-import querybuilder.QueryBuilder;
+import querybuilder.QueryBuilderFactory;
 import querybuilder.postgresql.PostgreSqlQueryBuilder;
 
 public class PosgreSql implements DatabaseInstance {
@@ -68,7 +68,7 @@ public class PosgreSql implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder(Connection connection) {
+	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
 		return new PostgreSqlQueryBuilder(connection);
 	}
 

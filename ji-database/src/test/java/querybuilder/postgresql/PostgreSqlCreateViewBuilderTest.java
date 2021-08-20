@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import query.wrappers.CreateViewBuilder;
-import querybuilder.Join;
+import querybuilder.builders.CreateViewBuilder;
+import querybuilder.enums.Join;
 
 @RunWith(JUnitParamsRunner.class)
 public class PostgreSqlCreateViewBuilderTest {

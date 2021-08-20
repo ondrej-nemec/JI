@@ -8,7 +8,7 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
-import query.wrappers.InsertBuilder;
+import querybuilder.builders.InsertBuilder;
 
 public class PostgreSqlInsertBuilderTest {
 	

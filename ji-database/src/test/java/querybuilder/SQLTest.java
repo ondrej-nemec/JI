@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import querybuilder.enums.SQL;
 
 @RunWith(JUnitParamsRunner.class)
 public class SQLTest {

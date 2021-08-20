@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 
-import query.buildersparent.Builder;
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.AlterTableBuilder;
-import querybuilder.ColumnSetting;
-import querybuilder.ColumnType;
-import querybuilder.OnAction;
+import querybuilder.builders.AlterTableBuilder;
+import querybuilder.buildersparent.Builder;
+import querybuilder.buildersparent.QueryBuilderParent;
+import querybuilder.enums.ColumnSetting;
+import querybuilder.enums.ColumnType;
+import querybuilder.enums.OnAction;
 
 public class MySqlAlterTableBuilder extends QueryBuilderParent implements AlterTableBuilder {
 	

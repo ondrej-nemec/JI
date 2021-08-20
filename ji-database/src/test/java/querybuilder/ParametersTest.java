@@ -3,11 +3,13 @@ package querybuilder;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
+import querybuilder.buildersparent.ParametrizedBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class ParametersTest {
@@ -15,10 +17,10 @@ public class ParametersTest {
 	@Test
 	@junitparams.Parameters(method = "dataAddParameter")
 	public void testAddParameter(Object value, String expected) {
-		Parameters<String> p = new Parameters<String>() {
-			@Override public String getSql() {return null;}
-			@Override public String createSql() {return null;}
-			@Override public String addNotEscapedParameter(String name, String value) {return value;}
+		ParametrizedBuilder<String> p = new ParametrizedBuilder<String>() {
+			@Override public String getSql() { return null; }
+			@Override public Map<String, String> getParameters() { return null; }
+			@Override public String addNotEscapedParameter(String name, String value) { return value; }
 		};
 		assertEquals(expected, p.addParameter("parameter", value));
 	}

@@ -7,7 +7,7 @@ import java.sql.Connection;
 
 import org.junit.Test;
 
-import query.wrappers.DeleteBuilder;
+import querybuilder.builders.DeleteBuilder;
 
 public class DerbyDeleteBuilderTest {
 	

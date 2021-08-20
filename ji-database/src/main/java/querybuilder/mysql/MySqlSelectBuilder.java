@@ -2,7 +2,7 @@ package querybuilder.mysql;
 
 import java.sql.Connection;
 
-import query.wrappers.SelectBuilder;
+import querybuilder.builders.SelectBuilder;
 
 public class MySqlSelectBuilder extends SelectWrapper<SelectBuilder> implements SelectBuilder {
 	

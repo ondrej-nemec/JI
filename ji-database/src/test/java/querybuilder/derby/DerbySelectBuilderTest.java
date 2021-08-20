@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
-import query.wrappers.SelectBuilder;
-import querybuilder.Join;
+import querybuilder.builders.SelectBuilder;
+import querybuilder.enums.Join;
 
 @RunWith(JUnitParamsRunner.class)
 public class DerbySelectBuilderTest {

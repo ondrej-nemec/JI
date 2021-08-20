@@ -2,8 +2,8 @@ package querybuilder.sqlserver;
 
 import java.sql.Connection;
 
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.UpdateBuilder;
+import querybuilder.builders.UpdateBuilder;
+import querybuilder.buildersparent.QueryBuilderParent;
 
 public class SqlServerUpdateBuilder extends QueryBuilderParent implements UpdateBuilder {
 	

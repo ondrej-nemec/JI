@@ -3,9 +3,9 @@ package querybuilder.mysql;
 import java.sql.Connection;
 
 import common.functions.Implode;
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.Select;
-import querybuilder.Join;
+import querybuilder.builders.Select;
+import querybuilder.buildersparent.QueryBuilderParent;
+import querybuilder.enums.Join;
 
 public abstract class SelectWrapper<C> extends QueryBuilderParent implements Select<C> {
 

@@ -9,8 +9,8 @@ import database.Database;
 import database.DatabaseConfig;
 import database.support.ConnectionFunction;
 import database.support.DoubleConsumer;
-import querybuilder.BatchBuilder;
-import querybuilder.InsertQueryBuilder;
+import querybuilder.builders.BatchBuilder;
+import querybuilder.builders.InsertBuilder;
 import testing.entities.Row;
 import testing.entities.Table;
 
@@ -37,7 +37,7 @@ public class DatabaseMock extends Database {
 			BatchBuilder batch = builder.batch();
 			for(Table table : tables) {
 				for(Row row : table.getRows()) {
-					InsertQueryBuilder insert = builder.insert(table.getName());
+					InsertBuilder insert = builder.insert(table.getName());
     				for (String key : row.getColumns().keySet()) {
     					 insert.addValue(key, row.getColumns().get(key));
     				}

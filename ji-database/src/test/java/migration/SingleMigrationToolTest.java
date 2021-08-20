@@ -13,9 +13,9 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import migration.migrations.JavaMigration;
 import migration.migrations.SqlMigration;
-import querybuilder.DeleteQueryBuilder;
-import querybuilder.InsertQueryBuilder;
 import querybuilder.QueryBuilder;
+import querybuilder.builders.DeleteBuilder;
+import querybuilder.builders.InsertBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class SingleMigrationToolTest {
@@ -30,10 +30,10 @@ public class SingleMigrationToolTest {
 			String name, String extension, int javaCount, int sqlCount, boolean isRevert) throws Exception {
 		Connection con = mock(Connection.class);
 		
-		InsertQueryBuilder insert = mock(InsertQueryBuilder.class);
+		InsertBuilder insert = mock(InsertBuilder.class);
 		when(insert.addValue(any(), any())).thenReturn(insert);
 		
-		DeleteQueryBuilder delete = mock(DeleteQueryBuilder.class);
+		DeleteBuilder delete = mock(DeleteBuilder.class);
 		when(delete.where(any())).thenReturn(delete);
 		when(delete.andWhere(any())).thenReturn(delete);
 		when(delete.addParameter(any(), any())).thenReturn(delete);

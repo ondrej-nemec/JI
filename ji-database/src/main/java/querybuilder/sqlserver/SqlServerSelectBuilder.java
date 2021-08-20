@@ -2,7 +2,7 @@ package querybuilder.sqlserver;
 
 import java.sql.Connection;
 
-import query.wrappers.SelectBuilder;
+import querybuilder.builders.SelectBuilder;
 
 public class SqlServerSelectBuilder extends SqlServerSelectWrapper<SelectBuilder> implements SelectBuilder {
 	

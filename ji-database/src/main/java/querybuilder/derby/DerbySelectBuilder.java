@@ -2,7 +2,7 @@ package querybuilder.derby;
 
 import java.sql.Connection;
 
-import query.wrappers.SelectBuilder;
+import querybuilder.builders.SelectBuilder;
 
 public class DerbySelectBuilder extends SelectWrapper<SelectBuilder> implements SelectBuilder {
 

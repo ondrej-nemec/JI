@@ -3,9 +3,9 @@ package querybuilder.sqlserver;
 import java.sql.Connection;
 
 import common.functions.Implode;
-import query.buildersparent.MultyBuilderParent;
-import query.wrappers.Select;
-import querybuilder.Join;
+import querybuilder.builders.Select;
+import querybuilder.buildersparent.MultyBuilderParent;
+import querybuilder.enums.Join;
 
 public abstract class SqlServerSelectWrapper<C> extends MultyBuilderParent implements Select<C> {
 	

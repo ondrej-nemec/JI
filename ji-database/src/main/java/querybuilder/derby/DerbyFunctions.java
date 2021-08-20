@@ -1,7 +1,7 @@
 package querybuilder.derby;
 
-import querybuilder.ColumnType;
-import querybuilder.Functions;
+import querybuilder.builders.Functions;
+import querybuilder.enums.ColumnType;
 
 public class DerbyFunctions implements Functions {
 	

@@ -2,8 +2,8 @@ package querybuilder.postgresql;
 
 import java.sql.Connection;
 
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.InsertBuilder;
+import querybuilder.builders.InsertBuilder;
+import querybuilder.buildersparent.QueryBuilderParent;
 
 public class PostgreSqlInsertBuilder extends QueryBuilderParent implements InsertBuilder {
 	

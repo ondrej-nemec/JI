@@ -2,8 +2,8 @@ package querybuilder.mysql;
 
 import java.sql.Connection;
 
-import query.buildersparent.QueryBuilderParent;
-import query.wrappers.UpdateBuilder;
+import querybuilder.builders.UpdateBuilder;
+import querybuilder.buildersparent.QueryBuilderParent;
 
 public class MySqlUpdateBuilder extends QueryBuilderParent implements UpdateBuilder {
 	

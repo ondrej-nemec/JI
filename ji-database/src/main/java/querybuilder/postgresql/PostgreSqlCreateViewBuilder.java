@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 
-import query.buildersparent.Builder;
-import query.wrappers.CreateViewBuilder;
+import querybuilder.builders.CreateViewBuilder;
+import querybuilder.buildersparent.Builder;
 
 public class PostgreSqlCreateViewBuilder extends PostgresSqlSelectWrapper<CreateViewBuilder> implements CreateViewBuilder {
 	

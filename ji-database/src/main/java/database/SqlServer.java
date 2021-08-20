@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import common.Logger;
 import common.exceptions.NotImplementedYet;
-import querybuilder.QueryBuilder;
+import querybuilder.QueryBuilderFactory;
 import querybuilder.sqlserver.SqlServerQueryBuilder;
 
 public class SqlServer implements DatabaseInstance {
@@ -65,7 +65,7 @@ public class SqlServer implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilder getQueryBuilder(Connection connection) {
+	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
 		return new SqlServerQueryBuilder(connection);
 	}
 

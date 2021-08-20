@@ -11,6 +11,7 @@ import database.support.DoubleConsumer;
 import database.support.QueryBuilderFunction;
 import database.support.SqlQueryProfiler;
 import migration.MigrationTool;
+import querybuilder.QueryBuilder;
 
 public class Database {
 	
@@ -79,7 +80,7 @@ public class Database {
 	
 	public <T> T applyBuilder(final QueryBuilderFunction<T> consumer) throws SQLException {
 		return getDoubleFunction((con)->{
-			return consumer.apply(instance.getQueryBuilder(con));
+			return consumer.apply(getQueryBuilder(con));
 		}).get();
 	}
 
@@ -120,6 +121,10 @@ public class Database {
 		props.setProperty("create", "true");
 		props.setProperty("allowMultiQueries", "true");
 		return props;
+	}
+	
+	private QueryBuilder getQueryBuilder(Connection connection) {
+		return new QueryBuilder(connection, instance.getQueryBuilderFactory(connection));
 	}
 	
 	/********* Migration ****************/

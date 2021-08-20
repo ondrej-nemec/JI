@@ -17,9 +17,9 @@ import common.structures.Tuple2;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import migration.MigrationException;
-import querybuilder.CreateTableQueryBuilder;
 import querybuilder.QueryBuilder;
-import querybuilder.SelectQueryBuilder;
+import querybuilder.builders.CreateTableBuilder;
+import querybuilder.builders.SelectBuilder;
 
 @RunWith(JUnitParamsRunner.class)
 public class MigrationPreparationTest {
@@ -29,10 +29,11 @@ public class MigrationPreparationTest {
 
 	@Test // (expected = MigrationException.class)
 	public void testGetFilesToMigrateThrowIfMigrationGape() throws SQLException, MigrationException {
-		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
+		SelectBuilder select = mock(SelectBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
 		when(select.where(any())).thenReturn(select);
 		when(select.addParameter(any(), any())).thenReturn(select);
+		when(select.orderBy(any())).thenReturn(select);
 		when(select.fetchAll(any())).thenReturn(Arrays.asList("Second"));
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
@@ -47,6 +48,7 @@ public class MigrationPreparationTest {
 		verify(select, times(1)).from(MIGRATION_TABLE);
 		verify(select, times(1)).where(any());
 		verify(select, times(1)).addParameter(any(), any());
+		verify(select, times(1)).orderBy(any());
 		verify(select, times(1)).fetchAll(any());
 		verifyNoMoreInteractions(select);
 		
@@ -82,10 +84,11 @@ public class MigrationPreparationTest {
 	}
 
 	private Tuple2<QueryBuilder, Callable<Void>> builderPartMigrated() throws SQLException {
-		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
+		SelectBuilder select = mock(SelectBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
 		when(select.where(any())).thenReturn(select);
 		when(select.addParameter(any(), any())).thenReturn(select);
+		when(select.orderBy(any())).thenReturn(select);
 		when(select.fetchAll(any())).thenReturn(Arrays.asList("First"));
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
@@ -95,6 +98,7 @@ public class MigrationPreparationTest {
 			verify(select, times(1)).from(MIGRATION_TABLE);
 			verify(select, times(1)).where(any());
 			verify(select, times(1)).addParameter(any(), any());
+			verify(select, times(1)).orderBy(any());
 			verify(select, times(1)).fetchAll(any());
 			verifyNoMoreInteractions(select);
 			
@@ -106,9 +110,10 @@ public class MigrationPreparationTest {
 	}
 
 	private Tuple2<QueryBuilder, Callable<Void>> builderAllMigrated() throws SQLException {
-		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
+		SelectBuilder select = mock(SelectBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
 		when(select.where(any())).thenReturn(select);
+		when(select.orderBy(any())).thenReturn(select);
 		when(select.addParameter(any(), any())).thenReturn(select);
 		when(select.fetchAll(any())).thenReturn(Arrays.asList("First", "Second"));
 		
@@ -119,6 +124,7 @@ public class MigrationPreparationTest {
 			verify(select, times(1)).from(MIGRATION_TABLE);
 			verify(select, times(1)).where(any());
 			verify(select, times(1)).addParameter(any(), any());
+			verify(select, times(1)).orderBy(any());
 			verify(select, times(1)).fetchAll(any());
 			verifyNoMoreInteractions(select);
 			
@@ -130,13 +136,14 @@ public class MigrationPreparationTest {
 	}
 
 	private Tuple2<QueryBuilder, Callable<Void>> builderCreateTable() throws SQLException {
-		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
+		SelectBuilder select = mock(SelectBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
 		when(select.where(any())).thenReturn(select);
+		when(select.orderBy(any())).thenReturn(select);
 		when(select.addParameter(any(), any())).thenReturn(select);
 		when(select.fetchAll(any())).thenThrow(SQLException.class);
 		
-		CreateTableQueryBuilder create = mock(CreateTableQueryBuilder.class);
+		CreateTableBuilder create = mock(CreateTableBuilder.class);
 		when(create.addColumn(any(), any(), any())).thenReturn(create);
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
@@ -148,6 +155,7 @@ public class MigrationPreparationTest {
 			verify(select, times(1)).where(any());
 			verify(select, times(1)).addParameter(any(), any());
 			verify(select, times(1)).fetchAll(any());
+			verify(select, times(1)).orderBy(any());
 			verifyNoMoreInteractions(select);
 			
 			verify(create, times(4)).addColumn(any(), any(), any());
@@ -156,6 +164,7 @@ public class MigrationPreparationTest {
 			
 			verify(builder, times(1)).select("id");
 			verify(builder, times(1)).createTable(MIGRATION_TABLE);
+			verify(builder, times(1)).rollback();
 			verifyNoMoreInteractions(builder);
 			return null;
 		};
@@ -163,9 +172,10 @@ public class MigrationPreparationTest {
 	}
 
 	private Tuple2<QueryBuilder, Callable<Void>> builderNotCreate() throws SQLException {
-		SelectQueryBuilder select = mock(SelectQueryBuilder.class);
+		SelectBuilder select = mock(SelectBuilder.class);
 		when(select.from(MIGRATION_TABLE)).thenReturn(select);
 		when(select.where(any())).thenReturn(select);
+		when(select.orderBy(any())).thenReturn(select);
 		when(select.addParameter(any(), any())).thenReturn(select);
 		when(select.fetchAll(any())).thenReturn(new ArrayList<>());
 		
@@ -177,6 +187,7 @@ public class MigrationPreparationTest {
 			verify(select, times(1)).where(any());
 			verify(select, times(1)).addParameter(any(), any());
 			verify(select, times(1)).fetchAll(any());
+			verify(select, times(1)).orderBy(any());
 			verifyNoMoreInteractions(select);
 			
 			verify(builder, times(1)).select("id");

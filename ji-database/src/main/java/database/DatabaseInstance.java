@@ -3,7 +3,7 @@ package database;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import querybuilder.QueryBuilder;
+import querybuilder.QueryBuilderFactory;
 
 public interface DatabaseInstance {
 	
@@ -13,6 +13,6 @@ public interface DatabaseInstance {
 	
 	void createDb() throws SQLException;
 	
-	QueryBuilder getQueryBuilder(Connection connection);
+	QueryBuilderFactory getQueryBuilderFactory(Connection connection);
 
 }

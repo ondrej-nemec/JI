@@ -9,8 +9,8 @@ import java.util.Map;
 
 import common.Logger;
 import common.functions.DateTime;
-import querybuilder.ColumnType;
-import querybuilder.SelectQueryBuilder;
+import querybuilder.builders.SelectBuilder;
+import querybuilder.enums.ColumnType;
 
 public class DatabaseGeneralQueryTesting {
 
@@ -57,7 +57,7 @@ public class DatabaseGeneralQueryTesting {
 				//*
 				List<Map<String, Object>> data = database.applyBuilder((builder)->{
 					List<Map<String, Object>> items = new LinkedList<>();
-					SelectQueryBuilder select = builder.select("*").from("query_test");
+					SelectBuilder select = builder.select("*").from("query_test");
 					select.where("1=1");
 					select.addParameter(":empty", "");
 					filters.forEach((filter, value)->{

@@ -20,7 +20,8 @@ public class MultiModulesMigrationTest {
 	
 	@Test
 	public void testMigrateWithDirs() throws Exception {
-		QueryBuilder queryBuilder = new MySqlQueryBuilder(createCon());
+		Connection c = createCon();
+		QueryBuilder queryBuilder = new QueryBuilder(c,  new MySqlQueryBuilder(c));
 		MigrationTool tool = new MigrationTool(
 			Arrays.asList("test/migA", "test/migB"), 
 			queryBuilder,
@@ -31,7 +32,8 @@ public class MultiModulesMigrationTest {
 
 	@Test
 	public void testMigrateWithClassPath() throws Exception {
-		QueryBuilder queryBuilder = new MySqlQueryBuilder(createCon());
+		Connection c = createCon();
+		QueryBuilder queryBuilder = new QueryBuilder(c,  new MySqlQueryBuilder(c));
 		MigrationTool tool = new MigrationTool(
 			Arrays.asList("migrationsA", "migrationsB"), 
 			queryBuilder,
