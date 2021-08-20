@@ -1,5 +1,7 @@
 package database.support;
 
+import java.util.Map;
+
 public interface SqlQueryProfiler {
 
 	void execute(String identifier, String sql);
@@ -9,5 +11,7 @@ public interface SqlQueryProfiler {
 	void prepare(String identifier, String sql);
 	
 	void addParam(String identifier, Object param);
+	
+	void builderQuery(String query, String sql, Map<String, String> params);
 	
 }

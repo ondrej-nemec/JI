@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import common.structures.DictionaryValue;
 import common.structures.ThrowingFunction;
+import database.Database;
 import database.support.DatabaseRow;
 import querybuilder.buildersparent.ParametrizedBuilder;
 
@@ -27,7 +28,9 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 	/** INTERNAL */
 	default <T> T _execute(ThrowingFunction<ResultSet, T, SQLException> callback) throws SQLException {
 		String query = createSql();
-		// TODO log.log(builder.getSql(), builder.getParameters());
+		if (Database.PROFILER != null) {
+			Database.PROFILER.builderQuery(getSql(), query, getParameters());
+		}
 		try (Statement stat = getConnection().createStatement(); ResultSet res = stat.executeQuery(query);) {
 			return callback.apply(res);
 		}
