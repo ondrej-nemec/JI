@@ -49,6 +49,10 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 		return this;
 	}
 	
+	public MultipleSelectBuilder orderBy(String orderBy) {
+		query.append("ORDER BY " + orderBy);
+		return this;
+	}
 
 	@Override
 	public MultipleSelectBuilder addNotEscapedParameter(String name, String value) {
