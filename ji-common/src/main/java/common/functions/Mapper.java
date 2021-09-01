@@ -52,10 +52,9 @@ public class Mapper {
 							toUse = mapperType; // key match
 						}
 					}
-					if (toUse == null) {
-						continue;
+					if (toUse != null) {
+						name = toUse.value();
 					}
-					name = toUse.value();
 				}
 				json.put(name, field.get(value));
 			}
@@ -82,7 +81,7 @@ public class Mapper {
 			MapDictionary<String, Object> values = parameterValue.getDictionaryMap();
 			for (Field field : fields) {
 				field.setAccessible(true);
-				String parameterName = null;
+				String parameterName = field.getName();
 				
 				MapperType toUse = null;
 				if (field.isAnnotationPresent(MapperParameter.class)) {
@@ -96,8 +95,6 @@ public class Mapper {
 					if (toUse != null) {
 						parameterName = toUse.value();
 					}
-				} else {
-					parameterName = field.getName();
 				}
 				
 				Object newCandidate = values.get(parameterName);
@@ -136,7 +133,7 @@ public class Mapper {
 	
 	private Consumer<DictionaryValue> setDV(MapperType toUse) {
 		return (v)->{
-			if (toUse != null) {
+			if (toUse != null && !toUse.dateTimeFormat().equals("")) {
 				v.setDateTimeFormat(toUse.dateTimeFormat());
 				if (!toUse.key().equals("")) {
 					v.setOnlyKey(toUse.key());
