@@ -1,0 +1,10 @@
+[
+	{
+		"title": "Úvod",
+		"link": "about.html"
+	},
+	{
+		"title": "Licence",
+		"link": "https://raw.githubusercontent.com/ondrej-nemec/JI/master/LICENSE"
+	}
+]
