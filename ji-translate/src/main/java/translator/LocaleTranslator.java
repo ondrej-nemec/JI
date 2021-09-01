@@ -11,6 +11,8 @@ import common.functions.PropertiesLoader;
 
 public class LocaleTranslator implements Translator {
 	
+	public static TransProfiler PROFILER = null;
+	
 	private final Logger logger;
 
 	private Locale selectedLang;
@@ -89,6 +91,9 @@ public class LocaleTranslator implements Translator {
 					"Missing translation [%s] in %s: %s (%s)",
 					locale, module, transKey, variables
 				));
+				if (PROFILER != null) {
+					PROFILER.missingParameter(module, transKey, variables, locale);
+				}
 				value = key;
 				prop.put(transKey, value);
 			}
@@ -111,6 +116,9 @@ public class LocaleTranslator implements Translator {
 		Locale resourceKey = substitution.get(locale);
 		if (resourceKey == null) {
 			logger.info("Given locale not found (including substitutions): " + locale + ", default used");
+			if (PROFILER != null) {
+				PROFILER.missingLocale(locale);
+			}
 			resourceKey = settings.getDefaultLang();
 		}
 	
