@@ -21,6 +21,7 @@ import common.structures.DictionaryValue;
 import common.structures.ThrowingFunction;
 import database.Database;
 import database.support.DatabaseRow;
+import database.wrappers.StatementWrapper;
 import querybuilder.buildersparent.ParametrizedBuilder;
 
 public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
@@ -28,10 +29,10 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 	/** INTERNAL */
 	default <T> T _execute(ThrowingFunction<ResultSet, T, SQLException> callback) throws SQLException {
 		String query = createSql();
-		if (Database.PROFILER != null) {
-			Database.PROFILER.builderQuery(getSql(), query, getParameters());
-		}
 		try (Statement stat = getConnection().createStatement(); ResultSet res = stat.executeQuery(query);) {
+			if (Database.PROFILER != null) {
+				Database.PROFILER.builderQuery(StatementWrapper.class.cast(stat).ID, getSql(), query, getParameters());
+			}
 			return callback.apply(res);
 		}
 	}

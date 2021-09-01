@@ -12,6 +12,6 @@ public interface SqlQueryProfiler {
 	
 	void addParam(String identifier, Object param);
 	
-	void builderQuery(String query, String sql, Map<String, String> params);
+	void builderQuery(String identifier, String query, String sql, Map<String, String> params);
 	
 }
