@@ -6,5 +6,29 @@
 	{
 		"title": "Licence",
 		"link": "https://raw.githubusercontent.com/ondrej-nemec/JI/master/LICENSE"
+	},
+	{
+		"title": "Common",
+		"sub": []
+	},
+	{
+		"title": "Soubory",
+		"sub": []
+	},
+	{
+		"title": "Lokalizace",
+		"sub": []
+	},
+	{
+		"title": "Databáze",
+		"sub": []
+	},
+	{
+		"title": "Testování",
+		"sub": []
+	},
+	{
+		"title": "Klient-server",
+		"sub": []
 	}
 ]
