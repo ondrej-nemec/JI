@@ -60,6 +60,19 @@ public class DictionaryValue {
 	public Object getValue() {
 		return value;
 	}
+	
+	public boolean isPresent() {
+		return value != null;
+	}
+	
+	public boolean is(Class<?> clazz) {
+		try {
+			getValue(clazz);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T getValue(Class<T> clazz) {

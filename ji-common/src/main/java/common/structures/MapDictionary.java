@@ -30,6 +30,10 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		return map.get(name);
 	}
 	
+	public boolean containsKey(K key) {
+		return map.containsKey(key);
+	}
+	
 	public MapDictionary<K, V> put(K key, V value) {
 		map.put(key, value);
 		return this;

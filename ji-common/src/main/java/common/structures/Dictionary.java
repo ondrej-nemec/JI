@@ -21,6 +21,10 @@ public interface Dictionary<S> {
 		return getValue(name);
 	}
 	
+	default boolean is(S name, Class<?> clazz) {
+		return getDictionaryValue(name).is(clazz);
+	}
+	
 	default Boolean getBoolean(S name) {
 		return getDictionaryValue(name).getBoolean();
 	}
