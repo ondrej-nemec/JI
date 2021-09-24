@@ -67,8 +67,7 @@ public class DictionaryValue {
 	
 	public boolean is(Class<?> clazz) {
 		try {
-			getValue(clazz);
-			return true;
+			return clazz.isInstance(getValue(clazz));
 		} catch (Exception e) {
 			return false;
 		}
