@@ -6,10 +6,12 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import common.functions.Mapper;
+import common.structures.DictionaryValue;
 import common.structures.ListDictionary;
 import common.structures.MapDictionary;
 import json.providers.OutputStringProvider;
@@ -101,6 +103,10 @@ public class JsonWritter {
 			} else {
 				stream.writeObjectValue(name, date);
 			}
+		} else if (value instanceof DictionaryValue) {
+			writeObject(stream, DictionaryValue.class.cast(value).getValue(), name);
+		} else if (value instanceof Optional) {
+			writeObject(stream, Optional.class.cast(value).orElse(null), name);
 		} else {
 			writeObject(stream, Mapper.get().serialize(value), name);
 		}	
