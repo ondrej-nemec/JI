@@ -18,12 +18,20 @@ JI sdružuje několik užitečných knihoven.
 	<li><a href="">Komunikace klient-server</a> - web server, Rest API requesty, P2P komunikace</li>
 </ul>
 
-<h2>Závislost</h2>
+<h2>Dependency</h2>
 
-<p>JI lzde do projektu začlenit celé, nebo jen vybrané části.</p>
+<p>JI lzde do projektu přidat celé, nebo jen vybrané části. Přídání vybrané části - viz návod v dané části. Přidání pomocí Gradle Dependency (další způsoby zde <a href="https://jitpack.io/#ondrej-nemec/javainit">JitPack</a>):</p>
 
-<p>JI je publikováno na platformě <a href="https://jitpack.io/#ondrej-nemec/javainit">JitPack</a>. Ta umožňuje přidat projekt jako Gradle nebo Maven závislost.</p>
+<p>gradle.build</p>
 
-<p>Nejprve je nutné do <code>repositories</code> přidat:</p>
+<code>
+repositories { <br>
+	...<br>
+	maven { url 'https://jitpack.io' }<br>
+}<br>
+<br>
+dependencies {<br>
+    implementation 'com.github.ondrej-nemec:JI:Tag'<br>
+}<br>
 
-<code>maven { url 'https://jitpack.io' }</code>
+</code>

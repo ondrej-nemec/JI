@@ -9,109 +9,129 @@ import java.util.Map;
 
 public interface Dictionary<S> {
 
-	Object getValue(S name);
+	/**
+	 * 
+	 * @param key
+	 * @return value on given key in original type
+	 */
+	Object getValue(S key);
 	
 	void clear();
 	
-	default DictionaryValue getDictionaryValue(S name) {
-		return new DictionaryValue(getValue(name));
+	/**
+	 * 
+	 * @param key
+	 * @return value as DictionaryValue
+	 */
+	default DictionaryValue getDictionaryValue(S key) {
+		return new DictionaryValue(getValue(key));
 	}
 
-	default Object get(S name) {
-		return getValue(name);
+	/**
+	 * 
+	 * @param key
+	 * @return value on given key in original type
+	 */
+	default Object get(S key) {
+		return getValue(key);
 	}
 	
-	default boolean is(S name, Class<?> clazz) {
-		return getDictionaryValue(name).is(clazz);
+	/**
+	 * Check if value on given key is or can be instance of given class
+	 * @param key
+	 * @param clazz
+	 * @return true if value can is/can be casted/can be parsed to clas
+	 */
+	default boolean is(S key, Class<?> clazz) {
+		return getDictionaryValue(key).is(clazz);
 	}
 	
-	default Boolean getBoolean(S name) {
-		return getDictionaryValue(name).getBoolean();
+	default Boolean getBoolean(S key) {
+		return getDictionaryValue(key).getBoolean();
 	}
 	
-	default Byte getByte(S name) {
-		return getDictionaryValue(name).getByte();
+	default Byte getByte(S key) {
+		return getDictionaryValue(key).getByte();
 	}
 	
-	default Integer getInteger(S name) {
-		return getDictionaryValue(name).getInteger();
+	default Integer getInteger(S key) {
+		return getDictionaryValue(key).getInteger();
 	}
 	
-	default Long getLong(S name) {
-		return getDictionaryValue(name).getLong();
+	default Long getLong(S key) {
+		return getDictionaryValue(key).getLong();
 	}
 	
-	default Float getFloat(S name) {
-		return getDictionaryValue(name).getFloat();
+	default Float getFloat(S key) {
+		return getDictionaryValue(key).getFloat();
 	}
 	
-	default Double getDouble(S name) {
-		return getDictionaryValue(name).getDouble();
+	default Double getDouble(S key) {
+		return getDictionaryValue(key).getDouble();
 	}
 	
-	default Character getCharacter(S name) {
-		return getDictionaryValue(name).getCharacter();
+	default Character getCharacter(S key) {
+		return getDictionaryValue(key).getCharacter();
 	}
 	
-	default String getString(S name) {
-		return getDictionaryValue(name).getString();
+	default String getString(S key) {
+		return getDictionaryValue(key).getString();
 	}
 
-	default LocalTime getTime(S name) {
-		return getDictionaryValue(name).getTime();
+	default LocalTime getTime(S key) {
+		return getDictionaryValue(key).getTime();
 	}
 	
-	default LocalTime getTime(S name, String pattern) {
-		return getDictionaryValue(name).getTime(pattern);
+	default LocalTime getTime(S key, String pattern) {
+		return getDictionaryValue(key).getTime(pattern);
 	}
 	
-	default LocalDate getDate(S name) {
-		return getDictionaryValue(name).getDate();
+	default LocalDate getDate(S key) {
+		return getDictionaryValue(key).getDate();
 	}
 	
-	default LocalDate getDate(S name, String pattern) {
-		return getDictionaryValue(name).getDate(pattern);
+	default LocalDate getDate(S key, String pattern) {
+		return getDictionaryValue(key).getDate(pattern);
 	}
 	
-	default LocalDateTime getDateTime(S name) {
-		return getDictionaryValue(name).getDateTime();
+	default LocalDateTime getDateTime(S key) {
+		return getDictionaryValue(key).getDateTime();
 	}
 	
-	default LocalDateTime getDateTime(S name, String pattern) {
-		return getDictionaryValue(name).getDateTime(pattern);
+	default LocalDateTime getDateTime(S key, String pattern) {
+		return getDictionaryValue(key).getDateTime(pattern);
 	}
 	
-	default ZonedDateTime getDateTimeZone(S name) {
-		return getDictionaryValue(name).getDateTimeZone();
+	default ZonedDateTime getDateTimeZone(S key) {
+		return getDictionaryValue(key).getDateTimeZone();
 	}
 	
-	default ZonedDateTime getDateTimeZone(S name, String pattern) {
-		return getDictionaryValue(name).getDateTimeZone(pattern);
+	default ZonedDateTime getDateTimeZone(S key, String pattern) {
+		return getDictionaryValue(key).getDateTimeZone(pattern);
 	}
 	
-	
-	default <E extends Enum<E>> E getEnum(S name, Class<E> enumm) {
-		return getDictionaryValue(name).getEnum(enumm);
+	default <E extends Enum<E>> E getEnum(S key, Class<E> enumm) {
+		return getDictionaryValue(key).getEnum(enumm);
 	}
 	
-	default List<String> getList(S name, String delimiter) {
-		return getDictionaryValue(name).getList(delimiter);
+	default List<String> getList(S key, String delimiter) {
+		return getDictionaryValue(key).getList(delimiter);
 	}
 
-	default <T> ListDictionary<T> getDictionaryList(S name) {
-		return getDictionaryValue(name).getDictionaryList();
+	default <T> ListDictionary<T> getDictionaryList(S key) {
+		return getDictionaryValue(key).getDictionaryList();
 	}
 
-	default <T, E> MapDictionary<T, E> getDictionaryMap(S name) {
-		return getDictionaryValue(name).getDictionaryMap();
+	default <T, E> MapDictionary<T, E> getDictionaryMap(S key) {
+		return getDictionaryValue(key).getDictionaryMap();
 	}
 	
-	default <T> List<T> getList(S name) {
-		return getDictionaryValue(name).getList();
+	default <T> List<T> getList(S key) {
+		return getDictionaryValue(key).getList();
 	}
 
-	default <K, V> Map<K, V> getMap(S name) {
-		return getDictionaryValue(name).getMap();
+	default <K, V> Map<K, V> getMap(S key) {
+		return getDictionaryValue(key).getMap();
 	}
 
 }

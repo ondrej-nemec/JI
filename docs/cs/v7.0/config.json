@@ -9,7 +9,16 @@
 	},
 	{
 		"title": "Common",
-		"sub": []
+		"sub": [
+			{
+				"title": "Struktury",
+				"link": "common-structures.html"
+			},
+			{
+				"title": "Výjimky",
+				"link": "common-exceptions.html"
+			}
+		]
 	},
 	{
 		"title": "Soubory",
