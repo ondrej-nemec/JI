@@ -28,7 +28,7 @@
 
 <strong>Construct</strong>
 
-<p>
+<p class="code">
 <code>
 	<span class="comment">// with not empty Map</span> <br>
 	Map&lt;K, V&gt; map = ... <br>
@@ -43,7 +43,7 @@
 
 <strong>To Map</strong> 
 
-<p>
+<p class="code">
 <code>
 	// get Map from MapDictionary <br>
 	Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap(); <br>
@@ -52,7 +52,7 @@
 
 <strong>Get value</strong>	
 
-<p>
+<p class="code">
 <code>
 	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap().put("key1", "some value").put("key2", 123).toMap(); <br>
 	<span class="comment">// get "raw" value</span> <br>
@@ -70,7 +70,7 @@
 
 <strong>ForEach</strong>
 
-<p>
+<p class="code">
 <code>
 	MapDictionary&lt;Object, Object&gt; map = ... <br>
 	map.forEach((key, value)->{ <br>
@@ -85,7 +85,7 @@
 
 <strong>Construct</strong>
 
-<p>
+<p class="code">
 <code>
 	// with not empty List <br>
 	List&lt;S&gt; list = ... <br>
@@ -99,7 +99,7 @@
 
 <strong>Get List</strong>
 
-<p>
+<p class="code">
 <code>
 	// get List from ListDictionary <br>
 	List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList(); <br>
@@ -108,7 +108,7 @@
 
 <strong>Get value</strong> 
 
-<p>
+<p class="code">
 <code>
 	// get List from ListDictionary <br>
 	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList(); <br>
@@ -126,7 +126,7 @@
 
 <strong>ForEach</strong>
 
-<p>
+<p class="code">
 <code>
 	ListDictionary&lt;Object&gt; list = ... <br>
 	list.forEach((value)->{ <br>
@@ -142,7 +142,7 @@
 
 <p>Wrapper for Integer. Allows add (+) or remove (-) value. Useful in callbacks.</p>
 
-<p>
+<p class="code">
 <code>
 	List&lt;User&gt; users = ... <br>
 
@@ -166,7 +166,7 @@
 
 <p>List wrapper. Method <code>add</code> returns self.</p>
 
-<p>
+<p class="code">
 <code>
 	ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() <br>
 <span class="tab"></span>	.add("first") <br>
@@ -181,7 +181,7 @@
 
 <p>Map wrapper. Method <code>append</code>(instead of <code>put</code>) returns self.</p>
 
-<p>
+<p class="code">
 <code>
 	MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() <br>
 <span class="tab"></span>	.append("first", false) <br>
