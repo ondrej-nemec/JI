@@ -24,9 +24,11 @@
 
 <h3>Examples</h3>
 
-<h4>MapDictionary examples</h4>
+<h4>MapDictionary</h4>
 
-<strong>Construct</strong> <br>
+<strong>Construct</strong>
+
+<p>
 <code>
 	// with not empty Map <br>
 	Map&lt;K, V&gt; map = ... <br>
@@ -37,14 +39,20 @@
 	// as empty Properties <br>
 	MapDictionary.properties();
 </code>
-<br>
-<strong>To Map</strong> <br>
+</p>
+
+<strong>To Map</strong> 
+
+<p>
 <code>
 	// get Map from MapDictionary <br>
 	Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap(); <br>
 </code>
-<br>
-<strong>Get value</strong> <br>	
+</p>
+
+<strong>Get value</strong>	
+
+<p>
 <code>
 	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap().put("key1", "some value").put("key2", 123).toMap(); <br>
 	// get "raw" value <br>
@@ -58,20 +66,26 @@
 	Integer integer = dictionary.getInteger("key2"); <br>
 	List&lt;String&gt; list = dictionary.getList(" "); // split value by ' ' -> list will contains two fields "some" and "value"
 </code>
-<br>
-<strong>ForEach</strong> <br>
+</p>
+
+<strong>ForEach</strong>
+
+<p>
 <code>
 	MapDictionary&lt;Object, Object&gt; map = ... <br>
 	map.forEach((key, value)->{ <br>
-		// key is Object or other given class<br>
-		// !! value is DictionaryValue !! <br>
+<span class="tab"></span>		// key is Object or other given class<br>
+<span class="tab"></span>		// !! value is DictionaryValue !! <br>
 	}); <br>
 	// for standart forEach use forEach2 method
 </code>
+</p>
 
-<h4>ListDictionary examples</h4>
+<h4>ListDictionary</h4>
 
-<strong>Construct</strong> <br>
+<strong>Construct</strong>
+
+<p>
 <code>
 	// with not empty List <br>
 	List&lt;S&gt; list = ... <br>
@@ -81,14 +95,20 @@
 	// as empty ArrayList <br>
 	ListDictionary.arrayList();
 </code>
-<br>
-<strong>Get List</strong><br>
+</p>
+
+<strong>Get List</strong>
+
+<p>
 <code>
 	// get List from ListDictionary <br>
 	List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList(); <br>
 </code>
-<br>
-<strong>Get value</strong> <br>	
+</p>
+
+<strong>Get value</strong> 
+
+<p>
 <code>
 	// get List from ListDictionary <br>
 	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList(); <br>
@@ -102,15 +122,19 @@
 	Double doub = list.getDouble(0); <br>
 	LocalDate date = list.getDate(0); <br>
 </code>
-<br>
-<strong>ForEach</strong> <br>
+</p>
+
+<strong>ForEach</strong>
+
+<p>
 <code>
 	ListDictionary&lt;Object&gt; list = ... <br>
 	list.forEach((value)->{ <br>
-		// !! value is DictionaryValue !! <br>
+<span class="tab"></span>		// !! value is DictionaryValue !! <br>
 	}); <br>
 	// for standart forEach use forEach2 method
 </code>
+</p>
 
 <h2>Buildery</h2>
 
@@ -118,33 +142,77 @@
 
 <p>Wrapper for Integer. Allows add (+) or remove (-) value. Useful in callbacks.</p>
 
+<p>
 <code>
 	List&lt;User&gt; users = ... <br>
 
 	<strike>int usersAge = 0;</strike> <br>
 	<strike>users.forEach((user)->{</strike> <br>
-		<strike>usersAge += user.getAge();</strike>  <br>
+<span class="tab"></span>		<strike>usersAge += user.getAge();</strike>  <br>
 	<strike>});</strike>  <br>
 
 	IntegerBuilder usersAge = new IntegerBuilder(); <br>
 	users.forEach((user)->{	<br>
-		usersAge.add(user.getAge());<br>
+<span class="tab"></span>		usersAge.add(user.getAge());<br>
 	}); <br>
 </code>
+</p>
 
 <h3>ObjectBuilder</h3>
+
+<p>Object wrapper. You can set, get, clear or check (<code>isPresent()</code>) value. Userful in callbacks.</p>
+
 <h3>ListInit</h3>
+
+<p>List wrapper. Method <code>add</code> returns self.</p>
+
+<p>
+<code>
+	ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() <br>
+<span class="tab"></span>	.add("first") <br>
+<span class="tab"></span>	.second("second"); <br>
+	Set&lt;String&gt; set = init.toSet(); // convert to Set <br>
+	List&lt;String&gt; list = init.toList(); // convert to List <br>
+	ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
+</code>
+</p>
+
 <h3>MapInit</h3>
 
-<h2>Callbacky</h2>
+<p>Map wrapper. Method <code>append</code>(instead of <code>put</code>) returns self.</p>
 
+<p>
+<code>
+	MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() <br>
+<span class="tab"></span>	.append("first", false) <br>
+<span class="tab"></span>	.append("second", 42); <br>
+	Map&lt;String, Object&gt; map = init.toMap(); // convert to Map <br>
+	Properties prop = init.toProperties(); // convert to Properties <br>
+	MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
+</code>
+</p>
 
-<code></code>
-<code></code>
-<code></code>
-&lt;&gt;
-&lt;&gt;
-&lt;&gt;
-&lt;&gt;
-&lt;&gt;
-&lt;&gt;
+<h2>Callbacks</h2>
+
+<p>Java callbacks like <code>Function</code> or <code>Consumer</code> are very useful. But sometimes you need execute code throwing f.e. <code>IOException</code> inside <code>apply</code> method. And you have to do <code>try...catch</code>. But code that call <code>apply</code> is catched. Here help Throwing callbacks. Work like <code>Function</code> or <code>Consumer</code> or ... but throw given exception.</p>
+
+<p>
+	<ul>
+		<li>ThrowingConsumer</li>
+		<li>ThrowingBiConsumer</li>
+		<li>ThrowingFunction</li>
+		<li>ThrowingBiFunction</li>
+		<li>ThrowingSupplier</li>
+	</ul>
+</p>
+
+<h2>Tuple</h2>
+
+<p>Tuple holds more variables in one object.
+
+	<ul>
+		<li>Tuple2 - holds two values</li>
+		<li>TUple3 - holds three values</li>
+	</ul>
+
+</p>
