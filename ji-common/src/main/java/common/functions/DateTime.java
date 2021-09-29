@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
+@Deprecated
+// TODO move to Dictionary value - getString
 public class DateTime {
 	
 	public static String format(String pattern) {
