@@ -1,0 +1,150 @@
+<h1>Struktures</h1>
+
+<h2>Dictionary</h2>
+
+<p>Dictionary classes help to work with objects with unknown datatype, input data with variable datatype or data in string. Contains <code>MapDictionary</code>(<code>Map</code> wrapper), <code>ListDictionary</code>(<code>List</code> wrapper) and <code>DictionaryValue</code>(value wrapper)</p>
+
+<h3>DictionaryValue</h3>
+
+<p>Allows you to get a value in a given type. If the value is of a different type, it will try to parse or cast.
+	Supported:
+	<ul>
+		<li><code>Boolean</code>, <code>bool</code> - returns <code>true</code> if value is true or "true" or "on" or "1"</li>
+		<li>Numbers (including primitive types): <code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code></li>
+		<li>Text: <code>Character</code>, <code>char</code>, <code>String</code></li>
+		<li><code>Map</code>, <code>MapDictionary</code> - cast from <code>Map</code> to <code>MapDictionary</code> and vise versa automatically.</li>
+		<li><code>List</code>, <code>ListDictionary</code> - cast from <code>List</code> to <code>ListDictionary</code> and vise versa automatically. Eventual can be <code>String</code> splited by given delimeter to get <code>List</code>. </li>
+		<li><code>Enums</code></li>
+		<li>Time: <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>, <code>ZonedDateTime</code>. All times can be casted to another, parsed from <code>String</code> with ISO or set pattern. Also from number.</li>
+		<li>Arbitrary class - from <code>Map</code>. See Mapper TODO </li>
+	</ul>
+
+	If project contains classes for JSON parsing, <code>DictionaryValue</code> can parse <code>Map</code>, <code>MapDictionary</code>, <code>List</code> and <code>ListDictionary</code> from string. Or can be set function for parsing these classes.
+</p>
+
+<h3>Examples</h3>
+
+<h4>MapDictionary examples</h4>
+
+<strong>Construct</strong> <br>
+<code>
+	// with not empty Map <br>
+	Map&lt;K, V&gt; map = ... <br>
+	new MapDictionary(map); <br>
+	<br>
+	// as empty HashMap <br>
+	MapDictionary.hashMap(); <br>
+	// as empty Properties <br>
+	MapDictionary.properties();
+</code>
+<br>
+<strong>To Map</strong> <br>
+<code>
+	// get Map from MapDictionary <br>
+	Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap(); <br>
+</code>
+<br>
+<strong>Get value</strong> <br>	
+<code>
+	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap().put("key1", "some value").put("key2", 123).toMap(); <br>
+	// get "raw" value <br>
+	Object value = dictionary.get("key1"); // value will be String "some value" <br>
+	// or <br>
+	Object value2 = dictionary.get("key2"); // value2 will be Integer 123 <br>
+	// to get new DictionaryValue from value <br>
+	DictionaryValue v = dictionary.get("key2"); <br>
+	// to get with type <br>
+	String string = dictionary.getString("key1"); <br>
+	Integer integer = dictionary.getInteger("key2"); <br>
+	List&lt;String&gt; list = dictionary.getList(" "); // split value by ' ' -> list will contains two fields "some" and "value"
+</code>
+<br>
+<strong>ForEach</strong> <br>
+<code>
+	MapDictionary&lt;Object, Object&gt; map = ... <br>
+	map.forEach((key, value)->{ <br>
+		// key is Object or other given class<br>
+		// !! value is DictionaryValue !! <br>
+	}); <br>
+	// for standart forEach use forEach2 method
+</code>
+
+<h4>ListDictionary examples</h4>
+
+<strong>Construct</strong> <br>
+<code>
+	// with not empty List <br>
+	List&lt;S&gt; list = ... <br>
+	new ListDictionary(list); <br>
+	// as empty LinkedList <br>
+	ListDictionary.linkedList(); <br>
+	// as empty ArrayList <br>
+	ListDictionary.arrayList();
+</code>
+<br>
+<strong>Get List</strong><br>
+<code>
+	// get List from ListDictionary <br>
+	List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList(); <br>
+</code>
+<br>
+<strong>Get value</strong> <br>	
+<code>
+	// get List from ListDictionary <br>
+	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList(); <br>
+	// get "raw" value <br>
+	Object value = list.get(0); // value will be Intger 1 <br>
+	// get new DictionaryValue from value <br>
+	DictionaryValue v = list.getDictionaryValue(0); <br>
+	// to get with type <br>
+	Integer integer = list.getInteger(0); <br>
+	Boolean boolean = list.getBoolean(0); <br>
+	Double doub = list.getDouble(0); <br>
+	LocalDate date = list.getDate(0); <br>
+</code>
+<br>
+<strong>ForEach</strong> <br>
+<code>
+	ListDictionary&lt;Object&gt; list = ... <br>
+	list.forEach((value)->{ <br>
+		// !! value is DictionaryValue !! <br>
+	}); <br>
+	// for standart forEach use forEach2 method
+</code>
+
+<h2>Buildery</h2>
+
+<h3>IntegerBuilder</h3>
+
+<p>Wrapper for Integer. Allows add (+) or remove (-) value. Useful in callbacks.</p>
+
+<code>
+	List&lt;User&gt; users = ... <br>
+
+	<strike>int usersAge = 0;</strike> <br>
+	<strike>users.forEach((user)->{</strike> <br>
+		<strike>usersAge += user.getAge();</strike>  <br>
+	<strike>});</strike>  <br>
+
+	IntegerBuilder usersAge = new IntegerBuilder(); <br>
+	users.forEach((user)->{	<br>
+		usersAge.add(user.getAge());<br>
+	}); <br>
+</code>
+
+<h3>ObjectBuilder</h3>
+<h3>ListInit</h3>
+<h3>MapInit</h3>
+
+<h2>Callbacky</h2>
+
+
+<code></code>
+<code></code>
+<code></code>
+&lt;&gt;
+&lt;&gt;
+&lt;&gt;
+&lt;&gt;
+&lt;&gt;
+&lt;&gt;

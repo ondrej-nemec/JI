@@ -1,6 +1,6 @@
 [
 	{
-		"title": "Úvod",
+		"title": "About",
 		"link": "about.html"
 	},
 	{
@@ -11,33 +11,33 @@
 		"title": "Common",
 		"sub": [
 			{
-				"title": "Struktury",
+				"title": "Structures",
 				"link": "common-structures.html"
 			},
 			{
-				"title": "Výjimky",
+				"title": "Exceptions",
 				"link": "common-exceptions.html"
 			}
 		]
 	},
 	{
-		"title": "Soubory",
+		"title": "Files",
 		"sub": []
 	},
 	{
-		"title": "Lokalizace",
+		"title": "Localization",
 		"sub": []
 	},
 	{
-		"title": "Databáze",
+		"title": "Database",
 		"sub": []
 	},
 	{
-		"title": "Testování",
+		"title": "Testing",
 		"sub": []
 	},
 	{
-		"title": "Klient-server",
+		"title": "Client-server",
 		"sub": []
 	}
 ]

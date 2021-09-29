@@ -1,0 +1,37 @@
+<h1>About TOTI</h1>
+
+<a href="https://jitpack.io/#ondrej-nemec/javainit"><img src="https://jitpack.io/v/ondrej-nemec/javainit.svg"></a>
+<a href="https://github.com/ondrej-nemec/javainit/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg"></a>
+
+<p>
+Project contains some useful libraries, functions and structures
+</p>
+
+<h2>Libraries</h2>
+
+<ul>
+	<li><a href="">Common</a> - Often used logic, useful structures and exceptions</li>
+	<li><a href="">File reading/writing</a> - Factories for Buffered Reader/Writer and JSON stream</li>
+	<li><a href="">Lokalization</a> - Package supports multilingual applications./li>
+	<li><a href="">Database</a> - Contains: database communication, SQL Query Builder and database migrations.</li>
+	<li><a href="">Database Test Case</a> - Extends jUnit for testing with database</li>
+	<li><a href="">Client-Server communication</a> - Provide server/client communication (secured or unsecured) using Java sockets. Implements web server too.</li>
+</ul>
+
+<h2>Dependency</h2>
+
+<p>You can add whole JI or only selected parts to the project. Adding a selected part - see the instructions in that part. How to add whole project see <a href="https://jitpack.io/#ondrej-nemec/javainit">JitPack</a>) or you can use Gradle:</p>
+
+<p>gradle.build</p>
+
+<code>
+repositories { <br>
+	...<br>
+	maven { url 'https://jitpack.io' }<br>
+}<br>
+<br>
+dependencies {<br>
+    implementation 'com.github.ondrej-nemec:JI:Tag'<br>
+}<br>
+
+</code>
