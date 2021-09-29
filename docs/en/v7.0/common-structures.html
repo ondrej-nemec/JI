@@ -30,13 +30,13 @@
 
 <p>
 <code>
-	// with not empty Map <br>
+	<span class="comment">// with not empty Map</span> <br>
 	Map&lt;K, V&gt; map = ... <br>
 	new MapDictionary(map); <br>
 	<br>
-	// as empty HashMap <br>
+	<span class="comment">// as empty HashMap </span><br>
 	MapDictionary.hashMap(); <br>
-	// as empty Properties <br>
+	<span class="comment">// as empty Properties</span> <br>
 	MapDictionary.properties();
 </code>
 </p>
@@ -55,16 +55,16 @@
 <p>
 <code>
 	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap().put("key1", "some value").put("key2", 123).toMap(); <br>
-	// get "raw" value <br>
+	<span class="comment">// get "raw" value</span> <br>
 	Object value = dictionary.get("key1"); // value will be String "some value" <br>
-	// or <br>
+	<span class="comment">// or</span>  <br>
 	Object value2 = dictionary.get("key2"); // value2 will be Integer 123 <br>
-	// to get new DictionaryValue from value <br>
+	<span class="comment">// to get new DictionaryValue from value </span> <br>
 	DictionaryValue v = dictionary.get("key2"); <br>
-	// to get with type <br>
+	<span class="comment">// to get with type </span> <br>
 	String string = dictionary.getString("key1"); <br>
 	Integer integer = dictionary.getInteger("key2"); <br>
-	List&lt;String&gt; list = dictionary.getList(" "); // split value by ' ' -> list will contains two fields "some" and "value"
+	List&lt;String&gt; list = dictionary.getList(" ");<span class="comment"> // split value by ' ' -> list will contains two fields "some" and "value"</span> 
 </code>
 </p>
 
