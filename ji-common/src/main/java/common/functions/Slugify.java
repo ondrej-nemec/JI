@@ -5,6 +5,7 @@ import java.text.Normalizer.Form;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class Slugify {
 	
 	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");

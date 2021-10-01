@@ -15,6 +15,13 @@ public class FilesList {
 	private URL url;
 	private final List<String> files;
 
+	/**
+	 * Create new FilesList
+	 * @param folder - path to folder or jar
+	 * @param recursive if load files in sub dirs
+	 * @return new FilesList
+	 * @throws Exception
+	 */
 	public static FilesList get(String folder, boolean recursive) throws Exception {
 		return new FilesList(folder, recursive);
 	}

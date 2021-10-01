@@ -9,7 +9,7 @@ public class InputStreamLoader {
 
 	/**
 	 * Try to load file first from classpath and on failure try dir tree
-	 * @param clazz
+	 * @param clazz - some class for resource stream
 	 * @param path path to file **IMPORTANT** without '/' on path start
 	 * @return InputStream from classpath or dir tree
 	 * @throws IOException

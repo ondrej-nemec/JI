@@ -1,10 +1,85 @@
 <h1>Functions</h1>
 
-files: file lsit, file extension, inputstLoader, properties loader
+<h2>Files and IO functions</h2>
 
-mapper
+<h3>FileExcension</h3>
 
-env
-stact trace, slugyfy, implode
-hash
-console, terminal, operation sysetm
+<p>
+	Splits file name to name and extension:
+</p>
+<p class="code">
+	<code>
+		FileExtension ext = new FileExtension("some-name.txt"); <br>
+		String name = ext.getName();<br>
+		String extension = ext.getExtension();
+	</code>
+</p>
+
+<h3>FilesList</h3>
+
+<p>
+	Loads file names from directory. Can be recursive or not. Is able to load names from directory in file system and from jar file.
+</p>
+<p class="code">
+	<code>
+		FilesList filesList = FilesList.get("/path/to/dir/name", true); <span class="comment">// second parameter says 'recursive'</span> <br>
+		List&lt;String&gt; files = filesList.getFiles(); <br>
+		URL url = filesList.getURL();
+	</code>
+</p>
+
+<h3>InputStreamLoader</h3>
+
+<p>
+	Creates new instance of <code>InputStream</code> from file. File can be in file system, classpath (in IDE) or in jar. <strong>Path to file has to be relative without first '/'.</strong> 
+</p>
+<p class="code">
+	<code>
+		InputStream inputStream = InputStreamLoader.createInputStream(this.getClass(), "path/to/file");
+	</code>
+</p>
+
+<h3>PropertiesLoader</h3>
+
+<p>
+	Loads <code>Properties</code> from file using <code>InputStreamLoader</code> (means file can be in file system or jar).
+</p>
+<p class="code">
+	<code>
+		Properties prop = PropertiesLoader.loadProperties("res/app.properties"); <br>
+		<span class="comment">// optionally with charset, default 'uft-8'</span> <br>
+		Properties prop = PropertiesLoader.loadProperties("res/app.properties", "windows-1250");
+	</code>
+</p>
+
+<h2>Mapper</h2>
+
+
+
+<h2>Other</h2>
+
+<h3>Env</h3>
+
+<p>
+	Application configuration. Can be loaded from file using <code>PropertiesLoader</code>. Works like <code>MapDirectory</code>, so you can get variables with type.
+</p>
+<p>
+	Env env = new Env("conf/app.properties"); <br>
+	<span class="comment">// or alternativelly</span> <br>
+	Properties prop = ... <br>
+	Env env2 = new Env(prop); <br>
+</p>
+
+<h3>Implode</h3>
+
+<p>
+	Array or <code>Iterable</code> to string with given glue and optionally with to-string function applied on each item.
+</p>
+<p class="code">
+	<code>
+		Implode.implode(", ", 1, 2, 3); <span class="comment"> // returns "1, 2, 3"</span> <br>
+		Implode.implode(i->i+"0", ", ", 1, 2, 3); <span class="comment"> // returns "10, 20, 30"</span> <br>
+		Implode.implode(", ", Arrays.asList(1, 2, 3)); <span class="comment"> // returns "1, 2, 3"</span> <br>
+		Implode.implode(i->i+"0", ", ", Arrays.asList(1, 2, 3)); <span class="comment"> // returns "10, 20, 30"</span> <br>
+	</code>
+</p>

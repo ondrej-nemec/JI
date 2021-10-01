@@ -7,6 +7,7 @@ import java.util.Base64;
 
 import common.exceptions.HashException;
 
+@Deprecated
 public class Hash {
 	
 	private final String algoritm;	
