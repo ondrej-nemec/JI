@@ -31,7 +31,7 @@
 <p class="code">
 <code>
 	<span class="comment">// with not empty Map</span> <br>
-	Map&lt;K, V&gt; map = ... <br>
+	Map&lt;K, V&gt; map = ...; <br>
 	new MapDictionary(map); <br>
 	<br>
 	<span class="comment">// as empty HashMap </span><br>
@@ -54,7 +54,10 @@
 
 <p class="code">
 <code>
-	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap().put("key1", "some value").put("key2", 123).toMap(); <br>
+	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap() <br>
+	<span class="tab"></span> .put("key1", "some value") <br>
+	<span class="tab"></span> .put("key2", 123) <br>
+	<span class="tab"></span>.toMap(); <br>
 	<span class="comment">// get "raw" value</span> <br>
 	Object value = dictionary.get("key1"); // value will be String "some value" <br>
 	<span class="comment">// or</span>  <br>
@@ -72,12 +75,12 @@
 
 <p class="code">
 <code>
-	MapDictionary&lt;Object, Object&gt; map = ... <br>
+	MapDictionary&lt;Object, Object&gt; map = ...; <br>
 	map.forEach((key, value)->{ <br>
 <span class="tab"></span>		// key is Object or other given class<br>
 <span class="tab"></span>		// !! value is DictionaryValue !! <br>
 	}); <br>
-	// for standart forEach use forEach2 method
+	<span class="comment">// for standart forEach use forEach2 method</span>
 </code>
 </p>
 
@@ -87,12 +90,12 @@
 
 <p class="code">
 <code>
-	// with not empty List <br>
-	List&lt;S&gt; list = ... <br>
+	<span class="comment">// with not empty List</span> <br>
+	List&lt;S&gt; list = ...; <br>
 	new ListDictionary(list); <br>
-	// as empty LinkedList <br>
+	<span class="comment">// as empty LinkedList </span><br>
 	ListDictionary.linkedList(); <br>
-	// as empty ArrayList <br>
+	<span class="comment">// as empty ArrayList </span><br>
 	ListDictionary.arrayList();
 </code>
 </p>
@@ -101,7 +104,7 @@
 
 <p class="code">
 <code>
-	// get List from ListDictionary <br>
+	<span class="comment">// get List from ListDictionary</span> <br>
 	List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList(); <br>
 </code>
 </p>
@@ -110,13 +113,13 @@
 
 <p class="code">
 <code>
-	// get List from ListDictionary <br>
+	<span class="comment">// get List from ListDictionary </span><br>
 	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList(); <br>
-	// get "raw" value <br>
+	<span class="comment">// get "raw" value</span> <br>
 	Object value = list.get(0); // value will be Intger 1 <br>
-	// get new DictionaryValue from value <br>
+	<span class="comment">// get new DictionaryValue from value</span> <br>
 	DictionaryValue v = list.getDictionaryValue(0); <br>
-	// to get with type <br>
+	<span class="comment">// to get with type </span><br>
 	Integer integer = list.getInteger(0); <br>
 	Boolean boolean = list.getBoolean(0); <br>
 	Double doub = list.getDouble(0); <br>
@@ -128,11 +131,11 @@
 
 <p class="code">
 <code>
-	ListDictionary&lt;Object&gt; list = ... <br>
+	ListDictionary&lt;Object&gt; list = ...; <br>
 	list.forEach((value)->{ <br>
 <span class="tab"></span>		// !! value is DictionaryValue !! <br>
 	}); <br>
-	// for standart forEach use forEach2 method
+	<span class="comment">// for standart forEach use forEach2 method</span>
 </code>
 </p>
 
@@ -144,7 +147,7 @@
 
 <p class="code">
 <code>
-	List&lt;User&gt; users = ... <br>
+	List&lt;User&gt; users = ...; <br>
 
 	<strike>int usersAge = 0;</strike> <br>
 	<strike>users.forEach((user)->{</strike> <br>
