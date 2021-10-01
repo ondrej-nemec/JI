@@ -9,7 +9,7 @@
 </p>
 <p class="code">
 	<code>
-		FileExtension ext = new FileExtension("some-name.txt"); <br>
+		FileExtension ext = new FileExtension(<span class="text">"some-name.txt"</span>); <br>
 		String name = ext.getName();<br>
 		String extension = ext.getExtension();
 	</code>
@@ -22,7 +22,7 @@
 </p>
 <p class="code">
 	<code>
-		FilesList filesList = FilesList.get("/path/to/dir/name", true); <span class="comment">// second parameter says 'recursive'</span> <br>
+		FilesList filesList = FilesList.get(<span class="text">"/path/to/dir/name"</span>, true); <span class="comment">// second parameter says 'recursive'</span> <br>
 		List&lt;String&gt; files = filesList.getFiles(); <br>
 		URL url = filesList.getURL();
 	</code>
@@ -35,7 +35,7 @@
 </p>
 <p class="code">
 	<code>
-		InputStream inputStream = InputStreamLoader.createInputStream(this.getClass(), "path/to/file");
+		InputStream inputStream = InputStreamLoader.createInputStream(this.getClass(), <span class="text">"path/to/file"</span>);
 	</code>
 </p>
 
@@ -46,9 +46,9 @@
 </p>
 <p class="code">
 	<code>
-		Properties prop = PropertiesLoader.loadProperties("res/app.properties"); <br>
+		Properties prop = PropertiesLoader.loadProperties(<span class="text">"res/app.properties"</span>); <br>
 		<span class="comment">// optionally with charset, default 'uft-8'</span> <br>
-		Properties prop = PropertiesLoader.loadProperties("res/app.properties", "windows-1250");
+		Properties prop = PropertiesLoader.loadProperties(<span class="text">"res/app.properties"</span>, <span class="text">"windows-1250"</span>);
 	</code>
 </p>
 
@@ -64,7 +64,7 @@
 	Application configuration. Can be loaded from file using <code>PropertiesLoader</code>. Works like <code>MapDirectory</code>, so you can get variables with type.
 </p>
 <p>
-	Env env = new Env("conf/app.properties"); <br>
+	Env env = new Env(<span class="text">"conf/app.properties"</span>); <br>
 	<span class="comment">// or alternativelly</span> <br>
 	Properties prop = ...; <br>
 	Env env2 = new Env(prop); <br>
@@ -77,9 +77,9 @@
 </p>
 <p class="code">
 	<code>
-		Implode.implode(", ", 1, 2, 3); <span class="comment"> // returns "1, 2, 3"</span> <br>
-		Implode.implode(i->i+"0", ", ", 1, 2, 3); <span class="comment"> // returns "10, 20, 30"</span> <br>
-		Implode.implode(", ", Arrays.asList(1, 2, 3)); <span class="comment"> // returns "1, 2, 3"</span> <br>
-		Implode.implode(i->i+"0", ", ", Arrays.asList(1, 2, 3)); <span class="comment"> // returns "10, 20, 30"</span> <br>
+		Implode.implode(<span class="text">", "</span>, 1, 2, 3); <span class="comment"> // returns "1, 2, 3"</span> <br>
+		Implode.implode(i->i+<span class="text">"0"</span>, <span class="text">", "</span>, 1, 2, 3); <span class="comment"> // returns "10, 20, 30"</span> <br>
+		Implode.implode(<span class="text">", "</span>, Arrays.asList(1, 2, 3)); <span class="comment"> // returns "1, 2, 3"</span> <br>
+		Implode.implode(i->i+<span class="text">"0"</span>, <span class="text">", "</span>, Arrays.asList(1, 2, 3)); <span class="comment"> // returns "10, 20, 30"</span> <br>
 	</code>
 </p>

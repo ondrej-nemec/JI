@@ -172,8 +172,8 @@
 <p class="code">
 <code>
 	ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() <br>
-<span class="tab"></span>	.add("first") <br>
-<span class="tab"></span>	.second("second"); <br>
+<span class="tab"></span>	.add(<span class="text">"first"</span>) <br>
+<span class="tab"></span>	.second(<span class="text">"second"</span>); <br>
 	Set&lt;String&gt; set = init.toSet(); // convert to Set <br>
 	List&lt;String&gt; list = init.toList(); // convert to List <br>
 	ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
@@ -187,8 +187,8 @@
 <p class="code">
 <code>
 	MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() <br>
-<span class="tab"></span>	.append("first", false) <br>
-<span class="tab"></span>	.append("second", 42); <br>
+<span class="tab"></span>	.append(<span class="text">"first"</span>, false) <br>
+<span class="tab"></span>	.append(<span class="text">"second"</span>, 42); <br>
 	Map&lt;String, Object&gt; map = init.toMap(); // convert to Map <br>
 	Properties prop = init.toProperties(); // convert to Properties <br>
 	MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
