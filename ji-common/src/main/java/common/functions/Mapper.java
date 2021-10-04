@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,8 +37,8 @@ public class Mapper {
 					continue;
 				}
 				if (field.isAnnotationPresent(MapperIgnored.class)) {
-					String annotationKey = field.getAnnotation(MapperIgnored.class).value();
-					if (key == null || annotationKey.equals("") || annotationKey.equals(key)) {
+					String[] annotationKeys = field.getAnnotation(MapperIgnored.class).value();
+					if (key == null || annotationKeys.length == 0 || Arrays.asList(annotationKeys).contains(key)) {
 						continue;
 					}
 				}
