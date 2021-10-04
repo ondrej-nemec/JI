@@ -37,6 +37,11 @@ public class Console {
 		return in();
 	}
 	
+	public String ask(String message) {
+		out(message);
+		return in();
+	}
+	
 	public synchronized void clear() {
 		System.out.print("\033[H\033[2J");  
 		System.out.flush();
