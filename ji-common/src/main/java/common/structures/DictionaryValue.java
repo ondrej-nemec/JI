@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+// TODO serializable
 public class DictionaryValue {
 
 	private final Object value;
@@ -321,7 +322,7 @@ public class DictionaryValue {
 			return clazz.cast(value);
 		}
 		Object val = value;
-		if (val instanceof String && fromString != null) {
+		if (fromString != null) {
 			val = fromString.apply(val.toString());
 		}
 		if (prepare != null) {
