@@ -2,6 +2,7 @@ package common.functions;
 
 import common.structures.ThrowingFunction;
 
+// TODO improve and add to documentation
 public class StackTrace {
 
 	public static String classParent(ThrowingFunction<StackTraceElement, Boolean, Exception> function) {

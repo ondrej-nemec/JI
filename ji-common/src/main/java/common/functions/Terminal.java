@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import common.Logger;
 
+// TODO improve and add to documentation - remove logger?
 public class Terminal {
 	
 	private final Logger logger;

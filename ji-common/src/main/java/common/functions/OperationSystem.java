@@ -1,5 +1,6 @@
 package common.functions;
 
+// TODO improve and add to documentation
 public enum OperationSystem {
 	
 	NEW_LINE("\r\n", "\n"),
