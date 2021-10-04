@@ -55,9 +55,41 @@
 <h2>Mapper</h2>
 
 <p>
-	<code>Mapper</code> class is able to convert object (entity) to <code>Map</code> and <code>Map</code> back to entity. 
+	<code>Mapper</code> class is able to convert object (entity) to <code>Map</code> (serialize) and <code>Map</code> back to entity (parse).
 </p>
 
+<h3>Serialize</h3>
+
+<p>
+	During serialization JI come thru all fields of entity and uses then as key in new <code>Map</code>. Values of fields become values. Serializations works recursivelly. If you wish ignore field during serialization, just add <code>MapperIgnored</code> annotation. If you do not wish use field name as key, you need to annotate this field with <code>MapperParameter</code> and as value to put <code>MapperType</code> (see examples).
+</p>
+
+<strong>Entity</strong>
+<p class="code">
+<code>
+	public class UserEntity { <br>
+<span class="tab"></span>@MapperParameter({@MapperType(<span class="text">user_id</span>)}) <br>
+<span class="tab"></span>private int id; <span class="comment"> // this field will be saved as 'user_id'</span> <br>
+<span class="tab"></span> <br>
+<span class="tab"></span>private String name; <span class="comment"> // this field will be saved as 'name'</span> <br>
+<span class="tab"></span>@MapperIgnored <br>
+<span class="tab"></span>private int age; <span class="comment"> // this field will be ignored</span> <br>
+	}
+</code>
+</p>
+<strong>Call:</strong>
+<p class="code">
+	<code>
+		UserEntity user = ...; <br>
+		Mapper.get().serialize(user);
+	</code>
+</p>
+
+<p>
+	One entity can be serialized in more ways that are defined by string key. This key is the second (optional) parameter to <code>serialize</code> method. <code>MapperIgnore</code> contains array of strings. If one of then is equals to given key, field will be ignored. If the array is empty (default state), field will be always ignored. Otherwise will be used. <code>MapperParameter</code> can has more than one <code>MapperType</code>. <code>MapperType</code> has <code>key</code> parameter that specified the 'way'. Default is empty string and means 'use if no others options'.
+</p>
+ 
+TODO generate example
 
 
 <h2>Other</h2>
