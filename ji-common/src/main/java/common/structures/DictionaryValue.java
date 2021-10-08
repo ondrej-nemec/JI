@@ -134,7 +134,13 @@ public class DictionaryValue {
 	public Boolean getBoolean() {
 		return parseValue(
 			Boolean.class,
-			v->v.toString().equalsIgnoreCase("true") || v.toString().equalsIgnoreCase("on") || v.toString().equalsIgnoreCase("1")
+			v->v.equalsIgnoreCase("true") || v.equalsIgnoreCase("on") || v.equalsIgnoreCase("1"),
+			v->{
+				if (v instanceof Number) {
+					return Number.class.cast(v).byteValue() > 0;
+				}
+				return v;
+			}
 		);
 	}
 	
@@ -322,7 +328,7 @@ public class DictionaryValue {
 			return clazz.cast(value);
 		}
 		Object val = value;
-		if (fromString != null) {
+		if (val instanceof String && fromString != null) {
 			val = fromString.apply(val.toString());
 		}
 		if (prepare != null) {
