@@ -28,15 +28,15 @@ public abstract class DatabaseTestCase {
 
 	public DatabaseTestCase(Env env, Logger logger) {
 		this(new DatabaseConfig(
-				env.getString("db.type"),
-				env.getString("db.pathOrUrl"),
-				env.getBoolean("db.externalServer"),
-				env.getString("db.schema"),
-				env.getString("db.login"),
-				env.getString("db.password"),
-				env.getList("db.pathToMigrations", ","),
-				env.getInteger("db.poolSize")
-		), logger);
+                env.getString("database.type"),
+                env.getString("database.url"),
+                env.getBoolean("database.external") == null ? true : env.getBoolean("database.external"),
+                env.getString("database.schema-name"),
+                env.getString("database.login"),
+                env.getString("database.password"),
+                 env.getList("database.pathToMigrations", ","),
+                env.getInteger("database.pool-size")
+       ), logger);
 	}
 
 	protected abstract List<Table> getDataSet();
