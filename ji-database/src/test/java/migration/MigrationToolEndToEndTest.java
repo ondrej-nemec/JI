@@ -129,6 +129,7 @@ public class MigrationToolEndToEndTest {
 		
 		testStates(c, false);
 		tool.migrate();
+		c.commit();
 		testStates(c, true);
 		tool.revert();
 		testStates(c, false);
@@ -161,6 +162,7 @@ public class MigrationToolEndToEndTest {
 			.getConnection("jdbc:mysql://localhost:3306/", prop)
 			.createStatement()
 			.executeUpdate("CREATE DATABASE IF NOT EXISTS " + dbName);
+		
 		return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + dbName, prop);
 	}
 	

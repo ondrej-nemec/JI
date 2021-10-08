@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import common.Logger;
-import common.functions.DateTime;
 import querybuilder.builders.SelectBuilder;
 import querybuilder.enums.ColumnType;
 
@@ -111,7 +111,7 @@ public class DatabaseGeneralQueryTesting {
 		return new Logger() {
 
 		    public void print(String severity, Object message) {
-				System.out.println(DateTime.format("yyyy-mm-dd H:mm:ss") + " " + severity + " " + message.toString());
+				System.out.println(LocalDateTime.now() + " " + severity + " " + message.toString());
 			}
 			
 			public void print(String severity, Object message, Throwable t) {

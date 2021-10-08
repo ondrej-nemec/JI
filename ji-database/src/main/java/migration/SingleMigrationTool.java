@@ -2,9 +2,9 @@ package migration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import common.Logger;
-import common.functions.DateTime;
 import common.functions.FileExtension;
 import migration.migrations.JavaMigration;
 import migration.migrations.SqlMigration;
@@ -77,7 +77,8 @@ public class SingleMigrationTool {
 	    		.addValue("module", module)
 	    		.addValue("id", id)
 	    		.addValue("description", description)
-	    		.addValue("datetime", DateTime.format("yyyy-MM-dd HH:mm:ss.SSS"))
+	    		//.addValue("datetime", common.functions.DateTime.format("yyyy-MM-dd HH:mm:ss.SSS"))
+	    		.addValue("datetime", LocalDateTime.now())
 	    		.execute();
 		}
 	}
