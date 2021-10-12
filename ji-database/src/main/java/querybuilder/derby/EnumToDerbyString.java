@@ -54,6 +54,8 @@ public class EnumToDerbyString {
     		case CHAR:
     			return String.format("CHAR(%s)", type.getSize());
     		case DATETIME: return "TIMESTAMP";
+    		case TEXT:
+    			return "LONGVARCHAR";
     		default: return type.getType().toString();
 		}
 	}
