@@ -10,7 +10,7 @@ public class EnumToDerbyString {
 	public static String onActionToString(OnAction action) {
 		switch (action) {
     		case RESTRICT: return "RESTRICT";
-    		case CASCADE: throw new RuntimeException("CASCASE is not supported");// return "CASCADE";
+    		case CASCADE: return "CASCADE"; // not supported on update
     		case SET_NULL: return "SET NULL";
     		case NO_ACTION: return "NO ACTION";
     		case SET_DEFAULT: return "SET DEFAULT";

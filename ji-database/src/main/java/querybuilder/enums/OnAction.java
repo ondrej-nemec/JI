@@ -1,7 +1,7 @@
 package querybuilder.enums;
 
 public enum OnAction {
-	
+
 	RESTRICT,
 	CASCADE,
 	SET_NULL,
