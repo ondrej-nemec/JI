@@ -68,7 +68,7 @@
 <p class="code">
 <code>
 	public class UserEntity { <br>
-<span class="tab"></span>@MapperParameter({@MapperType(<span class="text">user_id</span>)}) <br>
+<span class="tab"></span>@MapperParameter({@MapperType(<span class="text">"user_id"</span>)}) <br>
 <span class="tab"></span>private int id; <span class="comment"> // this field will be saved as 'user_id'</span> <br>
 <span class="tab"></span> <br>
 <span class="tab"></span>private String name; <span class="comment"> // this field will be saved as 'name'</span> <br>
@@ -81,7 +81,7 @@
 <p class="code">
 	<code>
 		UserEntity user = ...; <br>
-		Mapper.get().serialize(user);
+		Mapper.get().serialize(user); <span class="comment">// result: {user_id=0, name=null}</span>
 	</code>
 </p>
 
@@ -89,8 +89,94 @@
 	One entity can be serialized in more ways that are defined by string key. This key is the second (optional) parameter to <code>serialize</code> method. <code>MapperIgnore</code> contains array of strings. If one of then is equals to given key, field will be ignored. If the array is empty (default state), field will be always ignored. Otherwise will be used. <code>MapperParameter</code> can has more than one <code>MapperType</code>. <code>MapperType</code> has <code>key</code> parameter that specified the 'way'. Default is empty string and means 'use if no others options'.
 </p>
  
-TODO generate example
+<strong>Entity</strong>
+<p class="code">
+<code>
+	public class UserEntity { <br>
+<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"user_id"</span>, key=<span class="text">"KeyA"</span>), @MapperType(value=<span class="text">"userId"</span>, key=<span class="text">"KeyB"</span>)}) <br>
+<span class="tab"></span>private int id; <br>
+<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"userName"</span>), @MapperType(value=<span class="text">"Name"</span>, key=<span class="text">"KeyA"</span>)}) <br>
+<span class="tab"></span>private String name;<br>
+<span class="tab"></span>@MapperIgnored({<span class="text">"KeyA"</span>}) <br>
+<span class="tab"></span>private int age; <span class="comment"> // this field will be ignored</span> <br>
+	}
+</code>
+</p>
 
+<strong>Call:</strong>
+<p class="code">
+	<code>
+		UserEntity user = ...; <br>
+		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyA"</span>) <span class="comment">// result: {user_id=0, Name=null}</span><br>
+		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyB"</span>)<span class="comment">// result: {userName=null, userId=0, age=0}</span><br>
+		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyC"</span>)<span class="comment">// result: {id=0, userName=null, age=0}</span><br>
+		Mapper.get().serialize(new MapperEndToEndTest())<span class="comment">// result: {id=0, userName=null, age=0}</span>
+	</code>
+</p>
+
+<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+
+<h3>Parsing</h3>
+
+<p>
+	Parsing is reverse of serialize. From <code>Map</code> create entity (Or from list of map, result will be list of entity). During serialization JI come thru all fields of entity and try finds for it value in <code>Map</code>. As key is used field name. If you do not wish use field name as key, you need to annotate this field with <code>MapperParameter</code> and as value to put <code>MapperType</code> (see examples). Parsing works recursively.
+</p>
+
+<strong>Entity</strong>
+<p class="code">
+<code>
+	public class UserEntity { <br>
+<span class="tab"></span>@MapperParameter({@MapperType(<span class="text">"user_id"</span>)}) <br>
+<span class="tab"></span>private int id; <span class="comment"> // this field will be loaded from 'user_id'</span> <br>
+<span class="tab"></span> <br>
+<span class="tab"></span>private String name; <span class="comment"> // this field will be loaded from 'name'</span> <br>
+	}
+</code>
+</p>
+<strong>Call:</strong>
+<p class="code">
+	<code>
+		Map<String, Object> map = new HashMap&lt;&gt;(); <br>
+		map.put(<span class="text">"user_id"</span>, 42); <br>
+		map.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
+		Mapper.get().parse(UserEntity.class, map);
+	</code>
+</p>
+
+<p>
+	One entity can be parsed in more ways that are defined by string key. This key is the second (optional) parameter to <code>parse</code> method. <code>MapperParameter</code> can has more than one <code>MapperType</code>. <code>MapperType</code> has <code>key</code> parameter that specified the 'way'. Default is empty string and means 'use if no others options'.
+</p>
+ 
+<strong>Entity</strong>
+<p class="code">
+<code>
+	public class UserEntity { <br>
+<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"user_id"</span>, key=<span class="text">"KeyA"</span>), @MapperType(value=<span class="text">"userId"</span>, key=<span class="text">"KeyB"</span>)}) <br>
+<span class="tab"></span>private int id; <br>
+<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"userName"</span>), @MapperType(value=<span class="text">"Name"</span>, key=<span class="text">"KeyA"</span>)}) <br>
+<span class="tab"></span>private String name;<br>
+	}
+</code>
+</p>
+
+<strong>Call:</strong>
+<p class="code">
+	<code>
+		Map<String, Object> map = new HashMap&lt;&gt;();
+		map.put(<span class="text">"user_id"</span>, 42); <br>
+		map.put(<span class="text">"userId"</span>, 24); <br>
+		map.put(<span class="text">"id", 1); <br>
+		map.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
+		map.put(<span class="text">"Name"</span>, <span class="text">"Name #24"</span>); <br>
+		map.put(<span class="text">"userName"</span>, <span class="text">"Name #1"</span>); <br>
+		Mapper.get().parse(UserEntity.class, <span class="test">"KeyA"</span>) <span class="comment">// result: id=42, name="Name #24"</span><br>
+		Mapper.get().parse(UserEntity.class, <span class="test">"KeyB"</span>)<span class="comment">// result: id=24, name="Name #1"</span><br>
+		Mapper.get().parse(UserEntity.class, <span class="test">"KeyC"</span>)<span class="comment">// result:id=1, name="Name #1"</span><br>
+		Mapper.get().parse(UserEntity.class)<span class="comment">// result: id=1, name="Name #1"</span>
+	</code>
+</p>
+
+<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
 
 <h2>Other</h2>
 

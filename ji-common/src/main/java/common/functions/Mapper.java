@@ -38,7 +38,7 @@ public class Mapper {
 				}
 				if (field.isAnnotationPresent(MapperIgnored.class)) {
 					String[] annotationKeys = field.getAnnotation(MapperIgnored.class).value();
-					if (key == null || annotationKeys.length == 0 || Arrays.asList(annotationKeys).contains(key)) {
+					if (annotationKeys.length == 0 || Arrays.asList(annotationKeys).contains(key)) {
 						continue;
 					}
 				}
