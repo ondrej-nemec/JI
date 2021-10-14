@@ -1,0 +1,17 @@
+<h1>Localization</h1>
+
+<p>
+JI Translate defines <code>Translator</code> interface. 
+</p>
+
+<h2>LanguageSettings</h2>
+
+<p>
+	Configuration of translator. Holds list of <code>Locale</code>s (see below) and default language. If not default language specificed, first <code>Locale</code> is used. If list of <code>Locale</code>s is empty, the default locale will be system default.
+</p>
+
+<h2>Locale</h2>
+
+<p>
+	Contains information about language. Firstly has <code>lang</code> field. This value is language key and will be used for searching translation. Secondary has <code>isLeftToRigh</code> boolean. This is only for developer and is not used in JI Translate. Lastly contains list of substitutions. Explain by example: <code>new Locale("en", true, Arrays.asList("en-GB", "en-US"))</code>. With this configuration, <code>en</code> translation will be used if locale parameter in <code>Translator</code> are: <code>en</code>, <code>en-GB</code> or <code>en-US</code>.
+</p>

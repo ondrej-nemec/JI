@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LanguageSettings {
+	
+	public static TransProfiler PROFILER = null;
 
 	private final Locale defaultLang;
 	
