@@ -1,7 +1,25 @@
 <h1>Localization</h1>
 
 <p>
-JI Translate defines <code>Translator</code> interface. 
+JI Translate defines <code>Translator</code> interface. Declare methods for translating simple message, message with parameters and message with another than default language. The only one implementation of <code>Translator</code> in JI is <code>PropertiesTranslator</code>.
+</p>
+
+<h2>PropertiesTranslator</h2>
+
+<p>
+	You can get a new instation of <code>PropertiesTranslator</code> by calling <code>Translator.create(LanguageSettings settings, Set&lt;String&gt; paths, Logger logger)</code> or <code>Translator.create(Locale locale, LanguageSettings settings, Set&lt;String&gt; paths, Logger logger)</code>. For <code>LanguageSettings</code> and <code>Locale</code> see below. The <code>paths</code> are paths to directories containing <code>.properties</code> files.
+</p>
+
+<h3>How translation works</h3>
+
+<p>
+	Suppose we call <code>translator.translate("common.translation.key")</code>. Now JI try finds file <code>common.<i>language</i>.properties</code>. Then JI search for <code>translation.key</code> key in founded file. If key exists, the value is returned. If key not founded or file not exists, a full key is returned (in this example <code>common.translation.key</code>).
+</p>
+
+<h3>How translate with parameters</h3>
+
+<p>
+	Suppose we need translate message <code>common.grid.delete-confirmation</code>. And we need result like <code>Do you really wish to delete user smith.j?</code> or <code>Do you really wish to delete user doe.j?</code>. Now we can use translation parameters. Firstly we create <code>Map</code> with key <code>user-name</code> and value will be the user login. In <code>common.<i>language</i>.properties</code> will be key <code>grid.delete-confirmation</code>. The value for this key in english can be like <code>Do you really wish to delete user %user-name%?</code>.
 </p>
 
 <h2>LanguageSettings</h2>

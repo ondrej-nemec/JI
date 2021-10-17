@@ -8,8 +8,12 @@ import common.Logger;
 
 public interface Translator {
 	
-	default Translator create(LanguageSettings settings, Set<String> paths, Logger logger) {
+	static Translator create(LanguageSettings settings, Set<String> paths, Logger logger) {
 		return new PropertiesTranslator(settings, paths, logger);
+	}
+	
+	static Translator create(Locale locale, LanguageSettings settings, Set<String> paths, Logger logger) {
+		return new PropertiesTranslator(locale, settings, paths, logger);
 	}
 	
 	default String translate(String key) {
@@ -28,12 +32,6 @@ public interface Translator {
 	
 	Locale getLocale(String locale);
 	
-	/**
-	 * key structure: <resource>.<key> OR <key>
-	 * if <resource> not exists returns <resource.key> as <key> from default
-	 * if no message for <key> founded, <key> returned 
-	 * message structure: "text %variable% %another-variable%"
-	 */
 	String translate(String key, Map<String, Object> variables, String locale);
 	
 	Translator withLocale(Locale locale);
