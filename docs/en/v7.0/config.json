@@ -30,7 +30,16 @@
 	},
 	{
 		"title": "Files",
-		"sub": []
+		"sub": [
+			{
+				"title": "About",
+				"link": "files-about.html"
+			},
+			{
+				"title": "Reading and writing",
+				"link": "files-reading-writing.html"
+			}
+		]
 	},
 	{
 		"title": "Localization",

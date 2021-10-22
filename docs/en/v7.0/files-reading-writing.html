@@ -1,0 +1,41 @@
+<h1>Simple Reading/Writing</h1>
+
+<h2>Plain text</h2>
+
+<p>
+	Class <code>Text</code> provide you <code>BufferedReader</code> and <code>BufferedWritter</code>. You can get new instance of <code>Text</code> by calling constructor <code>new Text()</code> or statically <code>Text.get()</code>
+</p>
+
+<h3>Reading</h3>
+
+<p>
+	JI Files allows read from <code>File</code>, <code>InputStream</code>, <code>URL</code> and path in string. Charset can be optionally added. Except source, for reading with <code>Text</code> you need <code>ThrowingFunction</code> (see <a href="?file=common-structures.html#H2-11">here</a>). The input parameter is <code>BufferedReader</code> and output is up to you.
+</p>
+
+<strong>Example</strong>
+<p class="code">
+<code>
+	Text.get().read((bufferedReader)->{
+<span class="tab"></span> <span class="comment">// your reading</span>
+<span class="tab"></span> return null;
+	}, <span class="text">"/path/to/readed/file.txt"</span>);
+</code>
+</p>
+
+<h3>Writting</h3>
+
+<p>
+	JI Files allows write data to <code>OutputStream</code> or path in string. Charset can be optionally added. If you write to file, you can specify if add data to end of file or override content of file. Except that, you have to provide <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>). This callback get <code>BufferedWritter</code> as parameter.
+</p>
+
+<strong>Example</strong>
+
+<p class="code">
+<code>
+	Text.get().write((bufferedWritter)->{
+<span class="tab"></span><span class="comment">// your writing</span>
+	}, "/path/to/file.txt", true); <span class="comment">// true - append content</span>
+</code>
+</p>
+
+<h2>Binary files</h2>
