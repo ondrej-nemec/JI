@@ -2,6 +2,7 @@ package querybuilder;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -37,9 +38,10 @@ public class ParametersTest {
 			new Object[] {"", "''"},
 			new Object[] {"some text", "'some text'"},
 			new Object[] {
-					Arrays.asList("a", "b", "c"),
-					"'a','b','c'"
-				}
+				Arrays.asList("a", "b", "c"),
+				"'a','b','c'"
+			},
+			new Object[] {LocalDateTime.of(2021, 10, 23, 19, 18), "2021-10-23 19:18"}
 		};
 	}
 	

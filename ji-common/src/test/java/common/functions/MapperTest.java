@@ -66,6 +66,7 @@ public class MapperTest {
 			private String first = "first value";
 			@MapperParameter({@MapperType(value = "second", key = "used")})
 			private int second = 42;
+			@MapperIgnored({"used"})
 			@MapperParameter({@MapperType(value = "--list--", key = "not-used")})
 			private List<String> list = Arrays.asList("a", "b", "c");
 			@MapperIgnored

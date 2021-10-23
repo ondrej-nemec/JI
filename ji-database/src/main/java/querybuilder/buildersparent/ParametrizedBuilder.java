@@ -1,5 +1,6 @@
 package querybuilder.buildersparent;
 
+import java.time.temporal.Temporal;
 import java.util.Map;
 
 import common.functions.Implode;
@@ -57,6 +58,8 @@ public interface ParametrizedBuilder<B> extends Builder {
 			return value.toString();
 		} else if (clazz.isPrimitive() && !(clazz.isAssignableFrom(byte.class) || clazz.isAssignableFrom(char.class))) {
 			return value.toString();
+		} else if (value instanceof Temporal) {
+			return value.toString().replace("T", " ");
 		} else {
 			return SQL.escape(value.toString());
 		}
