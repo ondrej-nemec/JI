@@ -59,7 +59,7 @@ public interface ParametrizedBuilder<B> extends Builder {
 		} else if (clazz.isPrimitive() && !(clazz.isAssignableFrom(byte.class) || clazz.isAssignableFrom(char.class))) {
 			return value.toString();
 		} else if (value instanceof Temporal) {
-			return value.toString().replace("T", " ");
+			return SQL.escape(value.toString().replace("T", " "));
 		} else {
 			return SQL.escape(value.toString());
 		}
