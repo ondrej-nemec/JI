@@ -31,7 +31,7 @@ public class ConnectionWrapper implements Connection {
 	}
 	
 	private String getId() {
-		return connection.toString() + "_" + new Random().nextDouble();
+		return "ConnectionWrapper_" + connection.hashCode() + "_" + new Random().nextDouble();
 	}
 
 	/***/
