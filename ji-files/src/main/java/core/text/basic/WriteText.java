@@ -26,9 +26,9 @@ public class WriteText {
 		bw.flush();
 	}
 	
-	public void write(BufferedWriter bw, final List<List<String>> table, final String split) throws IOException {
+	public void write(BufferedWriter bw, final List<List<String>> table, final String delimeter) throws IOException {
 		for(List<String> line : table) {
-			bw.write(Implode.implode(split, line));			
+			bw.write(Implode.implode(delimeter, line));			
 			bw.newLine();
 		}
 		bw.flush();

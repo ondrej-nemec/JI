@@ -38,6 +38,10 @@
 			{
 				"title": "Reading and writing",
 				"link": "files-reading-writing.html"
+			},
+			{
+				"title": "JSON",
+				"link": "files-json.html"
 			}
 		]
 	},

@@ -15,10 +15,29 @@
 <strong>Example</strong>
 <p class="code">
 <code>
-	Text.get().read((bufferedReader)->{
+	Text.get().read((bufferedReader)->{ <br>
 <span class="tab"></span> <span class="comment">// your reading</span>
-<span class="tab"></span> return null;
+<span class="tab"></span> return null; <br>
 	}, <span class="text">"/path/to/readed/file.txt"</span>);
+</code>
+</p>
+
+<h3>Class ReadText</h3>
+
+<p>
+	For simplification reading data from <code>BufferedReader</code>, JI Files contains <code>ReadText</code>. 
+</p>
+
+<strong>Using</strong>
+<p class="code">
+<code>
+	ReadText readText = ReadText.get(); <br>
+	<span class="comment">// read whole file as text</span> <br>
+	String text = readText.asString(bufferedReader); <br>
+	<span class="comment">// read file per line, each list element is one line</span> <br>
+	List&lt;String&gt; lines = readText.asList(bufferedReader); <br>
+	<span class="comment">// read file as table, each list element is line and line is splited to list by given delimeter</span> <br>
+	Collection&lt;List&lt;String&gt;&gt; table = readText.asTable(bufferedReader, <span class="text">","</span>);
 </code>
 </p>
 
@@ -32,10 +51,60 @@
 
 <p class="code">
 <code>
-	Text.get().write((bufferedWritter)->{
-<span class="tab"></span><span class="comment">// your writing</span>
-	}, "/path/to/file.txt", true); <span class="comment">// true - append content</span>
+	Text.get().write((bufferedWritter)->{ <br>
+<span class="tab"></span><span class="comment">// your writing</span> <br>
+	}, <span class="text">"/path/to/file.txt"</span>, true); <span class="comment">// true - append content</span>
+</code>
+</p>
+
+<h3>Class WriteText</h3>
+
+<p>
+	Similary as in reading section, for simplification writing JI Files contains <code>WriteText</code>.
+</p>
+
+<strong>Using</strong>
+<p class="code">
+<code>
+	WriteText writeText = WriteText.get(); <br>
+	<span class="comment">// write string</span> <br>
+	writeText.write(bufferedWriter, <span class="text">"your text"</span>); <br>
+	<span class="comment">// write list, each item will be new line</span> <br>
+	writeText.write(bufferedWriter, list); <br>
+	<span class="comment">// write list in list, each sublist is new line, items in sublist will be separated by delimeter</span> <br>
+	writeText.write(bufferedWritter, table, <span class="text">","</span>);
 </code>
 </p>
 
 <h2>Binary files</h2>
+
+<p>
+	Class <code>Binary</code> provide you <code>DataInputStream</code> and <code>DataOutputStream</code>. You can get new instance of <code>Binary</code> by calling constructor <code>new Binary()</code> or statically <code>Binary.get()</code>
+</p>
+
+<h3>Reading</h3>
+
+<p>JI Files provides only one factory: <code>read</code>. This method requires <code>InputStream</code> and <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
+
+<p class="code">
+<code>
+	Binary.get().read((dataInputStream)->{ <br>
+<span class="tab"></span><span class="comment">// your reading</span> <br>
+	}, inputStream);
+</code>
+</p>
+
+<h3>Writing</h3>
+
+<p>JI Files can create <code>DataOutputStream</code> in two way: from file (defined by string) and from <code>OutputStream</code>. Both methods require <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
+
+<p class="code">
+<code>
+	Binary.get().write((dataOutputStream)->{ <br>
+<span class="tab"></span><span class="comment">// your writing</span> <br>
+	}, outputStream); <br>
+	Binary.get().write((dataOutputStream)->{ <br>
+<span class="tab"></span><span class="comment">// your writing</span> <br>
+	}, <span class="text">"path/to/file"</span>);
+</code>
+</p>

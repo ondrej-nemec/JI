@@ -46,11 +46,11 @@ public class ReadText {
 		return result;
 	}
 	
-	public Collection<List<String>> asTable(BufferedReader br, final String split) throws IOException {
+	public Collection<List<String>> asTable(BufferedReader br, final String delimeter) throws IOException {
 		List<List<String>> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line != null){
-			String[] cels = line.split(split);
+			String[] cels = line.split(delimeter);
 			List<String> row = new ArrayList<>();
 			for(int i = 0; i < cels.length; i++){
 				row.add(cels[i]);
