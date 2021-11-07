@@ -9,12 +9,18 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 // TODO serializable
+
+// TODO set, collection, for each
 public class DictionaryValue {
 
 	private final Object value;
@@ -108,6 +114,8 @@ public class DictionaryValue {
 			return getMap();
 		} else if (clazz.isAssignableFrom(List.class)) {
 			return getList();
+		} else if (clazz.isAssignableFrom(Set.class)) {
+			return getSet();
 		} else if (clazz.isAssignableFrom(MapDictionary.class)) {
 			return getDictionaryMap();
 		} else if (clazz.isAssignableFrom(ListDictionary.class)) {
@@ -281,8 +289,8 @@ public class DictionaryValue {
 	@SuppressWarnings("unchecked")
 	public <T> ListDictionary<T> getDictionaryList() {
 		return parseValue(ListDictionary.class, fromStringToListCallback, (value)->{
-			if (value instanceof List<?>) {
-				return new ListDictionary<T>(List.class.cast(value));
+			if (value instanceof Collection<?>) {
+				return new ListDictionary<T>(Collection.class.cast(value));
 			}
 			return value;
 		});
@@ -303,6 +311,19 @@ public class DictionaryValue {
 		return parseValue(List.class, fromStringToListCallback, (value)-> {
 			if (value instanceof ListDictionary<?>) {
 				return ListDictionary.class.cast(value).toList();
+			}
+			if (value instanceof Set<?>) {
+				return new LinkedList<>(Set.class.cast(value));
+			}
+			return value;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> Set<T> getSet() {
+		return parseValue(Set.class, fromStringToListCallback, (value)-> {
+			if (value instanceof ListDictionary<?> || value instanceof List<?>) {
+				return new HashSet<>(getList());
 			}
 			return value;
 		});

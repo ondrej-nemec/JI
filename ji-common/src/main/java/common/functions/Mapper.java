@@ -7,8 +7,11 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import common.annotations.MapperType;
@@ -151,8 +154,11 @@ public class Mapper {
 		if (clazz.equals(Map.class)) {
 			return (T)new HashMap<>();
 		}
-		if (clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
+		if (clazz.isInterface() && List.class.isAssignableFrom(clazz)) {
 			return (T)new LinkedList<>();
+		}
+		if (clazz.isInterface() && Set.class.isAssignableFrom(clazz)) {
+			return (T)new HashSet<>();
 		}
 		try {
 			clazz.getConstructor();

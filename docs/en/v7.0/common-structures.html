@@ -1,4 +1,4 @@
-<h1>Struktures</h1>
+<h1>Structures</h1>
 
 <h2>Dictionary</h2>
 
@@ -13,7 +13,7 @@
 		<li>Numbers (including primitive types): <code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code></li>
 		<li>Text: <code>Character</code>, <code>char</code>, <code>String</code></li>
 		<li><code>Map</code>, <code>MapDictionary</code> - cast from <code>Map</code> to <code>MapDictionary</code> and vise versa automatically.</li>
-		<li><code>List</code>, <code>ListDictionary</code> - cast from <code>List</code> to <code>ListDictionary</code> and vise versa automatically. Eventual can be <code>String</code> splited by given delimeter to get <code>List</code>. </li>
+		<li><code>List</code>, <code>ListDictionary</code> and <code>Set</code> - cast from <code>List</code> to <code>ListDictionary</code>, from <code>List</code> to <code>Set</code>, from <code>Set</code> to <code>ListDictionary</code> and all vise versa automatically. Eventual can be <code>String</code> splited by given delimeter to get <code>List</code>. </li>
 		<li><code>Enums</code></li>
 		<li>Time: <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>, <code>ZonedDateTime</code>. All times can be casted to another, parsed from <code>String</code> with ISO or set pattern. Also from number.</li>
 		<li>Arbitrary class - from <code>Map</code>. See <a href="?file=common-functions.html#H2-6">Mapper</a></li>
@@ -91,21 +91,25 @@
 <p class="code">
 <code>
 	<span class="comment">// with not empty List</span> <br>
-	List&lt;S&gt; list = ...; <br>
-	new ListDictionary(list); <br>
+	Collection&lt;S&gt; collection = ...; <br>
+	new ListDictionary(collection); <br>
 	<span class="comment">// as empty LinkedList </span><br>
 	ListDictionary.linkedList(); <br>
 	<span class="comment">// as empty ArrayList </span><br>
 	ListDictionary.arrayList();
+	<span class="comment">// as empty HashSet </span><br>
+	ListDictionary.hashSet();
 </code>
 </p>
 
-<strong>Get List</strong>
+<strong>Get Collection</strong>
 
 <p class="code">
 <code>
 	<span class="comment">// get List from ListDictionary</span> <br>
-	List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList(); <br>
+	List&lt;Object&gt; list = ListDictionary.arrayList().add(<span class="text">"on"</span>).add(<span class="text">"2022-01-01T12:45:58"</span>).toList(); <br>
+	<span class="comment">// get Set from ListDictionary</span> <br>
+	Set&lt;Object&gt; list = ListDictionary.hashSet().add(<span class="text">"on"</span>).add(<span class="text">"2022-01-01T12:45:58"</span>).toSet(); <br>
 </code>
 </p>
 
@@ -114,7 +118,7 @@
 <p class="code">
 <code>
 	<span class="comment">// get List from ListDictionary </span><br>
-	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList(); <br>
+	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add(<code class="text">"2022-01-01T12:45:58"</code>).toList(); <br>
 	<span class="comment">// get "raw" value</span> <br>
 	Object value = list.get(0); // value will be Intger 1 <br>
 	<span class="comment">// get new DictionaryValue from value</span> <br>
@@ -133,7 +137,7 @@
 <code>
 	ListDictionary&lt;Object&gt; list = ...; <br>
 	list.forEach((value)->{ <br>
-<span class="tab"></span>		// !! value is DictionaryValue !! <br>
+<span class="tab"></span><span class="comment">/// !! value is DictionaryValue !! </span><br>
 	}); <br>
 	<span class="comment">// for standart forEach use forEach2 method</span>
 </code>
