@@ -15,6 +15,23 @@ import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
 public class InputJsonStreamTest {
+	
+	@Test
+	public void testReadEmptyString() throws JsonStreamException {
+		StringBuilder b = new StringBuilder();
+		InputStringProvider provider = new InputStringProvider("") {
+			@Override
+			public void close() throws JsonStreamException {
+				b.append("closed");
+				super.close();
+			}
+		};
+		InputJsonStream stream = new InputJsonStream(provider);
+		
+		Event e = stream.next();
+		assertEquals(new Event(EventType.EMPTY, "", new Value<>("", ValueType.NULL), -1), e);
+		assertEquals("closed", b.toString());
+	}
 
 	@Test
 	@Parameters(method = "dataNextTestEventTypes")
@@ -30,17 +47,21 @@ public class InputJsonStreamTest {
 		InputJsonStream stream = new InputJsonStream(provider);
 		
 		Event e = stream.next();
-		assertEquals(new Event(EventType.DOCUMENT_START, "", new Value<>("", ValueType.NULL), 0), e);
+		assertEquals(new Event(EventType.OBJECT_START, "", new Value<>("", ValueType.NULL), 0), e);
 		for (Event expected : events) {
 			assertEquals(expected, stream.next());
 		}
 		e = stream.next();
-		assertEquals(new Event(EventType.DOCUMENT_END, "", new Value<>("", ValueType.NULL), 0), e);
+		assertEquals(new Event(EventType.OBJECT_END, "", new Value<>("", ValueType.NULL), 0), e);
 		assertEquals("closed", b.toString());
 	}
 	
 	public Object[] dataNextTestEventTypes() {
 		return new Object[] {
+			new Object[] {
+				"{}",
+				new Event[] {}
+			},
 			new Object[] {
 				"{\"integer\": 123}",
 				new Event[] {
@@ -156,9 +177,11 @@ public class InputJsonStreamTest {
 		for (Event expected : events) {
 			assertEquals(expected, stream.next());
 		}
-		Event e = stream.next();
-		assertEquals(new Event(EventType.DOCUMENT_END, "", new Value<>("", ValueType.NULL), -1), e);
 		assertEquals("closed", b.toString());
+		
+		Event e = stream.next();
+		assertEquals(new Event(EventType.EMPTY, "", new Value<>("", ValueType.NULL), -1), e);
+		assertEquals("closedclosed", b.toString());
 	}
 	
 	@Test
@@ -166,7 +189,7 @@ public class InputJsonStreamTest {
 		String testingJson = "";
 		InputStringProvider provider = new InputStringProvider(testingJson);
 		InputJsonStream stream = new InputJsonStream(provider);
-		assertEquals(EventType.DOCUMENT_END, stream.next().getType());
+		assertEquals(EventType.EMPTY, stream.next().getType());
 	}
 	
 }

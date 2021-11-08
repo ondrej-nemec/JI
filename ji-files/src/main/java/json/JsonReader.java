@@ -37,9 +37,10 @@ public class JsonReader {
 	
 	public Object read(InputJsonStream stream) throws JsonStreamException {
 		Event event = stream.next();
-		if (event.getType() == EventType.DOCUMENT_START) {
+		if (event.getType() == EventType.OBJECT_START) {
 			Map<String, Object> json = new HashMap<>();
-			while((event = stream.next()).getType() != EventType.DOCUMENT_END) {
+			while(!(event = stream.next()).isJsonEnd()) {
+			// while((event = stream.next()).getType() != EventType.DOCUMENT_END) {
 				switch (event.getType()) {
 					case OBJECT_ITEM: json.put(event.getName(), event.getValue().get()); break;
 					case OBJECT_START: json.put(event.getName(), readMap(stream)); break;
@@ -51,7 +52,8 @@ public class JsonReader {
 		} else if (event.getType() == EventType.LIST_START) {
 			List<Object> list = new LinkedList<>();
 			event = stream.next();
-			while(event.getType() != EventType.LIST_END && event.getType() != EventType.DOCUMENT_END) {
+			while(event.getType() != EventType.LIST_END && event.getType() != EventType.EMPTY) {
+			// while(event.getType() != EventType.LIST_END && event.getType() != EventType.DOCUMENT_END) {
 				switch (event.getType()) {
 					case LIST_ITEM: list.add(event.getValue().get()); break;
 					case OBJECT_START: list.add(readMap(stream)); break;
@@ -71,9 +73,10 @@ public class JsonReader {
 	private Map<String, Object> readMap(InputJsonStream stream) throws JsonStreamException {
 		Map<String, Object> map = new HashMap<>();
 		Event event = stream.next();
-		while(event.getType() != EventType.OBJECT_END && event.getType() != EventType.DOCUMENT_END) {
+		while(event.getType() != EventType.OBJECT_END && !event.isJsonEnd()) {
+		// while(event.getType() != EventType.OBJECT_END && event.getType() != EventType.DOCUMENT_END) {
 			switch (event.getType()) {
-				case DOCUMENT_START:
+			//	case DOCUMENT_START:
 				case OBJECT_ITEM: map.put(event.getName(), event.getValue().get()); break;
 				case OBJECT_START: map.put(event.getName(), readMap(stream)); break;
 				case LIST_START: map.put(event.getName(), readList(stream)); break;

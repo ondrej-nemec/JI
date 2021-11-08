@@ -17,6 +17,14 @@ public class Event {
 		this.level = level;
 	}
 
+	public boolean isJsonEnd() {
+		return (level == 0 && (type == EventType.OBJECT_END || type == EventType.LIST_END)) || level < 0;
+	}
+	
+	public boolean hasNext() {
+		return !isJsonEnd();
+	}
+	
 	public EventType getType() {
 		return type;
 	}

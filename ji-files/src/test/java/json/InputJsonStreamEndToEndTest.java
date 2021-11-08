@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 import core.text.Text;
 import core.text.basic.ReadText;
 import json.event.Event;
-import json.event.EventType;
 import json.providers.InputStringProvider;
 
 public class InputJsonStreamEndToEndTest {
@@ -24,7 +23,7 @@ public class InputJsonStreamEndToEndTest {
 		String json = Text.get().read((br)->{return ReadText.get().asString(br);}, is);
 		InputJsonStream stream = new InputJsonStream(new InputStringProvider(json));
 		Event e = stream.next();
-		while(e.getType() != EventType.DOCUMENT_END) {
+		while(!e.isJsonEnd()) {
 			System.out.println(getPre(e.getLevel()) + e);
 			e = stream.next();
 		}

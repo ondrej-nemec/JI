@@ -71,16 +71,15 @@ public class InputJsonStream {
 						level--;
 						if (level == 0) {
 							provider.close();
-							return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), level);
+							//return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), level);
 						}
 						return new Event(EventType.OBJECT_END, name, ValueParser.parse(value, isValueQuoted), level);
 					case ']':
-						/*level--;
+						level--;
 						if (level == 0) {
 							provider.close();
-						   // TODO there will be document_end returned if document_start removed
-						}*/
-						return new Event(EventType.LIST_END, name, ValueParser.parse(value, isValueQuoted), --level);
+						}
+						return new Event(EventType.LIST_END, name, ValueParser.parse(value, isValueQuoted), level);
 				}
 				continue;
 			}
@@ -100,9 +99,9 @@ public class InputJsonStream {
 					}
 					break;
 				case '{': 
-					if (level == 0) {
+					/*if (level == 0) {
 						return new Event(EventType.DOCUMENT_START, name, ValueParser.parse(value, isValueQuoted), level++);
-					}
+					}*/
 					return new Event(EventType.OBJECT_START, name, ValueParser.parse(value, isValueQuoted), level++);
 				case '}':
 					actualCache = actual;
@@ -143,7 +142,7 @@ public class InputJsonStream {
 			//////
 		}
 		provider.close();
-		return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), -1);
+		return new Event(EventType.EMPTY, name, ValueParser.parse(value, isValueQuoted), -1);
 	}
 	
 }
