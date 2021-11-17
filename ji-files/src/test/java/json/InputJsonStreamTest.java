@@ -2,6 +2,8 @@ package json;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,7 +19,7 @@ import junitparams.Parameters;
 public class InputJsonStreamTest {
 	
 	@Test
-	public void testReadEmptyString() throws JsonStreamException {
+	public void testReadEmptyString() throws IOException {
 		StringBuilder b = new StringBuilder();
 		InputStringProvider provider = new InputStringProvider("") {
 			@Override
@@ -26,16 +28,16 @@ public class InputJsonStreamTest {
 				super.close();
 			}
 		};
-		InputJsonStream stream = new InputJsonStream(provider);
-		
-		Event e = stream.next();
-		assertEquals(new Event(EventType.EMPTY, "", new Value<>("", ValueType.NULL), -1), e);
+		try (InputJsonStream stream = new InputJsonStream(provider);) {
+			Event e = stream.next();
+			assertEquals(new Event(EventType.EMPTY, "", new Value<>("", ValueType.NULL), -1), e);
+		}
 		assertEquals("closed", b.toString());
 	}
 
 	@Test
 	@Parameters(method = "dataNextTestEventTypes")
-	public void testNextTestEventTypes(String json, Event[] events) throws JsonStreamException {
+	public void testNextTestEventTypes(String json, Event[] events) throws IOException {
 		StringBuilder b = new StringBuilder();
 		InputStringProvider provider = new InputStringProvider(json) {
 			@Override
@@ -44,15 +46,15 @@ public class InputJsonStreamTest {
 				super.close();
 			}
 		};
-		InputJsonStream stream = new InputJsonStream(provider);
-		
-		Event e = stream.next();
-		assertEquals(new Event(EventType.OBJECT_START, "", new Value<>("", ValueType.NULL), 0), e);
-		for (Event expected : events) {
-			assertEquals(expected, stream.next());
+		try (InputJsonStream stream = new InputJsonStream(provider);) {
+			Event e = stream.next();
+			assertEquals(new Event(EventType.OBJECT_START, "", new Value<>("", ValueType.NULL), 0), e);
+			for (Event expected : events) {
+				assertEquals(expected, stream.next());
+			}
+			e = stream.next();
+			assertEquals(new Event(EventType.OBJECT_END, "", new Value<>("", ValueType.NULL), 0), e);
 		}
-		e = stream.next();
-		assertEquals(new Event(EventType.OBJECT_END, "", new Value<>("", ValueType.NULL), 0), e);
 		assertEquals("closed", b.toString());
 	}
 	
@@ -157,7 +159,7 @@ public class InputJsonStreamTest {
 	}
 
 	@Test
-	public void testNextTestEventTypesWithList() throws JsonStreamException {
+	public void testNextTestEventTypesWithList() throws IOException {
 		StringBuilder b = new StringBuilder();
 		InputStringProvider provider = new InputStringProvider("[1, 2, 3]") {
 			@Override
@@ -166,7 +168,6 @@ public class InputJsonStreamTest {
 				super.close();
 			}
 		};
-		InputJsonStream stream = new InputJsonStream(provider);
 		Event[] events = new Event[] {
 				new Event(EventType.LIST_START, "", new Value<>("", ValueType.NULL), 0),
 				new Event(EventType.LIST_ITEM, "", new Value<>(1, ValueType.INTEGER), 1),
@@ -174,22 +175,25 @@ public class InputJsonStreamTest {
 				new Event(EventType.LIST_ITEM, "", new Value<>(3, ValueType.INTEGER), 1),
 				new Event(EventType.LIST_END, "", new Value<>("", ValueType.NULL), 0),
 			};
-		for (Event expected : events) {
-			assertEquals(expected, stream.next());
+		try (InputJsonStream stream = new InputJsonStream(provider);) {
+			for (Event expected : events) {
+				assertEquals(expected, stream.next());
+			}
+			Event e = stream.next();
+			assertEquals(new Event(EventType.EMPTY, "", new Value<>("", ValueType.NULL), -1), e);
 		}
 		assertEquals("closed", b.toString());
-		
-		Event e = stream.next();
-		assertEquals(new Event(EventType.EMPTY, "", new Value<>("", ValueType.NULL), -1), e);
-		assertEquals("closedclosed", b.toString());
+	//	assertEquals("closed", b.toString());
+	//	stream.close();
 	}
 	
 	@Test
-	public void testNextIfTextIsEmpty() throws JsonStreamException {
+	public void testNextIfTextIsEmpty() throws IOException {
 		String testingJson = "";
 		InputStringProvider provider = new InputStringProvider(testingJson);
 		InputJsonStream stream = new InputJsonStream(provider);
 		assertEquals(EventType.EMPTY, stream.next().getType());
+		stream.close();
 	}
 	
 }

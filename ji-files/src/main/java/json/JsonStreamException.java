@@ -1,6 +1,8 @@
 package json;
 
-public class JsonStreamException extends Exception {
+import java.io.IOException;
+
+public class JsonStreamException extends IOException {
 
 	private static final long serialVersionUID = 1L;
 

@@ -1,11 +1,13 @@
 package json;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import json.event.EventType;
 import json.providers.OutputProvider;
 
-public class OutputJsonStream {
+public class OutputJsonStream implements Closeable {
 
 	private final OutputProvider provider;
 	
@@ -21,7 +23,7 @@ public class OutputJsonStream {
 		this.provider = provider;
 		this.formated = formated;
 	}
-	
+/*
 	public void startDocument() throws JsonStreamException {
 		provider.write("{");
 		parent.add(true);
@@ -32,7 +34,7 @@ public class OutputJsonStream {
 		provider.write(getFormat(true) + "}");
 		provider.close();
 	}
-	
+*/
 	public void writeObjectValue(String name, Object value) throws JsonStreamException {
 		boolean isFirst = checkFirst();
 		provider.write(getFormat(isFirst) + String.format("\"%s\":%s", name, (formated ? " " : "") + getValue(value)));
@@ -118,6 +120,11 @@ public class OutputJsonStream {
 			});
 		}
 		return pre.toString();
+	}
+
+	@Override
+	public void close() throws IOException {
+		provider.close();
 	}
 	
 }

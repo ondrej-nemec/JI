@@ -1,5 +1,6 @@
 package json;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,8 +32,13 @@ public class JsonReader {
 	
 	public Object read(String json) throws JsonStreamException {
 		InputStringProvider provider = new InputStringProvider(json);
-		InputJsonStream stream = new InputJsonStream(provider);
-		return read(stream);
+		try (InputJsonStream stream = new InputJsonStream(provider)) {
+			return read(stream);
+		} catch (JsonStreamException e) {
+			throw e;
+		} catch (IOException e) {
+			throw new JsonStreamException(e);
+		}
 	}
 	
 	public Object read(InputJsonStream stream) throws JsonStreamException {

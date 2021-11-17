@@ -19,7 +19,8 @@ public class OutputJsonStreamEndToEndTest {
 	}
 	
 	public void createJson(OutputJsonStream stream) throws JsonStreamException {
-		stream.startDocument();
+		// stream.startDocument();
+		stream.writeObjectStart();
 		stream.writeObjectValue("name1", "value1");
 		stream.writeObjectValue("with-quotes", "\"");
 		stream.writeListStart("list1");
@@ -29,7 +30,8 @@ public class OutputJsonStreamEndToEndTest {
 		stream.writeObjectEnd();
 		stream.writeListEnd();
 		
-		stream.endDocument();
+		stream.writeObjectEnd();
+		// stream.endDocument();
 	}
 
 	public static void main(String[] args) {

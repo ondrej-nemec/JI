@@ -1,5 +1,6 @@
 package json;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -20,10 +21,9 @@ public class JsonWritter {
 	
 	public String write(Object json) {
 		OutputStringProvider provider = new OutputStringProvider();
-		OutputJsonStream stream = new OutputJsonStream(provider);
-		try {
+		try (OutputJsonStream stream = new OutputJsonStream(provider);) {
 			write(stream, json);
-		} catch (JsonStreamException e) {
+		} catch (IOException e) {
 			// ignored - no reason for it
 		}
 		return provider.getJson();
@@ -34,11 +34,13 @@ public class JsonWritter {
 	}
 
 	public void writeJson(OutputJsonStream stream, Map<String, Object> json) throws JsonStreamException {
-		stream.startDocument();
+		//stream.startDocument();
+		stream.writeObjectStart();
 		for (String key : json.keySet()) {
 			writeObject(stream, json.get(key), key);
 		}
-		stream.endDocument();
+		//stream.endDocument();
+		stream.writeObjectEnd();
 	}
 	
 	/******************/

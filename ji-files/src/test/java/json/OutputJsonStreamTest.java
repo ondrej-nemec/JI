@@ -30,68 +30,68 @@ public class OutputJsonStreamTest {
 				new Object[] {
 						"{}",
 						c((stream)->{
-							stream.startDocument();
-							stream.endDocument();
+							stream.writeObjectStart();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
 				new Object[] {
 						"{\"name\":\"value\"}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectValue("name", "value");
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
 				new Object[] {
 						"{\"quotes\":\"--\\\"--\"}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectValue("quotes", "--\"--");
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
 				new Object[] {
 						"{\"name\":\"value\",\"int\":12,\"special\":null,\"name2\":true}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectValue("name", "value");
 							stream.writeObjectValue("int", 12);
 							stream.writeObjectValue("special", null);
 							stream.writeObjectValue("name2", true);
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
 				new Object[] {
 						"{\"list\":[\"value1\",\"value2\"]}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeListStart("list");
 							stream.writeListValue("value1");
 							stream.writeListValue("value2");
 							stream.writeListEnd();
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
 				new Object[] {
 						"{\"object\":{\"name\":\"value\"}}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectStart("object");
 							stream.writeObjectValue("name", "value");
 							stream.writeObjectEnd();
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
 				new Object[] {
 						"{\"object\":{\"name\":\"value\",\"object2\":{\"list\":[12,false,123.4]}}}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectStart("object");
 							stream.writeObjectValue("name", "value");
 							stream.writeObjectStart("object2");
@@ -102,7 +102,7 @@ public class OutputJsonStreamTest {
 							stream.writeListEnd();
 							stream.writeObjectEnd();
 							stream.writeObjectEnd();
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						false
 				},
@@ -111,8 +111,8 @@ public class OutputJsonStreamTest {
 						"{\n"
 						+ "}",
 						c((stream)->{
-							stream.startDocument();
-							stream.endDocument();
+							stream.writeObjectStart();
+							stream.writeObjectEnd();
 						}),
 						true
 				},
@@ -121,9 +121,9 @@ public class OutputJsonStreamTest {
 						+ "  \"name\": \"value\"\n"
 						+ "}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectValue("name", "value");
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						true
 				},
@@ -135,12 +135,12 @@ public class OutputJsonStreamTest {
 						+ "  \"name2\": true\n"
 						+ "}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectValue("name", "value");
 							stream.writeObjectValue("int", 12);
 							stream.writeObjectValue("special", null);
 							stream.writeObjectValue("name2", true);
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						true
 				},
@@ -152,12 +152,12 @@ public class OutputJsonStreamTest {
 						+ "  ]\n"
 						+ "}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeListStart("list");
 							stream.writeListValue("value1");
 							stream.writeListValue("value2");
 							stream.writeListEnd();
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						true
 				},
@@ -168,11 +168,11 @@ public class OutputJsonStreamTest {
 						+ "  }\n"
 						+ "}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectStart("object");
 							stream.writeObjectValue("name", "value");
 							stream.writeObjectEnd();
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						true
 				},
@@ -190,7 +190,7 @@ public class OutputJsonStreamTest {
 						+ "  }\n"
 						+ "}",
 						c((stream)->{
-							stream.startDocument();
+							stream.writeObjectStart();
 							stream.writeObjectStart("object");
 							stream.writeObjectValue("name", "value");
 							stream.writeObjectStart("object2");
@@ -201,7 +201,7 @@ public class OutputJsonStreamTest {
 							stream.writeListEnd();
 							stream.writeObjectEnd();
 							stream.writeObjectEnd();
-							stream.endDocument();
+							stream.writeObjectEnd();
 						}),
 						true
 				}

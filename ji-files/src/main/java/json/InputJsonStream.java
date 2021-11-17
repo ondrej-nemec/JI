@@ -1,12 +1,15 @@
 package json;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import json.event.Event;
 import json.event.EventType;
 import json.event.ValueParser;
 import json.providers.InputProvider;
 import json.providers.InputStringProvider;
 
-public class InputJsonStream {
+public class InputJsonStream implements Closeable {
 	
 	public static InputJsonStream fromString(String json) {
 		return new InputJsonStream(new InputStringProvider(json));
@@ -69,16 +72,16 @@ public class InputJsonStream {
 				switch (cache) {
 					case '}':
 						level--;
-						if (level == 0) {
-							provider.close();
+					//	if (level == 0) {
+					//		provider.close();
 							//return new Event(EventType.DOCUMENT_END, name, ValueParser.parse(value, isValueQuoted), level);
-						}
+					//	}
 						return new Event(EventType.OBJECT_END, name, ValueParser.parse(value, isValueQuoted), level);
 					case ']':
 						level--;
-						if (level == 0) {
-							provider.close();
-						}
+					//	if (level == 0) {
+					//		provider.close();
+					//	}
 						return new Event(EventType.LIST_END, name, ValueParser.parse(value, isValueQuoted), level);
 				}
 				continue;
@@ -141,8 +144,13 @@ public class InputJsonStream {
 				actual = (actualCache == CHAR_DEFAULT) ? provider.getNext() : actualCache;
 			//////
 		}
-		provider.close();
+	//	provider.close();
 		return new Event(EventType.EMPTY, name, ValueParser.parse(value, isValueQuoted), -1);
+	}
+
+	@Override
+	public void close() throws IOException {
+		provider.close();
 	}
 	
 }

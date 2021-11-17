@@ -14,20 +14,21 @@ public class InputJsonStreamEndToEndTest {
 	public static void main(String[] args) {
 		try {
 			new InputJsonStreamEndToEndTest().parse(InputJsonStreamEndToEndTest.class.getResourceAsStream("/json/json-input.json"));
-		} catch (IOException | JsonStreamException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void parse(InputStream is) throws IOException, JsonStreamException {
 		String json = Text.get().read((br)->{return ReadText.get().asString(br);}, is);
-		InputJsonStream stream = new InputJsonStream(new InputStringProvider(json));
-		Event e = stream.next();
-		while(!e.isJsonEnd()) {
+		try (InputJsonStream stream = new InputJsonStream(new InputStringProvider(json));) {
+			Event e = stream.next();
+			while(!e.isJsonEnd()) {
+				System.out.println(getPre(e.getLevel()) + e);
+				e = stream.next();
+			}
 			System.out.println(getPre(e.getLevel()) + e);
-			e = stream.next();
 		}
-		System.out.println(getPre(e.getLevel()) + e);
 	}
 	
 	private String getPre(int level) {
