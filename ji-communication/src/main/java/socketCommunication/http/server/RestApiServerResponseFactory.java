@@ -16,6 +16,20 @@ public interface RestApiServerResponseFactory {
 			RequestParameters params,
 			String ipAddress
 	) throws IOException;
+	
+	RestApiResponse accept(
+			HttpMethod method,
+			String url,
+			String fullUrl,
+			String protocol,
+			Properties header,
+			RequestParameters params,
+			String ipAddress,
+			String host,
+			WebSocket websocket
+	) throws IOException;
+
+	
 	/*
 	default RestApiResponse onException(
 			HttpMethod method,

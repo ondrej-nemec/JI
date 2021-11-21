@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import common.functions.Console;
 import core.text.Binary;
@@ -21,12 +23,14 @@ import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
 import socketCommunication.http.server.UploadedFile;
+import socketCommunication.http.server.WebSocket;
 import socketCommunication.http.server.RequestParameters;
 import socketCommunication.http.server.RestApiResponse;
 
 public class ServerEndToEndTest {
 	
 	public final static Console console = new Console();
+	private static final ExecutorService pool = Executors.newSingleThreadExecutor();
 
 	public static void main(String[] args) {
 		try {
@@ -93,6 +97,9 @@ public class ServerEndToEndTest {
 				/*if ("1".equals(header.get("Upgrade-Insecure-Requests"))) {
 					return getCert();
 				}*/
+				if (url.equals("/websocket")) {
+					return getFilePage("index/web-sockets.html");
+				}
 				if (url.equals("/secured")) {
 					return getSecured();
 				}
@@ -112,7 +119,7 @@ public class ServerEndToEndTest {
 					return getBinaryFile("final.gif", "image/gif");
 				}
 				if (url.equals("/fileindex")) {
-					return getFilePage();
+					return getFilePage("index/index.html");
 				}
 				return getHtml();
 			}
@@ -137,7 +144,7 @@ public class ServerEndToEndTest {
 					);
 			}
 			
-			private RestApiResponse getFilePage() {
+			private RestApiResponse getFilePage(String file) {
 				return RestApiResponse.textResponse(
 					StatusCode.OK,
 					Arrays.asList(
@@ -147,7 +154,7 @@ public class ServerEndToEndTest {
 					(bw)->{
 						bw.write(Text.get().read((br)->{
 							return ReadText.get().asString(br);
-						}, "index/index.html"));
+						}, file));
 					}
 				);
 			}
@@ -272,6 +279,49 @@ public class ServerEndToEndTest {
 						));
 					}
 				);
+			}
+
+			@Override
+			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
+					Properties header, RequestParameters params, String ipAddress, String host, WebSocket websocket)
+					throws IOException {
+				if (url.equals("/ws")) {
+					pool.execute(()->{
+						int i = 0;
+						while(i < 100 && !websocket.isClosed()) {
+							try {
+								Thread.sleep(5000);
+								if (websocket.isRunning()) {
+									websocket.send("Message #" + i++);
+								}
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						System.err.println("Task finished");
+					});
+					return RestApiResponse.webSocketResponse(
+						Arrays.asList(),
+						websocket, 
+						(message)->{
+							try {
+								if (message.equals("end")) {
+									websocket.close();
+								} else {
+									websocket.send("Response: " + message);
+								}
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						},
+						(e)->{
+							e.printStackTrace();
+						}
+					);
+				}
+				return RestApiResponse.textResponse(StatusCode.BAD_REQUEST, Arrays.asList(), (os)->os.write(""));
 			}
 
 		};

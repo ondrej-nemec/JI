@@ -12,6 +12,7 @@ import socketCommunication.Server;
 import socketCommunication.http.HttpMethod;
 import socketCommunication.http.StatusCode;
 import socketCommunication.http.server.RestApiServerResponseFactory;
+import socketCommunication.http.server.WebSocket;
 import socketCommunication.http.server.RequestParameters;
 import socketCommunication.http.server.RestApiResponse;
 
@@ -67,6 +68,14 @@ public class ServerRestartEndToEndTest {
 						));
 					}
 				);
+			}
+
+			@Override
+			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
+					Properties header, RequestParameters params, String ipAddress, String host, WebSocket websocket)
+					throws IOException {
+				// TODO Auto-generated method stub
+				return null;
 			}
 
 		};

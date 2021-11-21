@@ -81,18 +81,37 @@ public class RestApiServer implements Servant {
 		profile(HttpServerProfilerEvent.REQUEST_PARSED);
 		/***********/
 		logger.debug("Request: " + request);
-		RestApiResponse response = createResponce.accept(
-			HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
-			request.getProperty(URL),
-			request.getProperty(FULL_URL),
-			request.getProperty(PROTOCOL),
-			header,
-			params,
-			clientIp
-		);
-		profile(HttpServerProfilerEvent.RESPONSE_CREATED);
-		sendResponse(response, request, bw, os);
-		profile(HttpServerProfilerEvent.RESPONSE_SENDED);
+        
+        if (header.contains("Upgrade") && header.getProperty("Upgrade").equals("websocket")) {
+			WebSocket websocket = new WebSocket(os, is, header);
+        	RestApiResponse response = createResponce.accept(
+        			HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
+        			request.getProperty(URL),
+        			request.getProperty(FULL_URL),
+        			request.getProperty(PROTOCOL),
+        			header,
+        			params,
+        			clientIp,
+        			header.getProperty("Origin"),
+        			websocket
+        	);
+			profile(HttpServerProfilerEvent.RESPONSE_CREATED);
+			sendResponse(response, request, bw, os);
+			profile(HttpServerProfilerEvent.RESPONSE_SENDED);
+        } else {
+			RestApiResponse response = createResponce.accept(
+				HttpMethod.valueOf(request.getProperty(METHOD).toUpperCase()),
+				request.getProperty(URL),
+				request.getProperty(FULL_URL),
+				request.getProperty(PROTOCOL),
+				header,
+				params,
+				clientIp
+			);
+			profile(HttpServerProfilerEvent.RESPONSE_CREATED);
+			sendResponse(response, request, bw, os);
+			profile(HttpServerProfilerEvent.RESPONSE_SENDED);
+        }
 	}
 	
 	private void profile(HttpServerProfilerEvent event) {
@@ -147,6 +166,7 @@ public class RestApiServer implements Servant {
         	parseHeaderLine(line, header);
         	line = br.readLine();
         }
+        
         String type = header.getProperty("Content-Type");
         if (type != null && type.contains("multipart/form-data")) {
 			parseFileForm(type, header, params, br, bis);

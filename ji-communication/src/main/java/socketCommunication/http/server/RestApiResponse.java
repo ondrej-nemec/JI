@@ -3,7 +3,9 @@ package socketCommunication.http.server;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import common.structures.ThrowingConsumer;
 import socketCommunication.http.StatusCode;
@@ -26,6 +28,21 @@ public class RestApiResponse {
 	public static RestApiResponse textResponse(StatusCode statusCode, List<String> header,
 			ThrowingConsumer<BufferedWriter, IOException> textContent) {
 		return new RestApiResponse(statusCode, header, textContent, null);
+	}
+	
+	public static RestApiResponse webSocketResponse(List<String> header, WebSocket websocket,
+			Consumer<String> onMessage, Consumer<IOException> onError) {
+		List<String> responseHeaders = new LinkedList<>();
+		responseHeaders.addAll(header);
+		responseHeaders.addAll(websocket.getHeaders());
+		return new RestApiResponse(
+			StatusCode.SWITCH_PROTOCOL,
+			responseHeaders,
+			null, 
+			(os)->{
+				websocket.accept(onMessage, onError);
+			}
+		);
 	}
 	
 	private RestApiResponse(
