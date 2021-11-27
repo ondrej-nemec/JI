@@ -23,7 +23,7 @@ public class InputJsonStreamEndToEndTest {
 		String json = Text.get().read((br)->{return ReadText.get().asString(br);}, is);
 		try (InputJsonStream stream = new InputJsonStream(new InputStringProvider(json));) {
 			Event e = stream.next();
-			while(!e.isJsonEnd()) {
+			while(e.hasNext()) {
 				System.out.println(getPre(e.getLevel()) + e);
 				e = stream.next();
 			}
