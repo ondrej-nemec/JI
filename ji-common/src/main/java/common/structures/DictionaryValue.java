@@ -177,7 +177,7 @@ public class DictionaryValue {
 	}
 	
 	public Character getCharacter() {
-		return parseValue(Character.class, a->a.charAt(0), a->a.toString());
+		return parseValue(Character.class, a->a.charAt(0), a->a.toString().charAt(0));
 	}
 	
 	public String getString() {
