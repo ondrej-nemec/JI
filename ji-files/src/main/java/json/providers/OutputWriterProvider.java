@@ -24,7 +24,11 @@ public class OutputWriterProvider implements OutputProvider {
 
 	@Override
 	public void close() throws JsonStreamException {
-		// TODO Auto-generated method stub
+		try {
+			writer.close();
+		} catch (IOException e) {
+			throw new JsonStreamException(e);
+		}
 	}
 
 }
