@@ -1,4 +1,4 @@
-package text.core;
+package common.functions;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,7 +21,7 @@ public class InputStreamLoaderTest {
 	}
 
 	@Test
-	@Parameters({"text/core","tests/core"})
+	@Parameters({"functions/env","tests/functions/env"})
 	public void testConstructorForFilesWorksForClasspathAndPathOnly(String path) throws IOException {
 		InputStreamLoader.createInputStream(getClass(), path + "/app.properties");
 		assertTrue(true);
