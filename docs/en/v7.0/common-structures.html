@@ -28,7 +28,7 @@
 
 <strong>Construct</strong>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	<span class="comment">// with not empty Map</span> <br>
 	Map&lt;K, V&gt; map = ...; <br>
@@ -43,7 +43,7 @@
 
 <strong>To Map</strong> 
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	<span class="comment">// get Map from MapDictionary</span> <br>
 	Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap(); <br>
@@ -52,7 +52,7 @@
 
 <strong>Get value</strong>	
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap() <br>
 	<span class="tab"></span> .put("key1", "some value") <br>
@@ -73,7 +73,7 @@
 
 <strong>ForEach</strong>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	MapDictionary&lt;Object, Object&gt; map = ...; <br>
 	map.forEach((key, value)->{ <br>
@@ -88,7 +88,7 @@
 
 <strong>Construct</strong>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	<span class="comment">// with not empty List</span> <br>
 	Collection&lt;S&gt; collection = ...; <br>
@@ -104,7 +104,7 @@
 
 <strong>Get Collection</strong>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	<span class="comment">// get List from ListDictionary</span> <br>
 	List&lt;Object&gt; list = ListDictionary.arrayList().add(<span class="text">"on"</span>).add(<span class="text">"2022-01-01T12:45:58"</span>).toList(); <br>
@@ -115,7 +115,7 @@
 
 <strong>Get value</strong> 
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	<span class="comment">// get List from ListDictionary </span><br>
 	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add(<code class="text">"2022-01-01T12:45:58"</code>).toList(); <br>
@@ -133,7 +133,7 @@
 
 <strong>ForEach</strong>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	ListDictionary&lt;Object&gt; list = ...; <br>
 	list.forEach((value)->{ <br>
@@ -149,7 +149,7 @@
 
 <p>Wrapper for Integer. Allows add (+) or remove (-) value. Useful in callbacks.</p>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	List&lt;User&gt; users = ...; <br>
 
@@ -173,7 +173,7 @@
 
 <p>List wrapper. Method <code>add</code> returns self.</p>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() <br>
 <span class="tab"></span>	.add(<span class="text">"first"</span>) <br>
@@ -188,7 +188,7 @@
 
 <p>Map wrapper. Method <code>append</code>(instead of <code>put</code>) returns self.</p>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() <br>
 <span class="tab"></span>	.append(<span class="text">"first"</span>, false) <br>

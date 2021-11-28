@@ -13,7 +13,7 @@
 </p>
 
 <strong>Example</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	Text.get().read((bufferedReader)->{ <br>
 <span class="tab"></span> <span class="comment">// your reading</span> <br>
@@ -29,7 +29,7 @@
 </p>
 
 <strong>Using</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	ReadText readText = ReadText.get(); <br>
 	<span class="comment">// read whole file as text</span> <br>
@@ -49,7 +49,7 @@
 
 <strong>Example</strong>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	Text.get().write((bufferedWritter)->{ <br>
 <span class="tab"></span><span class="comment">// your writing</span> <br>
@@ -64,7 +64,7 @@
 </p>
 
 <strong>Using</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	WriteText writeText = WriteText.get(); <br>
 	<span class="comment">// write string</span> <br>
@@ -86,7 +86,7 @@
 
 <p>JI Files provides only one factory: <code>read</code>. This method requires <code>InputStream</code> and <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	Binary.get().read((dataInputStream)->{ <br>
 <span class="tab"></span><span class="comment">// your reading</span> <br>
@@ -98,7 +98,7 @@
 
 <p>JI Files can create <code>DataOutputStream</code> in two way: from file (defined by string) and from <code>OutputStream</code>. Both methods require <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
 
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	Binary.get().write((dataOutputStream)->{ <br>
 <span class="tab"></span><span class="comment">// your writing</span> <br>

@@ -7,7 +7,7 @@
 <p>
 	Splits file name to name and extension:
 </p>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		FileExtension ext = new FileExtension(<span class="text">"some-name.txt"</span>); <br>
 		String name = ext.getName();<br>
@@ -20,7 +20,7 @@
 <p>
 	Loads file names from directory. Can be recursive or not. Is able to load names from directory in file system and from jar file.
 </p>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		FilesList filesList = FilesList.get(<span class="text">"/path/to/dir/name"</span>, true); <span class="comment">// second parameter says 'recursive'</span> <br>
 		List&lt;String&gt; files = filesList.getFiles(); <br>
@@ -33,7 +33,7 @@
 <p>
 	Creates new instance of <code>InputStream</code> from file. File can be in file system, classpath (in IDE) or in jar. <strong>Path to file has to be relative without first '/'.</strong> 
 </p>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		InputStream inputStream = InputStreamLoader.createInputStream(this.getClass(), <span class="text">"path/to/file"</span>);
 	</code>
@@ -44,7 +44,7 @@
 <p>
 	Loads <code>Properties</code> from file using <code>InputStreamLoader</code> (means file can be in file system or jar).
 </p>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		Properties prop = PropertiesLoader.loadProperties(<span class="text">"res/app.properties"</span>); <br>
 		<span class="comment">// optionally with charset, default 'uft-8'</span> <br>
@@ -65,7 +65,7 @@
 </p>
 
 <strong>Entity</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	public class UserEntity { <br>
 <span class="tab"></span>@MapperParameter({@MapperType(<span class="text">"user_id"</span>)}) <br>
@@ -78,7 +78,7 @@
 </code>
 </p>
 <strong>Call:</strong>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		UserEntity user = ...; <br>
 		Mapper.get().serialize(user); <span class="comment">// result: {user_id=0, name=null}</span>
@@ -90,7 +90,7 @@
 </p>
  
 <strong>Entity</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	public class UserEntity { <br>
 <span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"user_id"</span>, key=<span class="text">"KeyA"</span>), @MapperType(value=<span class="text">"userId"</span>, key=<span class="text">"KeyB"</span>)}) <br>
@@ -104,7 +104,7 @@
 </p>
 
 <strong>Call:</strong>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		UserEntity user = ...; <br>
 		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyA"</span>) <span class="comment">// result: {user_id=0, Name=null}</span><br>
@@ -114,7 +114,10 @@
 	</code>
 </p>
 
-<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+<p class="alert alert-warning">
+	<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+</p>
+
 
 <h3>Parsing</h3>
 
@@ -123,7 +126,7 @@
 </p>
 
 <strong>Entity</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	public class UserEntity { <br>
 <span class="tab"></span>@MapperParameter({@MapperType(<span class="text">"user_id"</span>)}) <br>
@@ -134,7 +137,7 @@
 </code>
 </p>
 <strong>Call:</strong>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		Map<String, Object> map = new HashMap&lt;&gt;(); <br>
 		map.put(<span class="text">"user_id"</span>, 42); <br>
@@ -148,7 +151,7 @@
 </p>
  
 <strong>Entity</strong>
-<p class="code">
+<p class="alert alert-dark code">
 <code>
 	public class UserEntity { <br>
 <span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"user_id"</span>, key=<span class="text">"KeyA"</span>), @MapperType(value=<span class="text">"userId"</span>, key=<span class="text">"KeyB"</span>)}) <br>
@@ -160,7 +163,7 @@
 </p>
 
 <strong>Call:</strong>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		Map<String, Object> map = new HashMap&lt;&gt;();
 		map.put(<span class="text">"user_id"</span>, 42); <br>
@@ -176,7 +179,10 @@
 	</code>
 </p>
 
-<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+<p class="alert alert-warning">
+	<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+</p>
+
 
 <h2>Other</h2>
 
@@ -185,7 +191,7 @@
 <p>
 	Application configuration. Can be loaded from file using <code>PropertiesLoader</code>. Works like <code>MapDirectory</code>, so you can get variables with type.
 </p>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		Env env = new Env(<span class="text">"conf/app.properties"</span>); <br>
 		<span class="comment">// or alternativelly</span> <br>
@@ -199,7 +205,7 @@
 <p>
 	Array or <code>Iterable</code> to string with given glue and optionally with to-string function applied on each item.
 </p>
-<p class="code">
+<p class="alert alert-dark code">
 	<code>
 		Implode.implode(<span class="text">", "</span>, 1, 2, 3); <span class="comment"> // returns "1, 2, 3"</span> <br>
 		Implode.implode(i->i+<span class="text">"0"</span>, <span class="text">", "</span>, 1, 2, 3); <span class="comment"> // returns "10, 20, 30"</span> <br>

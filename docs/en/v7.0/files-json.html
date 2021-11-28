@@ -15,7 +15,7 @@
 </p>
 
 <strong>API</strong>
-<p class="code"><code>
+<p class="alert alert-dark code"><code>
 	<span class="comment">// object start - '{' - in list or empty file</span> <br>
 	stream.writeObjectStart(); <br>
 	<span class="comment">// object start - '{' - in object</span> <br>
@@ -38,7 +38,7 @@
 </code></p>
 
 <strong>Example: construct</strong>
-<p class="code"><code>
+<p class="alert alert-dark code"><code>
 	OutputProvider provider = ...; <br>
 	OutputJsonStream stream = new OutputJsonStream(provider); <br>
 	<span class="comment">// your code</span>
@@ -63,7 +63,7 @@
 }
 </code></p>
 
-<p class="code"><code>
+<p class="alert alert-dark code"><code>
 	stream.writeObjectStart(); <br>
 	stream.writeObjectValue(<span class="text">"item1"</span>, 123); <br>
 	stream.writeObjectValue(<span class="text">"item2"</span>, <span class="text">"value"</span>); <br>
@@ -107,7 +107,7 @@
 </p>
 
 <strong>Example: construct</strong>
-<p class="code"><code>
+<p class="alert alert-dark code"><code>
 	InputProvider provider = ...; <br>
 	InputJsonStream stream = new InputJsonStream(provider); <br>
 	<span class="comment">// your code</span> <br>
@@ -115,7 +115,7 @@
 </code></p>
 
 <strong>Example: reading</strong>
-<p class="code"><code>
+<p class="alert alert-dark code"><code>
 	<span class="comment">// reading is more general, does not requried JSON example</span> <br>
 	Event e = stream.next(); <br>
 	while(e.hasNext()) { <br>
@@ -147,7 +147,7 @@
 	String json = new JsonWritter().write(<span class="variable">data</span>); <br>
 	<span class="comment">// write JSON to given OutputJsonStream</span> <br>
 	OutputJsonStream <span class="variable">stream</span> = ...; <br>
-	new JsonWritter().write(<span class="variable">stream</span>, <span class="variable">data</span>);<br>
+	<span class="keyword">new</span> JsonWritter().write(<span class="variable">stream</span>, <span class="variable">data</span>);<br>
 </code></p>
 
 <p>
