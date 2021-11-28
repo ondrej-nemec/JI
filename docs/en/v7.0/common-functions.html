@@ -9,9 +9,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		FileExtension ext = new FileExtension(<span class="text">"some-name.txt"</span>); <br>
-		String name = ext.getName();<br>
-		String extension = ext.getExtension();
+		FileExtension <span class="variable">ext</span> = <span class="keyword">new</span> FileExtension(<span class="text">"some-name.txt"</span>); <br>
+		String <span class="variable">name</span> = <span class="variable">ext</span>.getName();<br>
+		String <span class="variable">extension</span> = <span class="variable">ext</span>.getExtension();
 	</code>
 </p>
 
@@ -22,7 +22,7 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		FilesList filesList = FilesList.get(<span class="text">"/path/to/dir/name"</span>, true); <span class="comment">// second parameter says 'recursive'</span> <br>
+		FilesList <span class="variable">filesList</span> = FilesList.get(<span class="text">"/path/to/dir/name"</span>, true); <span class="comment">// second parameter says 'recursive'</span> <br>
 		List&lt;String&gt; files = filesList.getFiles(); <br>
 		URL url = filesList.getURL();
 	</code>
@@ -107,10 +107,10 @@
 <p class="alert alert-dark code">
 	<code>
 		UserEntity user = ...; <br>
-		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyA"</span>) <span class="comment">// result: {user_id=0, Name=null}</span><br>
-		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyB"</span>)<span class="comment">// result: {userName=null, userId=0, age=0}</span><br>
-		Mapper.get().serialize(new MapperEndToEndTest(), <span class="test">"KeyC"</span>)<span class="comment">// result: {id=0, userName=null, age=0}</span><br>
-		Mapper.get().serialize(new MapperEndToEndTest())<span class="comment">// result: {id=0, userName=null, age=0}</span>
+		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest(), <span class="test">"KeyA"</span>) <span class="comment">// result: {user_id=0, Name=null}</span><br>
+		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest(), <span class="test">"KeyB"</span>)<span class="comment">// result: {userName=null, userId=0, age=0}</span><br>
+		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest(), <span class="test">"KeyC"</span>)<span class="comment">// result: {id=0, userName=null, age=0}</span><br>
+		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest())<span class="comment">// result: {id=0, userName=null, age=0}</span>
 	</code>
 </p>
 
@@ -139,7 +139,7 @@
 <strong>Call:</strong>
 <p class="alert alert-dark code">
 	<code>
-		Map<String, Object> map = new HashMap&lt;&gt;(); <br>
+		Map<String, Object> map = <span class="keyword">new</span> HashMap&lt;&gt;(); <br>
 		map.put(<span class="text">"user_id"</span>, 42); <br>
 		map.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
 		Mapper.get().parse(UserEntity.class, map);
@@ -165,13 +165,13 @@
 <strong>Call:</strong>
 <p class="alert alert-dark code">
 	<code>
-		Map<String, Object> map = new HashMap&lt;&gt;();
-		map.put(<span class="text">"user_id"</span>, 42); <br>
-		map.put(<span class="text">"userId"</span>, 24); <br>
-		map.put(<span class="text">"id", 1); <br>
-		map.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
-		map.put(<span class="text">"Name"</span>, <span class="text">"Name #24"</span>); <br>
-		map.put(<span class="text">"userName"</span>, <span class="text">"Name #1"</span>); <br>
+		Map<String, Object> <span class="variable">map</span> = <span class="keyword">new</span> HashMap&lt;&gt;();
+		<span class="variable">map</span>.put(<span class="text">"user_id"</span>, 42); <br>
+		<span class="variable">map</span>.put(<span class="text">"userId"</span>, 24); <br>
+		<span class="variable">map</span>.put(<span class="text">"id", 1); <br>
+		<span class="variable">map</span>.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
+		<span class="variable">map</span>.put(<span class="text">"Name"</span>, <span class="text">"Name #24"</span>); <br>
+		<span class="variable">map</span>.put(<span class="text">"userName"</span>, <span class="text">"Name #1"</span>); <br>
 		Mapper.get().parse(UserEntity.class, <span class="test">"KeyA"</span>) <span class="comment">// result: id=42, name="Name #24"</span><br>
 		Mapper.get().parse(UserEntity.class, <span class="test">"KeyB"</span>)<span class="comment">// result: id=24, name="Name #1"</span><br>
 		Mapper.get().parse(UserEntity.class, <span class="test">"KeyC"</span>)<span class="comment">// result:id=1, name="Name #1"</span><br>
@@ -193,10 +193,10 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Env env = new Env(<span class="text">"conf/app.properties"</span>); <br>
+		Env env = <span class="keyword">new</span> Env(<span class="text">"conf/app.properties"</span>); <br>
 		<span class="comment">// or alternativelly</span> <br>
 		Properties prop = ...; <br>
-		Env env2 = new Env(prop); <br>
+		Env env2 = <span class="keyword">new</span> Env(prop); <br>
 	</code>
 </p>
 

@@ -40,7 +40,7 @@
 <strong>Example: construct</strong>
 <p class="alert alert-dark code"><code>
 	OutputProvider provider = ...; <br>
-	OutputJsonStream stream = new OutputJsonStream(provider); <br>
+	OutputJsonStream stream = <span class="keyword">new</span> OutputJsonStream(provider); <br>
 	<span class="comment">// your code</span>
 	stream.close(); <br>
 </code></p>
@@ -109,7 +109,7 @@
 <strong>Example: construct</strong>
 <p class="alert alert-dark code"><code>
 	InputProvider provider = ...; <br>
-	InputJsonStream stream = new InputJsonStream(provider); <br>
+	InputJsonStream stream = <span class="keyword">new</span> InputJsonStream(provider); <br>
 	<span class="comment">// your code</span> <br>
 	stream.close(); <br>
 </code></p>
@@ -144,10 +144,10 @@
 <p class="alert alert-dark code"><code>
 	Object <span class="variable">data</span> = ...; <br>
 	<span class="comment">// create JSON and returns it as string</span> <br>
-	String json = new JsonWritter().write(<span class="variable">data</span>); <br>
+	String json = <span class="keyword">new</span> JsonWritter().write(<span class="variable">data</span>); <br>
 	<span class="comment">// write JSON to given OutputJsonStream</span> <br>
 	OutputJsonStream <span class="variable">stream</span> = ...; <br>
-	<span class="keyword">new</span> JsonWritter().write(<span class="variable">stream</span>, <span class="variable">data</span>);<br>
+	<span class="keyword"><span class="keyword">new</span></span> JsonWritter().write(<span class="variable">stream</span>, <span class="variable">data</span>);<br>
 </code></p>
 
 <p>

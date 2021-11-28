@@ -32,7 +32,7 @@
 <code>
 	<span class="comment">// with not empty Map</span> <br>
 	Map&lt;K, V&gt; map = ...; <br>
-	new MapDictionary(map); <br>
+	<span class="keyword">new</span> MapDictionary(map); <br>
 	<br>
 	<span class="comment">// as empty HashMap </span><br>
 	MapDictionary.hashMap(); <br>
@@ -62,7 +62,7 @@
 	Object value = dictionary.get("key1"); // value will be String "some value" <br>
 	<span class="comment">// or</span>  <br>
 	Object value2 = dictionary.get("key2"); // value2 will be Integer 123 <br>
-	<span class="comment">// to get new DictionaryValue from value </span> <br>
+	<span class="comment">// to get <span class="keyword">new</span> DictionaryValue from value </span> <br>
 	DictionaryValue v = dictionary.get("key2"); <br>
 	<span class="comment">// to get with type </span> <br>
 	String string = dictionary.getString("key1"); <br>
@@ -92,7 +92,7 @@
 <code>
 	<span class="comment">// with not empty List</span> <br>
 	Collection&lt;S&gt; collection = ...; <br>
-	new ListDictionary(collection); <br>
+	<span class="keyword">new</span> ListDictionary(collection); <br>
 	<span class="comment">// as empty LinkedList </span><br>
 	ListDictionary.linkedList(); <br>
 	<span class="comment">// as empty ArrayList </span><br>
@@ -121,7 +121,7 @@
 	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add(<code class="text">"2022-01-01T12:45:58"</code>).toList(); <br>
 	<span class="comment">// get "raw" value</span> <br>
 	Object value = list.get(0); // value will be Intger 1 <br>
-	<span class="comment">// get new DictionaryValue from value</span> <br>
+	<span class="comment">// get <span class="keyword">new</span> DictionaryValue from value</span> <br>
 	DictionaryValue v = list.getDictionaryValue(0); <br>
 	<span class="comment">// to get with type </span><br>
 	Integer integer = list.getInteger(0); <br>
@@ -158,7 +158,7 @@
 <span class="tab"></span>		<strike>usersAge += user.getAge();</strike>  <br>
 	<strike>});</strike>  <br>
 
-	IntegerBuilder usersAge = new IntegerBuilder(); <br>
+	IntegerBuilder usersAge = <span class="keyword">new</span> IntegerBuilder(); <br>
 	users.forEach((user)->{	<br>
 <span class="tab"></span>		usersAge.add(user.getAge());<br>
 	}); <br>
@@ -175,7 +175,7 @@
 
 <p class="alert alert-dark code">
 <code>
-	ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() <br>
+	ListInit&lt;String&gt; init = <span class="keyword">new</span> ListInit&lt;String&gt;() <br>
 <span class="tab"></span>	.add(<span class="text">"first"</span>) <br>
 <span class="tab"></span>	.second(<span class="text">"second"</span>); <br>
 	Set&lt;String&gt; set = init.toSet(); // convert to Set <br>
@@ -190,7 +190,7 @@
 
 <p class="alert alert-dark code">
 <code>
-	MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() <br>
+	MapInit&lt;String, Object&gt; init = <span class="keyword">new</span> MapInit&lt;String, Object&gt;() <br>
 <span class="tab"></span>	.append(<span class="text">"first"</span>, false) <br>
 <span class="tab"></span>	.append(<span class="text">"second"</span>, 42); <br>
 	Map&lt;String, Object&gt; map = init.toMap(); // convert to Map <br>
