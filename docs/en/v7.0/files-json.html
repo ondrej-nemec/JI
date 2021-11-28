@@ -48,14 +48,14 @@
 <strong>Example: writing</strong>
 
 <p><code>
-{
+{ <br>
 <span class="tab"></span>"item1": 123,<br>
 <span class="tab"></span>"item2": "value",<br>
 <span class="tab"></span>"item-list": [ <br>
-<span class="tab"></span><span class="tab"></span>"one",
-<span class="tab"></span><span class="tab"></span>2,
-<span class="tab"></span><span class="tab"></span>false,
-<span class="tab"></span><span class="tab"></span>NULL
+<span class="tab"></span><span class="tab"></span>"one", <br>
+<span class="tab"></span><span class="tab"></span>2, <br>
+<span class="tab"></span><span class="tab"></span>false, <br>
+<span class="tab"></span><span class="tab"></span>NULL <br>
 <span class="tab"></span>],<br>
 <span class="tab"></span>"item-object": { <br>
 <span class="tab"></span><span class="tab"></span>"subItem": "value" <br>
@@ -68,7 +68,7 @@
 	stream.writeObjectValue(<span class="text">"item1"</span>, 123); <br>
 	stream.writeObjectValue(<span class="text">"item2"</span>, <span class="text">"value"</span>); <br>
 	stream.writeListStart(<span class="text">"item-list"</span>); <br>
-	stream.writeListValue(<span class="text">one</span>); <br>
+	stream.writeListValue(<span class="text">"one"</span>); <br>
 	stream.writeListValue(2); <br>
 	stream.writeListValue(false); <br>
 	stream.writeListValue(null); <br>
@@ -84,10 +84,10 @@
 <p>
 	Write data. JI Files contains two implementations:
 
-	<ol>
+	<ul>
 		<li><code>OutputStringProvider</code>: write JSON into <code>String</code>. The result is available on <code>getJson</code> method.</li>
 		<li><code>OutputWriterProvider</code>: write JSON into given <code>Writer</code>. The <code>OutputWriterProvider::close()</code> close <code>Writer</code>.</li>
-	</ol>
+	</ul>
 </p>
 
 <h3>InputJsonStream</h3>
@@ -129,10 +129,10 @@
 <p>
 	Read data. JI Files contains two implementations:
 
-	<ol>
+	<ul>
 		<li><code>InputStringProvider</code>: provide data from given String</li>
 		<li><code>InputReaderProvider</code>: read data from given <code>Reader</code>. The <code>InputReaderProvider::close()</code> close <code>Reader</code>.</li>
-	</ol>
+	</ul>
 </p>
 
 <h2>JsonWriter</h2>
@@ -140,5 +140,38 @@
 <p>
 	Write any <code>Object</code> to JSON stream.
 </p>
+
+<p class="alert alert-dark">
+	Object <span class="variable">data</span> = ...; <br>
+	<span class="comment">// create JSON and returns it as string</span> <br>
+	String json = new JsonWritter().write(<span class="variable">data</span>); <br>
+	<span class="comment">// write JSON to given OutputJsonStream</span> <br>
+	OutputJsonStream <span class="variable">stream</span> = ...; <br>
+	new JsonWritter().write(<span class="variable">stream</span>, <span class="variable">data</span>);<br>
+</p>
+
+<p>
+	The object will be written with following rules:
+	<ul>
+		<li><code>NULL</code> is <code>null</code></li>
+		<li><code>Iterable</code> and <code>ListDictionary</code> are JSON list</li>
+		<li><code>Map</code> and <code>MapDictionary</code> are JSON object</li>
+		<li><code>Jsonable</code> (see bellow) - the final JSON is defined by <code>toJson</code> method</li>
+		<li><code>Boolean</code> and <code>Number</code> are written with <code>toString</code> without quotes</li>
+		<li>
+			<code>Character</code>, <code>String</code>, <code>Enum</code>, <code>LocalDateTime</code>, 
+			<code>ZonedDateTime</code>, <code>LocalTime</code>, <code>LocalDate</code> and <code>Date</code> are written as text with quotes
+		</li>
+		<li><code>DictionaryValue</code> is written as its value</li>
+		<li><code>Optional</code> - if present, the value is written, otherwise <code>null</code></li>
+		<li>Any other classes are serialized with JI Common <code>Mapper</code></li>
+	</ul>
+</p>
+
+<p class="alert alert-danger">
+	<strong>NOTE:</strong> serializing some native classes with <code>Mapper</code> can cause infinite recursion.
+</p>
+
+<h3>Jsonable</h3>
 
 <h2>JsonReader</h2>
