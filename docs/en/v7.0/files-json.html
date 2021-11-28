@@ -141,14 +141,14 @@
 	Write any <code>Object</code> to JSON stream.
 </p>
 
-<p class="alert alert-dark code">
+<p class="alert alert-dark code"><code>
 	Object <span class="variable">data</span> = ...; <br>
 	<span class="comment">// create JSON and returns it as string</span> <br>
 	String json = new JsonWritter().write(<span class="variable">data</span>); <br>
 	<span class="comment">// write JSON to given OutputJsonStream</span> <br>
 	OutputJsonStream <span class="variable">stream</span> = ...; <br>
 	new JsonWritter().write(<span class="variable">stream</span>, <span class="variable">data</span>);<br>
-</p>
+</code></p>
 
 <p>
 	The object will be written with following rules:
