@@ -9,9 +9,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		FileExtension <span class="variable">ext</span> = <span class="keyword">new</span> FileExtension(<span class="text">"some-name.txt"</span>); <br>
-		String <span class="variable">name</span> = <span class="variable">ext</span>.getName();<br>
-		String <span class="variable">extension</span> = <span class="variable">ext</span>.getExtension();
+		FileExtension <v>ext</v> = <k>new</k> FileExtension(<s>"some-name.txt"</s>); <br>
+		String <v>name</v> = <v>ext</v>.getName();<br>
+		String <v>extension</v> = <v>ext</v>.getExtension();
 	</code>
 </p>
 
@@ -22,9 +22,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		FilesList <span class="variable">filesList</span> = FilesList.get(<span class="text">"/path/to/dir/name"</span>, true); <span class="comment">// second parameter says 'recursive'</span> <br>
-		List&lt;String&gt; files = filesList.getFiles(); <br>
-		URL url = filesList.getURL();
+		FilesList <v>filesList</v> = FilesList.get(<s>"/path/to/dir/name"</s>, true); <c>// second parameter says 'recursive'</c> <br>
+		List&lt;String&gt; files = <v>filesList</v>.getFiles(); <br>
+		URL <v>url</v> = <v>filesList</v>.getURL();
 	</code>
 </p>
 
@@ -35,7 +35,7 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		InputStream inputStream = InputStreamLoader.createInputStream(this.getClass(), <span class="text">"path/to/file"</span>);
+		InputStream <v>inputStream</v> = InputStreamLoader.createInputStream(<k>this</k>.getClass(), <s>"path/to/file"</s>);
 	</code>
 </p>
 
@@ -46,9 +46,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Properties prop = PropertiesLoader.loadProperties(<span class="text">"res/app.properties"</span>); <br>
-		<span class="comment">// optionally with charset, default 'uft-8'</span> <br>
-		Properties prop = PropertiesLoader.loadProperties(<span class="text">"res/app.properties"</span>, <span class="text">"windows-1250"</span>);
+		Properties <v>prop</v> = PropertiesLoader.loadProperties(<s>"res/app.properties"</s>); <br>
+		<c>// optionally with charset, default 'uft-8'</c> <br>
+		Properties <v>prop</v> = PropertiesLoader.loadProperties(<s>"res/app.properties"</s>, <s>"windows-1250"</s>);
 	</code>
 </p>
 
@@ -67,21 +67,21 @@
 <strong>Entity</strong>
 <p class="alert alert-dark code">
 <code>
-	public class UserEntity { <br>
-<span class="tab"></span>@MapperParameter({@MapperType(<span class="text">"user_id"</span>)}) <br>
-<span class="tab"></span>private int id; <span class="comment"> // this field will be saved as 'user_id'</span> <br>
-<span class="tab"></span> <br>
-<span class="tab"></span>private String name; <span class="comment"> // this field will be saved as 'name'</span> <br>
-<span class="tab"></span>@MapperIgnored <br>
-<span class="tab"></span>private int age; <span class="comment"> // this field will be ignored</span> <br>
+	<k>public class</k> UserEntity { <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType<d>(<s>"user_id"</s>)}) <br>
+		<t/><k>private<k> <k>int</k> <f>id</f>; <c>// this field will be saved as 'user_id'</c> <br>
+		<t/> <br>
+		<t/><k>private</k> String <f>name</f>; <c>// this field will be saved as 'name'</c> <br>
+		<t/><d>@MapperIgnored</d> <br>
+		<t/><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
 	}
 </code>
 </p>
 <strong>Call:</strong>
 <p class="alert alert-dark code">
 	<code>
-		UserEntity user = ...; <br>
-		Mapper.get().serialize(user); <span class="comment">// result: {user_id=0, name=null}</span>
+		UserEntity <v>user</v> = ...; <br>
+		Mapper.get().serialize(<v>user</v>); <c>// result: {user_id=0, name=null}</c>
 	</code>
 </p>
 
@@ -92,13 +92,13 @@
 <strong>Entity</strong>
 <p class="alert alert-dark code">
 <code>
-	public class UserEntity { <br>
-<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"user_id"</span>, key=<span class="text">"KeyA"</span>), @MapperType(value=<span class="text">"userId"</span>, key=<span class="text">"KeyB"</span>)}) <br>
-<span class="tab"></span>private int id; <br>
-<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"userName"</span>), @MapperType(value=<span class="text">"Name"</span>, key=<span class="text">"KeyA"</span>)}) <br>
-<span class="tab"></span>private String name;<br>
-<span class="tab"></span>@MapperIgnored({<span class="text">"KeyA"</span>}) <br>
-<span class="tab"></span>private int age; <span class="comment"> // this field will be ignored</span> <br>
+	<k>public class</k> UserEntity { <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"user_id"</s>, key=<s>"KeyA"</s>), <d>@MapperType</d>(value=<s>"userId"</s>, key=<s>"KeyB"</s>)}) <br>
+		<t/><k>private</k> <k>int</k> <f>id</f>; <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"userName"</s>), @MapperType(value=<s>"Name"</s>, key=<s>"KeyA"</s>)}) <br>
+		<t/><k>private</k> String <f>name</f>;<br>
+		<t/><d>@MapperIgnored</d>({<s>"KeyA"</s>}) <br>
+		<t/><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
 	}
 </code>
 </p>
@@ -106,11 +106,11 @@
 <strong>Call:</strong>
 <p class="alert alert-dark code">
 	<code>
-		UserEntity user = ...; <br>
-		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest(), <span class="test">"KeyA"</span>) <span class="comment">// result: {user_id=0, Name=null}</span><br>
-		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest(), <span class="test">"KeyB"</span>)<span class="comment">// result: {userName=null, userId=0, age=0}</span><br>
-		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest(), <span class="test">"KeyC"</span>)<span class="comment">// result: {id=0, userName=null, age=0}</span><br>
-		Mapper.get().serialize(<span class="keyword">new</span> MapperEndToEndTest())<span class="comment">// result: {id=0, userName=null, age=0}</span>
+		UserEntity <v>user</v> = ...; <br>
+		Mapper.get().serialize(<k>new</k> MapperEndToEndTest(), <s>"KeyA"</s>) <c>// result: {user_id=0, Name=null}</c><br>
+		Mapper.get().serialize(<k>new</k> MapperEndToEndTest(), <s>"KeyB"</s>)<c>// result: {userName=null, userId=0, age=0}</c><br>
+		Mapper.get().serialize(<k>new</k> MapperEndToEndTest(), <s>"KeyC"</s>)<c>// result: {id=0, userName=null, age=0}</c><br>
+		Mapper.get().serialize(<k>new</k> MapperEndToEndTest())<c>// result: {id=0, userName=null, age=0}</c>
 	</code>
 </p>
 
@@ -128,21 +128,21 @@
 <strong>Entity</strong>
 <p class="alert alert-dark code">
 <code>
-	public class UserEntity { <br>
-<span class="tab"></span>@MapperParameter({@MapperType(<span class="text">"user_id"</span>)}) <br>
-<span class="tab"></span>private int id; <span class="comment"> // this field will be loaded from 'user_id'</span> <br>
-<span class="tab"></span> <br>
-<span class="tab"></span>private String name; <span class="comment"> // this field will be loaded from 'name'</span> <br>
+	<k>public class</k> UserEntity { <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(<s>"user_id"</s>)}) <br>
+		<t/><k>private int</k> <f>id</f>; <c>// this field will be loaded from 'user_id'</c> <br>
+		<t/> <br>
+		<t/><k>private</k> String <f>name</f>; <c>// this field will be loaded from 'name'</c> <br>
 	}
 </code>
 </p>
 <strong>Call:</strong>
 <p class="alert alert-dark code">
 	<code>
-		Map<String, Object> map = <span class="keyword">new</span> HashMap&lt;&gt;(); <br>
-		map.put(<span class="text">"user_id"</span>, 42); <br>
-		map.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
-		Mapper.get().parse(UserEntity.class, map);
+		Map&lt;String, Object&gt; <v>map</v> = <k>new</k> HashMap&lt;&gt;(); <br>
+		<v>map</v>.put(<s>"user_id"</s>, 42); <br>
+		<v>map</v>.put(<s>"name"</s>, <s>"Name #42"</s>); <br>
+		Mapper.get().parse(UserEntity.<k>class</k>, <v>map</v>);
 	</code>
 </p>
 
@@ -153,11 +153,11 @@
 <strong>Entity</strong>
 <p class="alert alert-dark code">
 <code>
-	public class UserEntity { <br>
-<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"user_id"</span>, key=<span class="text">"KeyA"</span>), @MapperType(value=<span class="text">"userId"</span>, key=<span class="text">"KeyB"</span>)}) <br>
-<span class="tab"></span>private int id; <br>
-<span class="tab"></span>@MapperParameter({@MapperType(value=<span class="text">"userName"</span>), @MapperType(value=<span class="text">"Name"</span>, key=<span class="text">"KeyA"</span>)}) <br>
-<span class="tab"></span>private String name;<br>
+	<k>public class</k> UserEntity { <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"user_id"</s>, key=<s>"KeyA"</s>), <d>@MapperType</d>(value=<s>"userId"</s>, key=<s>"KeyB"</s>)}) <br>
+		<t/><k>private int</k> <f>id</f>; <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"userName"</s>), <d>@MapperType</d>(value=<s>"Name"</s>, key=<s>"KeyA"</s>)}) <br>
+		<t/><k>private</k> String <f>name<f>;<br>
 	}
 </code>
 </p>
@@ -165,17 +165,17 @@
 <strong>Call:</strong>
 <p class="alert alert-dark code">
 	<code>
-		Map<String, Object> <span class="variable">map</span> = <span class="keyword">new</span> HashMap&lt;&gt;();
-		<span class="variable">map</span>.put(<span class="text">"user_id"</span>, 42); <br>
-		<span class="variable">map</span>.put(<span class="text">"userId"</span>, 24); <br>
-		<span class="variable">map</span>.put(<span class="text">"id", 1); <br>
-		<span class="variable">map</span>.put(<span class="text">"name"</span>, <span class="text">"Name #42"</span>); <br>
-		<span class="variable">map</span>.put(<span class="text">"Name"</span>, <span class="text">"Name #24"</span>); <br>
-		<span class="variable">map</span>.put(<span class="text">"userName"</span>, <span class="text">"Name #1"</span>); <br>
-		Mapper.get().parse(UserEntity.class, <span class="test">"KeyA"</span>) <span class="comment">// result: id=42, name="Name #24"</span><br>
-		Mapper.get().parse(UserEntity.class, <span class="test">"KeyB"</span>)<span class="comment">// result: id=24, name="Name #1"</span><br>
-		Mapper.get().parse(UserEntity.class, <span class="test">"KeyC"</span>)<span class="comment">// result:id=1, name="Name #1"</span><br>
-		Mapper.get().parse(UserEntity.class)<span class="comment">// result: id=1, name="Name #1"</span>
+		Map&lt;String, Object&gt; <v>map</v> = <k>new</k> HashMap&lt;&gt;();
+		<v>map</v>.put(<s>"user_id"</s>, 42); <br>
+		<v>map</v>.put(<s>"userId"</s>, 24); <br>
+		<v>map</v>.put(<s>"id"</s>, 1); <br>
+		<v>map</v>.put(<s>"name"</s>, <s>"Name #42"</s>); <br>
+		<v>map</v>.put(<s>"Name"</s>, <s>"Name #24"</s>); <br>
+		<v>map</v>.put(<s>"userName"</s>, <s>"Name #1"</s>); <br>
+		Mapper.get().parse(UserEntity.<k>class</k>, <s>"KeyA"</s>) <c>// result: id=42, name="Name #24"</c><br>
+		Mapper.get().parse(UserEntity.<k>class</k>, <s>"KeyB"</s>)<c>// result: id=24, name="Name #1"</c><br>
+		Mapper.get().parse(UserEntity.<k>class</k>, <s>"KeyC"</s>)<c>// result:id=1, name="Name #1"</c><br>
+		Mapper.get().parse(UserEntity.<k>class</k>)<c>// result: id=1, name="Name #1"</c>
 	</code>
 </p>
 
@@ -193,10 +193,10 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Env env = <span class="keyword">new</span> Env(<span class="text">"conf/app.properties"</span>); <br>
-		<span class="comment">// or alternativelly</span> <br>
-		Properties prop = ...; <br>
-		Env env2 = <span class="keyword">new</span> Env(prop); <br>
+		Env <v>env</v> = <k>new</k> Env(<s>"conf/app.properties"</s>); <br>
+		<c>// or alternativelly</c> <br>
+		Properties <v>prop</v> = ...; <br>
+		Env <v>env2</v> = <d>new</d> Env(<v>prop</k>); <br>
 	</code>
 </p>
 
@@ -207,9 +207,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Implode.implode(<span class="text">", "</span>, 1, 2, 3); <span class="comment"> // returns "1, 2, 3"</span> <br>
-		Implode.implode(i->i+<span class="text">"0"</span>, <span class="text">", "</span>, 1, 2, 3); <span class="comment"> // returns "10, 20, 30"</span> <br>
-		Implode.implode(<span class="text">", "</span>, Arrays.asList(1, 2, 3)); <span class="comment"> // returns "1, 2, 3"</span> <br>
-		Implode.implode(i->i+<span class="text">"0"</span>, <span class="text">", "</span>, Arrays.asList(1, 2, 3)); <span class="comment"> // returns "10, 20, 30"</span> <br>
+		Implode.<i>implode</i>(<s>", "</s>, 1, 2, 3); <c> // returns "1, 2, 3"</c> <br>
+		Implode.implode(i->i+<s>"0"</s>, <s>", "</s>, 1, 2, 3); <c> // returns "10, 20, 30"</c> <br>
+		Implode.implode(<s>", "</s>, Arrays.asList(1, 2, 3)); <c> // returns "1, 2, 3"</c> <br>
+		Implode.implode(i->i+<s>"0"</s>, <s>", "</s>, Arrays.asList(1, 2, 3)); <c> // returns "10, 20, 30"</c> <br>
 	</code>
 </p>

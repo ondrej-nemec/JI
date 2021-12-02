@@ -30,13 +30,13 @@
 
 <p class="alert alert-dark code">
 <code>
-	<span class="comment">// with not empty Map</span> <br>
+	<c>// with not empty Map</span> <br>
 	Map&lt;K, V&gt; map = ...; <br>
 	<span class="keyword">new</span> MapDictionary(map); <br>
 	<br>
-	<span class="comment">// as empty HashMap </span><br>
+	<c>// as empty HashMap </span><br>
 	MapDictionary.hashMap(); <br>
-	<span class="comment">// as empty Properties</span> <br>
+	<c>// as empty Properties</span> <br>
 	MapDictionary.properties();
 </code>
 </p>
@@ -45,7 +45,7 @@
 
 <p class="alert alert-dark code">
 <code>
-	<span class="comment">// get Map from MapDictionary</span> <br>
+	<c>// get Map from MapDictionary</span> <br>
 	Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap(); <br>
 </code>
 </p>
@@ -55,19 +55,19 @@
 <p class="alert alert-dark code">
 <code>
 	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap() <br>
-	<span class="tab"></span> .put("key1", "some value") <br>
-	<span class="tab"></span> .put("key2", 123) <br>
-	<span class="tab"></span>.toMap(); <br>
-	<span class="comment">// get "raw" value</span> <br>
+	<t/> .put("key1", "some value") <br>
+	<t/> .put("key2", 123) <br>
+	<t/>.toMap(); <br>
+	<c>// get "raw" value</span> <br>
 	Object value = dictionary.get("key1"); // value will be String "some value" <br>
-	<span class="comment">// or</span>  <br>
+	<c>// or</span>  <br>
 	Object value2 = dictionary.get("key2"); // value2 will be Integer 123 <br>
-	<span class="comment">// to get <span class="keyword">new</span> DictionaryValue from value </span> <br>
+	<c>// to get <span class="keyword">new</span> DictionaryValue from value </span> <br>
 	DictionaryValue v = dictionary.get("key2"); <br>
-	<span class="comment">// to get with type </span> <br>
+	<c>// to get with type </span> <br>
 	String string = dictionary.getString("key1"); <br>
 	Integer integer = dictionary.getInteger("key2"); <br>
-	List&lt;String&gt; list = dictionary.getList(" ");<span class="comment"> // split value by ' ' -> list will contains two fields "some" and "value"</span> 
+	List&lt;String&gt; list = dictionary.getList(" ");<c> // split value by ' ' -> list will contains two fields "some" and "value"</span> 
 </code>
 </p>
 
@@ -77,10 +77,10 @@
 <code>
 	MapDictionary&lt;Object, Object&gt; map = ...; <br>
 	map.forEach((key, value)->{ <br>
-<span class="tab"></span>		// key is Object or other given class<br>
-<span class="tab"></span>		// !! value is DictionaryValue !! <br>
+<t/>		// key is Object or other given class<br>
+<t/>		// !! value is DictionaryValue !! <br>
 	}); <br>
-	<span class="comment">// for standart forEach use forEach2 method</span>
+	<c>// for standart forEach use forEach2 method</span>
 </code>
 </p>
 
@@ -90,14 +90,14 @@
 
 <p class="alert alert-dark code">
 <code>
-	<span class="comment">// with not empty List</span> <br>
+	<c>// with not empty List</span> <br>
 	Collection&lt;S&gt; collection = ...; <br>
 	<span class="keyword">new</span> ListDictionary(collection); <br>
-	<span class="comment">// as empty LinkedList </span><br>
+	<c>// as empty LinkedList </span><br>
 	ListDictionary.linkedList(); <br>
-	<span class="comment">// as empty ArrayList </span><br>
+	<c>// as empty ArrayList </span><br>
 	ListDictionary.arrayList();
-	<span class="comment">// as empty HashSet </span><br>
+	<c>// as empty HashSet </span><br>
 	ListDictionary.hashSet();
 </code>
 </p>
@@ -106,10 +106,10 @@
 
 <p class="alert alert-dark code">
 <code>
-	<span class="comment">// get List from ListDictionary</span> <br>
-	List&lt;Object&gt; list = ListDictionary.arrayList().add(<span class="text">"on"</span>).add(<span class="text">"2022-01-01T12:45:58"</span>).toList(); <br>
-	<span class="comment">// get Set from ListDictionary</span> <br>
-	Set&lt;Object&gt; list = ListDictionary.hashSet().add(<span class="text">"on"</span>).add(<span class="text">"2022-01-01T12:45:58"</span>).toSet(); <br>
+	<c>// get List from ListDictionary</span> <br>
+	List&lt;Object&gt; list = ListDictionary.arrayList().add(<s>"on"</span>).add(<s>"2022-01-01T12:45:58"</span>).toList(); <br>
+	<c>// get Set from ListDictionary</span> <br>
+	Set&lt;Object&gt; list = ListDictionary.hashSet().add(<s>"on"</span>).add(<s>"2022-01-01T12:45:58"</span>).toSet(); <br>
 </code>
 </p>
 
@@ -117,13 +117,13 @@
 
 <p class="alert alert-dark code">
 <code>
-	<span class="comment">// get List from ListDictionary </span><br>
+	<c>// get List from ListDictionary </span><br>
 	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add(<code class="text">"2022-01-01T12:45:58"</code>).toList(); <br>
-	<span class="comment">// get "raw" value</span> <br>
+	<c>// get "raw" value</span> <br>
 	Object value = list.get(0); // value will be Intger 1 <br>
-	<span class="comment">// get <span class="keyword">new</span> DictionaryValue from value</span> <br>
+	<c>// get <span class="keyword">new</span> DictionaryValue from value</span> <br>
 	DictionaryValue v = list.getDictionaryValue(0); <br>
-	<span class="comment">// to get with type </span><br>
+	<c>// to get with type </span><br>
 	Integer integer = list.getInteger(0); <br>
 	Boolean boolean = list.getBoolean(0); <br>
 	Double doub = list.getDouble(0); <br>
@@ -137,9 +137,9 @@
 <code>
 	ListDictionary&lt;Object&gt; list = ...; <br>
 	list.forEach((value)->{ <br>
-<span class="tab"></span><span class="comment">/// !! value is DictionaryValue !! </span><br>
+<t/><c>/// !! value is DictionaryValue !! </span><br>
 	}); <br>
-	<span class="comment">// for standart forEach use forEach2 method</span>
+	<c>// for standart forEach use forEach2 method</span>
 </code>
 </p>
 
@@ -155,12 +155,12 @@
 
 	<strike>int usersAge = 0;</strike> <br>
 	<strike>users.forEach((user)->{</strike> <br>
-<span class="tab"></span>		<strike>usersAge += user.getAge();</strike>  <br>
+<t/>		<strike>usersAge += user.getAge();</strike>  <br>
 	<strike>});</strike>  <br>
 
 	IntegerBuilder usersAge = <span class="keyword">new</span> IntegerBuilder(); <br>
 	users.forEach((user)->{	<br>
-<span class="tab"></span>		usersAge.add(user.getAge());<br>
+<t/>		usersAge.add(user.getAge());<br>
 	}); <br>
 </code>
 </p>
@@ -176,8 +176,8 @@
 <p class="alert alert-dark code">
 <code>
 	ListInit&lt;String&gt; init = <span class="keyword">new</span> ListInit&lt;String&gt;() <br>
-<span class="tab"></span>	.add(<span class="text">"first"</span>) <br>
-<span class="tab"></span>	.second(<span class="text">"second"</span>); <br>
+<t/>	.add(<s>"first"</span>) <br>
+<t/>	.second(<s>"second"</span>); <br>
 	Set&lt;String&gt; set = init.toSet(); // convert to Set <br>
 	List&lt;String&gt; list = init.toList(); // convert to List <br>
 	ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
@@ -191,8 +191,8 @@
 <p class="alert alert-dark code">
 <code>
 	MapInit&lt;String, Object&gt; init = <span class="keyword">new</span> MapInit&lt;String, Object&gt;() <br>
-<span class="tab"></span>	.append(<span class="text">"first"</span>, false) <br>
-<span class="tab"></span>	.append(<span class="text">"second"</span>, 42); <br>
+<t/>	.append(<s>"first"</span>, false) <br>
+<t/>	.append(<s>"second"</span>, 42); <br>
 	Map&lt;String, Object&gt; map = init.toMap(); // convert to Map <br>
 	Properties prop = init.toProperties(); // convert to Properties <br>
 	MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
