@@ -25,7 +25,7 @@ public interface RestApiServerResponseFactory {
 			Properties header,
 			RequestParameters params,
 			String ipAddress,
-			String host,
+			String origin,
 			WebSocket websocket
 	) throws IOException;
 
