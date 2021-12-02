@@ -9,7 +9,7 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		FileExtension <v>ext</v> = <k>new</k> FileExtension(<s>"some-name.txt"</s>); <br>
+		FileExtension <v>ext</v> = <k>new</k> FileExtension(<w>"some-name.txt"</w>); <br>
 		String <v>name</v> = <v>ext</v>.getName();<br>
 		String <v>extension</v> = <v>ext</v>.getExtension();
 	</code>
@@ -22,8 +22,8 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		FilesList <v>filesList</v> = FilesList.get(<s>"/path/to/dir/name"</s>, true); <c>// second parameter says 'recursive'</c> <br>
-		List&lt;String&gt; files = <v>filesList</v>.getFiles(); <br>
+		FilesList <v>filesList</v> = FilesList.get(<w>"/path/to/dir/name"</w>, <k>true</k>); <c>// second parameter says 'recursive'</c> <br>
+		List&lt;String&gt; <v>files</v> = <v>filesList</v>.getFiles(); <br>
 		URL <v>url</v> = <v>filesList</v>.getURL();
 	</code>
 </p>
@@ -35,7 +35,7 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		InputStream <v>inputStream</v> = InputStreamLoader.createInputStream(<k>this</k>.getClass(), <s>"path/to/file"</s>);
+		InputStream <v>inputStream</v> = InputStreamLoader.<i>createInputStream</i></fieldset>(<k>this</k>.getClass(), <w>"path/to/file"</w>);
 	</code>
 </p>
 
@@ -46,9 +46,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Properties <v>prop</v> = PropertiesLoader.loadProperties(<s>"res/app.properties"</s>); <br>
+		Properties <v>prop</v> = PropertiesLoader.<i>loadProperties</i>(<w>"res/app.properties"</w>); <br>
 		<c>// optionally with charset, default 'uft-8'</c> <br>
-		Properties <v>prop</v> = PropertiesLoader.loadProperties(<s>"res/app.properties"</s>, <s>"windows-1250"</s>);
+		Properties <v>prop</v> = PropertiesLoader.<i>loadProperties</i>(<w>"res/app.properties"</w>, <w>"windows-1250"</w>);
 	</code>
 </p>
 
@@ -68,8 +68,8 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType<d>(<s>"user_id"</s>)}) <br>
-		<t/><k>private<k> <k>int</k> <f>id</f>; <c>// this field will be saved as 'user_id'</c> <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType<d>(<w>"user_id"</w>)}) <br>
+		<t/><k>private</k> <k>int</k> <f>id</f>; <c>// this field will be saved as 'user_id'</c> <br>
 		<t/> <br>
 		<t/><k>private</k> String <f>name</f>; <c>// this field will be saved as 'name'</c> <br>
 		<t/><d>@MapperIgnored</d> <br>
@@ -81,7 +81,7 @@
 <p class="alert alert-dark code">
 	<code>
 		UserEntity <v>user</v> = ...; <br>
-		Mapper.get().serialize(<v>user</v>); <c>// result: {user_id=0, name=null}</c>
+		Mapper.<i>get</i>().serialize(<v>user</v>); <c>// result: {user_id=0, name=null}</c>
 	</code>
 </p>
 
@@ -93,11 +93,11 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"user_id"</s>, key=<s>"KeyA"</s>), <d>@MapperType</d>(value=<s>"userId"</s>, key=<s>"KeyB"</s>)}) <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"user_id"</w>, key=<w>"KeyA"</w>), <d>@MapperType</d>(value=<w>"userId"</w>, key=<w>"KeyB"</w>)}) <br>
 		<t/><k>private</k> <k>int</k> <f>id</f>; <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"userName"</s>), @MapperType(value=<s>"Name"</s>, key=<s>"KeyA"</s>)}) <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"userName"</w>), @MapperType(value=<w>"Name"</w>, key=<w>"KeyA"</w>)}) <br>
 		<t/><k>private</k> String <f>name</f>;<br>
-		<t/><d>@MapperIgnored</d>({<s>"KeyA"</s>}) <br>
+		<t/><d>@MapperIgnored</d>({<w>"KeyA"</w>}) <br>
 		<t/><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
 	}
 </code>
@@ -107,10 +107,10 @@
 <p class="alert alert-dark code">
 	<code>
 		UserEntity <v>user</v> = ...; <br>
-		Mapper.get().serialize(<k>new</k> MapperEndToEndTest(), <s>"KeyA"</s>) <c>// result: {user_id=0, Name=null}</c><br>
-		Mapper.get().serialize(<k>new</k> MapperEndToEndTest(), <s>"KeyB"</s>)<c>// result: {userName=null, userId=0, age=0}</c><br>
-		Mapper.get().serialize(<k>new</k> MapperEndToEndTest(), <s>"KeyC"</s>)<c>// result: {id=0, userName=null, age=0}</c><br>
-		Mapper.get().serialize(<k>new</k> MapperEndToEndTest())<c>// result: {id=0, userName=null, age=0}</c>
+		Mapper.<i>get</i>().serialize(<k>new</k> MapperEndToEndTest(), <w>"KeyA"</w>) <c>// result: {user_id=0, Name=null}</c><br>
+		Mapper.<i>get</i>().serialize(<k>new</k> MapperEndToEndTest(), <w>"KeyB"</w>)<c>// result: {userName=null, userId=0, age=0}</c><br>
+		Mapper.<i>get</i>().serialize(<k>new</k> MapperEndToEndTest(), <w>"KeyC"</w>)<c>// result: {id=0, userName=null, age=0}</c><br>
+		Mapper.<i>get</i>().serialize(<k>new</k> MapperEndToEndTest())<c>// result: {id=0, userName=null, age=0}</c>
 	</code>
 </p>
 
@@ -129,7 +129,7 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(<s>"user_id"</s>)}) <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(<w>"user_id"</w>)}) <br>
 		<t/><k>private int</k> <f>id</f>; <c>// this field will be loaded from 'user_id'</c> <br>
 		<t/> <br>
 		<t/><k>private</k> String <f>name</f>; <c>// this field will be loaded from 'name'</c> <br>
@@ -140,9 +140,9 @@
 <p class="alert alert-dark code">
 	<code>
 		Map&lt;String, Object&gt; <v>map</v> = <k>new</k> HashMap&lt;&gt;(); <br>
-		<v>map</v>.put(<s>"user_id"</s>, 42); <br>
-		<v>map</v>.put(<s>"name"</s>, <s>"Name #42"</s>); <br>
-		Mapper.get().parse(UserEntity.<k>class</k>, <v>map</v>);
+		<v>map</v>.put(<w>"user_id"</w>, 42); <br>
+		<v>map</v>.put(<w>"name"</w>, <w>"Name #42"</w>); <br>
+		Mapper.<i>get</i>().parse(UserEntity.<k>class</k>, <v>map</v>);
 	</code>
 </p>
 
@@ -154,9 +154,9 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"user_id"</s>, key=<s>"KeyA"</s>), <d>@MapperType</d>(value=<s>"userId"</s>, key=<s>"KeyB"</s>)}) <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"user_id"</w>, key=<w>"KeyA"</w>), <d>@MapperType</d>(value=<w>"userId"</w>, key=<w>"KeyB"</w>)}) <br>
 		<t/><k>private int</k> <f>id</f>; <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<s>"userName"</s>), <d>@MapperType</d>(value=<s>"Name"</s>, key=<s>"KeyA"</s>)}) <br>
+		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"userName"</w>), <d>@MapperType</d>(value=<w>"Name"</w>, key=<w>"KeyA"</w>)}) <br>
 		<t/><k>private</k> String <f>name<f>;<br>
 	}
 </code>
@@ -166,16 +166,16 @@
 <p class="alert alert-dark code">
 	<code>
 		Map&lt;String, Object&gt; <v>map</v> = <k>new</k> HashMap&lt;&gt;();
-		<v>map</v>.put(<s>"user_id"</s>, 42); <br>
-		<v>map</v>.put(<s>"userId"</s>, 24); <br>
-		<v>map</v>.put(<s>"id"</s>, 1); <br>
-		<v>map</v>.put(<s>"name"</s>, <s>"Name #42"</s>); <br>
-		<v>map</v>.put(<s>"Name"</s>, <s>"Name #24"</s>); <br>
-		<v>map</v>.put(<s>"userName"</s>, <s>"Name #1"</s>); <br>
-		Mapper.get().parse(UserEntity.<k>class</k>, <s>"KeyA"</s>) <c>// result: id=42, name="Name #24"</c><br>
-		Mapper.get().parse(UserEntity.<k>class</k>, <s>"KeyB"</s>)<c>// result: id=24, name="Name #1"</c><br>
-		Mapper.get().parse(UserEntity.<k>class</k>, <s>"KeyC"</s>)<c>// result:id=1, name="Name #1"</c><br>
-		Mapper.get().parse(UserEntity.<k>class</k>)<c>// result: id=1, name="Name #1"</c>
+		<v>map</v>.put(<w>"user_id"</w>, 42); <br>
+		<v>map</v>.put(<w>"userId"</w>, 24); <br>
+		<v>map</v>.put(<w>"id"</w>, 1); <br>
+		<v>map</v>.put(<w>"name"</w>, <w>"Name #42"</w>); <br>
+		<v>map</v>.put(<w>"Name"</w>, <w>"Name #24"</w>); <br>
+		<v>map</v>.put(<w>"userName"</w>, <w>"Name #1"</w>); <br>
+		Mapper.<i>get</i>().parse(UserEntity.<k>class</k>, <w>"KeyA"</w>) <c>// result: id=42, name="Name #24"</c><br>
+		Mapper.<i>get</i>().parse(UserEntity.<k>class</k>, <w>"KeyB"</w>)<c>// result: id=24, name="Name #1"</c><br>
+		Mapper.<i>get</i>().parse(UserEntity.<k>class</k>, <w>"KeyC"</w>)<c>// result:id=1, name="Name #1"</c><br>
+		Mapper.<i>get</i>().parse(UserEntity.<k>class</k>)<c>// result: id=1, name="Name #1"</c>
 	</code>
 </p>
 
@@ -193,7 +193,7 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Env <v>env</v> = <k>new</k> Env(<s>"conf/app.properties"</s>); <br>
+		Env <v>env</v> = <k>new</k> Env(<w>"conf/app.properties"</w>); <br>
 		<c>// or alternativelly</c> <br>
 		Properties <v>prop</v> = ...; <br>
 		Env <v>env2</v> = <d>new</d> Env(<v>prop</k>); <br>
@@ -207,9 +207,9 @@
 </p>
 <p class="alert alert-dark code">
 	<code>
-		Implode.<i>implode</i>(<s>", "</s>, 1, 2, 3); <c> // returns "1, 2, 3"</c> <br>
-		Implode.implode(i->i+<s>"0"</s>, <s>", "</s>, 1, 2, 3); <c> // returns "10, 20, 30"</c> <br>
-		Implode.implode(<s>", "</s>, Arrays.asList(1, 2, 3)); <c> // returns "1, 2, 3"</c> <br>
-		Implode.implode(i->i+<s>"0"</s>, <s>", "</s>, Arrays.asList(1, 2, 3)); <c> // returns "10, 20, 30"</c> <br>
+		Implode.<i>implode</i>(<w>", "</w>, 1, 2, 3); <c> // returns "1, 2, 3"</c> <br>
+		Implode.<i>implode</i>(<v>i</v>-><v>i</v>+<w>"0"</w>, <w>", "</w>, 1, 2, 3); <c> // returns "10, 20, 30"</c> <br>
+		Implode.<i>implode</i>(<w>", "</w>, Arrays.asList(1, 2, 3)); <c> // returns "1, 2, 3"</c> <br>
+		Implode.<i>implode</i>(<v>i</v>-><v>i</v>+<w>"0"</w>, <w>", "</w>, Arrays.asList(1, 2, 3)); <c> // returns "10, 20, 30"</c> <br>
 	</code>
 </p>

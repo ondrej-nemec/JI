@@ -18,7 +18,7 @@
 	Text.get().read((bufferedReader)->{ <br>
 <t/> <c>// your reading</span> <br>
 <t/> return null; <br>
-	}, <s>"/path/to/readed/file.txt"</span>);
+	}, <w>"/path/to/readed/file.txt"</span>);
 </code>
 </p>
 
@@ -37,7 +37,7 @@
 	<c>// read file per line, each list element is one line</span> <br>
 	List&lt;String&gt; lines = readText.asList(bufferedReader); <br>
 	<c>// read file as table, each list element is line and line is splited to list by given delimeter</span> <br>
-	Collection&lt;List&lt;String&gt;&gt; table = readText.asTable(bufferedReader, <s>","</span>);
+	Collection&lt;List&lt;String&gt;&gt; table = readText.asTable(bufferedReader, <w>","</span>);
 </code>
 </p>
 
@@ -53,7 +53,7 @@
 <code>
 	Text.get().write((bufferedWritter)->{ <br>
 <t/><c>// your writing</span> <br>
-	}, <s>"/path/to/file.txt"</span>, true); <c>// true - append content</span>
+	}, <w>"/path/to/file.txt"</span>, true); <c>// true - append content</span>
 </code>
 </p>
 
@@ -68,11 +68,11 @@
 <code>
 	WriteText writeText = WriteText.get(); <br>
 	<c>// write string</span> <br>
-	writeText.write(bufferedWriter, <s>"your text"</span>); <br>
+	writeText.write(bufferedWriter, <w>"your text"</span>); <br>
 	<c>// write list, each item will be <span class="keyword">new</span> line</span> <br>
 	writeText.write(bufferedWriter, list); <br>
 	<c>// write list in list, each sublist is <span class="keyword">new</span> line, items in sublist will be separated by delimeter</span> <br>
-	writeText.write(bufferedWritter, table, <s>","</span>);
+	writeText.write(bufferedWritter, table, <w>","</span>);
 </code>
 </p>
 
@@ -105,6 +105,6 @@
 	}, outputStream); <br>
 	Binary.get().write((dataOutputStream)->{ <br>
 <t/><c>// your writing</span> <br>
-	}, <s>"path/to/file"</span>);
+	}, <w>"path/to/file"</span>);
 </code>
 </p>
