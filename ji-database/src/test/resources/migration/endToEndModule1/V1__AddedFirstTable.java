@@ -2,9 +2,9 @@ package migration.endToEndModule1;
 
 import java.sql.SQLException;
 
-import migration.Migration;
-import querybuilder.enums.ColumnType;
-import querybuilder.QueryBuilder;
+import ji.migration.Migration;
+import ji.querybuilder.QueryBuilder;
+import ji.querybuilder.enums.ColumnType;
 
 public class V1__AddedFirstTable implements Migration {
 

@@ -3,11 +3,11 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 
-import common.Logger;
-import common.structures.DictionaryValue;
-import database.Database;
-import database.DatabaseConfig;
-import database.support.DatabaseRow;
+import ji.common.Logger;
+import ji.common.structures.DictionaryValue;
+import ji.database.Database;
+import ji.database.DatabaseConfig;
+import ji.database.support.DatabaseRow;
 
 public class TimestampEndToEndTest {
 	/*if (java.sql.Date.class.isInstance(object)) {

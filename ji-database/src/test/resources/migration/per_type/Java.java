@@ -2,8 +2,8 @@ package migration.per_type;
 
 import java.sql.SQLException;
 
-import migration.Migration;
-import querybuilder.QueryBuilder;
+import ji.migration.Migration;
+import ji.querybuilder.QueryBuilder;
 
 public class Java implements Migration {
 

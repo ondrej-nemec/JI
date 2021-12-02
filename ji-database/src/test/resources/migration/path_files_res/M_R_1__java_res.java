@@ -2,8 +2,8 @@ package migration.path_files_res;
 
 import java.sql.SQLException;
 
-import migration.Migration;
-import querybuilder.QueryBuilder;
+import ji.migration.Migration;
+import ji.querybuilder.QueryBuilder;
 
 public class M_R_1__java_res implements Migration {
 
