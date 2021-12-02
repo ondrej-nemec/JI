@@ -68,12 +68,12 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType<d>(<w>"user_id"</w>)}) <br>
-		<t/><k>private</k> <k>int</k> <f>id</f>; <c>// this field will be saved as 'user_id'</c> <br>
-		<t/> <br>
-		<t/><k>private</k> String <f>name</f>; <c>// this field will be saved as 'name'</c> <br>
-		<t/><d>@MapperIgnored</d> <br>
-		<t/><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
+		<t></t><d>@MapperParameter</d>({<d>@MapperType<d>(<w>"user_id"</w>)}) <br>
+		<t></t><k>private</k> <k>int</k> <f>id</f>; <c>// this field will be saved as 'user_id'</c> <br>
+		<t></t> <br>
+		<t></t><k>private</k> String <f>name</f>; <c>// this field will be saved as 'name'</c> <br>
+		<t></t><d>@MapperIgnored</d> <br>
+		<t></t><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
 	}
 </code>
 </p>
@@ -93,12 +93,12 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"user_id"</w>, key=<w>"KeyA"</w>), <d>@MapperType</d>(value=<w>"userId"</w>, key=<w>"KeyB"</w>)}) <br>
-		<t/><k>private</k> <k>int</k> <f>id</f>; <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"userName"</w>), @MapperType(value=<w>"Name"</w>, key=<w>"KeyA"</w>)}) <br>
-		<t/><k>private</k> String <f>name</f>;<br>
-		<t/><d>@MapperIgnored</d>({<w>"KeyA"</w>}) <br>
-		<t/><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
+		<t></t><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"user_id"</w>, key=<w>"KeyA"</w>), <d>@MapperType</d>(value=<w>"userId"</w>, key=<w>"KeyB"</w>)}) <br>
+		<t></t><k>private</k> <k>int</k> <f>id</f>; <br>
+		<t></t><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"userName"</w>), @MapperType(value=<w>"Name"</w>, key=<w>"KeyA"</w>)}) <br>
+		<t></t><k>private</k> String <f>name</f>;<br>
+		<t></t><d>@MapperIgnored</d>({<w>"KeyA"</w>}) <br>
+		<t></t><k>private</k> <k>int</k> <f>age</f>; <c>// this field will be ignored</c> <br>
 	}
 </code>
 </p>
@@ -129,10 +129,10 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(<w>"user_id"</w>)}) <br>
-		<t/><k>private int</k> <f>id</f>; <c>// this field will be loaded from 'user_id'</c> <br>
-		<t/> <br>
-		<t/><k>private</k> String <f>name</f>; <c>// this field will be loaded from 'name'</c> <br>
+		<t></t><d>@MapperParameter</d>({<d>@MapperType</d>(<w>"user_id"</w>)}) <br>
+		<t></t><k>private int</k> <f>id</f>; <c>// this field will be loaded from 'user_id'</c> <br>
+		<t></t> <br>
+		<t></t><k>private</k> String <f>name</f>; <c>// this field will be loaded from 'name'</c> <br>
 	}
 </code>
 </p>
@@ -154,10 +154,10 @@
 <p class="alert alert-dark code">
 <code>
 	<k>public class</k> UserEntity { <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"user_id"</w>, key=<w>"KeyA"</w>), <d>@MapperType</d>(value=<w>"userId"</w>, key=<w>"KeyB"</w>)}) <br>
-		<t/><k>private int</k> <f>id</f>; <br>
-		<t/><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"userName"</w>), <d>@MapperType</d>(value=<w>"Name"</w>, key=<w>"KeyA"</w>)}) <br>
-		<t/><k>private</k> String <f>name<f>;<br>
+		<t></t><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"user_id"</w>, key=<w>"KeyA"</w>), <d>@MapperType</d>(value=<w>"userId"</w>, key=<w>"KeyB"</w>)}) <br>
+		<t></t><k>private int</k> <f>id</f>; <br>
+		<t></t><d>@MapperParameter</d>({<d>@MapperType</d>(value=<w>"userName"</w>), <d>@MapperType</d>(value=<w>"Name"</w>, key=<w>"KeyA"</w>)}) <br>
+		<t></t><k>private</k> String <f>name<f>;<br>
 	}
 </code>
 </p>

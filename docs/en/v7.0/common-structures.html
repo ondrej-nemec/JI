@@ -55,9 +55,9 @@
 <p class="alert alert-dark code">
 <code>
 	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap() <br>
-	<t/> .put("key1", "some value") <br>
-	<t/> .put("key2", 123) <br>
-	<t/>.toMap(); <br>
+	<t></t> .put("key1", "some value") <br>
+	<t></t> .put("key2", 123) <br>
+	<t></t>.toMap(); <br>
 	<c>// get "raw" value</span> <br>
 	Object value = dictionary.get("key1"); // value will be String "some value" <br>
 	<c>// or</span>  <br>
@@ -77,8 +77,8 @@
 <code>
 	MapDictionary&lt;Object, Object&gt; map = ...; <br>
 	map.forEach((key, value)->{ <br>
-<t/>		// key is Object or other given class<br>
-<t/>		// !! value is DictionaryValue !! <br>
+<t></t>		// key is Object or other given class<br>
+<t></t>		// !! value is DictionaryValue !! <br>
 	}); <br>
 	<c>// for standart forEach use forEach2 method</span>
 </code>
@@ -137,7 +137,7 @@
 <code>
 	ListDictionary&lt;Object&gt; list = ...; <br>
 	list.forEach((value)->{ <br>
-<t/><c>/// !! value is DictionaryValue !! </span><br>
+<t></t><c>/// !! value is DictionaryValue !! </span><br>
 	}); <br>
 	<c>// for standart forEach use forEach2 method</span>
 </code>
@@ -155,12 +155,12 @@
 
 	<strike>int usersAge = 0;</strike> <br>
 	<strike>users.forEach((user)->{</strike> <br>
-<t/>		<strike>usersAge += user.getAge();</strike>  <br>
+<t></t>		<strike>usersAge += user.getAge();</strike>  <br>
 	<strike>});</strike>  <br>
 
 	IntegerBuilder usersAge = <span class="keyword">new</span> IntegerBuilder(); <br>
 	users.forEach((user)->{	<br>
-<t/>		usersAge.add(user.getAge());<br>
+<t></t>		usersAge.add(user.getAge());<br>
 	}); <br>
 </code>
 </p>
@@ -176,8 +176,8 @@
 <p class="alert alert-dark code">
 <code>
 	ListInit&lt;String&gt; init = <span class="keyword">new</span> ListInit&lt;String&gt;() <br>
-<t/>	.add(<w>"first"</span>) <br>
-<t/>	.second(<w>"second"</span>); <br>
+<t></t>	.add(<w>"first"</span>) <br>
+<t></t>	.second(<w>"second"</span>); <br>
 	Set&lt;String&gt; set = init.toSet(); // convert to Set <br>
 	List&lt;String&gt; list = init.toList(); // convert to List <br>
 	ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
@@ -191,8 +191,8 @@
 <p class="alert alert-dark code">
 <code>
 	MapInit&lt;String, Object&gt; init = <span class="keyword">new</span> MapInit&lt;String, Object&gt;() <br>
-<t/>	.append(<w>"first"</span>, false) <br>
-<t/>	.append(<w>"second"</span>, 42); <br>
+<t></t>	.append(<w>"first"</span>, false) <br>
+<t></t>	.append(<w>"second"</span>, 42); <br>
 	Map&lt;String, Object&gt; map = init.toMap(); // convert to Map <br>
 	Properties prop = init.toProperties(); // convert to Properties <br>
 	MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
