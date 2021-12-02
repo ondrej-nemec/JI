@@ -174,4 +174,30 @@
 
 <h3>Jsonable</h3>
 
+<p>
+	This interface allow you define how to parse your object to JSON. <code>toJson</code> returns object and the rules upper will be applied on it.
+</p>
+
 <h2>JsonReader</h2>
+
+<p>
+	Reads from JSON stream and returns <code>Object</code>. JSON list is <code>List</code>, JSON object is <code>Map</code>.If target class is specified, returns new instance of that class (using <code>Mapper</code>).
+</p>
+
+<p class="alert alert-dark code"><code>
+	<c>// parse from string</c> <br>
+	String <v>json</v> = ...; <br>
+	Object <v>parsedJson</v> = <k>new</k> JsonReader().read(<v>json</v>); <br>
+
+	<c>// parse from stream</c> <br>
+	InputJsonStream <v>jsonStream</v> = ...; <br>
+	Object <v>parsedJsonStream</v> = <k>new</k> JsonReader().read(<v>jsonStream</v>); <br>
+
+	<c>// parse from json to MyClass</c> <br>
+	String <v>json</v> = ...; <br>
+	MyClass <v>myClassFromString</v> = <k>new</k> JsonReader().read(<v>json</v>, MyClass.<k>class</k>); <br>
+
+	<c>// parse from stream to MyClass</c> <br>
+	InputJsonStream <v>jsonStream</v> = ...; <br>
+	MyClass <v>myClassFromStream</v> = <k>new</k> JsonReader().read(<v>jsonStream</v>, MyClass.<k>class</k>); <br>
+</code></p>
