@@ -15,69 +15,70 @@
 </p>
 
 <strong>API</strong>
-<p class="alert alert-dark code"><code>
-	<c>// object start - '{' - in list or empty file</span> <br>
-	stream.writeObjectStart(); <br>
-	<c>// object start - '{' - in object</span> <br>
-	stream.writeObjectStart(name); <br>
-	<c>// object end - '}'</span> <br>
-	stream.writeObjectEnd(); <br>
 
-	<c>// list start - '[' - in list or empty file</span> <br>
-	stream.writeListStart(); <br>
-	<c>// list start - '[' - in object</span> <br>
-	stream.writeListStart(name); <br>
-	<c>// list end - ']'</span> <br>
-	stream.writeListEnd(); <br>
+<pre><code class="language-java">
+// object start - '{' - in list or empty file
+stream.writeObjectStart();
+// object start - '{' - in object
+stream.writeObjectStart(name);
+// object end - '}'
+stream.writeObjectEnd();
+
+// list start - '[' - in list or empty file
+stream.writeListStart();
+// list start - '[' - in object
+stream.writeListStart(name);
+// list end - ']'
+stream.writeListEnd("aaa");
 
 
-	<c>// primitive or String value - in list</span> <br>
-	stream.writeListValue(value); <br>
-	<c>// primitive or String value - in object</span> <br>
-	stream.writeObjectValue(name, value); <br>
-</code></p>
+// primitive or String value - in list
+stream.writeListValue(value);
+// primitive or String value - in object
+stream.writeObjectValue(name, value);
+</code></pre>
 
 <strong>Example: construct</strong>
-<p class="alert alert-dark code"><code>
-	OutputProvider provider = ...; <br>
-	OutputJsonStream stream = <span class="keyword">new</span> OutputJsonStream(provider); <br>
-	<c>// your code</span>
-	stream.close(); <br>
-</code></p>
+<pre><code class="language-java">
+OutputProvider provider = ...;
+OutputJsonStream stream = new OutputJsonStream(provider);
+// your code
+stream.close();
+</code></pre>
 
 <strong>Example: writing</strong>
 
-<p><code>
-{ <br>
-<t></t>"item1": 123,<br>
-<t></t>"item2": "value",<br>
-<t></t>"item-list": [ <br>
-<t></t><t></t>"one", <br>
-<t></t><t></t>2, <br>
-<t></t><t></t>false, <br>
-<t></t><t></t>NULL <br>
-<t></t>],<br>
-<t></t>"item-object": { <br>
-<t></t><t></t>"subItem": "value" <br>
-<t></t>} <br>
+<pre><code class="nohighlight">
+{
+	"item1": 123,
+	"item2": "value",
+	"item-list": [
+		"one",
+		2,
+		false,
+		NULL
+	],
+	"item-object": {
+		"subItem": "value"
+	}
 }
-</code></p>
+</code></pre>
 
-<p class="alert alert-dark code"><code>
-	stream.writeObjectStart(); <br>
-	stream.writeObjectValue(<w>"item1"</span>, 123); <br>
-	stream.writeObjectValue(<w>"item2"</span>, <w>"value"</span>); <br>
-	stream.writeListStart(<w>"item-list"</span>); <br>
-	stream.writeListValue(<w>"one"</span>); <br>
-	stream.writeListValue(2); <br>
-	stream.writeListValue(false); <br>
-	stream.writeListValue(null); <br>
-	stream.writeListEnd(); <br>
-	stream.writeObjectStart(<w>"item-object"</span>); <br>
-	stream.writeObjectItem(<w>"subItem"</span>, <w>"value"</span>); <br>
-	stream.writeObjectEnd(); <br>
-	stream.writeObjectEnd();
-</code></p>
+<pre><code class="language-java">
+stream.writeObjectStart();
+stream.writeObjectValue("item1", 123);
+stream.writeObjectValue("item2", "value");
+stream.writeListStart("item-list");
+stream.writeListValue("one");
+stream.writeListValue(2);
+stream.writeListValue(false);
+stream.writeListValue(null);
+stream.writeListEnd();
+stream.writeObjectStart("item-object");
+stream.writeObjectItem("subItem", "value");
+stream.writeObjectEnd();
+stream.writeObjectEnd();
+</code></pre>
 
 <h4>OutputProvider</h4>
 
@@ -107,22 +108,22 @@
 </p>
 
 <strong>Example: construct</strong>
-<p class="alert alert-dark code"><code>
-	InputProvider provider = ...; <br>
-	InputJsonStream stream = <span class="keyword">new</span> InputJsonStream(provider); <br>
-	<c>// your code</span> <br>
-	stream.close(); <br>
-</code></p>
+<pre><code class="language-java">
+InputProvider provider = ...;
+InputJsonStream stream = new InputJsonStream(provider);
+// your code
+stream.close();
+</code></pre>
 
 <strong>Example: reading</strong>
-<p class="alert alert-dark code"><code>
-	<c>// reading is more general, does not requried JSON example</span> <br>
-	Event e = stream.next(); <br>
-	while(e.hasNext()) { <br>
-	<t></t><c>// your code</span> <br>
-	<t></t>e = stream.next(); <br>
-	} <br>
-</code></p>
+<pre><code class="language-java">
+// reading is more general, does not requried JSON example
+Event e = stream.next();
+while(e.hasNext()) {
+	// your code
+	e = stream.next();
+}
+</code></pre>
 
 <h4>InputProvider</h4>
 
@@ -141,14 +142,14 @@
 	Write any <code>Object</code> to JSON stream.
 </p>
 
-<p class="alert alert-dark code"><code>
-	Object <v>data</span> = ...; <br>
-	<c>// create JSON and returns it as string</span> <br>
-	String json = <span class="keyword">new</span> JsonWritter().write(<v>data</span>); <br>
-	<c>// write JSON to given OutputJsonStream</span> <br>
-	OutputJsonStream <v>stream</span> = ...; <br>
-	<span class="keyword"><span class="keyword">new</span></span> JsonWritter().write(<v>stream</span>, <v>data</span>);<br>
-</code></p>
+<pre><code class="language-java">
+Object data = ...;
+// create JSON and returns it as string
+String json = new JsonWritter().write(data);
+// write JSON to given OutputJsonStream
+OutputJsonStream stream = ...;
+new JsonWritter().write(stream, data);
+</code></pre>
 
 <p>
 	The object will be written with following rules:
@@ -184,20 +185,20 @@
 	Reads from JSON stream and returns <code>Object</code>. JSON list is <code>List</code>, JSON object is <code>Map</code>.If target class is specified, returns new instance of that class (using <code>Mapper</code>).
 </p>
 
-<p class="alert alert-dark code"><code>
-	<c>// parse from string</c> <br>
-	String <v>json</v> = ...; <br>
-	Object <v>parsedJson</v> = <k>new</k> JsonReader().read(<v>json</v>); <br>
+<pre><code class="language-java">
+// parse from string
+String json = ...;
+Object parsedJson = new JsonReader().read(json);
 
-	<c>// parse from stream</c> <br>
-	InputJsonStream <v>jsonStream</v> = ...; <br>
-	Object <v>parsedJsonStream</v> = <k>new</k> JsonReader().read(<v>jsonStream</v>); <br>
+// parse from stream
+InputJsonStream jsonStream = ...;
+Object parsedJsonStream = new JsonReader().read(jsonStream);
 
-	<c>// parse from json to MyClass</c> <br>
-	String <v>json</v> = ...; <br>
-	MyClass <v>myClassFromString</v> = <k>new</k> JsonReader().read(<v>json</v>, MyClass.<k>class</k>); <br>
+// parse from json to MyClass
+String json = ...;
+MyClass myClassFromString = new JsonReader().read(json, MyClass.class);
 
-	<c>// parse from stream to MyClass</c> <br>
-	InputJsonStream <v>jsonStream</v> = ...; <br>
-	MyClass <v>myClassFromStream</v> = <k>new</k> JsonReader().read(<v>jsonStream</v>, MyClass.<k>class</k>); <br>
-</code></p>
+// parse from stream to MyClass
+InputJsonStream jsonStream = ...;
+MyClass myClassFromStream = new JsonReader().read(jsonStream, MyClass.class);
+</code></pre>

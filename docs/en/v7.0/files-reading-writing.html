@@ -13,14 +13,12 @@
 </p>
 
 <strong>Example</strong>
-<p class="alert alert-dark code">
-<code>
-	Text.get().read((bufferedReader)->{ <br>
-<t></t> <c>// your reading</span> <br>
-<t></t> return null; <br>
-	}, <w>"/path/to/readed/file.txt"</span>);
-</code>
-</p>
+<pre><code class="language-java">
+Text.get().read((bufferedReader)->{ 
+	// your reading 
+	return null; 
+}, "/path/to/readed/file.txt");
+</code></pre>
 
 <h3>Class ReadText</h3>
 
@@ -29,17 +27,15 @@
 </p>
 
 <strong>Using</strong>
-<p class="alert alert-dark code">
-<code>
-	ReadText readText = ReadText.get(); <br>
-	<c>// read whole file as text</span> <br>
-	String text = readText.asString(bufferedReader); <br>
-	<c>// read file per line, each list element is one line</span> <br>
-	List&lt;String&gt; lines = readText.asList(bufferedReader); <br>
-	<c>// read file as table, each list element is line and line is splited to list by given delimeter</span> <br>
-	Collection&lt;List&lt;String&gt;&gt; table = readText.asTable(bufferedReader, <w>","</span>);
-</code>
-</p>
+<pre><code class="language-java">
+ReadText readText = ReadText.get(); 
+// read whole file as text 
+String text = readText.asString(bufferedReader); 
+// read file per line, each list element is one line 
+List&lt;String&gt; lines = readText.asList(bufferedReader); 
+// read file as table, each list element is line and line is splited to list by given delimeter 
+Collection&lt;List&lt;String&gt;&gt; table = readText.asTable(bufferedReader, ",");
+</code></pre>
 
 <h3>Writting</h3>
 
@@ -49,13 +45,11 @@
 
 <strong>Example</strong>
 
-<p class="alert alert-dark code">
-<code>
-	Text.get().write((bufferedWritter)->{ <br>
-<t></t><c>// your writing</span> <br>
-	}, <w>"/path/to/file.txt"</span>, true); <c>// true - append content</span>
-</code>
-</p>
+<pre><code class="language-java">
+Text.get().write((bufferedWritter)->{ 
+	// your writing 
+}, "/path/to/file.txt", true); // true - append content
+</code></pre>
 
 <h3>Class WriteText</h3>
 
@@ -64,17 +58,15 @@
 </p>
 
 <strong>Using</strong>
-<p class="alert alert-dark code">
-<code>
-	WriteText writeText = WriteText.get(); <br>
-	<c>// write string</span> <br>
-	writeText.write(bufferedWriter, <w>"your text"</span>); <br>
-	<c>// write list, each item will be <span class="keyword">new</span> line</span> <br>
-	writeText.write(bufferedWriter, list); <br>
-	<c>// write list in list, each sublist is <span class="keyword">new</span> line, items in sublist will be separated by delimeter</span> <br>
-	writeText.write(bufferedWritter, table, <w>","</span>);
-</code>
-</p>
+<pre><code class="language-java">
+WriteText writeText = WriteText.get(); 
+// write string 
+writeText.write(bufferedWriter, "your text"); 
+// write list, each item will be new line 
+writeText.write(bufferedWriter, list); 
+// write list in list, each sublist is new line, items in sublist will be separated by delimeter 
+writeText.write(bufferedWritter, table, ",");
+</code></pre>
 
 <h2>Binary files</h2>
 
@@ -86,25 +78,21 @@
 
 <p>JI Files provides only one factory: <code>read</code>. This method requires <code>InputStream</code> and <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
 
-<p class="alert alert-dark code">
-<code>
-	Binary.get().read((dataInputStream)->{ <br>
-<t></t><c>// your reading</span> <br>
-	}, inputStream);
-</code>
-</p>
+<pre><code class="language-java">
+Binary.get().read((dataInputStream)->{ 
+	// your reading 
+}, inputStream);
+</code></pre>
 
 <h3>Writing</h3>
 
 <p>JI Files can create <code>DataOutputStream</code> in two way: from file (defined by string) and from <code>OutputStream</code>. Both methods require <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
 
-<p class="alert alert-dark code">
-<code>
-	Binary.get().write((dataOutputStream)->{ <br>
-<t></t><c>// your writing</span> <br>
-	}, outputStream); <br>
-	Binary.get().write((dataOutputStream)->{ <br>
-<t></t><c>// your writing</span> <br>
-	}, <w>"path/to/file"</span>);
-</code>
-</p>
+<pre><code class="language-java">
+Binary.get().write((dataOutputStream)->{ 
+	// your writing 
+}, outputStream); 
+Binary.get().write((dataOutputStream)->{ 
+	// your writing 
+}, "path/to/file");
+</code></pre>

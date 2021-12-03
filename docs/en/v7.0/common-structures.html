@@ -28,120 +28,104 @@
 
 <strong>Construct</strong>
 
-<p class="alert alert-dark code">
-<code>
-	<c>// with not empty Map</c> <br>
-	Map&lt;K, V&gt; <v>map</v> = ...; <br>
-	<k>new</k> MapDictionary(<v>map</v>); <br>
-	<br>
-	<c>// as empty HashMap </c><br>
-	MapDictionary.<i>hashMap</i>(); <br>
-	<c>// as empty Properties</c> <br>
-	MapDictionary.<i>properties</i>();
-</code>
-</p>
+<pre><code class="language-java">
+// with not empty Map
+Map&lt;K, V&gt; map = ...;
+new MapDictionary(map);
+
+// as empty HashMap
+MapDictionary.hashMap();
+// as empty Properties
+MapDictionary.properties();
+</code></pre>
 
 <strong>To Map</strong> 
 
-<p class="alert alert-dark code">
-<code>
-	<c>// get Map from MapDictionary</c> <br>
-	Map&lt;Object, Object&gt; <v>map</v> = MapDictionary.<i>hashMap<i>().put(<w>"key"</w>, <w>"value"</w>).put(<w>"key2"</w>, 123).toMap(); <br>
-</code>
-</p>
+<pre><code class="language-java">
+// get Map from MapDictionary
+Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap();
+</code></pre>
 
 <strong>Get value</strong>	
 
-<p class="alert alert-dark code">
-<code>
-	MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap() <br>
-	<t></t> .put("key1", "some value") <br>
-	<t></t> .put("key2", 123) <br>
-	<t></t>.toMap(); <br>
-	<c>// get "raw" value</span> <br>
-	Object value = dictionary.get("key1"); // value will be String "some value" <br>
-	<c>// or</span>  <br>
-	Object value2 = dictionary.get("key2"); // value2 will be Integer 123 <br>
-	<c>// to get <span class="keyword">new</span> DictionaryValue from value </span> <br>
-	DictionaryValue v = dictionary.get("key2"); <br>
-	<c>// to get with type </span> <br>
-	String string = dictionary.getString("key1"); <br>
-	Integer integer = dictionary.getInteger("key2"); <br>
-	List&lt;String&gt; list = dictionary.getList(" ");<c> // split value by ' ' -> list will contains two fields "some" and "value"</span> 
-</code>
-</p>
+<pre><code class="language-java">
+MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap()
+	 .put("key1", "some value") 
+	 .put("key2", 123)
+	.toMap();
+// get "raw" value
+Object value = dictionary.get("key1"); // value will be String "some value"
+// or 
+Object value2 = dictionary.get("key2"); // value2 will be Integer 123 
+// to get new DictionaryValue from value
+DictionaryValue v = dictionary.get("key2");
+// to get with type
+String string = dictionary.getString("key1");
+Integer integer = dictionary.getInteger("key2");
+List&lt;String&gt; list = dictionary.getList(" "); // split value by ' ' -> list will contains two fields "some" and "value" 
+</code></pre>
 
 <strong>ForEach</strong>
 
-<p class="alert alert-dark code">
-<code>
-	MapDictionary&lt;Object, Object&gt; map = ...; <br>
-	map.forEach((key, value)->{ <br>
-<t></t>		// key is Object or other given class<br>
-<t></t>		// !! value is DictionaryValue !! <br>
-	}); <br>
-	<c>// for standart forEach use forEach2 method</span>
-</code>
-</p>
+<pre><code class="language-java">
+MapDictionary&lt;Object, Object&gt; map = ...;
+map.forEach((key, value)->{
+	// key is Object or other given class
+	// !! value is DictionaryValue !!
+});
+// for standart forEach use forEach2 method
+</code></pre>
 
 <h4>ListDictionary</h4>
 
 <strong>Construct</strong>
 
-<p class="alert alert-dark code">
-<code>
-	<c>// with not empty List</span> <br>
-	Collection&lt;S&gt; collection = ...; <br>
-	<span class="keyword">new</span> ListDictionary(collection); <br>
-	<c>// as empty LinkedList </span><br>
-	ListDictionary.linkedList(); <br>
-	<c>// as empty ArrayList </span><br>
-	ListDictionary.arrayList();
-	<c>// as empty HashSet </span><br>
-	ListDictionary.hashSet();
-</code>
-</p>
+<pre><code class="language-java">
+// with not empty List
+Collection&lt;S&gt; collection = ...;
+new ListDictionary(collection);
+// as empty LinkedList
+ListDictionary.linkedList();
+// as empty ArrayList
+ListDictionary.arrayList();
+// as empty HashSet
+ListDictionary.hashSet();
+</code></pre>
 
 <strong>Get Collection</strong>
 
-<p class="alert alert-dark code">
-<code>
-	<c>// get List from ListDictionary</span> <br>
-	List&lt;Object&gt; list = ListDictionary.arrayList().add(<w>"on"</span>).add(<w>"2022-01-01T12:45:58"</span>).toList(); <br>
-	<c>// get Set from ListDictionary</span> <br>
-	Set&lt;Object&gt; list = ListDictionary.hashSet().add(<w>"on"</span>).add(<w>"2022-01-01T12:45:58"</span>).toSet(); <br>
-</code>
-</p>
+<pre><code class="language-java">
+// get List from ListDictionary
+List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList();
+// get Set from ListDictionary
+Set&lt;Object&gt; list = ListDictionary.hashSet().add("on").add("2022-01-01T12:45:58").toSet();
+</code></pre>
 
 <strong>Get value</strong> 
 
-<p class="alert alert-dark code">
-<code>
-	<c>// get List from ListDictionary </span><br>
-	ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add(<code class="text">"2022-01-01T12:45:58"</code>).toList(); <br>
-	<c>// get "raw" value</span> <br>
-	Object value = list.get(0); // value will be Intger 1 <br>
-	<c>// get <span class="keyword">new</span> DictionaryValue from value</span> <br>
-	DictionaryValue v = list.getDictionaryValue(0); <br>
-	<c>// to get with type </span><br>
-	Integer integer = list.getInteger(0); <br>
-	Boolean boolean = list.getBoolean(0); <br>
-	Double doub = list.getDouble(0); <br>
-	LocalDate date = list.getDate(0); <br>
-</code>
-</p>
+<pre><code class="language-java">
+// get List from ListDictionary
+ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList();
+// get "raw" value
+Object value = list.get(0); // value will be Intger 1 
+// get new DictionaryValue from value
+DictionaryValue v = list.getDictionaryValue(0);
+// to get with type
+Integer integer = list.getInteger(0);
+Boolean boolean = list.getBoolean(0);
+Double doub = list.getDouble(0);
+LocalDate date = list.getDate(0);
+</code></pre>
 
 <strong>ForEach</strong>
 
-<p class="alert alert-dark code">
-<code>
-	ListDictionary&lt;Object&gt; list = ...; <br>
-	list.forEach((value)->{ <br>
-<t></t><c>/// !! value is DictionaryValue !! </span><br>
-	}); <br>
-	<c>// for standart forEach use forEach2 method</span>
-</code>
-</p>
+<pre><code class="language-java">
+ListDictionary&lt;Object&gt; list = ...; 
+list.forEach((value)->{ 
+	// !! value is DictionaryValue !! 
+}); 
+// for standart forEach use forEach2 method
+</code></pre>
 
 <h2>Builders</h2>
 
@@ -149,21 +133,19 @@
 
 <p>Wrapper for Integer. Allows add (+) or remove (-) value. Useful in callbacks.</p>
 
-<p class="alert alert-dark code">
-<code>
-	List&lt;User&gt; users = ...; <br>
+<pre><code class="language-java">
+List&lt;User&gt; users = ...; 
 
-	<strike>int usersAge = 0;</strike> <br>
-	<strike>users.forEach((user)->{</strike> <br>
-<t></t>		<strike>usersAge += user.getAge();</strike>  <br>
-	<strike>});</strike>  <br>
+int usersAge = 0;
+users.forEach((user)->{
+	usersAge += user.getAge(); 
+});
 
-	IntegerBuilder usersAge = <span class="keyword">new</span> IntegerBuilder(); <br>
-	users.forEach((user)->{	<br>
-<t></t>		usersAge.add(user.getAge());<br>
-	}); <br>
-</code>
-</p>
+IntegerBuilder usersAge = new IntegerBuilder(); 
+users.forEach((user)->{	
+	usersAge.add(user.getAge());
+}); 
+</code></pre>
 
 <h3>ObjectBuilder</h3>
 
@@ -173,31 +155,27 @@
 
 <p>List wrapper. Method <code>add</code> returns self.</p>
 
-<p class="alert alert-dark code">
-<code>
-	ListInit&lt;String&gt; init = <span class="keyword">new</span> ListInit&lt;String&gt;() <br>
-<t></t>	.add(<w>"first"</span>) <br>
-<t></t>	.second(<w>"second"</span>); <br>
-	Set&lt;String&gt; set = init.toSet(); // convert to Set <br>
-	List&lt;String&gt; list = init.toList(); // convert to List <br>
-	ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
-</code>
-</p>
+<pre><code class="language-java">
+ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() 
+	.add("first") 
+	.second("second"); 
+Set&lt;String&gt; set = init.toSet(); // convert to Set 
+List&lt;String&gt; list = init.toList(); // convert to List 
+ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
+</code></pre>
 
 <h3>MapInit</h3>
 
 <p>Map wrapper. Method <code>append</code>(instead of <code>put</code>) returns self.</p>
 
-<p class="alert alert-dark code">
-<code>
-	MapInit&lt;String, Object&gt; init = <span class="keyword">new</span> MapInit&lt;String, Object&gt;() <br>
-<t></t>	.append(<w>"first"</span>, false) <br>
-<t></t>	.append(<w>"second"</span>, 42); <br>
-	Map&lt;String, Object&gt; map = init.toMap(); // convert to Map <br>
-	Properties prop = init.toProperties(); // convert to Properties <br>
-	MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
-</code>
-</p>
+<pre><code class="language-java">
+MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() 
+	.append("first", false) 
+	.append("second", 42); 
+Map&lt;String, Object&gt; map = init.toMap(); // convert to Map 
+Properties prop = init.toProperties(); // convert to Properties 
+MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
+</code></pre>
 
 <h2>Callbacks</h2>
 
