@@ -92,4 +92,9 @@ public class MySqlQueryBuilder implements QueryBuilderFactory {
 			String.format("ALTER TABLE %s DROP INDEX %s", table, name)
 		);
 	}
+
+	@Override
+	public Connection getConnection() {
+		return connection;
+	}
 }

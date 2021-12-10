@@ -68,7 +68,7 @@ public class QueryBuilderEndToEndTest {
 			Consumer<Void> startDbAndCreateSchema,
 			Consumer<Void> stopDb,
 			String type) {
-		this.createBuilder = (c)->new QueryBuilder(c, createBuilder.apply(c));
+		this.createBuilder = (c)->new QueryBuilder(createBuilder.apply(c));
 		this.createConnection = createConnection;
 		this.startDbAndCreateSchema = startDbAndCreateSchema;
 		this.stopDb = stopDb;

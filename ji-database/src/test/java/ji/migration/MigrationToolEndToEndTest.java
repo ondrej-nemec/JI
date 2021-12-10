@@ -48,7 +48,7 @@ public class MigrationToolEndToEndTest {
 		Connection c = createConnection();
 		c.setAutoCommit(false);
 		
-		QueryBuilder queryBuilder = new QueryBuilder(c,  new MySqlQueryBuilder(c));
+		QueryBuilder queryBuilder = new QueryBuilder(new MySqlQueryBuilder(c));
 		try {
 			MigrationTool tableCreate = new MigrationTool(Arrays.asList("empty"), queryBuilder, Mockito.mock(Logger.class));
 			tableCreate.migrate();
@@ -79,7 +79,7 @@ public class MigrationToolEndToEndTest {
 		Connection c = createConnection();
 		c.setAutoCommit(false);
 		
-		QueryBuilder queryBuilder = new QueryBuilder(c,  new MySqlQueryBuilder(c));
+		QueryBuilder queryBuilder = new QueryBuilder(new MySqlQueryBuilder(c));
 		MigrationTool tool = new MigrationTool(Arrays.asList(folder), queryBuilder, Mockito.mock(Logger.class));
 		
 		testStates(c, false);
@@ -121,7 +121,7 @@ public class MigrationToolEndToEndTest {
 		Connection c = createConnection();
 		c.setAutoCommit(false);
 		
-		QueryBuilder queryBuilder = new QueryBuilder(c,  new MySqlQueryBuilder(c));
+		QueryBuilder queryBuilder = new QueryBuilder(new MySqlQueryBuilder(c));
 		MigrationTool tool = new MigrationTool(
 			Arrays.asList("migration/endToEndModule1", "migration/endToEndModule2"), 
 			queryBuilder, 
@@ -142,7 +142,7 @@ public class MigrationToolEndToEndTest {
 	@Test(expected = IOException.class)
 	public void testMigrateThrowsIfNotExistingFolderGiven() throws Exception {
 		try (Connection c = createConnection()) {
-			QueryBuilder queryBuilder = new QueryBuilder(c,  new MySqlQueryBuilder(c));
+			QueryBuilder queryBuilder = new QueryBuilder(new MySqlQueryBuilder(c));
 			MigrationTool tool = new MigrationTool(Arrays.asList("not-existing-folder"), queryBuilder, Mockito.mock(Logger.class));
 			tool.migrate();
 		}

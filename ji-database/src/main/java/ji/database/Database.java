@@ -124,7 +124,7 @@ public class Database {
 	}
 	
 	private QueryBuilder getQueryBuilder(Connection connection) {
-		return new QueryBuilder(connection, instance.getQueryBuilderFactory(connection));
+		return new QueryBuilder(instance.getQueryBuilderFactory(connection));
 	}
 	
 	/********* Migration ****************/

@@ -81,4 +81,9 @@ public class DerbyQueryBuilder implements QueryBuilderFactory {
 		);
 	}
 
+	@Override
+	public Connection getConnection() {
+		return connection;
+	}
+
 }

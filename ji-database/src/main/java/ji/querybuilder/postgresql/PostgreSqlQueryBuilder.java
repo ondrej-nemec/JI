@@ -93,4 +93,9 @@ public class PostgreSqlQueryBuilder implements QueryBuilderFactory {
 		);
 	}
 
+	@Override
+	public Connection getConnection() {
+		return connection;
+	}
+
 }

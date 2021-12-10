@@ -90,4 +90,9 @@ public class SqlServerQueryBuilder implements QueryBuilderFactory {
 		return new ExecuteBuilder(connection, String.format("ALTER TABLE %s DROP INDEX %s", table, name));
 	}
 
+	@Override
+	public Connection getConnection() {
+		return connection;
+	}
+
 }

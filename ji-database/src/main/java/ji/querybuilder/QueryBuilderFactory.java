@@ -1,5 +1,7 @@
 package ji.querybuilder;
 
+import java.sql.Connection;
+
 import ji.querybuilder.builders.AlterTableBuilder;
 import ji.querybuilder.builders.CreateTableBuilder;
 import ji.querybuilder.builders.CreateViewBuilder;
@@ -41,5 +43,7 @@ public interface QueryBuilderFactory {
 	 ExecuteBuilder createIndex(String name, String table, String... colums);
 	
 	 ExecuteBuilder deleteIndex(String name, String table);
+	 
+	 Connection getConnection();
 	
 }

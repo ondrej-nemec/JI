@@ -17,36 +17,46 @@ import ji.querybuilder.builders.UpdateBuilder;
 
 public class QueryBuilder implements QueryBuilderFactory {
 
-	private final Connection connection;
 	private final QueryBuilderFactory factory;
 	
-	public QueryBuilder(Connection connection, QueryBuilderFactory factory) {
-		this.connection = connection;
+	public QueryBuilder(QueryBuilderFactory factory) {
 		this.factory = factory;
 	}
 
 	public Connection getConnection() {
-		return connection;
+		return factory.getConnection();
 	}
 	
-	public void transaction() throws SQLException {
-		connection.setAutoCommit(false);
+	/**
+	 * Begin transaction
+	 * @throws SQLException
+	 */
+	public void begin() throws SQLException {
+		factory.getConnection().setAutoCommit(false);
 	}
 
+	/**
+	 * Commit transaction
+	 * @throws SQLException
+	 */
 	public void commit() throws SQLException {
-		connection.commit();
+		factory.getConnection().commit();
 	}
 	
+	/**
+	 * Rollback transaction
+	 * @throws SQLException
+	 */
 	public void rollback() throws SQLException {
-		connection.rollback();
+		factory.getConnection().rollback();
 	}
 	
 	public BatchBuilder batch() {
-		return new BatchBuilder(connection);
+		return new BatchBuilder(factory.getConnection());
 	}
 	
 	public MultipleSelectBuilder multiSelect(SelectBuilder builder) {
-		return new MultipleSelectBuilder(connection, builder);
+		return new MultipleSelectBuilder(factory.getConnection(), builder);
 	}
 
 	@Override
