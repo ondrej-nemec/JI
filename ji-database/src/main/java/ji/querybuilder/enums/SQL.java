@@ -1,8 +1,44 @@
 package ji.querybuilder.enums;
 
-public class SQL {
+import java.time.temporal.Temporal;
 
-	public static String escape(String sql) {
+import ji.common.functions.Implode;
+import ji.common.structures.ListDictionary;
+
+public class SQL {
+	
+	public static String escape(Object value) {
+		if (value == null) {
+			return "null";
+		}
+		if (value instanceof Iterable<?>) {
+			Iterable<?> iterable = Iterable.class.cast(value);
+			return Implode.implode(item->escapeScalar(item), ",", iterable);
+		} else if (value instanceof ListDictionary) {
+			ListDictionary<?> iterable = ListDictionary.class.cast(value);
+			return Implode.implode(item->escapeScalar(item), ",", iterable.toList());
+		} else {
+			return escapeScalar(value);
+		}
+	}
+
+	public static String escapeScalar(Object value) {
+		Class<?> clazz = value.getClass();
+		if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
+			//  value ? "1" : "0"
+			return value.toString();
+		} else if (value instanceof Number) {
+			return value.toString();
+		} else if (clazz.isPrimitive() && !(clazz.isAssignableFrom(byte.class) || clazz.isAssignableFrom(char.class))) {
+			return value.toString();
+		} else if (value instanceof Temporal) {
+			return escapeString(value.toString().replace("T", " "));
+		} else {
+			return escapeString(value.toString());
+		}
+	}
+
+	public static String escapeString(String sql) {
 		// TODO??  * @ - _ + . /
 		return String.format("'%s'", sql.replaceAll("\\'", "''"));
 	}
