@@ -51,7 +51,24 @@
 	},
 	{
 		"title": "Database",
-		"sub": []
+		"sub": [
+			{
+				"title": "About",
+				"link": "database-about.html"
+			},
+			{
+				"title": "Query Builder",
+				"link": "database-query-builder.html"
+			},
+			{
+				"title": "Migrations",
+				"link": "database-migrations.html"
+			},
+			{
+				"title": "Database",
+				"link": "database-db.html"
+			}
+		]
 	},
 	{
 		"title": "Testing",

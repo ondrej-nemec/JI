@@ -1,0 +1,107 @@
+<h1>Ouery Buider</h1>
+
+<p>Query Builder composes SQL query by calling adequate methods. Another word, this package is Database Abstraction Layer. 
+</p>
+<p>You can create new instance of each builder or you can use <code>QueryBuilder</code> class. This class is factory for builders. <strong>Remember all builders created from one <code>QueryBuilder</code> have same <code>Connection</code>.</strong> <code>QueryBuilder</code> allow you begin, commit or rollback transaction.</p>
+
+<p>
+	Supported databases:
+	<ul>
+		<li>MySQL</li>
+		<li>PostgreSQL</li>
+		<li>SQL Server (MS Server)</li>
+		<li>Derby</li>
+	</ul>
+</p>
+
+<h2>Knonw issues</h2>
+
+<p>
+	<ul>
+		<li>SQL Server: The operation 'ALTER TABLE DROP INDEX' is supported only with memory optimized tables</li>
+		<li>Derby: Alter table create/delete foreign key not working</li>
+	</ul>
+</p>
+
+<h2>Construct</h2>
+
+<p>
+	<code>QueryBuilder</code> requireds implementation of <code>QueryBuilderFactory</code> (implemented in JI Database, f.e. <code>MySqlQueryBuilder</code>). <strong>But usualy you get code <code>QueryBuilder</code> from <code>Database</code> class. See <a href="?file=database-db.html">Database section</a> for more.</strong>
+</p>
+
+<h2>Parameters</h2>
+
+<p>
+	Some queries can be parametrized. See example:
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ...;
+builder.select("*")
+	.from("myTable")
+	.where("id > :id")
+	.addParameter(":id", 123);
+</code></pre>
+
+<p>
+	All parameters are named. That is usefull if you need use one value moretimes. All values are escaped. If you wish add not escaped value, use <code>addNotEscapedParameter</code> method.
+</p>
+
+<h2>Escaping</h2>
+
+<p>
+	Values passed to <code>addParameter</code> or <code>addValue</code> are escaped.
+</p>
+
+<strong>Rules</strong>
+
+<ul>
+	<li><code>Boolean</code>: became 'true' or 'false' string</li>
+	<li><code>Number</code>s: stay as are</li>
+	<li><code>String</code>, <code>Character</code>: escaped</li>
+	<li>Date and time (<code>Date</code>, <code>LocalDate</code>, ...): escaped</li>
+	<li><code>Iterable</code> and <code>ListDictionary</code>: stringified to 'item1,item2,...', each item escaped</li>
+	<li><code>null</code>: became 'null' string</li>
+	<li>Others:  used <code>toString</code> and escaped</li>
+</ul>
+
+<h2>Join</h2>
+
+<p>
+	Join type is realized with <code>Join</code> enum.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ...;
+builder.select("*")
+	.from("FirstTable f")
+	.join("SecondTable s", Join.LEFT_OUTER_JOIN, "s.id = t.second_id");
+</code></pre>
+
+<h2>Where</h2>
+
+<p>Some builders contains <code>where</code>, <code>orWhere</code> and <code>andWhere</code> method. The <code>where</code> can be called only once and before other *where methods. Everything inside *where method parameter will be automatically inside '()'.</p>
+
+<h2>Builders</h2>
+
+<h3>Select</h3>
+
+<strong>Parametrized</strong>
+
+<p>For creating select statement. Result is returned with: <code>fetchSingle</code> (returns one <code>DictionaryValue</code> from first row and first column or null), <code>fetchRow</code> (returns <code>MapDictionary</code> of values on first row), <code>fetchRow(Class&lt;T&gt;)</code> (returns new instance of <code>Class&lt;T&gt;</code> parsed from row using <a href="?file=common-functions.html">Mapper</a> or null), <code>fetchAll</code> (returns list of <code>MapDictionary</code>, one item - one row) and <code>fetchAll(callback)</code> (returns list, each item is result of given callback applied on corresponging row).</p>
+
+<h3>Update</h3>
+<h3>Insert</h3>
+<h3>Selete</h3>
+
+<h3>Create table</h3>
+<h3>Alter table</h3>
+<h3>Delete table</h3>
+
+<h3>Create view</h3>
+<h3>Alter view</h3>
+<h3>Deletec view</h3>
+
+<h3>Multy select</h3>
+<h3>Batch</h3>
+<h3>SQL Functions</h3> 
