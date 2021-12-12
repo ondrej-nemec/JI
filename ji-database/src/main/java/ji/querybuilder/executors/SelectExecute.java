@@ -87,13 +87,13 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 			if (res.next()) {
 				return _parseRow(res);
 			}
-			return new DatabaseRow(); // TODO back compatibility, null or optional can be better
+			return null;
 		});
 	}
 	
 	default <T> T fetchRow(Class<T> clazz) throws Exception {
 		DatabaseRow row = fetchRow();
-		if (row.values().isEmpty()) { // TODO == null after fetchRow will be returning null
+		if (row == null) {
 			return null;
 		}
 		return row.parse(clazz);
