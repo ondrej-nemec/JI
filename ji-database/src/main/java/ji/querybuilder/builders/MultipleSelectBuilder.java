@@ -3,8 +3,11 @@ package ji.querybuilder.builders;
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
+import ji.common.exceptions.LogicException;
 import ji.common.structures.Tuple2;
+import ji.querybuilder.buildersparent.Builder;
 import ji.querybuilder.buildersparent.QueryBuilderParent;
 import ji.querybuilder.executors.SelectExecute;
 
@@ -12,6 +15,7 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 
 	private final SelectBuilder initial;
 	private List<Tuple2<SelectBuilder, String>> selects;
+	private StringBuilder orderByBuilder = new StringBuilder();
 	
 	public MultipleSelectBuilder(Connection connection, SelectBuilder initial) {
 		super(connection);
@@ -50,7 +54,15 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 	}
 	
 	public MultipleSelectBuilder orderBy(String orderBy) {
-		query.append("ORDER BY " + orderBy);
+		if (orderBy == null || orderBy.trim().length() == 0) {
+			throw new LogicException("ORDER BY statement cannot be empty or null");
+		}
+		if (orderByBuilder.toString().isEmpty()) {
+			orderByBuilder.append(" ORDER BY ");
+		} else {
+			orderByBuilder.append(", ");
+		}
+		orderByBuilder.append(orderBy);
 		return this;
 	}
 
@@ -62,20 +74,21 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 	
 	@Override
 	public String getSql() {
-		query.append(initial.getSql());
-		selects.forEach((select)->{
-			query.append(" " + select._2() + " " + select._1().getSql());
-		});
-		return super.getSql();
+		return prepare(b->b.getSql());
 	}
 	
 	@Override
 	public String createSql() {
+		return prepare(b->b.createSql(getParameters()));
+	}
+	
+	private String prepare(Function<Builder, String> toString) {
 		StringBuilder query = new StringBuilder();
-		query.append(initial.createSql(getParameters()));
+		query.append(toString.apply(initial));
 		selects.forEach((select)->{
-			query.append(" " + select._2() + " " + select._1().createSql(getParameters()));
+			query.append(" " + select._2() + " " + toString.apply(select._1()));
 		});
+		query.append(orderByBuilder.toString());
 		return query.toString();
 	}
 
