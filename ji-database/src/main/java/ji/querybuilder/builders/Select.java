@@ -7,14 +7,14 @@ public interface Select<C> extends Builder {
 
 	C from(String table);
 	
-	default C from(Select<C> builder) {
-		return from(String.format("(%s)", builder.createSql()));
+	default C from(Select<SelectBuilder> builder, String name) {
+		return from(String.format("(%s) %s", builder.createSql(), name));
 	}
 	
 	C join(String table, Join join, String on);
 
-	default C join(Select<C> builder, Join join, String on) {
-		return join(String.format("(%s)", builder.createSql()), join, on);
+	default C join(Select<SelectBuilder> builder, String name, Join join, String on) {
+		return join(String.format("(%s) %s", builder.createSql(), name), join, on);
 	}
 	
 	C where(String where);
