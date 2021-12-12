@@ -131,11 +131,19 @@ builder.deleteView("table1_table2_view")
 builder.multiSelect(
 	builder.select("*")
 	.from("Table1")
+	.where("name != :name")
+	.andWhere("id > :id")
+	.addParameter(":name", "Table1-name")
 )
 .union(
 	builder.select("*")
 	.from("Table2")
+	.where("name != :name")
+	.andWhere("id > :id")
+	.addParameter(":name", "Table2-name")
 )
+.addParameter(":id", 42)
+.orderBy("id")
 			);
 		printTest(
 				"BATCH",

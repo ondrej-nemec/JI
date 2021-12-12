@@ -101,32 +101,57 @@ builder.select("*")
 
 <pre><code class="language-java">
 builder.select("*")
-.from("Table1 a")
-.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
-.join(
-	builder.select("max(id) as max_id, name").from("Table1").groupBy("name"),
-	"c", // name of subselect
-	Join.LEFT_OUTER_JOIN,
-	"a.id = c.max_id"
-)
-.where("a.id &lt; :id")
-.andWhere("b.id &lt; :id")
-.andWhere("b.number in (:in)")
-.orWhere("c.name != :name")
-.orderBy("a.id")
-.limit(10, 5)
-.addParameter(":id", 18)
-.addParameter(":name", "admin")
-.addParameter(":in", Arrays.asList(1,2,3,4))
+	.from("Table1 a")
+	.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
+	.join(
+		builder.select("max(id) as max_id, name").from("Table1").groupBy("name"),
+		"c", // name of subselect
+		Join.LEFT_OUTER_JOIN,
+		"a.id = c.max_id"
+	)
+	.where("a.id &lt; :id")
+	.andWhere("b.id &lt; :id")
+	.andWhere("b.number in (:in)")
+	.orWhere("c.name != :name")
+	.orderBy("a.id")
+	.limit(10, 5)
+	.addParameter(":id", 18)
+	.addParameter(":name", "admin")
+	.addParameter(":in", Arrays.asList(1,2,3,4))
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id LEFT JOIN (SELECT max(id) as max_id, name FROM Table1 GROUP BY name) c ON a.id = c.max_id WHERE (a.id &lt; :id) AND (b.id &lt; :id) AND (b.number in (:in)) OR (c.name != :name) ORDER BY a.id LIMIT 10 OFFSET 5
+SELECT * 
+FROM Table1 a 
+JOIN Table2 b ON a.id = b.a_id 
+LEFT JOIN (
+	SELECT max(id) as max_id, name 
+	FROM Table1 
+	GROUP BY name
+) c ON a.id = c.max_id 
+WHERE (a.id &lt; :id) 
+AND (b.id &lt; :id) 
+AND (b.number in (:in)) 
+OR (c.name != :name) 
+ORDER BY a.id 
+LIMIT 10 OFFSET 5
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id LEFT JOIN (SELECT max(id) as max_id, name FROM Table1 GROUP BY name) c ON a.id = c.max_id WHERE (a.id &lt; 18) AND (b.id &lt; 18) AND (b.number in (1,2,3,4)) OR (c.name != 'admin') ORDER BY a.id LIMIT 10 OFFSET 5
+SELECT * 
+FROM Table1 a 
+JOIN Table2 b ON a.id = b.a_id 
+LEFT JOIN (
+	SELECT max(id) as max_id, name 
+	FROM Table1 
+	GROUP BY name
+) c ON a.id = c.max_id 
+WHERE (a.id &lt; 18) 
+AND (b.id &lt; 18) 
+AND (b.number in (1,2,3,4)) 
+OR (c.name != 'admin') 
+ORDER BY a.id LIMIT 10 OFFSET 5
 </code></pre>
 
 <h3>Update</h3>
@@ -140,19 +165,23 @@ SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id LEFT JOIN (SELECT max(id) 
 
 <pre><code class="language-java">
 builder.update("Table1")
-.set("name = :name")
-.where("id = :id")
-.addParameter(":id", 18)
-.addParameter(":name", "user18")
+	.set("name = :name")
+	.where("id = :id")
+	.addParameter(":id", 18)
+	.addParameter(":name", "user18")
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-UPDATE Table1 SET name = :name WHERE (id = :id)
+UPDATE Table1 
+SET name = :name 
+WHERE (id = :id)
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-UPDATE Table1 SET name = 'user18' WHERE (id = 18)
+UPDATE Table1 
+SET name = 'user18' 
+WHERE (id = 18)
 </code></pre>
 
 <h3>Insert</h3>
@@ -163,18 +192,15 @@ UPDATE Table1 SET name = 'user18' WHERE (id = 18)
 
 <pre><code class="language-java">
 builder.insert("Table2")
-.addValue("id", 123)
-.addValue("number", 12.8)
-.addValue("name", "Item 8")
+	.addValue("id", 123)
+	.addValue("number", 12.8)
+	.addValue("name", "Item 8")
 </code></pre>
 
-<p>SQL without translated parameters:</p>
+<p>SQL:</p>
 <pre><code class="language-sql">
-INSERT INTO Table2 (number, name, id) VALUES (12.8, 'Item 8', 123)
-</code></pre>
-<p>SQL with translated parameters</p>
-<pre><code class="language-sql">
-INSERT INTO Table2 (number, name, id) VALUES (12.8, 'Item 8', 123)
+INSERT INTO Table2 (number, name, id) 
+VALUES (12.8, 'Item 8', 123)
 </code></pre>
 
 <h3>Delete</h3>
@@ -184,20 +210,22 @@ INSERT INTO Table2 (number, name, id) VALUES (12.8, 'Item 8', 123)
 <p>For creating delete statement. Executed with <code>execute</code>.</p>
 
 <strong>Example</strong>
-builder.delete("Table1")
-.where("id = :id")
-.addParameter(":id", 1)
-<pre><code class="language-java">
 
+<pre><code class="language-java">
+builder.delete("Table1")
+	.where("id = :id")
+	.addParameter(":id", 1)
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-DELETE FROM Table1 WHERE (id = :id)
+DELETE FROM Table1 
+WHERE (id = :id)
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-DELETE FROM Table1 WHERE (id = 1)
+DELETE FROM Table1 
+WHERE (id = 1)
 </code></pre>
 
 <h3>Create table</h3>
@@ -208,18 +236,19 @@ DELETE FROM Table1 WHERE (id = 1)
 
 <pre><code class="language-java">
 builder.createTable("Table3")
-.addColumn("id", ColumnType.integer(), ColumnSetting.PRIMARY_KEY, ColumnSetting.AUTO_INCREMENT)
-.addColumn("name", ColumnType.string(10)) // no addition settings
-.addColumn("is_used", ColumnType.bool(), true, ColumnSetting.NOT_NULL) // defaut value is 'true'
+	.addColumn("id", ColumnType.integer(), ColumnSetting.PRIMARY_KEY, ColumnSetting.AUTO_INCREMENT)
+	.addColumn("name", ColumnType.string(10)) // no addition settings
+	.addColumn("is_used", ColumnType.bool(), true, ColumnSetting.NOT_NULL) // defaut value is 'true'
 </code></pre>
 
-<p>SQL without translated parameters:</p>
+<p>SQL:</p>
 <pre><code class="language-sql">
-CREATE TABLE Table3 ( id INT AUTO INCREMENT, name VARCHAR(10), is_used BOOLEAN DEFAULT true NOT NULL, PRIMARY KEY (id))
-</code></pre>
-<p>SQL with translated parameters</p>
-<pre><code class="language-sql">
-CREATE TABLE Table3 ( id INT AUTO INCREMENT, name VARCHAR(10), is_used BOOLEAN DEFAULT true NOT NULL, PRIMARY KEY (id))
+CREATE TABLE Table3 ( 
+	id INT AUTO INCREMENT, 
+	name VARCHAR(10), 
+	is_used BOOLEAN DEFAULT true NOT NULL,
+	PRIMARY KEY (id)
+)
 </code></pre>
 
 <h3>Alter table</h3>
@@ -230,19 +259,16 @@ CREATE TABLE Table3 ( id INT AUTO INCREMENT, name VARCHAR(10), is_used BOOLEAN D
 
 <pre><code class="language-java">
 builder.alterTable("Table3")
-.addColumn("cost", ColumnType.integer())
-.renameColumn("is_used", "used", ColumnType.bool())
+	.addColumn("cost", ColumnType.integer())
+	.renameColumn("is_used", "used", ColumnType.bool())
 </code></pre>
 
-<p>SQL without translated parameters:</p>
+<p>SQL:</p>
 <pre><code class="language-sql">
-ALTER TABLE Table3 ADD cost INT, CHANGE COLUMN is_used used BOOLEAN
+ALTER TABLE Table3 
+ADD cost INT, 
+CHANGE COLUMN is_used used BOOLEAN
 </code></pre>
-<p>SQL with translated parameters</p>
-<pre><code class="language-sql">
-ALTER TABLE Table3 ADD cost INT, CHANGE COLUMN is_used used BOOLEAN
-</code></pre>
-
 
 <h3>Delete table</h3>
 
@@ -254,11 +280,7 @@ ALTER TABLE Table3 ADD cost INT, CHANGE COLUMN is_used used BOOLEAN
 builder.deleteTable("Table3")
 </code></pre>
 
-<p>SQL without translated parameters:</p>
-<pre><code class="language-sql">
-DROP TABLE Table3
-</code></pre>
-<p>SQL with translated parameters</p>
+<p>SQL:</p>
 <pre><code class="language-sql">
 DROP TABLE Table3
 </code></pre>
@@ -271,33 +293,61 @@ DROP TABLE Table3
 
 <pre><code class="language-java">
 builder.createView("table1_table2_view")
-.select("*")
-.from("Table1 a")
-.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
-.join(
-	builder.select("max(id) as max_id, name").from("Table1").groupBy("name"),
-	"c", // name of subselect
-	Join.LEFT_OUTER_JOIN,
-	"a.id = c.max_id"
-)
-.where("a.id &lt; :id")
-.andWhere("b.id &lt; :id")
-.andWhere("b.number in (:in)")
-.orWhere("c.name != :name")
-.orderBy("a.id")
-.limit(10, 5)
-.addParameter(":id", 18)
-.addParameter(":name", "admin")
-.addParameter(":in", Arrays.asList(1,2,3,4))
+	.select("*")
+	.from("Table1 a")
+	.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
+	.join(
+		builder.select("max(id) as max_id, name").from("Table1").groupBy("name"),
+		"c", // name of subselect
+		Join.LEFT_OUTER_JOIN,
+		"a.id = c.max_id"
+	)
+	.where("a.id &lt; :id")
+	.andWhere("b.id &lt; :id")
+	.andWhere("b.number in (:in)")
+	.orWhere("c.name != :name")
+	.orderBy("a.id")
+	.limit(10, 5)
+	.addParameter(":id", 18)
+	.addParameter(":name", "admin")
+	.addParameter(":in", Arrays.asList(1,2,3,4))
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-CREATE VIEW table1_table2_view AS SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id LEFT JOIN (SELECT max(id) as max_id, name FROM Table1 GROUP BY name) c ON a.id = c.max_id WHERE (a.id &lt; :id) AND (b.id &lt; :id) AND (b.number in (:in)) OR (c.name != :name) ORDER BY a.id LIMIT 10 OFFSET 5
+CREATE VIEW table1_table2_view AS
+	SELECT * 
+	FROM Table1 a 
+	JOIN Table2 b ON a.id = b.a_id 
+	LEFT JOIN (
+		SELECT max(id) as max_id, name
+		FROM Table1 
+		GROUP BY name
+	) c ON a.id = c.max_id 
+	WHERE (a.id &lt; :id) 
+	AND (b.id &lt; :id) 
+	AND (b.number in (:in)) 
+	OR (c.name != :name) 
+	ORDER BY a.id 
+	LIMIT 10 OFFSET 5
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-CREATE VIEW table1_table2_view AS SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id LEFT JOIN (SELECT max(id) as max_id, name FROM Table1 GROUP BY name) c ON a.id = c.max_id WHERE (a.id &lt; 18) AND (b.id &lt; 18) AND (b.number in (1,2,3,4)) OR (c.name != 'admin') ORDER BY a.id LIMIT 10 OFFSET 5
+CREATE VIEW table1_table2_view AS
+	SELECT * 
+	FROM Table1 a 
+	JOIN Table2 b ON a.id = b.a_id 
+	LEFT JOIN (
+		SELECT max(id) as max_id, name 
+		FROM Table1 
+		GROUP BY name
+	) c ON a.id = c.max_id
+	WHERE (a.id &lt; 18) 
+	AND (b.id &lt; 18) 
+	AND (b.number in (1,2,3,4)) 
+	OR (c.name != 'admin') 
+	ORDER BY a.id 
+	LIMIT 10 OFFSET 5
 </code></pre>
 
 <h3>Alter view</h3>
@@ -308,28 +358,49 @@ CREATE VIEW table1_table2_view AS SELECT * FROM Table1 a JOIN Table2 b ON a.id =
 
 <pre><code class="language-java">
 builder.alterView("table1_table2_view")
-.select("*")
-.from("Table1 a")
-.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
-.where("a.id &lt; :id")
-.andWhere("b.id &lt; :id")
-.andWhere("b.number in (:in)")
-.orWhere("c.name != :name")
-.orderBy("a.id")
-.limit(10, 5)
-.addParameter(":id", 18)
-.addParameter(":name", "admin")
-.addParameter(":in", Arrays.asList(1,2,3,4))
-			);
+	.select("*")
+	.from("Table1 a")
+	.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
+	.where("a.id &lt; :id")
+	.andWhere("b.id &lt; :id")
+	.andWhere("b.number in (:in)")
+	.orWhere("c.name != :name")
+	.orderBy("a.id")
+	.limit(10, 5)
+	.addParameter(":id", 18)
+	.addParameter(":name", "admin")
+	.addParameter(":in", Arrays.asList(1,2,3,4))
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-DROP VIEW table1_table2_view;CREATE VIEW table1_table2_view AS SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id WHERE (a.id &lt; :id) AND (b.id &lt; :id) AND (b.number in (:in)) OR (c.name != :name) ORDER BY a.id LIMIT 10 OFFSET 5
+-- see, MySql has not alter view statement, so delete and create again is used
+DROP VIEW table1_table2_view;
+CREATE VIEW table1_table2_view AS 
+	SELECT * 
+	FROM Table1 a 
+	JOIN Table2 b ON a.id = b.a_id 
+	WHERE (a.id &lt; :id) 
+	AND (b.id &lt; :id) 
+	AND (b.number in (:in)) 
+	OR (c.name != :name) 
+	ORDER BY a.id 
+	LIMIT 10 OFFSET 5
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-DROP VIEW table1_table2_view;CREATE VIEW table1_table2_view AS SELECT * FROM Table1 a JOIN Table2 b ON a.id = b.a_id WHERE (a.id &lt; 18) AND (b.id &lt; 18) AND (b.number in (1,2,3,4)) OR (c.name != 'admin') ORDER BY a.id LIMIT 10 OFFSET 5
+-- see, MySql has not alter view statement, so delete and create again is used
+DROP VIEW table1_table2_view;
+CREATE VIEW table1_table2_view AS 
+	SELECT * 
+	FROM Table1 a 
+	JOIN Table2 b ON a.id = b.a_id 
+	WHERE (a.id &lt; 18) 
+	AND (b.id &lt; 18) 
+	AND (b.number in (1,2,3,4)) 
+	OR (c.name != 'admin') 
+	ORDER BY a.id 
+	LIMIT 10 OFFSET 5
 </code></pre>
 
 <h3>Delete view</h3>
@@ -342,11 +413,7 @@ DROP VIEW table1_table2_view;CREATE VIEW table1_table2_view AS SELECT * FROM Tab
 builder.deleteView("table1_table2_view")
 </code></pre>
 
-<p>SQL without translated parameters:</p>
-<pre><code class="language-sql">
-DROP VIEW table1_table2_view
-</code></pre>
-<p>SQL with translated parameters</p>
+<p>SQL:</p>
 <pre><code class="language-sql">
 DROP VIEW table1_table2_view
 </code></pre>
@@ -355,28 +422,55 @@ DROP VIEW table1_table2_view
 
 <strong>Parametrized</strong>
 
-<p>Allows <code>union</code>, <code>intersect</code> and <code>except</code>. Result is returned in same was as in <code>select</code>.</p>
+<p>Allows <code>union</code>, <code>intersect</code> and <code>except</code> of <code>SelectBuiler</code>s. Result is returned in same was as in <code>select</code>. Each builder can has own parameters. Except this, <code>MultipleSelectBuilder</code> has global parameters common for all batches.</p>
 
 <strong>Example</strong>
 
 <pre><code class="language-java">
-builder.multiSelect(
-	builder.select("*")
-	.from("Table1")
-)
-.union(
-	builder.select("*")
-	.from("Table2")
-)
+builder
+	.multiSelect(
+		builder.select("*")
+		.from("Table1")
+		.where("name != :name")
+		.andWhere("id > :id")
+		.addParameter(":name", "Table1-name")
+	)
+	.union(
+		builder.select("*")
+		.from("Table2")
+		.where("name != :name")
+		.andWhere("id > :id")
+		.addParameter(":name", "Table2-name")
+	)
+	.addParameter(":id", 42)
+	.orderBy("id")
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-SELECT * FROM Table1 UNION SELECT * FROM Table2
+	SELECT * 
+	FROM Table1 
+	WHERE (name != :name) 
+	AND (id > :id) 
+UNION 
+	SELECT * 
+	FROM Table2 
+	WHERE (name != :name) 
+	AND (id > :id)
+ORDER BY id
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-SELECT * FROM Table1 UNION SELECT * FROM Table2
+	SELECT * 
+	FROM Table1 
+	WHERE (name != 'Table1-name')
+	AND (id > 42) 
+UNION 
+	SELECT * 
+	FROM Table2
+	WHERE (name != 'Table2-name') 
+	AND (id > 42)
+ORDER BY id
 </code></pre>
 
 <h3>Batch</h3>
@@ -391,28 +485,40 @@ SELECT * FROM Table1 UNION SELECT * FROM Table2
 
 <pre><code class="language-java">
 builder.batch()
-.addBatch(
-	builder.update("Table1")
-	.set("name = :name")
-	.where("id = :id")
-	.addParameter(":name", "Table1-Name")
-)
-.addBatch(
-	builder.update("Table2")
-	.set("name = :name")
-	.where("id = :id")
-	.addParameter(":name", "Table2-Name")
-)
-.addParameter(":id", 42)
+	.addBatch(
+		builder.update("Table1")
+		.set("name = :name")
+		.where("id = :id")
+		.addParameter(":name", "Table1-Name")
+	)
+	.addBatch(
+		builder.update("Table2")
+		.set("name = :name")
+		.where("id = :id")
+		.addParameter(":name", "Table2-Name")
+	)
+	.addParameter(":id", 42)
 </code></pre>
 
 <p>SQL without translated parameters:</p>
 <pre><code class="language-sql">
-UPDATE Table1 SET name = :name WHERE (id = :id); UPDATE Table2 SET name = :name WHERE (id = :id); 
+UPDATE Table1 
+SET name = :name
+WHERE (id = :id);
+
+UPDATE Table2
+SET name = :name 
+WHERE (id = :id); 
 </code></pre>
 <p>SQL with translated parameters</p>
 <pre><code class="language-sql">
-UPDATE Table1 SET name = 'Table1-Name' WHERE (id = 42); UPDATE Table2 SET name = 'Table2-Name' WHERE (id = 42); 
+UPDATE Table1 
+SET name = 'Table1-Name' 
+WHERE (id = 42); 
+
+UPDATE Table2 
+SET name = 'Table2-Name'
+WHERE (id = 42); 
 </code></pre>
 
 <h3>SQL Functions</h3>
