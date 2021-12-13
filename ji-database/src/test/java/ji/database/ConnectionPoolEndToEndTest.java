@@ -87,12 +87,20 @@ public class ConnectionPoolEndToEndTest {
 		});
 		
 		ExecutorService exec = Executors.newFixedThreadPool(5);
+	
+		try {
+			d.createDbIfNotExists();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		
 		exec.execute(task(d, 1));
 		exec.execute(task(d, 2));
 		exec.execute(task(d, 3));
 		exec.execute(task(d, 4));
 		exec.execute(task(d, 5));
+	//	exec.execute(task(d, 6));
+	//	exec.execute(task(d, 7));
 		
 		try {Thread.sleep(10000);} catch (InterruptedException e) {e.printStackTrace();}
 		print("END");
