@@ -4,6 +4,22 @@
 JI Translate defines <code>Translator</code> interface. Declare methods for translating simple message, message with parameters and message with another than default language. The only one implementation of <code>Translator</code> in JI is <code>PropertiesTranslator</code>.
 </p>
 
+<h2>Dependency</h2>
+
+<p>See <a href="https://jitpack.io/#ondrej-nemec/JI">JitPack</a> or you use Gradle:</p>
+
+<p>gradle.build</p>
+
+<pre><code>
+repositories {
+	...
+	maven { url 'https://jitpack.io' }
+}
+dependencies {
+	implementation 'com.github.ondrej-nemec:JI:ji-translate:Tag'
+}
+</code></pre>
+
 <h2>PropertiesTranslator</h2>
 
 <p>
