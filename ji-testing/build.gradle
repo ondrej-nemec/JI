@@ -17,7 +17,7 @@ dependencies {
 	compile group: 'junit', name: 'junit', version: '4.12'
 	
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
+	compile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
 	
 	// https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
 	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
