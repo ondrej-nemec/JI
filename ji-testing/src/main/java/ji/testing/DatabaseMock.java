@@ -9,8 +9,11 @@ import ji.database.Database;
 import ji.database.DatabaseConfig;
 import ji.database.support.ConnectionFunction;
 import ji.database.support.DoubleConsumer;
+import ji.querybuilder.QueryBuilder;
 import ji.querybuilder.builders.BatchBuilder;
 import ji.querybuilder.builders.InsertBuilder;
+import ji.querybuilder.builders.UpdateBuilder;
+import ji.querybuilder.buildersparent.Builder;
 import ji.testing.entities.Row;
 import ji.testing.entities.Table;
 
@@ -33,20 +36,38 @@ public class DatabaseMock extends Database {
 	}
 
 	public void applyDataSet() throws SQLException {
+		applyDataSet(tables);
+	}
+
+	protected void applyDataSet(List<Table> tables) throws SQLException {
 		applyBuilder((builder)->{
 			BatchBuilder batch = builder.batch();
 			for(Table table : tables) {
 				for(Row row : table.getRows()) {
-					InsertBuilder insert = builder.insert(table.getName());
-    				for (String key : row.getColumns().keySet()) {
-    					 insert.addValue(key, row.getColumns().get(key));
-    				}
-    				batch.addBatch(insert);
+					batch.addBatch(applyRow(builder, batch, table.getName(), row));
 				}
 			}
 			batch.execute();
 			return null;
 		});
+	}
+	
+	private Builder applyRow(QueryBuilder builder, BatchBuilder batch, String table, Row row) {
+		if (row.isInsert()) {
+			InsertBuilder insert = builder.insert(table);
+			row.getColumns().forEach((key, value)->{
+				insert.addValue(key, value);
+			});
+			return insert;
+		}
+		UpdateBuilder update = builder.update(table);
+		row.getColumns().forEach((key, value)->{
+			update.set(key + " = :" + key)
+			.addParameter(":" + key, value);
+		});
+		update.where(row.getIdName() + " = :" + row.getIdName())
+			.addParameter(":" + row.getIdName(), row.getIdValue());
+		return update;
 	}
 	
 	@Override
@@ -57,6 +78,6 @@ public class DatabaseMock extends Database {
 	}
 	
 	protected void rollback() throws SQLException {
-		pool.returnAllConnections();
+		pool.close();
 	}
 }
