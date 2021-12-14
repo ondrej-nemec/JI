@@ -47,7 +47,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	public void after() throws SQLException {
 		super.after();
 		testDbEmpty();
-	}	
+	}
 	
 	@Test
 	public void testDataInDb() throws SQLException {
@@ -59,6 +59,29 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 				assertTrue(res.next());
 				assertEquals(i, res.getInt(1));
 				assertEquals("Name #" + i, res.getObject(2));
+			}
+			return null;
+		});
+	}
+	
+	@Test
+	public void testDataAlterInSeparatedDatasetWorks() throws SQLException {
+		alterDataSet(Arrays.asList(
+			new Table("dbtc")
+			.addRow(
+				Row.update("id", 1).addColumn("name", "another name")
+			)
+		));
+		getDatabase().applyQuery((con)->{
+			PreparedStatement stat = con.prepareStatement("select * from dbtc");
+			ResultSet res = stat.executeQuery();
+			
+			for (int i = 0; i < 3; i++) {
+				assertTrue(res.next());
+				assertEquals(i, res.getInt(1));
+				assertEquals(
+					i == 1 ? "another name" : "Name #" + i,
+					res.getObject(2));
 			}
 			return null;
 		});
@@ -114,7 +137,7 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 	}
 	
 	private Row getRow(int i) {
-		Row row = new Row();
+		Row row = Row.insert();
 		row.addColumn("id", i);
 		row.addColumn("name", "Name #" + i);
 		return row;
@@ -124,25 +147,25 @@ public class DatabaseTestCaseTest extends DatabaseTestCase {
 		Properties prop = new Properties();
 		prop.put("app.mode", "test");
 		prop.put("db.timezone", "Europe/Prague");
-		
-		prop.put("db.type", "postgresql");
-		prop.put("db.pathOrUrl", "//localhost");
-		prop.put("db.externalServer", true);
-		prop.put("db.schema", "javainit_testing_test");
-		prop.put("db.login", "postgres");
-		prop.put("db.password", "1234");
-		prop.put("db.pathToMigrations", "migrations");
-		prop.put("db.poolSize", 3);
 		/*
-		prop.put("db.type", "mysql");
-		prop.put("db.pathOrUrl", "//localhost:3306");
-		prop.put("db.externalServer", true);
-		prop.put("db.schema", "javainit_testing_test");
-		prop.put("db.login", "root");
-		prop.put("db.password", "");
-		prop.put("db.pathToMigrations", "testing");
-		prop.put("db.poolSize", 3);
-		*/
+		prop.put("database.type", "postgresql");
+		prop.put("database.url", "//localhost");
+		prop.put("database.externalServer", true);
+		prop.put("database.schema-name", "javainit_testing_test");
+		prop.put("database.login", "postgres");
+		prop.put("database.password", "1234");
+		prop.put("database.pathToMigrations", "migrations");
+		prop.put("database.pool-size", 3);
+		/*/
+		prop.put("database.type", "mysql");
+		prop.put("database.url", "//localhost:3306");
+		prop.put("database.externalServer", true);
+		prop.put("database.schema-name", "javainit_testing_test");
+		prop.put("database.login", "root");
+		prop.put("database.password", "");
+		prop.put("database.pathToMigrations", "migrations");
+		prop.put("database.pool-size", 3);
+		//*/
 		prop.put("log.logFile", "log.txt");
 		prop.put("log.type", "null");
 		return prop;
