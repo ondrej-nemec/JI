@@ -93,4 +93,12 @@ public class ConnectionPool {
 	//	System.err.println(String.format("Return connection: A: %s, B: %s", available.size(), borrowed.size()));
 	}
 
+	public void close() throws SQLException {
+		returnAllConnections();
+		for (Connection c : available) {
+			c.close();
+		}
+		logger.info("Connection pool was closed");
+	}
+
 }
