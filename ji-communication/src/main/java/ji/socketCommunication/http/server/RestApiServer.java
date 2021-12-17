@@ -64,6 +64,8 @@ public class RestApiServer implements Servant {
            	 BufferedInputStream is = new BufferedInputStream(socket.getInputStream());
            	 BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());) {
 			serve(br, bw, is, os, socket.getInetAddress().toString());
+       } catch (Exception e) {
+    	   createResponce.catchException(e);
        }
 	}
 	

@@ -29,6 +29,10 @@ public interface RestApiServerResponseFactory {
 			WebSocket websocket
 	) throws IOException;
 
+	default void catchException(Exception e) throws IOException {
+		throw new IOException(e);
+	}
+	
 	
 	/*
 	default RestApiResponse onException(
