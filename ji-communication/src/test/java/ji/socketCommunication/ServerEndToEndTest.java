@@ -20,7 +20,6 @@ import ji.files.text.Text;
 import ji.files.text.basic.ReadText;
 import ji.socketCommunication.Servant;
 import ji.socketCommunication.Server;
-import ji.socketCommunication.ServerSecuredCredentials;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.StatusCode;
 import ji.socketCommunication.http.server.RequestParameters;
@@ -36,16 +35,18 @@ public class ServerEndToEndTest {
 
 	public static void main(String[] args) {
 		try {
-			//*
-			Optional<ServerSecuredCredentials> cred = Optional.empty();
+			SslCredentials ssl = new SslCredentials();
+			
+		//	ssl.setCertificateStore("certificates/test2/JKS-server-certificate.jks", "12345678");
+			ssl.setCertificateStore("certificates/test3/jks-server-certificate.jks", "123456");
+			//ssl.setTrustAll(false);
+			//ssl.setTrustedClientsStore("certificates/test2/JKS-server-accept.jks", "12345678");
+			
+			/*
+			Optional<SslCredentials> cred = Optional.empty();
 			int port = 80;
 			/*/
-			Optional<ServerSecuredCredentials> cred = Optional.of(new ServerSecuredCredentials(
-				"certificates/p2/server-keystore.jks",
-				"123456",
-				Optional.empty(),
-				Optional.empty()
-			));
+			Optional<SslCredentials> cred = Optional.of(ssl);
 			int port = 443;
 			//*/
 			
@@ -90,6 +91,9 @@ public class ServerEndToEndTest {
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
 					Properties header, RequestParameters params, String ip) throws IOException {
+				if (url.equals("/ping")) {
+					return getText("OK");
+				}
 				System.err.println("Params:");
 				System.err.println("> Body: " + params.getPlainBody());
 				params.forEach((key, value)->{
@@ -124,6 +128,20 @@ public class ServerEndToEndTest {
 					return getFilePage("index/index.html");
 				}
 				return getHtml();
+			}
+			
+			private RestApiResponse getText(String text) {
+				return RestApiResponse.textResponse(
+						StatusCode.OK,
+						Arrays.asList(
+								"Access-Control-Allow-Origin: *", 
+								"Content-Type: text/html; charset=utf-8",
+								"X-XSS-Protection: 1; mode=block"
+						),
+						(bw)->{
+							bw.write(text);
+						}
+					);
 			}
 			
 			private RestApiResponse getFile() {

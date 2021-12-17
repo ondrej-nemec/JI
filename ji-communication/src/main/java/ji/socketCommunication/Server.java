@@ -1,13 +1,10 @@
 package ji.socketCommunication;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.security.KeyStore;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -16,15 +13,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 
 import ji.common.Logger;
-import ji.common.functions.InputStreamLoader;
 import ji.socketCommunication.http.server.RestApiServer;
 import ji.socketCommunication.http.server.RestApiServerResponseFactory;
 
@@ -53,7 +45,7 @@ public class Server {
     		int threadPool,
     		long readTimeout,
     		RestApiServerResponseFactory response,
-    		Optional<ServerSecuredCredentials> config,
+    		Optional<SslCredentials> ssl,
     		int maxUploadFileSize,
     		Optional<List<String>> allowedFileContentTypes,
     		String charset,
@@ -63,7 +55,7 @@ public class Server {
     			threadPool,
     			readTimeout,
     			new RestApiServer(response, maxUploadFileSize, allowedFileContentTypes, logger),
-    			config,
+    			ssl,
     			charset,
     			logger
     	);
@@ -74,7 +66,7 @@ public class Server {
     		int threadPool,
     		long readTimeOut,
     		Servant servant,
-    		Optional<ServerSecuredCredentials> config,
+    		Optional<SslCredentials> ssl,
     		String charset,
     		Logger logger) throws Exception {
         this.executor = Executors.newFixedThreadPool(threadPool);
@@ -85,13 +77,13 @@ public class Server {
         this.maxThread = threadPool;
         this.readTimeOut = readTimeOut;
         
-        this.serverSocket = getSocket(port, config);
+        this.serverSocket = getSocket(port, ssl);
         logger.info("Server prepared " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
     }
     
-    private ServerSocket getSocket(int port, Optional<ServerSecuredCredentials> config) throws Exception {
-    	if (config.isPresent()) {
-    		return getSecuredSocket(port, config.get());
+    private ServerSocket getSocket(int port, Optional<SslCredentials> ssl) throws Exception {
+    	if (ssl.isPresent()) {
+    		return getSecuredSocket(port, ssl.get());
     	}
     	logger.warn("No Secured connection credentials, so unsecured server socket used");
     	return getUnsecuredSocket(port);
@@ -101,37 +93,13 @@ public class Server {
     	return new ServerSocket(port);
     }
     
-    private ServerSocket getSecuredSocket(int port, ServerSecuredCredentials config) throws Exception {
-    	/***/
-    	TrustManager[] trustManager = null;
-    	if (config.getClientTrustStore().isPresent()) {
-    		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-	        InputStream tstore = InputStreamLoader.createInputStream(getClass(), config.getClientTrustStore().get());
-	        trustStore.load(tstore, config.getClientTrustStorePassword().orElse("").toCharArray());
-	        tstore.close();
-	        TrustManagerFactory tmf = TrustManagerFactory
-	            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-	        tmf.init(trustStore);
-	        trustManager = tmf.getTrustManagers();
-    	}
-        /***/
-    	KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream kstore = InputStreamLoader.createInputStream(getClass(), config.getServerKeyStore());
-        keyStore.load(kstore, config.getServerKeystorePassword().toCharArray());
-        KeyManagerFactory kmf = KeyManagerFactory
-            .getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        kmf.init(keyStore, config.getServerKeystorePassword().toCharArray());
-        /***/
-        
-        SSLContext ctx = SSLContext.getInstance("TLS");
-        ctx.init(kmf.getKeyManagers(), trustManager, SecureRandom.getInstanceStrong());
-
-        SSLServerSocketFactory factory = ctx.getServerSocketFactory();
+    private ServerSocket getSecuredSocket(int port, SslCredentials ssl) throws Exception {
+    	SSLServerSocketFactory factory = SSL.getSSLContext(ssl).getServerSocketFactory();
         
         ServerSocket listener = factory.createServerSocket(port);
         SSLServerSocket sslListener = (SSLServerSocket) listener;
 
-        if (config.getClientTrustStore().isPresent()) {
+        if (ssl.useTrustedClients()) {
         	sslListener.setNeedClientAuth(true); // client certs required
         } else {
         	sslListener.setNeedClientAuth(false); // client certs not required

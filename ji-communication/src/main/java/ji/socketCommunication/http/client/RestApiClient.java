@@ -2,17 +2,12 @@ package ji.socketCommunication.http.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -20,14 +15,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 import ji.common.Logger;
-import ji.common.functions.InputStreamLoader;
 import ji.files.text.Binary;
-import ji.socketCommunication.ClientSecuredCredentials;
+import ji.socketCommunication.SSL;
+import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.HttpMethod;
 
 public class RestApiClient {
@@ -40,17 +32,17 @@ public class RestApiClient {
 	
 	private final Binary binary;
 	
-	private final Optional<ClientSecuredCredentials> config;
+	private final Optional<SslCredentials> ssl;
 	
-	public RestApiClient(String serverUrl, Optional<ClientSecuredCredentials> config, String charset, Logger logger) {
-		this(serverUrl, config, charset, logger, Binary.get());
+	public RestApiClient(String serverUrl, Optional<SslCredentials> ssl, String charset, Logger logger) {
+		this(serverUrl, ssl, charset, logger, Binary.get());
 	}
 	
-	protected RestApiClient(String serverUrl, Optional<ClientSecuredCredentials> config, String charset, Logger logger, Binary binary) {
+	protected RestApiClient(String serverUrl, Optional<SslCredentials> ssl, String charset, Logger logger, Binary binary) {
 		this.serverUrl = serverUrl;
 		this.logger = logger;
 		this.charset = charset;
-		this.config = config;
+		this.ssl = ssl;
 		this.binary = binary;
 	}
 	
@@ -74,55 +66,39 @@ public class RestApiClient {
 	
 	private RestApiResponse send(String uri, HttpMethod method, Properties header, Properties params) throws Exception {
 		String url = createUrl(serverUrl, uri, method, params);
-		HttpURLConnection con = getConnection(url, config);
+		HttpURLConnection con = getConnection(url, ssl);
 		return send(con, method, header, params);
 	}
 	
-	private HttpURLConnection getConnection(String url, Optional<ClientSecuredCredentials> config) throws Exception {
-		if (config.isPresent()) {
-			return getSecuredConnection(url, config.get());
+	private HttpURLConnection getConnection(String url, Optional<SslCredentials> ssl) throws Exception {
+		if (ssl.isPresent()) {
+			return getSecuredConnection(url, ssl.get());
 		} else {
 			return getUnsecuredConnection(url);
 		}
 	}
 
-	private HttpsURLConnection getSecuredConnection(String url, ClientSecuredCredentials config) throws Exception {
-		TrustManager[] trustManager = null;
-		if (config.getClientTrustStore().isPresent()) {
-	    	if (config.getClientTrustStore().isPresent()) {
-	    		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		        InputStream tstore = InputStreamLoader.createInputStream(getClass(), config.getClientTrustStore().get());
-		        trustStore.load(tstore, config.getClientTrustStorePassword().orElse("").toCharArray());
-		        tstore.close();
-		        TrustManagerFactory tmf = TrustManagerFactory
-		            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-		        tmf.init(trustStore);
-		        trustManager = tmf.getTrustManagers();
-	    	}
-		} else {
-			// trust all certs
-			trustManager = new TrustManager[]{
-			    new X509TrustManager() {
-					@Override public X509Certificate[] getAcceptedIssuers() { return null; }
-					@Override public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-					@Override public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-				}
-			};
-		}
-		SSLContext sc = SSLContext.getInstance("TLS");
-	    sc.init(null, trustManager, SecureRandom.getInstanceStrong());
+	private HttpsURLConnection getSecuredConnection(String url, SslCredentials ssl) throws Exception {
+		SSLContext sc = SSL.getSSLContext(ssl);
 		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		
-		
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		if (!config.getClientTrustStore().isPresent()) {
+		//*
+		if (ssl.trustAll()) {
 			// trust all certs 2
 			con.setHostnameVerifier(new HostnameVerifier() {
 				@Override public boolean verify(String hostname, SSLSession session) { return true; }
 			});
+		} else if (ssl.useTrustedClients()) {
+			con.setHostnameVerifier(HttpsURLConnection.getDefaultHostnameVerifier());
 		}
-		
+		/*/
+		con.setHostnameVerifier(new HostnameVerifier() {
+			@Override public boolean verify(String hostname, SSLSession session) {
+				return HttpsURLConnection.getDefaultHostnameVerifier().verify(hostname, session);
+			}
+		});
+		//*/
 		return con;
 	}
 	

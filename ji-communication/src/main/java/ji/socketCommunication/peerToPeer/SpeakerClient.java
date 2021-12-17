@@ -3,26 +3,15 @@ package ji.socketCommunication.peerToPeer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Optional;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
 import ji.common.Logger;
-import ji.common.functions.InputStreamLoader;
-import ji.common.structures.ThrowingBiConsumer;
-import ji.socketCommunication.ClientSecuredCredentials;
+import ji.common.structures.ThrowingBiConsumer;import ji.socketCommunication.SSL;
+import ji.socketCommunication.SslCredentials;
 
 public class SpeakerClient {
 
@@ -31,7 +20,7 @@ private final Logger logger;
     private BufferedReader br;
     private BufferedWriter bw;
 
-	private final Optional<ClientSecuredCredentials> config;
+	private final Optional<SslCredentials> config;
 	
     private final String ip;
     private final int port;
@@ -42,7 +31,7 @@ private final Logger logger;
     public SpeakerClient(
     		String ip, int port, 
     		int connectionTimeout, int readTimeout, 
-    		Optional<ClientSecuredCredentials> config, 
+    		Optional<SslCredentials> config, 
     		String charset, Logger logger) throws UnknownHostException, IOException {
         this.logger = logger;
         this.ip = ip;
@@ -71,32 +60,8 @@ private final Logger logger;
 		}
     }
 
-	private Socket createSslSocket(String ip, int port, ClientSecuredCredentials config) throws Exception {
-		TrustManager[] trustManager = null;
-		if (config.getClientTrustStore().isPresent()) {
-	    	if (config.getClientTrustStore().isPresent()) {
-	    		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		        InputStream tstore = InputStreamLoader.createInputStream(getClass(), config.getClientTrustStore().get());
-		        trustStore.load(tstore, config.getClientTrustStorePassword().orElse("").toCharArray());
-		        tstore.close();
-		        TrustManagerFactory tmf = TrustManagerFactory
-		            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-		        tmf.init(trustStore);
-		        trustManager = tmf.getTrustManagers();
-	    	}
-		} else {
-			// trust all certs
-			trustManager = new TrustManager[]{
-			    new X509TrustManager() {
-					@Override public X509Certificate[] getAcceptedIssuers() { return null; }
-					@Override public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-					@Override public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
-				}
-			};
-		}
-		SSLContext ctx = SSLContext.getInstance("TLS");
-        ctx.init(null, trustManager, SecureRandom.getInstanceStrong());
-        return ctx.getSocketFactory().createSocket(ip, port);
+	private Socket createSslSocket(String ip, int port, SslCredentials config) throws Exception {
+        return SSL.getSSLContext(config).getSocketFactory().createSocket(ip, port);
 	}
 
 	@Deprecated
