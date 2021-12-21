@@ -76,6 +76,19 @@
 	},
 	{
 		"title": "Client-server",
-		"sub": []
+		"sub": [
+			{
+				"title": "About",
+				"link": "communication-about.html"
+			},
+			{
+				"title": "Peer to peer",
+				"link": "communication-peertopeer.html"
+			},
+			{
+				"title": "HTTP server/client",
+				"link": "communication-restapi.html"
+			}
+		]
 	}
 ]

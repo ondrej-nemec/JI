@@ -1,5 +1,7 @@
 {
 	"name": "JI",
 	"langs": ["en"],
-	"versions": ["v7.0"]
+	"versions": {
+		"v7.0": "--tag-name--"
+	}
 }
