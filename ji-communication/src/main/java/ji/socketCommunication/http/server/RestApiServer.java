@@ -157,6 +157,9 @@ public class RestApiServer implements Servant {
 			BufferedReader br, BufferedInputStream bis) throws IOException {
 		// url, method, protocol
 		String first = br.readLine();
+		// TODO http v2
+		// System.err.println("Firstline: " + first);
+		// https://www.digitalocean.com/community/tutorials/http-1-1-vs-http-2-what-s-the-difference
 		if (first == null) {
 			logger.warn("Wrong request - empty first line");
 			return;
