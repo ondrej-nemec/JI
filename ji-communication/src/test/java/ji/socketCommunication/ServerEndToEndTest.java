@@ -42,7 +42,7 @@ public class ServerEndToEndTest {
 			//ssl.setTrustAll(false);
 			//ssl.setTrustedClientsStore("certificates/test2/JKS-server-accept.jks", "12345678");
 			
-			/*
+			//*
 			Optional<SslCredentials> cred = Optional.empty();
 			int port = 80;
 			/*/
@@ -90,7 +90,46 @@ public class ServerEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, RequestParameters params, String ip) throws IOException {
+					Properties header, RequestParameters params, String ip, Optional<WebSocket> websocket) throws IOException {
+				if (websocket.isPresent()) {
+					if (url.equals("/ws")) {
+						pool.execute(()->{
+							int i = 0;
+							while(i < 100 && !websocket.get().isClosed()) {
+								try {
+									Thread.sleep(5000);
+									if (websocket.get().isRunning()) {
+										websocket.get().send("Message #" + i++);
+									}
+								} catch (Exception e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+							System.err.println("Task finished");
+						});
+						return RestApiResponse.webSocketResponse(
+							Arrays.asList(),
+							websocket.get(), 
+							(message)->{
+								try {
+									if (message.equals("end")) {
+										websocket.get().close();
+									} else {
+										websocket.get().send("Response: " + message);
+									}
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							},
+							(e)->{
+								e.printStackTrace();
+							}
+						);
+					}
+				}
+				
 				if (url.equals("/ping")) {
 					return getText("OK");
 				}
@@ -299,49 +338,6 @@ public class ServerEndToEndTest {
 						));
 					}
 				);
-			}
-
-			@Override
-			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, RequestParameters params, String ipAddress, String host, WebSocket websocket)
-					throws IOException {
-				if (url.equals("/ws")) {
-					pool.execute(()->{
-						int i = 0;
-						while(i < 100 && !websocket.isClosed()) {
-							try {
-								Thread.sleep(5000);
-								if (websocket.isRunning()) {
-									websocket.send("Message #" + i++);
-								}
-							} catch (Exception e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-						System.err.println("Task finished");
-					});
-					return RestApiResponse.webSocketResponse(
-						Arrays.asList(),
-						websocket, 
-						(message)->{
-							try {
-								if (message.equals("end")) {
-									websocket.close();
-								} else {
-									websocket.send("Response: " + message);
-								}
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						},
-						(e)->{
-							e.printStackTrace();
-						}
-					);
-				}
-				return RestApiResponse.textResponse(StatusCode.BAD_REQUEST, Arrays.asList(), (os)->os.write(""));
 			}
 
 		};

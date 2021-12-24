@@ -34,6 +34,10 @@ public class WebSocket {
 		this.closed = null;
 	}
 	
+	public String getOrigin() {
+		return requestHeaders.getProperty("Origin");
+	}
+	
 	protected List<String> getHeaders() {
 		/*
     	System.err.println("Upgrade: " + header.get("Upgrade"));

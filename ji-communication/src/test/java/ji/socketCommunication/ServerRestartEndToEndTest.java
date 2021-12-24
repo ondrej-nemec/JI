@@ -57,7 +57,7 @@ public class ServerRestartEndToEndTest {
 
 			@Override
 			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, RequestParameters params, String ip) throws IOException {
+					Properties header, RequestParameters params, String ip, Optional<WebSocket> websocket) throws IOException {
 				Date today = new Date();
 				return RestApiResponse.textResponse(
 					StatusCode.OK,
@@ -68,14 +68,6 @@ public class ServerRestartEndToEndTest {
 						));
 					}
 				);
-			}
-
-			@Override
-			public RestApiResponse accept(HttpMethod method, String url, String fullUrl, String protocol,
-					Properties header, RequestParameters params, String ipAddress, String host, WebSocket websocket)
-					throws IOException {
-				// TODO Auto-generated method stub
-				return null;
 			}
 
 		};

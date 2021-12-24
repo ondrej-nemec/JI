@@ -94,8 +94,8 @@ public class RestApiServer implements Servant {
         			header,
         			params,
         			clientIp,
-        			header.getProperty("Origin"),
-        			websocket
+        			//header.getProperty("Origin"),
+        			Optional.of(websocket)
         	);
 			profile(HttpServerProfilerEvent.RESPONSE_CREATED);
 			sendResponse(response, request, bw, os);
@@ -108,7 +108,8 @@ public class RestApiServer implements Servant {
 				request.getProperty(PROTOCOL),
 				header,
 				params,
-				clientIp
+				clientIp,
+				Optional.empty()
 			);
 			profile(HttpServerProfilerEvent.RESPONSE_CREATED);
 			sendResponse(response, request, bw, os);

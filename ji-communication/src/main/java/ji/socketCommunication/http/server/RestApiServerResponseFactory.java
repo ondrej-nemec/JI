@@ -1,6 +1,7 @@
 package ji.socketCommunication.http.server;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Properties;
 
 import ji.socketCommunication.http.HttpMethod;
@@ -14,19 +15,8 @@ public interface RestApiServerResponseFactory {
 			String protocol,
 			Properties header,
 			RequestParameters params,
-			String ipAddress
-	) throws IOException;
-	
-	RestApiResponse accept(
-			HttpMethod method,
-			String url,
-			String fullUrl,
-			String protocol,
-			Properties header,
-			RequestParameters params,
 			String ipAddress,
-			String origin,
-			WebSocket websocket
+			Optional<WebSocket> webSocket
 	) throws IOException;
 
 	default void catchException(Exception e) throws IOException {
