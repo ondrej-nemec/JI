@@ -82,12 +82,20 @@
 				"link": "communication-about.html"
 			},
 			{
+				"title": "Server",
+				"link": "communication-server.html"
+			},
+			{
 				"title": "Peer to peer",
 				"link": "communication-peertopeer.html"
 			},
 			{
 				"title": "HTTP server/client",
 				"link": "communication-restapi.html"
+			},
+			{
+				"title": "Secured connection",
+				"link": "communication-ssl.html"
 			}
 		]
 	}

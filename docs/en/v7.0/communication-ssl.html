@@ -1,0 +1,23 @@
+<h1>Secured connection</h1>
+
+<p>
+	Some classes requred <code>Optional</code> of <code>SslCredentials</code>. If you provide <code>Optional.empty()</code>, unsecured connection will be used. Otherwise JI try establish secured connection using <code>SslCredentials</code>.
+</p>
+
+<h2>SslCredentials</h2>
+
+<p>Holds information about keytool stores.</p>
+
+<h3>setCertificateStore</h3>
+
+<p>Specify path and password for own certificates =&gt; say who is on this end of connection.</p>
+
+<h3>setTrustedClientsStore</h3>
+
+<p>Specify path and password for trusted certificates =&gt; say with whom can be communicated</p>
+
+<h3>setTrustAll</h3>
+
+<p>
+	Connection can be established with everyone =&gt; say no matter who is on the other side of connection. <strong>Works only if <code>setTrustedClientsStore</code> is not specified.</strong>
+</p>
