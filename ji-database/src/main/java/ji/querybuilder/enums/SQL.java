@@ -39,7 +39,7 @@ public class SQL {
 	}
 
 	public static String escapeString(String sql) {
-		// TODO??  * @ - _ + . /
+		// maybe??  * @ - _ + . /
 		return String.format("'%s'", sql.replaceAll("\\'", "''"));
 	}
 	

@@ -323,7 +323,7 @@ public class RestApiServer implements Servant {
 		String[] methods = first.split(" ");
 		if (methods.length != 3) {
 			logger.warn("Invalid request: " + first);
-			return; //TODO what now?
+			return; // what now?
 		}
 		
 		String[] urlParst = methods[1].split("\\?");

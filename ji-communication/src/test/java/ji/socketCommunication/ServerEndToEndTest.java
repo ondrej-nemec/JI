@@ -102,7 +102,6 @@ public class ServerEndToEndTest {
 										websocket.get().send("Message #" + i++);
 									}
 								} catch (Exception e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 							}
@@ -119,7 +118,6 @@ public class ServerEndToEndTest {
 										websocket.get().send("Response: " + message);
 									}
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 							},

@@ -118,7 +118,7 @@ public class InputJsonStream implements Closeable {
 					if (!name.isEmpty()) { // list has not name, value is in name
 						return new Event(EventType.LIST_ITEM, value, ValueParser.parse(name, isKeyQuoted), level);
 					}
-					if (!value.isEmpty()) { // TODO why this happend??
+					if (!value.isEmpty()) { // why this happend??
 						return new Event(EventType.LIST_ITEM, name, ValueParser.parse(value, isValueQuoted), level);
 					}
 					break;

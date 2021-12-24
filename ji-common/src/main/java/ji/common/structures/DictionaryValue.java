@@ -18,9 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-// TODO serializable
-
-// TODO set, collection, for each
 public class DictionaryValue {
 
 	private final Object value;
@@ -130,7 +127,7 @@ public class DictionaryValue {
 			return getDateTime();
 		} else if (clazz.isAssignableFrom(ZonedDateTime.class)) {
 			return getDateTimeZone();
-		} else if (value instanceof MapDictionary || value instanceof Map) { // TODO check very carefully if there is no recursion !
+		} else if (value instanceof MapDictionary || value instanceof Map) { // check very carefully if there is no recursion !
 			return getDictionaryMap().parse(clazz, onlyKey);
 		} else {
 			return value;
