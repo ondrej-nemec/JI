@@ -353,12 +353,12 @@ public class ServerEndToEndTest {
 					bw.write("Int #" + i + "");
 					bw.newLine();
 					if (i%10 == 0) {
-						bw.write(SpeakerEndToEndTest.MESSAGE_END);
+						bw.write(P2PEndToEndTest.MESSAGE_END);
 						bw.flush();
 						
 						//StringBuilder message = new StringBuilder();
 						int c = br.read();
-						while((char)c != SpeakerEndToEndTest.MESSAGE_END && c != -1) {
+						while((char)c != P2PEndToEndTest.MESSAGE_END && c != -1) {
 							System.out.println(i + "--> " + (char)c);
 							c = br.read();
 						}

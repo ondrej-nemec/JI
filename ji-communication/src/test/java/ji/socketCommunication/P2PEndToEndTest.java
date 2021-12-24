@@ -2,16 +2,16 @@ package ji.socketCommunication;
 
 import java.util.Optional;
 
-import ji.socketCommunication.peerToPeer.SpeakerClient;
+import ji.socketCommunication.peerToPeer.P2PClient;
 
-public class SpeakerEndToEndTest {
+public class P2PEndToEndTest {
 
 	public static final char MESSAGE_END = ';';
 	public static final char TRANSFER_END = '$';
 	
 	public static void main(String[] args) {
 		try {
-			SpeakerClient client = new SpeakerClient(
+			P2PClient client = new P2PClient(
 					"localhost", 
 					10123, 
 					15000, // connection timeout

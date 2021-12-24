@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import ji.socketCommunication.peerToPeer.Communication;
 
-public class SpeakerTest {
+public class P2PClientTest {
 
 	@Test
 	@Ignore

@@ -13,7 +13,7 @@ import ji.common.Logger;
 import ji.common.structures.ThrowingBiConsumer;import ji.socketCommunication.SSL;
 import ji.socketCommunication.SslCredentials;
 
-public class SpeakerClient {
+public class P2PClient {
 
 private final Logger logger;
     
@@ -28,7 +28,7 @@ private final Logger logger;
     private final String charset;
     private Socket socket;
     
-    public SpeakerClient(
+    public P2PClient(
     		String ip, int port, 
     		int connectionTimeout, int readTimeout, 
     		Optional<SslCredentials> config, 
