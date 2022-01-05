@@ -1,7 +1,15 @@
 {
 	"name": "JI",
-	"langs": ["en"],
+	"langs": {
+		"en": "English"
+	},
 	"versions": {
 		"v7.0": "v7.0.0"
+	},
+	"social": {
+		"author": "Ondřej Němec",
+		"from": 2018,
+		"icon": "",
+		"description": ""
 	}
 }
