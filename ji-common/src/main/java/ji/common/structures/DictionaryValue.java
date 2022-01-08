@@ -24,7 +24,7 @@ public class DictionaryValue {
 	
 	private Function<String, Object> stringMapping = (v)->{
 		try {
-			Object reader = Class.forName("json.JsonReader").newInstance();
+			Object reader = Class.forName("ji.json.JsonReader").newInstance();
 			return reader.getClass().getMethod("read", String.class).invoke(reader, v);
 		} catch (Exception e) {
 			return v;
