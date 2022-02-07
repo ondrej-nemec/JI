@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.common.functions.InputStreamLoader;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

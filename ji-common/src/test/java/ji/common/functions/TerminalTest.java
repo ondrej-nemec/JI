@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ji.common.Logger;
-import ji.common.functions.OperationSystem;
-import ji.common.functions.Terminal;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

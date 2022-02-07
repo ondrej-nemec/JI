@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ji.common.functions.FilesList;
-
 public class FilesListTest {
 
 	@Test

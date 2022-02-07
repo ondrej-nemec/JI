@@ -1,7 +1,5 @@
 package ji.common.functions;
 
-import ji.common.functions.FilesList;
-
 public class FilesListEndToEndTest {
 
 	public static void main(String[] args) {

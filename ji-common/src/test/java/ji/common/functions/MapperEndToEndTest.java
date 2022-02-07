@@ -6,7 +6,6 @@ import java.util.Map;
 import ji.common.annotations.MapperIgnored;
 import ji.common.annotations.MapperParameter;
 import ji.common.annotations.MapperType;
-import ji.common.functions.Mapper;
 
 public class MapperEndToEndTest {
 	
