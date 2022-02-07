@@ -15,6 +15,7 @@ public class EndToEnd {
 		json2.put(2, "value");
 		json1.put("list", list);
 		json1.put("json", json2);
+		json1.put("error", "\\\"]'); alert('Successfull XSS'); // ");
 		
 		JsonWritter writter = new JsonWritter();
 		String text1 = writter.write(json1);

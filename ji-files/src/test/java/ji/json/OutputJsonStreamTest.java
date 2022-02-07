@@ -204,7 +204,16 @@ public class OutputJsonStreamTest {
 							stream.writeObjectEnd();
 						}),
 						true
-				}
+				},
+				new Object[] {
+						"{\"escape\":\" escape \\\\ and \\\" for safety \"}",
+						c((stream)->{
+							stream.writeObjectStart();
+							stream.writeObjectValue("escape", " escape \\ and \" for safety ");
+							stream.writeObjectEnd();
+						}),
+						false
+				},
 		};
 	}
 	

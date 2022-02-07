@@ -14,6 +14,8 @@ public class OutputJsonStream implements Closeable {
 	private final LinkedList<Boolean> parent = new LinkedList<>();
 	
 	private final boolean formated;
+	//private int level = 0;
+	//private boolean isEmpty = true;
 	
 	public OutputJsonStream(OutputProvider provider) {
 		this(provider, false);
@@ -43,14 +45,17 @@ public class OutputJsonStream implements Closeable {
 	public void writeObjectStart() throws JsonStreamException {
 		boolean isFirst = checkFirst(EventType.OBJECT_START);
 		provider.write(getFormat(isFirst) + "{");
+		//level++;
 	}
 	
 	public void writeObjectStart(String name) throws JsonStreamException {
 		boolean isFirst = checkFirst(EventType.OBJECT_START);
 		provider.write(getFormat(isFirst) + String.format("\"%s\":%s{", name, (formated ? " " : "")));
+		//level++;
 	}
 	
 	public void writeObjectEnd() throws JsonStreamException {
+		//level--;
 		provider.write(getFormat(true) + "}");
 		parent.removeLast();
 	}
@@ -63,14 +68,17 @@ public class OutputJsonStream implements Closeable {
 	public void writeListStart() throws JsonStreamException {
 		boolean isFirst = checkFirst(EventType.LIST_START);
 		provider.write(getFormat(isFirst) + "[");
+		//level++;
 	}
 	
 	public void writeListStart(String name) throws JsonStreamException {
 		boolean isFirst = checkFirst(EventType.LIST_START);
 		provider.write(getFormat(isFirst) + String.format("\"%s\":%s[", name, (formated ? " " : "")));
+		//level++;
 	}
 	
 	public void writeListEnd() throws JsonStreamException {
+		//level--;
 		provider.write(getFormat(true) + "]");
 		parent.removeLast();
 	}
@@ -85,7 +93,12 @@ public class OutputJsonStream implements Closeable {
 		if (value instanceof Number) {
 			return value.toString();
 		}
-		return String.format("\"%s\"", value.toString().replace("\"", "\\\""));
+		return String.format(
+			"\"%s\"",
+			value.toString()
+				.replace("\\", "\\\\") // replace \ with \\
+				.replace("\"", "\\\"") // replace " with \"
+		);
 	}
 	
 	private boolean checkFirst(EventType child) {
@@ -113,7 +126,12 @@ public class OutputJsonStream implements Closeable {
 	
 	private String getFormat(boolean isFirst) {
 		StringBuilder pre = new StringBuilder((isFirst ? "" : ","));
-		if (formated) {
+		/*if (formated && level == 0 && !isEmpty) {
+			pre.append("\n");
+		} else {
+			isEmpty = false;
+		}*/
+		if (formated /*&& level > 0*/) {
 			pre.append("\n");
 			parent.forEach((item)->{
 				pre.append("  ");
