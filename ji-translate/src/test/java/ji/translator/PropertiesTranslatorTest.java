@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import ji.common.Logger;
-import ji.translator.LanguageSettings;
-import ji.translator.PropertiesTranslator;
 
 public class PropertiesTranslatorTest {
 

@@ -9,8 +9,6 @@ import java.util.Map;
 import org.junit.Test;
 
 import ji.common.structures.MapInit;
-import ji.json.JsonReader;
-import ji.json.JsonStreamException;
 
 public class JsonReaderTest {
 	

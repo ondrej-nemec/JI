@@ -6,8 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ji.common.Logger;
-import ji.database.Database;
-import ji.database.DatabaseConfig;
 
 public class ConnectionPoolEndToEndTest {
 

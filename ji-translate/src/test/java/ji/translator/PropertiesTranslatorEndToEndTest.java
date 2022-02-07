@@ -4,9 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import ji.common.structures.ListInit;
-import ji.translator.LanguageSettings;
-import ji.translator.Locale;
-import ji.translator.PropertiesTranslator;
 
 public class PropertiesTranslatorEndToEndTest {
 

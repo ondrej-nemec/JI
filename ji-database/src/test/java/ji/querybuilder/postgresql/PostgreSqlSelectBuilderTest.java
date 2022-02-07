@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.enums.Join;
-import ji.querybuilder.postgresql.PostgreSqlSelectBuilder;
 import junitparams.JUnitParamsRunner;
 
 @RunWith(JUnitParamsRunner.class)

@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import ji.querybuilder.derby.DerbyFunctions;
-
 public class DerbyFunctionsTest {
 
 	@Test

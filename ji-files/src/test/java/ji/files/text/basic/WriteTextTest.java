@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ji.files.text.basic.WriteText;
-
 public class WriteTextTest {
 
 	@Test

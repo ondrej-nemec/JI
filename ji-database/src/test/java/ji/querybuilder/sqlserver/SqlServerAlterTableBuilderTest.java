@@ -12,7 +12,6 @@ import ji.querybuilder.builders.AlterTableBuilder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.OnAction;
-import ji.querybuilder.sqlserver.SqlServerAlterTableBuilder;
 
 public class SqlServerAlterTableBuilderTest {
 	

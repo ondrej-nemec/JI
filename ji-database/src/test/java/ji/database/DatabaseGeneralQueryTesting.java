@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import ji.common.Logger;
-import ji.database.Database;
-import ji.database.DatabaseConfig;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.enums.ColumnType;
 

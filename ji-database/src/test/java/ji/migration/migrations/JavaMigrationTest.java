@@ -13,7 +13,6 @@ import javax.tools.ToolProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.migration.migrations.JavaMigration;
 import ji.querybuilder.QueryBuilder;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;

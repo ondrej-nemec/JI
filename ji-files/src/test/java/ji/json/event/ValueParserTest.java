@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.json.event.ValueParser;
-import ji.json.event.ValueType;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

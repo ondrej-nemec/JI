@@ -8,7 +8,6 @@ import java.util.Properties;
 import java.util.function.Function;
 
 import ji.common.functions.Console;
-import ji.socketCommunication.Server;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.StatusCode;
 import ji.socketCommunication.http.server.RequestParameters;

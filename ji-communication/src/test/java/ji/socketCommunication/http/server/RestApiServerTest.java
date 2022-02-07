@@ -14,9 +14,6 @@ import org.junit.runner.RunWith;
 
 import ji.common.Logger;
 import ji.common.structures.MapInit;
-import ji.socketCommunication.http.server.RequestParameters;
-import ji.socketCommunication.http.server.RestApiServer;
-import ji.socketCommunication.http.server.RestApiServerResponseFactory;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

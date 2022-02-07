@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import ji.common.Logger;
-import ji.migration.MigrationTool;
 import ji.querybuilder.QueryBuilder;
 import ji.querybuilder.mysql.MySqlQueryBuilder;
 

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import org.junit.Test;
 
 import ji.querybuilder.builders.InsertBuilder;
-import ji.querybuilder.mysql.MySqlInsertBuilder;
 
 public class MySqlInsertBuilderTest {
 	

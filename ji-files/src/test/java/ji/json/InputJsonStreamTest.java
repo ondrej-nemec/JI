@@ -7,8 +7,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.json.InputJsonStream;
-import ji.json.JsonStreamException;
 import ji.json.event.Event;
 import ji.json.event.EventType;
 import ji.json.event.Value;

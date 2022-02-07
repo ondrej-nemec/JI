@@ -16,8 +16,6 @@ import org.junit.runner.RunWith;
 
 import ji.common.Logger;
 import ji.socketCommunication.http.HttpMethod;
-import ji.socketCommunication.http.client.RestApiClient;
-import ji.socketCommunication.http.client.RestApiResponse;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

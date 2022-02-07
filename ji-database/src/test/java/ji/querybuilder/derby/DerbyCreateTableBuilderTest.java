@@ -8,7 +8,6 @@ import java.sql.Connection;
 import org.junit.Test;
 
 import ji.querybuilder.builders.CreateTableBuilder;
-import ji.querybuilder.derby.DerbyCreateTableBuilder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.OnAction;

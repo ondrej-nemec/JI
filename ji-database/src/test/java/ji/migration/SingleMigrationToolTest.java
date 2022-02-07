@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ji.common.Logger;
-import ji.migration.SingleMigrationTool;
 import ji.migration.migrations.JavaMigration;
 import ji.migration.migrations.SqlMigration;
 import ji.querybuilder.QueryBuilder;

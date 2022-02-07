@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import ji.database.support.DoubleConsumer;
 import ji.querybuilder.builders.UpdateBuilder;
-import ji.querybuilder.sqlserver.SqlServerUpdateBuilder;
 
 public class SqlServerUpdateBuilderTest {
 	

@@ -8,8 +8,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import ji.json.JsonWritter;
-
 public class JsonWritterTest {
 
 	@Test

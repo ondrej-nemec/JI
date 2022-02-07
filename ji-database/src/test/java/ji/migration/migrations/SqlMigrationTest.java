@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ji.files.text.Text;
-import ji.migration.migrations.SqlMigration;
 import ji.querybuilder.QueryBuilder;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;

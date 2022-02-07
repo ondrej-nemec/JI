@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import ji.common.Logger;
-import ji.database.Database;
-import ji.database.DatabaseConfig;
 
 public class DatabaseTransactionTesting {
 

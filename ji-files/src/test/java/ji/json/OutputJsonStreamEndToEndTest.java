@@ -1,7 +1,5 @@
 package ji.json;
 
-import ji.json.JsonStreamException;
-import ji.json.OutputJsonStream;
 import ji.json.providers.OutputStringProvider;
 
 public class OutputJsonStreamEndToEndTest {

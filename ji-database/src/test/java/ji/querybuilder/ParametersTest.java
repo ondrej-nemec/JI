@@ -30,9 +30,9 @@ public class ParametersTest {
 		return new Object[] {
 			new Object[] {null, "null"},
 			new Object[] {false, "false"},
-			new Object[] {new Boolean(true), "true"},
+			new Object[] {Boolean.valueOf(true), "true"},
 			new Object[] {1, "1"},
-			new Object[] {new Double(123.4), "123.4"},
+			new Object[] {Double.valueOf(123.4), "123.4"},
 			new Object[] {'c', "'c'"},
 			new Object[] {(byte)42, "42"},
 			new Object[] {"", "''"},

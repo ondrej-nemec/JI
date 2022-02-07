@@ -15,8 +15,6 @@ import java.util.List;
 import org.junit.runners.Parameterized.Parameters;
 
 import ji.common.Logger;
-import ji.database.Database;
-import ji.database.DatabaseConfig;
 import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
 import ji.files.text.basic.ReadText;

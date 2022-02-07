@@ -9,8 +9,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import ji.socketCommunication.peerToPeer.Communication;
-
 public class CommunicationTest {
 
 	@Test

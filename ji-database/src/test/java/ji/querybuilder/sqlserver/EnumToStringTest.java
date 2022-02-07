@@ -9,7 +9,6 @@ import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.Join;
 import ji.querybuilder.enums.OnAction;
-import ji.querybuilder.sqlserver.EnumToSqlServerString;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

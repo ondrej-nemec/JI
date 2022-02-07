@@ -8,7 +8,6 @@ import java.sql.Connection;
 import org.junit.Test;
 
 import ji.querybuilder.builders.DeleteBuilder;
-import ji.querybuilder.postgresql.PostgreSqlDeleteBuilder;
 
 public class PostgreSqlDeleteBuilderTest {
 	

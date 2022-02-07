@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ji.querybuilder.builders.SelectBuilder;
-import ji.querybuilder.derby.DerbySelectBuilder;
 import ji.querybuilder.enums.Join;
 import junitparams.JUnitParamsRunner;
 

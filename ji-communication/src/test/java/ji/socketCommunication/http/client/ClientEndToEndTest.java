@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import ji.common.functions.Console;
 import ji.socketCommunication.LoggerImpl;
-import ji.socketCommunication.http.client.RestApiClient;
 
 public class ClientEndToEndTest {
 	

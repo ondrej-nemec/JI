@@ -15,8 +15,6 @@ import java.io.IOException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ji.socketCommunication.peerToPeer.Communication;
-
 public class P2PClientTest {
 
 	@Test

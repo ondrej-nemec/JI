@@ -9,7 +9,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.migration.resources.MigrationFiles;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

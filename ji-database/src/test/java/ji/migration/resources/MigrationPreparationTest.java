@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import ji.common.structures.Tuple2;
 import ji.migration.MigrationException;
-import ji.migration.resources.MigrationPreparation;
 import ji.querybuilder.QueryBuilder;
 import ji.querybuilder.builders.CreateTableBuilder;
 import ji.querybuilder.builders.SelectBuilder;

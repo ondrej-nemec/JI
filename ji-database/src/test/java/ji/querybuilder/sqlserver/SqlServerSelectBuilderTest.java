@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.enums.Join;
-import ji.querybuilder.sqlserver.SqlServerSelectBuilder;
 import junitparams.JUnitParamsRunner;
 
 @RunWith(JUnitParamsRunner.class)

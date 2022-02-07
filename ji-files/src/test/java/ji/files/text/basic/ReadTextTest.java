@@ -9,8 +9,6 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import ji.files.text.basic.ReadText;
-
 public class ReadTextTest {
 	
 	@Test

@@ -35,8 +35,6 @@ import ji.common.structures.ThrowingBiConsumer;
 import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
 import ji.files.text.basic.ReadText;
-import ji.querybuilder.QueryBuilder;
-import ji.querybuilder.QueryBuilderFactory;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.derby.DerbyQueryBuilder;
 import ji.querybuilder.enums.ColumnSetting;

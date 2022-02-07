@@ -9,7 +9,6 @@ import java.sql.Connection;
 import org.junit.Test;
 
 import ji.querybuilder.builders.AlterTableBuilder;
-import ji.querybuilder.derby.DerbyAlterTableBuilder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.OnAction;
