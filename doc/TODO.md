@@ -9,16 +9,11 @@
 
 ## FIX and Bugs
 
-* Files
-    * JSON: escape `map.put("subText2", "\\\"]'); alert('Successfull XSS'); // ");`
-    * JSON: check \n character
 * Communication:
 	* `Content length not match expecation. Expected: 610, actual: 0` - with file upload
 
 ## TODO
 
-* Common
-	* Substitution for DateTime?
 * More unit tests
 * Check TODOs - remove or add here
 * Database:
@@ -34,7 +29,6 @@
 
 ## Improvement
 
-* Full comtability with java 9 - 16
 * Common:
      * Mapper – create instance with parametrized constructor
 	* Env: load configuration from another files like xml, too.
