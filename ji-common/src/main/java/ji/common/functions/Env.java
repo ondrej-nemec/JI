@@ -9,13 +9,19 @@ import ji.common.structures.Dictionary;
 public class Env implements Dictionary<String> {
 	
 	private final Properties properties;
+	private final String key;
 		
 	public Env(final String path) throws FileNotFoundException, IOException {
-		this.properties = PropertiesLoader.loadProperties(path); // loadProperties(path);
+		this(PropertiesLoader.loadProperties(path), null); // loadProperties(path);
 	}
 	
 	public Env(final Properties properties) {
+		this(properties, null);
+	}
+	
+	private Env(Properties properties, String key) {
 		this.properties = properties;
+		this.key = key;
 	}
 
 	protected Properties getProperties() {
@@ -24,12 +30,19 @@ public class Env implements Dictionary<String> {
 
 	@Override
 	public Object getValue(String name) {
-		return properties.get(name);
+		if (key == null) {
+			return properties.get(name);
+		}
+		return properties.get(key + "." + name);
 	}
 
 	@Override
 	public void clear() {
 		properties.clear();
+	}
+	
+	public Env getModule(String key) {
+		return new Env(properties, key);
 	}
 
 }
