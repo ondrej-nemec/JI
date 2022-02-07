@@ -18,7 +18,8 @@ public interface MultipleExecute<B> extends Execute, ParametrizedBuilder<B> {
 			for (Builder b : _getBuilders()) {
 				String query = b.createSql(getParameters());
 				if (Database.PROFILER != null) {
-					Database.PROFILER.builderQuery(StatementWrapper.class.cast(stat).ID, getSql(), query, getParameters());
+					StatementWrapper w = StatementWrapper.class.cast(stat);
+					Database.PROFILER.builderQuery(w.ID, getSql(), query, getParameters());
 				}
 				if (!query.isEmpty()) {
 					stat.execute(query);

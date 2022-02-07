@@ -13,7 +13,8 @@ public interface SingleExecute<B> extends Execute, ParametrizedBuilder<B> {
 		String query = createSql();
 		try (Statement stat = getConnection().createStatement();) {
 			if (Database.PROFILER != null) {
-				Database.PROFILER.builderQuery(StatementWrapper.class.cast(stat).ID, getSql(), query, getParameters());
+				StatementWrapper w = StatementWrapper.class.cast(stat);
+				Database.PROFILER.builderQuery(w.ID, getSql(), query, getParameters());
 			}
 			return stat.executeUpdate(query);
 		}

@@ -33,10 +33,10 @@ public class JavaMigration implements SingleMigration {
 	
 	private Migration getMigration(String name) throws Exception {
 		try {
-			return (Migration)loader.loadClass(this.path + "." + name).newInstance();
+			return (Migration)loader.loadClass(this.path + "." + name).getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException e1) {
 			try {
-				return (Migration)loader.loadClass(name).newInstance();
+				return (Migration)loader.loadClass(name).getDeclaredConstructor().newInstance();
 			} catch (ClassNotFoundException e2) {
 				throw new ClassNotFoundException("Migration class not found: " + e1.getMessage() + " OR " + e2.getMessage());
 			}

@@ -18,7 +18,8 @@ public interface BatchExecute<B> extends Execute, ParametrizedBuilder<B> {
 			for (Builder b : _getBuilders()) {
 				String query = b.createSql(getParameters());
 				if (Database.PROFILER != null) {
-					Database.PROFILER.builderQuery(StatementWrapper.class.cast(stat).ID, b.getSql(), query, getParameters());
+					StatementWrapper w = StatementWrapper.class.cast(stat);
+					Database.PROFILER.builderQuery(w.ID, b.getSql(), query, getParameters());
 				}
 				stat.addBatch(query);
 			}
