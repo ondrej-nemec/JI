@@ -154,7 +154,13 @@ public class InputJsonStreamTest {
 						new Event(EventType.OBJECT_ITEM, "a", new Value<>(false, ValueType.BOOLEAN), 2),
 						new Event(EventType.OBJECT_END, "", new Value<>("", ValueType.NULL), 1)
 				}
-			}
+			},
+			new Object[] {
+					"{\"escape\": \"-- \\ and \\\" --\"}",
+					new Event[] {
+						new Event(EventType.OBJECT_ITEM, "escape", new Value<>("-- \\ and \\\" --", ValueType.STRING), 1),
+					}
+				}
 		};
 	}
 
