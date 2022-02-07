@@ -1,0 +1,98 @@
+<h1>Simple Reading/Writing</h1>
+
+<h2>Plain text</h2>
+
+<p>
+	Class <code>Text</code> provide you <code>BufferedReader</code> and <code>BufferedWritter</code>. You can get new instance of <code>Text</code> by calling constructor <code>new Text()</code> or statically <code>Text.get()</code>
+</p>
+
+<h3>Reading</h3>
+
+<p>
+	JI Files allows read from <code>File</code>, <code>InputStream</code>, <code>URL</code> and path in string. Charset can be optionally added. Except source, for reading with <code>Text</code> you need <code>ThrowingFunction</code> (see <a href="?file=common-structures.html#H2-11">here</a>). The input parameter is <code>BufferedReader</code> and output is up to you.
+</p>
+
+<strong>Example</strong>
+<pre><code class="language-java">
+Text.get().read((bufferedReader)->{ 
+	// your reading 
+	return null; 
+}, "/path/to/readed/file.txt");
+</code></pre>
+
+<h3>Class ReadText</h3>
+
+<p>
+	For simplification reading data from <code>BufferedReader</code>, JI Files contains <code>ReadText</code>. 
+</p>
+
+<strong>Using</strong>
+<pre><code class="language-java">
+ReadText readText = ReadText.get(); 
+// read whole file as text 
+String text = readText.asString(bufferedReader); 
+// read file per line, each list element is one line 
+List&lt;String&gt; lines = readText.asList(bufferedReader); 
+// read file as table, each list element is line and line is splited to list by given delimeter 
+Collection&lt;List&lt;String&gt;&gt; table = readText.asTable(bufferedReader, ",");
+</code></pre>
+
+<h3>Writting</h3>
+
+<p>
+	JI Files allows write data to <code>OutputStream</code> or path in string. Charset can be optionally added. If you write to file, you can specify if add data to end of file or override content of file. Except that, you have to provide <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>). This callback get <code>BufferedWritter</code> as parameter.
+</p>
+
+<strong>Example</strong>
+
+<pre><code class="language-java">
+Text.get().write((bufferedWritter)->{ 
+	// your writing 
+}, "/path/to/file.txt", true); // true - append content
+</code></pre>
+
+<h3>Class WriteText</h3>
+
+<p>
+	Similary as in reading section, for simplification writing JI Files contains <code>WriteText</code>.
+</p>
+
+<strong>Using</strong>
+<pre><code class="language-java">
+WriteText writeText = WriteText.get(); 
+// write string 
+writeText.write(bufferedWriter, "your text"); 
+// write list, each item will be new line 
+writeText.write(bufferedWriter, list); 
+// write list in list, each sublist is new line, items in sublist will be separated by delimeter 
+writeText.write(bufferedWritter, table, ",");
+</code></pre>
+
+<h2>Binary files</h2>
+
+<p>
+	Class <code>Binary</code> provide you <code>DataInputStream</code> and <code>DataOutputStream</code>. You can get new instance of <code>Binary</code> by calling constructor <code>new Binary()</code> or statically <code>Binary.get()</code>
+</p>
+
+<h3>Reading</h3>
+
+<p>JI Files provides only one factory: <code>read</code>. This method requires <code>InputStream</code> and <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
+
+<pre><code class="language-java">
+Binary.get().read((dataInputStream)->{ 
+	// your reading 
+}, inputStream);
+</code></pre>
+
+<h3>Writing</h3>
+
+<p>JI Files can create <code>DataOutputStream</code> in two way: from file (defined by string) and from <code>OutputStream</code>. Both methods require <code>ThrowingConsumer</code> (see <a href="?file=common-structures.html#H2-11">here</a>).</p>
+
+<pre><code class="language-java">
+Binary.get().write((dataOutputStream)->{ 
+	// your writing 
+}, outputStream); 
+Binary.get().write((dataOutputStream)->{ 
+	// your writing 
+}, "path/to/file");
+</code></pre>
