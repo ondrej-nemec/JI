@@ -9,7 +9,6 @@ import java.util.Properties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.common.functions.PropertiesLoader;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
