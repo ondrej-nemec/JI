@@ -196,6 +196,19 @@ Env env2 = new Env(prop);
 	</code>
 </pre>
 
+<p>
+	<code>Env::getModule</code> returnw new instance of <code>Env</code>. In new env are accessible only parameters starts with given key.
+</p>
+
+<pre><code class="language-java">
+Env env = ...;
+String value = env.getProperty("key.subkey"); // works
+
+Env sub = env.getModule("key");
+String value2 = sub.getProperty("subkey"); // works
+String value3 = sub.getProperty("key.subkey"); // returns null
+</code></pre>
+
 <h3>Implode</h3>
 
 <p>
@@ -209,3 +222,18 @@ Implode.implode(", ", Arrays.asList(1, 2, 3));  // returns "1, 2, 3"
 Implode.implode(i->i+"0", ", ", Arrays.asList(1, 2, 3));  // returns "10, 20, 30"
 	</code>
 </pre>
+
+<h3>DateTIme</h3>
+
+<p>
+	Simplify <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code> and <code>ZonedDateTime</code> to formatted string.
+</p>
+
+<pre><code class="language-java">
+String pattern = ...;
+TemporalAccessor dataTime = ...; // LocalDate, LocalTime, LocalDateTime, ZonedDateTime
+// from given date
+String dateTimeFormatted = DateTime.format(pattern, dateTime);
+// formatted string with using LocalDateTime.now()
+String now = DateTime.format(pattern);
+</code></pre>
