@@ -1,5 +1,7 @@
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+plugins {
+    id 'java-library'
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -7,13 +9,11 @@ repositories {
 }
 
 dependencies {
-	compile project(':ji-common')
-	compile project(':ji-translate')
-	compile project(':ji-communication')
-	compile project(':ji-database')
-	compile project(':ji-testing')
-	compile project(':ji-files')
-//	compile project(':ji-logging')
-//	compile project(':ji-acl')
+	implementation project('ji-common')
+	implementation project('ji-translate')
+	implementation project('ji-communication')
+	implementation project('ji-database')
+	implementation project('ji-testing')
+	implementation project('ji-files')
 }
 

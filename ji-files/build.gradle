@@ -1,6 +1,9 @@
 
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+plugins {
+    id 'java-library'
+}
+
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -9,16 +12,16 @@ repositories {
 }
 
 dependencies {
-	compile project(':ji-common')
+	implementation project(':ji-common')
 		
 	// https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testImplementation group: 'junit', name: 'junit', version: '4.12'
 	
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
 	
 	// https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
-	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+	testImplementation group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
 
 }
 

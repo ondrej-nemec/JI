@@ -1,6 +1,8 @@
 
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+plugins {
+    id 'java-library'
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -10,34 +12,34 @@ repositories {
 }
 
 dependencies {
-	compile project(':ji-common')
-	compile project(':ji-files')
+	implementation project(':ji-common')
+	implementation project(':ji-files')
 	
 	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
 	// compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
 	
 	
 	// https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testImplementation group: 'junit', name: 'junit', version: '4.12'
 	
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
 	
 	// https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
-	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+	testImplementation group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
 	
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
-	testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+	testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
 	
-	testCompile fileTree(dir: "libs/derby", includes: ['*.jar'])
+	testImplementation fileTree(dir: "libs/derby", includes: ['*.jar'])
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
-	testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
+	testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
 
 	// https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
 	//testCompile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.1.1.jre15-preview'
 
 	// https://mvnrepository.com/artifact/com.microsoft.sqlserver/sqljdbc4
-	testCompile group: 'com.microsoft.sqlserver', name: 'sqljdbc41', version: '4.1'
+	testImplementation group: 'com.microsoft.sqlserver', name: 'sqljdbc41', version: '4.1'
 
 
 }

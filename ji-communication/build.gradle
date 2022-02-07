@@ -1,6 +1,8 @@
 
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+plugins {
+    id 'java-library'
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -8,22 +10,22 @@ repositories {
 }
 
 dependencies {
-	compile project(':ji-common')
-	compile project(':ji-files')
+	implementation project(':ji-common')
+	implementation project(':ji-files')
 	
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
 	// https://mvnrepository.com/artifact/commons-codec/commons-codec
-	compile group: 'commons-codec', name: 'commons-codec', version: '1.15'
+	implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
 
 	// https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testImplementation group: 'junit', name: 'junit', version: '4.12'
 	
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
 	
 	// https://mvnrepository.com/artifact/pl.pragmatists/JUnitParams
-	testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+	testImplementation group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
 
 }
 
