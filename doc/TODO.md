@@ -10,7 +10,7 @@
 ## FIX and Bugs
 
 * Communication:
-	* `Content length not match expecation. Expected: 610, actual: 0` - with file upload
+	* Exception `Content length not match expecation. Expected: 610, actual: 0` - with file upload
 
 ## TODO
 
