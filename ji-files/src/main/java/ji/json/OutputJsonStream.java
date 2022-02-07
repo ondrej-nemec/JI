@@ -98,6 +98,7 @@ public class OutputJsonStream implements Closeable {
 			value.toString()
 				.replace("\\", "\\\\") // replace \ with \\
 				.replace("\"", "\\\"") // replace " with \"
+				.replace("\n", "\\n")
 		);
 	}
 	

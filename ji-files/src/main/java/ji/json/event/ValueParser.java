@@ -9,7 +9,14 @@ public class ValueParser {
 			return new Value<>(null, ValueType.NULL);
 		}
 		if (isValueQuoted) {
-			return new Value<>(value, ValueType.STRING);
+			return new Value<>(
+				value.toString()
+					.replace("\\\\\\", "\\\\") // \\\ to \\
+					.replace("\\n", "\n") // \\n to \n
+					.replace("\\\"", "\"")
+				,
+				ValueType.STRING
+			);
 		}
 		if ("null".equals(value.toLowerCase())) {
 			return new Value<>(null, ValueType.NULL);
