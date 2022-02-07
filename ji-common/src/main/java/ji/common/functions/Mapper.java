@@ -1,6 +1,7 @@
 package ji.common.functions;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -147,7 +148,7 @@ public class Mapper {
 	}
 		
 	@SuppressWarnings("unchecked")
-	private <T> T createNewInstance(Object valueCandidate, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+	private <T> T createNewInstance(Object valueCandidate, Class<T> clazz) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (valueCandidate != null) {
 			return new DictionaryValue(valueCandidate).getValue(clazz);
 		}
@@ -169,7 +170,8 @@ public class Mapper {
 		/*if (clazz.isEnum()) {
 			return null;
 		}*/
-		return clazz.newInstance();
+		 // return clazz.newInstance();
+		return clazz.getDeclaredConstructor().newInstance();
 	}
 
 	private Tuple2<Class<?>, Type> getGenericClass(Type field, int index) {
