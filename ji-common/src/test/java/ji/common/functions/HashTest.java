@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import ji.common.exceptions.HashException;
-import ji.common.functions.Hash;
 
 public class HashTest {
 	
