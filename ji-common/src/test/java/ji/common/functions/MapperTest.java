@@ -11,7 +11,6 @@ import org.junit.Test;
 import ji.common.annotations.MapperIgnored;
 import ji.common.annotations.MapperParameter;
 import ji.common.annotations.MapperType;
-import ji.common.functions.Mapper;
 import ji.common.functions.testingClasses.Generic;
 import ji.common.functions.testingClasses.Main;
 import ji.common.functions.testingClasses.Parse;

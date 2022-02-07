@@ -9,10 +9,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.common.structures.DictionaryValue;
-import ji.common.structures.ListDictionary;
-import ji.common.structures.MapDictionary;
-import ji.common.structures.MapInit;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
