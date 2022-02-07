@@ -79,7 +79,11 @@ public class RestApiServer implements Servant {
 		RequestParameters params = new RequestParameters();
 		Properties header = new Properties();
 		Properties request = new Properties();
-		parseRequest(request, header, params, br, is);
+		boolean parsed = parseRequest(request, header, params, br, is);
+		if (!parsed) {
+			logger.error("Unparsed request");
+			return;
+		}
 		profile(HttpServerProfilerEvent.REQUEST_PARSED);
 		/***********/
 		logger.debug("Request: " + request);
@@ -153,7 +157,7 @@ public class RestApiServer implements Servant {
 
 	/********* PARSE **************/
 	
-	private void parseRequest(
+	private boolean parseRequest(
 			Properties request, Properties header, RequestParameters params, 
 			BufferedReader br, BufferedInputStream bis) throws IOException {
 		// url, method, protocol
@@ -162,8 +166,8 @@ public class RestApiServer implements Servant {
 		// System.err.println("Firstline: " + first);
 		// https://www.digitalocean.com/community/tutorials/http-1-1-vs-http-2-what-s-the-difference
 		if (first == null) {
-			logger.warn("Wrong request - empty first line");
-			return;
+			logger.warn("Wrong request - empty first line.");
+			return false;
 		}
 		parseFirst(request, params, first);
         // header
@@ -208,6 +212,7 @@ public class RestApiServer implements Servant {
 	        	parsePayload(params, payload.toString());
 	        }
 		}
+        return true;
 	}
 	
 	protected void parseFileForm(
