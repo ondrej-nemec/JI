@@ -46,24 +46,28 @@ public class ConnectionPool {
 		// borrowed full - wait
 		while (borrowed.size() >= maxSize) {
 		//	System.err.println(String.format("No connection: A: %s, B: %s", available.size(), borrowed.size()));
-			logger.debug("Connection pool is busy, waiting.");
+			logger.debug("Connection pool is busy, waiting. " + getState());
 			try {Thread.sleep(WAIT_TIME);} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		Connection c = getAvailableConnection();
 	//	System.err.println(String.format("Get connection: A: %s, B: %s", available.size(), borrowed.size()));
 		c.setAutoCommit(!isTemp);
 		borrowed.put(c.hashCode(), c);
+		logger.debug("Connection borrowed: " + c.hashCode() + ". " + getState());
 		return c;
 	}
-	
+
 	private Connection getAvailableConnection() throws SQLException {
 		// no available - create
 		if (available.size() == 0) {
-			available.add(createConnection());
-			return available.removeFirst();
+			Connection c = createConnection();
+			logger.debug("Connection created: " + c.hashCode());
+			return c;
 		}
 		Connection c = available.removeFirst();
-		if (c.isValid(VALID_TIMEOUT)) {
+		if (!c.isValid(VALID_TIMEOUT)) {
+            logger.debug("Closing invalid connection: " + c.hashCode() + " ." + getState());
+            c.close();
 			return getAvailableConnection();
 		}
 		return c;
@@ -99,6 +103,12 @@ public class ConnectionPool {
 			c.close();
 		}
 		logger.info("Connection pool was closed");
+	}
+	
+	/***************/
+	
+	private String getState() {
+		return String.format("Borrowed/available %s/%s", borrowed.size(), available.size());
 	}
 
 }
