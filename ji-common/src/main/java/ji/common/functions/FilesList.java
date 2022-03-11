@@ -66,6 +66,9 @@ public class FilesList {
      private List<String> jar(String expectedNamespace, boolean recursive) throws Exception {
          List<String> files = new LinkedList<>();
          for (URL url : new URL[] {ClassLoader.getSystemResource(expectedNamespace)}) {
+        	 if (url == null) {
+               continue;
+        	 }
               JarURLConnection connection = (JarURLConnection) url.openConnection();
               JarFile file = connection.getJarFile();
               Enumeration<JarEntry> entries = file.entries();
