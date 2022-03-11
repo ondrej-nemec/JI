@@ -16,6 +16,9 @@
 
 * More unit tests
 * Check TODOs - remove or add here
+* Common
+     * Mapper – create instance with parametrized constructor
+     * Mapper - serialize - ignore value if is null parameter
 * Database:
     * Known issue: SQL Server: The operation 'ALTER TABLE DROP INDEX' is supported only with memory optimized tables
     * Known issue: Derby: Alter table create/delete foreign key not working
@@ -26,11 +29,12 @@
     * Try load file and maybe add content type as extension to name for higher security
 * Files
     * sometimes infinite loop happends - with some nativ objects
+* Translations
+	* Translation base on parameter - count, class,..
 
 ## Improvement
 
 * Common:
-     * Mapper – create instance with parametrized constructor
 	* Env: load configuration from another files like xml, too.
 * Database
 	* Migrations: revert - remove or add to documentation
@@ -61,6 +65,7 @@
 * Database:
    * Materialization
    * QueryBuilder - high validation - like MultipleSelectBuilder::orderBy
+   * Defined function - like procedures - for send parameters to view fe. NOW
 * BIG rewrite
    * separate to more libs of one project (with TOTI?)
    * split Files (plain, json), Database (core, query builder, migrations, testing), Common (dictionary,...)
