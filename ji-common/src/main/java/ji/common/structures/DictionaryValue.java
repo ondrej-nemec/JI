@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DictionaryValue {
 
@@ -139,7 +141,7 @@ public class DictionaryValue {
 	public Boolean getBoolean() {
 		return parseValue(
 			Boolean.class,
-			v->v.equalsIgnoreCase("true") || v.equalsIgnoreCase("on") || v.equalsIgnoreCase("1"),
+			v->v!=null && (v.equalsIgnoreCase("true") || v.equalsIgnoreCase("on") || v.equalsIgnoreCase("1")),
 			v->{
 				if (v instanceof Number) {
 					return Number.class.cast(v).byteValue() > 0;
@@ -150,31 +152,59 @@ public class DictionaryValue {
 	}
 	
 	public Byte getByte() {
-		return parseValue(Byte.class, a->Byte.parseByte(a), v->Number.class.cast(v).byteValue());
+		return parseValue(
+			Byte.class, 
+			a->parsePrimitive(a, ()->Byte.parseByte(a)),
+			v->Number.class.cast(v).byteValue()
+		);
 	}
 	
 	public Short getShort() {
-		return parseValue(Short.class, a->Short.parseShort(a), v->Number.class.cast(v).shortValue());
+		return parseValue(
+			Short.class, 
+			a->parsePrimitive(a, ()->Short.parseShort(a)),
+			v->Number.class.cast(v).shortValue()
+		);
 	}
 	
 	public Integer getInteger() {
-		return parseValue(Integer.class, a->Integer.parseInt(a), v->Number.class.cast(v).intValue());
+		return parseValue(
+			Integer.class, 
+			a->parsePrimitive(a, ()->Integer.parseInt(a)), 
+			v->Number.class.cast(v).intValue()
+		);
 	}
 	
 	public Long getLong() {
-		return parseValue(Long.class, a->Long.parseLong(a), v->Number.class.cast(v).longValue());
+		return parseValue(
+			Long.class,
+			a->parsePrimitive(a, ()->Long.parseLong(a)), 
+			v->Number.class.cast(v).longValue()
+		);
 	}
 	
 	public Float getFloat() {
-		return parseValue(Float.class, a->Float.parseFloat(a), v->Number.class.cast(v).floatValue());
+		return parseValue(
+			Float.class, 
+			a->parsePrimitive(a, ()->Float.parseFloat(a)), 
+			v->Number.class.cast(v).floatValue()
+		);
 	}
 	
 	public Double getDouble() {
-		return parseValue(Double.class, a->Double.parseDouble(a), v->Number.class.cast(v).doubleValue());
+		return parseValue(
+			Double.class,
+			a->parsePrimitive(a, ()->Double.parseDouble(a)),
+			v->Number.class.cast(v).doubleValue()
+		);
 	}
 	
 	public Character getCharacter() {
-		return parseValue(Character.class, a->a.charAt(0), a->a.toString().charAt(0));
+		return parseValue(
+			Character.class, 
+			a->parsePrimitive(a, ()->a.charAt(0)),
+			a->a.toString().charAt(0)
+		);
 	}
 	
 	public String getString() {
@@ -182,7 +212,14 @@ public class DictionaryValue {
 	}
 	
 	public <E extends Enum<E>> E getEnum(Class<E> enumm) {
-		return parseValue(enumm, a->E.valueOf(enumm, a));
+		return parseValue(enumm,a->parsePrimitive(a, ()->E.valueOf(enumm, a)));
+	}
+	
+	private <T> T parsePrimitive(String s, Supplier<T> supplier) {
+		if (s == null || s.equalsIgnoreCase("null")) {
+			return null;
+		}
+		return supplier.get();
 	}
 	
 	/*****************/
@@ -306,6 +343,9 @@ public class DictionaryValue {
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getList() {
 		return parseValue(List.class, fromStringToListCallback, (value)-> {
+			if (value.getClass().isArray()) {
+				return new ArrayList<>(Arrays.asList((T[])value));
+			}
 			if (value instanceof ListDictionary<?>) {
 				return ListDictionary.class.cast(value).toList();
 			}
@@ -319,13 +359,39 @@ public class DictionaryValue {
 	@SuppressWarnings("unchecked")
 	public <T> Set<T> getSet() {
 		return parseValue(Set.class, fromStringToListCallback, (value)-> {
+			if (value.getClass().isArray()) {
+				return new HashSet<>(Arrays.asList((T[])value));
+			}
 			if (value instanceof ListDictionary<?> || value instanceof List<?>) {
 				return new HashSet<>(getList());
 			}
 			return value;
 		});
 	}
-
+	/*
+	@SuppressWarnings("unchecked")
+	public <T> Iterable<T> getIterable() {
+		return parseValue(Set.class, fromStringToListCallback, (value)-> {
+			if (value.getClass().isArray()) {
+				return Arrays.asList((T[])value);
+			}
+			if (value instanceof ListDictionary<?>) {
+				return ListDictionary.class.cast(value).toList();
+			}
+			return value;
+		});
+	}
+*/
+//	static <T> Iterable<T> toIterable(Object o, Class<T> clazz) {
+//		if (o instanceof ListDictionary) {
+//			return ListDictionary.class.cast(o).toList();
+//		} else if (o.getClass().isArray()) {
+//			return java.util.Arrays.asList((T[])o);
+//		} else /*if (o16_1 instanceof Iterable<?>)*/ {
+//			return (Iterable<T>) o;
+//		}
+//	}
+	
 	@SuppressWarnings("unchecked")
 	public <K, V> Map<K, V> getMap() {
 		return parseValue(Map.class, fromStringToMapCallback, (value)-> {
@@ -346,11 +412,14 @@ public class DictionaryValue {
 			return clazz.cast(value);
 		}
 		Object val = value;
-		if (val instanceof String && fromString != null) {
+		if (val instanceof String && fromString != null && val != null) {
 			val = fromString.apply(val.toString());
 		}
-		if (prepare != null) {
+		if (prepare != null && val != null) {
 			val = prepare.apply(val);
+		}
+		if (val == null) {
+			return null;
 		}
 		return clazz.cast(val);
 	}
