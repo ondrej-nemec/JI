@@ -1,10 +1,9 @@
 package ji.socketCommunication;
 
 import java.util.Optional;
-import java.util.Properties;
 
+import ji.socketCommunication.http.ApiRequest;
 import ji.socketCommunication.http.client.RestApiClient;
-import ji.socketCommunication.http.client.RestApiResponse;
 
 public class RestClientEndToEndTest {
 
@@ -28,7 +27,7 @@ public class RestClientEndToEndTest {
 		// "http://localhost/linkedPages"  /ji-doc/index.html
 		RestApiClient c = new RestApiClient(url, config, "UTF-8", new LoggerImpl());
 		try {
-			RestApiResponse r = c.get("/ping", new Properties(), new Properties());
+			ApiRequest r = c.get("/ping", (request)->{});
 			System.out.println(r);
 		} catch (Exception e) {
 			e.printStackTrace();

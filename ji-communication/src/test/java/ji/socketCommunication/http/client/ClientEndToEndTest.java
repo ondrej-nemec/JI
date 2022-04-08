@@ -53,13 +53,33 @@ public class ClientEndToEndTest {
 		//	client.send(HttpMethod.GET, "/", header, params);
 		//*
 			console.out("GET");
-			console.out(client.get("/uri", header, params));
+			console.out(client.get("/uri", (request)->{
+				request.addHeader("User-Agent", "Mozilla/5.0");
+				request.addHeader("User", "Chrome");
+				request.addBodyParameter("userName", "sysadmin");
+				request.addBodyParameter("password", "secret-password");
+			}));
 			console.out("POST");
-			console.out(client.post("/uri", header, params));
+			console.out(client.post("/uri", (request)->{
+				request.addHeader("User-Agent", "Mozilla/5.0");
+				request.addHeader("User", "Chrome");
+				request.addBodyParameter("userName", "sysadmin");
+				request.addBodyParameter("password", "secret-password");
+			}));
 			console.out("PUT");
-			console.out(client.put("/uri", header, params));
+			console.out(client.put("/uri", (request)->{
+				request.addHeader("User-Agent", "Mozilla/5.0");
+				request.addHeader("User", "Chrome");
+				request.addBodyParameter("userName", "sysadmin");
+				request.addBodyParameter("password", "secret-password");
+			}));
 			console.out("DELETE");
-			console.out(client.delete("/uri", header, params));
+			console.out(client.delete("/uri", (request)->{
+				request.addHeader("User-Agent", "Mozilla/5.0");
+				request.addHeader("User", "Chrome");
+				request.addBodyParameter("userName", "sysadmin");
+				request.addBodyParameter("password", "secret-password");
+			}));
 		//*/
 		} catch (Exception e) {
 			e.printStackTrace();
