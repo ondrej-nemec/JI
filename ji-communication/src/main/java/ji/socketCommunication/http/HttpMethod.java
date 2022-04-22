@@ -2,20 +2,21 @@ package ji.socketCommunication.http;
 
 public enum HttpMethod {
 
-	POST("POST"),
-	GET("GET"),
-	PUT("PUT"),
-	DELETE("DELETE"),
-	PATCH("PATCH");
+	GET,
+	POST,
+	PUT,
+	PATCH,
+	DELETE,
+	COPY,
+	HEAD,
+	OPTIONS,
+	LINK,
+	UNLINK,
+	PURGE,
+	LOCK,
+	UNLOCK,
+	PROPFIND,
+	VIEW,
+	REPORT;
 	
-	private final String method;
-	
-	private HttpMethod(String method) {
-		this.method = method;
-	}
-	
-	@Override
-	public String toString() {
-		return method;
-	}
 }
