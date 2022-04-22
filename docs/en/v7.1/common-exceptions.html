@@ -15,3 +15,52 @@
 <h3>Logger</h3>
 
 <p>JI Common contains interface <code>Logger</code>. This interface is used in other parts of JI. JI not contains logging library, so if you wish use JI part where logging is required, you have to implement <code>Logger</code>. </p>
+
+<h4>Example of integration with Log4j 1.2</h4>
+
+<pre><code class="language-java">
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
+
+public class Log4j12LoggerFactory implements LoggerFactory {
+
+	@Override
+	public Logger makeNewLoggerInstance(String name) {
+		return new Log4j12Logger(name);
+	}
+
+}
+</code></pre>
+
+<pre><code class="language-java">
+import java.io.IOException;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+import ji.common.functions.InputStreamLoader;
+
+public class Log4j12Logger extends Logger implements ji.common.Logger {
+
+	public static String CONF_FILE = "log4j.properties";	
+	
+	private static Log4j12LoggerFactory Log4j12LoggerFactory;
+	
+	public static Log4j12Logger getLogger(String name) {
+		if (Log4j12LoggerFactory == null) {
+			try {
+				PropertyConfigurator.configure(InputStreamLoader.createInputStream(Log4j12Logger.class, CONF_FILE));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Log4j12LoggerFactory = new Log4j12LoggerFactory();
+		}
+		return (Log4j12Logger)Logger.getLogger(name, Log4j12LoggerFactory);
+	}
+	
+	protected Log4j12Logger(String name) {
+		super(name);
+	}
+
+}
+</code></pre>
