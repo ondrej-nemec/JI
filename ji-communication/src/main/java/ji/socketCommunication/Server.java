@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -22,8 +23,6 @@ import ji.socketCommunication.http.server.RestApiServer;
 import ji.socketCommunication.http.server.RestApiServerResponseFactory;
 
 public class Server {
-	
-	private final String tlsVersion = "TLSv1.2";
 	
 	private final Logger logger;
     
@@ -105,7 +104,11 @@ public class Server {
         } else {
         	sslListener.setNeedClientAuth(false); // client certs not required
         }
-        sslListener.setEnabledProtocols(new String[] {tlsVersion});
+        if (Arrays.asList(sslListener.getEnabledProtocols()).contains("TLSv1.3")) {
+        	 sslListener.setEnabledProtocols(new String[] {"TLSv1.3"});
+        } else { // fix for Java 8
+        	sslListener.setEnabledProtocols(new String[] {"TLSv1.2"});
+        }
    		return sslListener;
     }
 
