@@ -17,6 +17,7 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
 import ji.common.Logger;
+import ji.common.structures.NamedThredFactory;
 import ji.socketCommunication.http.server.RestApiServer;
 import ji.socketCommunication.http.server.RestApiServerResponseFactory;
 
@@ -69,8 +70,8 @@ public class Server {
     		Optional<SslCredentials> ssl,
     		String charset,
     		Logger logger) throws Exception {
-        this.executor = Executors.newFixedThreadPool(threadPool);
-        this.sheduled = Executors.newScheduledThreadPool(1);
+        this.executor = Executors.newFixedThreadPool(threadPool, new NamedThredFactory("client-request"));
+        this.sheduled = Executors.newScheduledThreadPool(1, new NamedThredFactory("ji-server"));
         this.logger = logger;
         this.servant = servant;
         this.charset = charset;
