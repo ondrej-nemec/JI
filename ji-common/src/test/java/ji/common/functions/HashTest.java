@@ -13,7 +13,7 @@ public class HashTest {
 		String origin = "hello world";
 		String hashed = "uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=";
 		Hash hash = new Hash("SHA-256");
-		assertEquals(hashed, hash.toHash(origin));
+		assertEquals(hashed, hash.toHash(origin, ""));
 	}
 
 	@Test
@@ -24,7 +24,7 @@ public class HashTest {
 		
 		Hash hash = new Hash("SHA-256");
 		
-		assertTrue(hash.compare(origin, goodHash));
-		assertFalse(hash.compare(origin, wrongHash));
+		assertTrue(hash.compare(origin, goodHash, ""));
+		assertFalse(hash.compare(origin, wrongHash, ""));
 	}
 }
