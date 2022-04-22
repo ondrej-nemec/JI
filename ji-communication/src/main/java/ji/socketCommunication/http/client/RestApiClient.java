@@ -83,7 +83,7 @@ public class RestApiClient {
     }
 	
 	protected ApiRequest send(Socket con, ApiRequest request) throws IOException {
-		Parser parser = new Parser(logger, 0, Optional.empty()); // TODO
+		Parser parser = new Parser(logger, 0, Optional.empty()); // TODO files limits
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), charset));
 	         	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), charset));
 	         	 BufferedInputStream is = new BufferedInputStream(con.getInputStream());

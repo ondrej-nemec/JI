@@ -27,6 +27,8 @@
     * Try trusted certificates (improve doc)
     * Try higher version of TLS (Server class)
     * Try load file and maybe add content type as extension to name for higher security
+    * Parsers - support for binary, file limits,... see todos in code
+    * Use new parsing for server, too
 * Files
     * sometimes infinite loop happends - with some nativ objects
 * Translations
