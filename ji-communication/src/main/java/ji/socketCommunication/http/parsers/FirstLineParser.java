@@ -1,75 +1,49 @@
 package ji.socketCommunication.http.parsers;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.function.Function;
 
-import ji.common.Logger;
-import ji.common.structures.DictionaryValue;
-import ji.socketCommunication.http.ApiRequest;
+import ji.socketCommunication.http.Exchange;
 import ji.socketCommunication.http.HttpMethod;
+import ji.socketCommunication.http.ParsingException;
+import ji.socketCommunication.http.Request;
+import ji.socketCommunication.http.Response;
 import ji.socketCommunication.http.StatusCode;
 
-public class FirstLineParser {
+public interface FirstLineParser extends Stream {
 	
-	private final Logger logger;
-	private final PayloadParser payloadParser;
-	
-	public FirstLineParser(Logger logger, PayloadParser payloadParser) {
-		this.logger = logger;
-		this.payloadParser = payloadParser;
+	default void writeFirstLine(Exchange exchange, BufferedOutputStream bos) throws IOException {
+		bos.write(exchange.getFirstLine().getBytes());
 	}
 
-	public void writeFirstLine(ApiRequest request, BufferedWriter bw) throws IOException {
-		if (request.getStatusCode() == null) { // request
-			bw.write(request.getMethod().toString());
-	        bw.write(" ");
-	        bw.write(request.getFullUrl());
-	        bw.write(" ");
-	        bw.write(request.getProtocol());
-		} else {
-			bw.write(request.getProtocol());
-	        bw.write(" ");
-	        bw.write(request.getStatusCode().toString());
-		}
-        bw.newLine();
+	// response: HTTP/1.1 200 OK
+	default Response createResponse(BufferedInputStream bis) throws IOException {
+		return create(bis, (methods)->new Response(
+			StatusCode.valueOf(methods[2].toUpperCase().replace(" ", "_").replace("-", "_")),
+			methods[0]
+		));
+	}
+
+	// request: POST /cgi-bin/process.cgi HTTP/1.1
+	default Request createRequest(BufferedInputStream bis) throws IOException {
+		return create(bis, (methods)->new Request(
+			HttpMethod.valueOf(methods[0].toUpperCase()), 
+			methods[1], 
+			methods[2]
+		));
 	}
 	
-	public ApiRequest readFirstLine(BufferedReader br) throws IOException {
-		String first = br.readLine();
+	default <T> T create(BufferedInputStream bis, Function<String[], T> create) throws IOException {
+		String first = readLine(bis);
 		if (first == null) {
-			logger.warn("Wrong request - empty first line.");
-			return null;
+			throw new ParsingException("Wrong request - empty first line.");
 		}
 		String[] methods = first.split(" ", 3);
 		if (methods.length != 3) {
-			logger.warn("Invalid request: " + first);
-			return null; // what now?
+			throw new ParsingException("Invalid request: " + first); // what now?
 		}
-		if (new DictionaryValue(methods[0].toUpperCase()).is(HttpMethod.class)) {
-			// request: POST /cgi-bin/process.cgi HTTP/1.1
-			ApiRequest request = new ApiRequest(
-				HttpMethod.valueOf(methods[0].toUpperCase()), 
-				methods[1], 
-				methods[2]
-			);
-			String[] urlParst = methods[1].split("\\?");
-			request.setUrl(urlParst[0]);
-			if (urlParst.length > 1) {
-				payloadParser.parsePayload(
-					(name, value)->request.addUrlParameter(name, value),
-					name->request.getUrlParameter(name),
-					urlParst[1]
-				);
-			}
-			return request;
-		}
-		// response: HTTP/1.1 200 OK
-		ApiRequest request = new ApiRequest(
-			StatusCode.valueOf(methods[2].toUpperCase().replace(" ", "_").replace("-", "_")),
-			// StatusCode.forCode(Integer.parseInt(methods[1])),
-			methods[0]
-		);
-		return request;
+		return create.apply(methods);
 	}
 }

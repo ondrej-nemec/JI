@@ -1,53 +1,46 @@
 package ji.socketCommunication.http.parsers;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import ji.common.Logger;
-import ji.socketCommunication.http.ApiRequest;
+import ji.socketCommunication.http.Exchange;
 
-public class HeaderParser {
-	
-	private final Logger logger;
-	
-	public HeaderParser(Logger logger) {
-		this.logger = logger;
-	}
+public interface HeaderParser extends Stream {
 
-	public void writeHeaders(ApiRequest request, BufferedWriter bw) throws IOException {
-		for (Entry<String, List<Object>> header : request.getHeaders().entrySet()) {
+	default void writeHeaders(Exchange exchange, BufferedOutputStream bos) throws IOException {
+		// TODO add missing heades content length and type?
+		for (Entry<String, List<Object>> header : exchange.getHeaders().entrySet()) {
 			for (Object headerValue : header.getValue()) {
-				bw.write(String.format("%s: %s", header.getKey(), headerValue));
-	        	bw.newLine();
+				bos.write('\n');// bw.newLine();
+				bos.write(String.format("%s: %s", header.getKey(), headerValue).getBytes());
 			}
         }
-		// end of header
-        bw.newLine();
-        bw.flush();
+		if (exchange.getBody() != null) {
+			bos.write('\n');// bw.newLine();
+		}
 	}
 	
-	public void readHeaders(ApiRequest request, BufferedReader br) throws IOException {
-		String line = br.readLine();
+	default List<String> readHeaders(Exchange exchange, BufferedInputStream bis) throws IOException {
+		List<String> errors = new LinkedList<>();
+		String line = readLine(bis);
         while (line != null && !line.isEmpty()) {
-        	parseHeaderLine(line, request);
-        	line = br.readLine();
+        	if (line.isEmpty()) { // TODO is required?
+    			return errors;
+    		}
+    		String[] property = line.split(": ", 2);
+        	if (property.length == 2 && ! property[0].isEmpty()) {
+        		exchange.addHeader(property[0], property[1]);
+        	} else if (property.length == 1){
+        		exchange.addHeader(property[0], "");
+        	} else {
+        		errors.add("Invalid header line " + line);
+        	}
+        	line = readLine(bis);
         }
-	}
-
-	private void parseHeaderLine(String line, ApiRequest request) {
-		if (line.isEmpty()) {
-			return;
-		}
-		String[] property = line.split(": ", 2);
-    	if (property.length == 2 && ! property[0].isEmpty()) {
-    		request.addHeader(property[0], property[1]);
-    	} else if (property.length == 1){
-    		request.addHeader(property[0], "");
-    	} else {
-    		logger.warn("Invalid header line " + line);
-    	}
+        return errors;
 	}
 }

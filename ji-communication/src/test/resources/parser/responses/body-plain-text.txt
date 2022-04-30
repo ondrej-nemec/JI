@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Some-header: my header value
+Content-Length: 59
+Content-Type: plain/text
+
+Some UTF-8 text: ěščř Сайн уу 你好 أأهلاً

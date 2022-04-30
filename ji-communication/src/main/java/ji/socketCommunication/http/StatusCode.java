@@ -5,8 +5,8 @@ import ji.common.exceptions.LogicException;
 public enum StatusCode {
 
 	CONTINUE(100, "Continue"),
-	SWITCH_PROTOCOL(101, "Switching Protocol"),
-	PROCESING(102, "Processing (WebDAV)"),
+	SWITCHING_PROTOCOL(101, "Switching Protocol"),
+	PROCESING(102, "Processing"), //  (WebDAV)
 	EARLY_HINTS(103, "Early Hints"),
 	
 	OK(200, "OK"),
@@ -16,9 +16,9 @@ public enum StatusCode {
 	NO_CONTENT(204, "No Content"),
 	RESET_CONTENT(205, "Reset Content"),
 	PARTIAL_CONTENT(206, "Partial Content"),
-	MULTI_STATUS(207, "Multi-Status (WebDAV)"),
-	ALREADY_REPORTED(208, "Already Reported (WebDAV)"),
-	IM_USER(226, "IM Used (HTTP Delta encoding)"),
+	MULTI_STATUS(207, "Multi-Status"), //  (WebDAV)
+	ALREADY_REPORTED(208, "Already Reported"), //  (WebDAV)
+	IM_USER(226, "IM Used"), //  (HTTP Delta encoding)
 	
 	MULTIPLE_CHOICE(300, "Multiple Choice"),
 	MOVED_PERMANENTLY(301, "Moved Permanently"),
@@ -50,8 +50,8 @@ public enum StatusCode {
 	EXPECTATION_FAILED(417, "Expectation Failed"),
 	I_AM_A_TEAPORT(418, "I'm a teapot"),
 	MISDIRECTED_REQUEST(421, "Misdirected Request"),
-	UNPROCESSABLE_ENTITY(422, "Unprocessable Entity (WebDAV)"),
-	LOCKED(423, "Locked (WebDAV)"),
+	UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"), //  (WebDAV)
+	LOCKED(423, "Locked"), //  (WebDAV)
 	FAILED_DEPENDENCY(424, "Failed Dependency (WebDAV)"),
 	TOO_EARLY(425, "Too Early"),
 	UPGRADE_REQUIRED(426, "Upgrade Required"),
@@ -67,8 +67,8 @@ public enum StatusCode {
 	GATEWAY_TIMEOUT(504, "Gateway Timeout"),
 	HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported"),
 	VARIANT_ALSO_NEGOTIATES(506, "Variant Also Negotiates"),
-	INSUFFICIENT_STORAGE(507, "Insufficient Storage (WebDAV)"),
-	LOOP_DETECTED(508, "Loop Detected (WebDAV)"),
+	INSUFFICIENT_STORAGE(507, "Insufficient Storage"), //  (WebDAV)
+	LOOP_DETECTED(508, "Loop Detected"), //  (WebDAV)
 	NOT_EXTENDED(510, "Not Extended"),
 	NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required");
 	

@@ -14,6 +14,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 
 import ji.common.Logger;
+import ji.common.structures.DictionaryValue;
 
 public class PayloadParser {
 	
@@ -23,23 +24,62 @@ public class PayloadParser {
 		this.logger = logger;
 	}
 	
-	public String parsePayload(Map<String, Object> params) throws UnsupportedEncodingException {
+	public String createPayload(Map<String, Object> params) {
 		StringBuilder b = new StringBuilder();
-		for (Object name : params.keySet()) {
-			Object value = params.get(name);
-			if (!b.toString().isEmpty()) {
-				b.append("&");
-			}
-			b.append(String.format(
+		createPayload((name, value)->{
+			 try {
+				if (!b.toString().isEmpty()) {
+					b.append("&");
+				}
+				b.append(String.format(
 					"%s=%s",
-					URLEncoder.encode(name + "", StandardCharsets.UTF_8.toString()),
-					URLEncoder.encode(value + "", StandardCharsets.UTF_8.toString())/*
-					UrlEscape.escapeText(name + ""), // + "" is fix, varialbe could be null
-					UrlEscape.escapeText(value + "") // + "" is fix, varialbe could be null*/
-			));
-		}
+					// TODO use encode?
+					name, // URLEncoder.encode(name, StandardCharsets.UTF_8.toString()),
+					URLEncoder.encode(value + "", StandardCharsets.UTF_8.toString()) // + "" is fix, varialbe could be null
+				));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+		}, null, params);
 		return b.toString();
 	}
+	
+	private void createPayload(BiConsumer<String, Object> addValue, String parent, Map<String, Object> params) {
+		params.forEach((name, value)->{
+			createPayload(
+				addValue,
+				parent == null ? name : String.format("%s[%s]", parent, name), 
+				params.get(name)
+			);
+		});
+	}
+	
+	private void createPayload(BiConsumer<String, Object> addValue, String name, List<Object> params) {
+		for (Object value : params) {
+			createPayload(addValue, name + "[]", value);
+		}
+	}
+	
+	public void createPayload(BiConsumer<String, Object> addValue, String name, Object value) {
+		if (value == null) {
+			addValue.accept(name, value);
+		} else if (value instanceof Map) {
+			createPayload(addValue, name, new DictionaryValue(value).getMap());
+		} else if (value instanceof List) {
+			createPayload(addValue, name, new DictionaryValue(value).getList());
+		} else {
+			addValue.accept(name, value);
+		}
+	}
+	
+/*	private String createItem(String name, Object value) throws UnsupportedEncodingException {
+		return String.format(
+			"&%s=%s",
+			// TODO use encode?
+			name, // URLEncoder.encode(name, StandardCharsets.UTF_8.toString()),
+			URLEncoder.encode(value + "", StandardCharsets.UTF_8.toString()) // + "" is fix, varialbe could be null
+		);
+	}*/
 	
 	public void parsePayload(
 			BiConsumer<String, Object> addParameter,

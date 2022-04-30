@@ -1,10 +1,10 @@
-package ji.socketCommunication.http.client;
+package ji.socketCommunication;
 
 import java.util.Optional;
 import java.util.Properties;
 
 import ji.common.functions.Console;
-import ji.socketCommunication.LoggerImpl;
+import ji.socketCommunication.http.client.RestApiClient;
 
 public class ClientEndToEndTest {
 	
@@ -56,29 +56,29 @@ public class ClientEndToEndTest {
 			console.out(client.get("/uri", (request)->{
 				request.addHeader("User-Agent", "Mozilla/5.0");
 				request.addHeader("User", "Chrome");
-				request.addBodyParameter("userName", "sysadmin");
-				request.addBodyParameter("password", "secret-password");
+			//	request.addBodyParameter("userName", "sysadmin");
+			//	request.addBodyParameter("password", "secret-password");
 			}));
 			console.out("POST");
 			console.out(client.post("/uri", (request)->{
 				request.addHeader("User-Agent", "Mozilla/5.0");
 				request.addHeader("User", "Chrome");
-				request.addBodyParameter("userName", "sysadmin");
-				request.addBodyParameter("password", "secret-password");
+			//	request.addBodyParameter("userName", "sysadmin");
+			//	request.addBodyParameter("password", "secret-password");
 			}));
 			console.out("PUT");
 			console.out(client.put("/uri", (request)->{
 				request.addHeader("User-Agent", "Mozilla/5.0");
 				request.addHeader("User", "Chrome");
-				request.addBodyParameter("userName", "sysadmin");
-				request.addBodyParameter("password", "secret-password");
+			//	request.addBodyParameter("userName", "sysadmin");
+			//	request.addBodyParameter("password", "secret-password");
 			}));
 			console.out("DELETE");
 			console.out(client.delete("/uri", (request)->{
 				request.addHeader("User-Agent", "Mozilla/5.0");
 				request.addHeader("User", "Chrome");
-				request.addBodyParameter("userName", "sysadmin");
-				request.addBodyParameter("password", "secret-password");
+			//	request.addBodyParameter("userName", "sysadmin");
+			//	request.addBodyParameter("password", "secret-password");
 			}));
 		//*/
 		} catch (Exception e) {

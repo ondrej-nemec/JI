@@ -1,46 +1,71 @@
 package ji.socketCommunication.http.parsers;
 
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import ji.common.Logger;
-import ji.socketCommunication.http.ApiRequest;
+import ji.common.structures.ThrowingSupplier;
+import ji.socketCommunication.http.Exchange;
+import ji.socketCommunication.http.ParsingException;
+import ji.socketCommunication.http.Request;
+import ji.socketCommunication.http.Response;
 
-public class Parser {
+public class Parser implements HeaderParser, FirstLineParser {
 	
 	private final PayloadParser payloadParser;
-	private final HeaderParser headersParser;
-	private final FirstLineParser firstLineParser;
 	private final BodyParser bodyParser;
+	
+	private Logger logger;
 	
 	public Parser(Logger logger, int maxUploadFileSize, Optional<List<String>> allowedFileTypes) {
 		this.payloadParser = new PayloadParser(logger);
-		this.headersParser = new HeaderParser(logger);
-		this.firstLineParser = new FirstLineParser(logger, payloadParser);
 		this.bodyParser = new BodyParser(payloadParser, maxUploadFileSize, allowedFileTypes);
-	}
-
-	public ApiRequest readRequest(BufferedReader br, BufferedInputStream bis) throws IOException {
-		ApiRequest request = firstLineParser.readFirstLine(br);
-		if (request == null) {
-			return null;
-		}
-		headersParser.readHeaders(request, br);
-		bodyParser.readBody(request, br, bis);
-		return request;
+		this.logger = logger;
 	}
 	
-	public void writeRequest(ApiRequest request, BufferedWriter bw, BufferedOutputStream os) throws IOException {
-		// TODO maybe make full url from URL params
-		firstLineParser.writeFirstLine(request, bw);
-		headersParser.writeHeaders(request, bw);
-		bodyParser.writeBody(request, bw, os);
+	protected Parser(Logger logger, int maxUploadFileSize, Optional<List<String>> allowedFileTypes, Supplier<String> createBoundary) {
+		this.payloadParser = new PayloadParser(logger);
+		this.bodyParser = new BodyParser(payloadParser, maxUploadFileSize, allowedFileTypes, createBoundary);
+		this.logger = logger;
+	}
+	
+	public Response readResponse(BufferedInputStream bis) throws IOException {
+		return read(bis, ()->createResponse(bis));
+	}
+	
+	public Request readRequest(BufferedInputStream bis) throws IOException {
+		return read(bis, ()->createRequest(bis));
+	}
+	
+	private <T extends Exchange> T read(BufferedInputStream bis, ThrowingSupplier<T, IOException> create) throws IOException {
+		try {
+			T exchange = create.get();
+			if (exchange == null) {
+				return null;
+			}
+			List<String> errors = readHeaders(exchange, bis);
+			if (errors.size() > 0) {
+				errors.forEach((err)->{
+					logger.warn(err);
+				});
+				return null;
+			}
+			bodyParser.readBody(exchange, bis);
+			return exchange;
+		} catch (ParsingException e) {
+			logger.warn(e.getMessage());
+			return null;
+		}
+	}
+	
+	public void write(Exchange exchange, BufferedOutputStream bos) throws IOException {
+		writeFirstLine(exchange, bos);
+		writeHeaders(exchange, bos);
+		bodyParser.writeBody(exchange, bos);
 	}
 
 }

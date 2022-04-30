@@ -24,14 +24,10 @@ public class EndToEnd {
 		System.out.println(text2);
 		
 		JsonReader reader = new JsonReader();
-		try {
 		//	Object obj1 = reader.read(text1);
-			Object obj2 = reader.read(text2);
+		Object obj2 = reader.read(text2);
 		//	System.out.println(obj1 + " " + obj1.getClass());
-			System.out.println(obj2 + " " + obj2.getClass());
-		} catch (JsonStreamException e) {
-			e.printStackTrace();
-		}
+		System.out.println(obj2 + " " + obj2.getClass());
 	}
 	
 }
