@@ -1,0 +1,161 @@
+package ji.socketCommunication.http.parsers.bodyParsers;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import ji.socketCommunication.http.RequestParameters;
+import ji.socketCommunication.http.UploadedFile;
+import ji.socketCommunication.http.parsers.ExceptionWrapper;
+import ji.socketCommunication.http.parsers.Payload;
+import ji.socketCommunication.http.parsers.StreamReader;
+
+public class Form {
+	
+	private final Payload payload;
+	private final StreamReader stream;
+	
+	public Form(Payload payload, StreamReader stream) {
+		this.payload = payload;
+		this.stream = stream;
+	}
+
+	public ByteArrayOutputStream write(String boundary, RequestParameters map) throws IOException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		map.forEach((name, value)->{
+			payload.writeItem((n, v)->{
+				try {
+					byte[] bytes = String.format("--%s", boundary).getBytes();
+					byte newLine = '\n';
+
+					stream.write(bytes, bos);
+					stream.write(newLine, bos);
+					
+					if (v instanceof UploadedFile) {
+						UploadedFile file = UploadedFile.class.cast(v);
+						bytes = String.format(
+							"Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"",
+							n, file.getFileName()
+						).getBytes();
+						stream.write(bytes, bos);
+						stream.write(newLine, bos);
+						
+						bytes = String.format("Content-Type: %s", file.getContentType()).getBytes();
+						stream.write(bytes, bos);
+						stream.write(newLine, bos);
+						
+						stream.write(newLine, bos);
+						
+						stream.write(file.getContent(), bos);
+					} else {
+						bytes = String.format("Content-Disposition: form-data; name=\"%s\"", n).getBytes();
+						stream.write(bytes, bos);
+						stream.write(newLine, bos);
+
+						stream.write(newLine, bos);
+
+						bytes = v.toString().getBytes();
+						stream.write(bytes, bos);
+					}
+					
+					stream.write(newLine, bos);
+				} catch (IOException e) {
+					throw new ExceptionWrapper(e);
+				}
+			}, name, value == null ? null : value.getValue());
+		});
+		byte[] bytes = String.format("--%s--", boundary).getBytes();
+		stream.write(bytes, bos);
+		return bos;
+	}
+	
+	/******************************/
+
+	public RequestParameters read(String type, int contentLength, InputStream bis) throws IOException {
+		String boundary = "--" + type.replace("multipart/form-data;", "").trim().replace("boundary=", "").trim();
+
+		int readed = 0;
+		RequestParameters data = new RequestParameters();
+		
+		String elementName = null;
+		String elementValue = null;
+		String filename = null;
+		String contentType = null;
+		boolean isValue = false;
+		ByteArrayOutputStream fileContent = null;
+		Boolean useRN = null;
+
+		while(readed < contentLength) {
+			byte[] readedData = stream.readData(contentLength, bis, readed, actual->actual == '\n', false, false);
+			readed += readedData.length;
+			String requestLine = new String(readedData);
+			if (useRN == null) {
+				useRN = requestLine.endsWith("\r\n");
+			}
+			requestLine = requestLine.replace("\r", "").replace("\n", "");
+
+			if (requestLine.startsWith(boundary)) { // start element
+				if (elementName != null && fileContent != null) {
+					data.put(elementName, new UploadedFile(
+						filename, contentType, 
+						Arrays.copyOfRange(fileContent.toByteArray(), 0, fileContent.size() - (useRN ? 2 : 1)))
+					);
+				} else if (elementName != null && elementValue != null) {
+					payload.readItem(
+						(name, value)->data.put(name, value),
+						name->data.get(name),
+						elementName, 
+						elementValue
+					);
+				}
+				elementName = null;
+				filename = null;
+				contentType = null;
+				isValue = false;
+				fileContent = null;
+				elementValue = null;
+			//} else if (requestLine.equals(boundary + "--")) { // close
+			} else if (!isValue && requestLine.isEmpty()) { // start element value
+				isValue = true;
+			} else if (isValue && filename == null) {
+				if (elementValue == null) {
+					elementValue = "";
+				} else {
+					elementValue += "\n";
+				}
+				elementValue += requestLine;
+			} else if (isValue) {
+				if (fileContent == null) {
+					fileContent = new ByteArrayOutputStream();
+					// TODO add this
+					/*if (requestLine.startsWith("‰")) {
+						contentType = requestLine.replace("‰", "");
+					}*/
+				}
+				//if (readedData.length + fileContent.size() > maxUploadFileSize) {
+				//	throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
+				//}
+				fileContent.write(readedData);
+				fileContent.flush();
+			} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isValue) {
+				Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
+						.matcher(requestLine);
+				m.find();
+				elementName = m.group(1);
+				filename = m.group(5);
+				if (filename != null && (filename.contains("..") || filename.contains("/") || filename.contains("\\"))) {
+					throw new IOException("Filename is probably corrupted " + filename);
+				}
+			} else if (requestLine.startsWith("Content-Type: ") && !isValue) {
+				contentType = requestLine.replace("Content-Type: ", "");
+				//if (allowedFileTypes.isPresent() && !allowedFileTypes.get().contains(contentType)) {
+				//	throw new IOException("Uploading file content type is not allowed " + contentType);
+				//}
+			}
+		}
+		return data;
+	}
+}

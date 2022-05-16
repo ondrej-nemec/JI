@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +19,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import ji.common.Logger;
 import ji.common.structures.NamedThredFactory;
 import ji.socketCommunication.http.server.RestApiServer;
-import ji.socketCommunication.http.server.RestApiServerResponseFactory;
+import ji.socketCommunication.http.server.ResponseFactory;
 
 public class Server {
 	
@@ -44,17 +43,16 @@ public class Server {
     public static Server createWebServer(int port,
     		int threadPool,
     		long readTimeout,
-    		RestApiServerResponseFactory response,
+    		ResponseFactory response,
     		Optional<SslCredentials> ssl,
-    		int maxUploadFileSize,
-    		Optional<List<String>> allowedFileContentTypes,
+    		Integer maxUploadFileSize,
     		String charset,
     		Logger logger) throws Exception {
     	return new Server(
     			port, 
     			threadPool,
     			readTimeout,
-    			new RestApiServer(response, maxUploadFileSize, allowedFileContentTypes, logger),
+    			new RestApiServer(response, maxUploadFileSize, logger),
     			ssl,
     			charset,
     			logger

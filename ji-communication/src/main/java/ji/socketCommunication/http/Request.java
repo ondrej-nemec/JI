@@ -1,8 +1,5 @@
 package ji.socketCommunication.http;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ji.common.structures.MapDictionary;
 
 public class Request extends Exchange {
@@ -10,6 +7,9 @@ public class Request extends Exchange {
 	private final HttpMethod method;
 	private final String protocol;
 	private final String uri; // full uri with parameter
+	
+	private String plainUri;
+	private MapDictionary<String, Object> urlParams;
 	
 	public Request(HttpMethod method, String uri, String protocol) {
 		super();
@@ -31,13 +31,18 @@ public class Request extends Exchange {
 	}
 	
 	public String getPlainUri() {
-		return uri; // TODO
+		return plainUri;
 	}
 	
 	public MapDictionary<String, Object> getUrlParameters() {
-		return new MapDictionary<>(new HashMap<>()); // TODO
+		return urlParams;
 	}
 
+	public void setUriParams(String plainUri, MapDictionary<String, Object> urlParams) {
+		this.plainUri = plainUri;
+		this.urlParams = urlParams;
+	}
+	
 	@Override
 	public String getFirstLine() {
 		return String.format("%s %s %s", method, uri, protocol);

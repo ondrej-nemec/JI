@@ -1,4 +1,4 @@
-package ji.socketCommunication.http.server;
+package ji.socketCommunication.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -6,14 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Consumer;
 
-import org.apache.commons.codec.digest.DigestUtils;
 
 import ji.common.structures.Tuple2;
 
@@ -24,39 +20,29 @@ public class WebSocket {
 
 	private final OutputStream os;
 	private final InputStream is;
-	private final Properties requestHeaders;
 	private Boolean closed;
 	
-	public WebSocket(OutputStream os, InputStream is, Properties requestHeaders) {
+	private Consumer<String> onMessage;
+	private Consumer<IOException> onError;
+	
+	private final String key;
+	private final String origin;
+	
+	public WebSocket(OutputStream os, InputStream is, Exchange exchange) {
 		this.os = os;
 		this.is = is;
-		this.requestHeaders = requestHeaders;
 		this.closed = null;
+		
+		this.key = exchange.getHeader("Sec-WebSocket-Key") + "";
+		this.origin = exchange.getHeader("Origin").toString();
 	}
 	
 	public String getOrigin() {
-		return requestHeaders.getProperty("Origin");
+		return origin;
 	}
 	
-	protected List<String> getHeaders() {
-		/*
-    	System.err.println("Upgrade: " + header.get("Upgrade"));
-		System.err.println("Version: " + header.get("Sec-WebSocket-Version"));
-		System.err.println("Key: " + header.get("Sec-WebSocket-Key"));
-		System.err.println("Extension: " + header.get("Sec-WebSocket-Extensions"));
-		System.err.println("Origin: " + header.get("Origin"));
-		*/
-		return Arrays.asList(
-	    	"Upgrade: websocket",
-	    	"Connection: Upgrade",
-	    	"Sec-WebSocket-Accept: "
-	    	+ new String(
-	    		Base64.getEncoder().encode(DigestUtils.sha1(
-	    			requestHeaders.getProperty("Sec-WebSocket-Key")
-	    			+ "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
-	    		))
-	    	)
-    	);
+	public String getKey() {
+		return key;
 	}
 	
 	public void close() {
@@ -81,7 +67,16 @@ public class WebSocket {
 		return closed != null && closed;
 	}
 	
-	protected void accept(Consumer<String> onMessage, Consumer<IOException> onError) {
+	public boolean isAccepted() {
+		return onMessage != null || onError != null;
+	}
+	
+	public void accept(Consumer<String> onMessage, Consumer<IOException> onError) {
+		this.onError = onError;
+		this.onMessage = onMessage;
+	}
+	
+	public void waitOnMessages() {
 		int code = 0;
 		closed = false;
 	    while(code != 8 && !closed) {

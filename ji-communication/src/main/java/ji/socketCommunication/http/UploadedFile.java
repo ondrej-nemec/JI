@@ -1,4 +1,4 @@
-package ji.socketCommunication.http.server;
+package ji.socketCommunication.http;
 
 import java.io.IOException;
 import java.util.Arrays;

@@ -15,25 +15,28 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ji.common.Logger;
 import ji.common.structures.MapInit;
 import ji.socketCommunication.LoggerImpl;
 import ji.socketCommunication.http.Exchange;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.Request;
+import ji.socketCommunication.http.RequestParameters;
 import ji.socketCommunication.http.Response;
 import ji.socketCommunication.http.StatusCode;
-import ji.socketCommunication.http.server.UploadedFile;
+import ji.socketCommunication.http.UploadedFile;
+import ji.socketCommunication.http.parsers.bodyParsers.Form;
+import ji.socketCommunication.http.parsers.bodyParsers.Urlencode;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
-public class ParserTest {
+public class ExchangeFactoryTest {
 	
 	private class BufferedInputStremMock extends BufferedInputStream {
 		private final String data;
@@ -82,7 +85,7 @@ public class ParserTest {
 	@Test
 	@Parameters(method = "getData")
 	public void testWriteRequest(String filename, Map<String, List<Object>> headers, Function<Exchange, Object> setBody) throws IOException {
-		Parser parser = createParser();
+		ExchangeFactory parser = createParser();
 		// String expected = Text.get().read(b->ReadText.get().asString(b), getClass().getResource("/parser/requests/" + filename));
 		ByteArrayOutputStream expected = readFile("/parser/requests/" + filename);
 		try (BufferedOutputStreamMock bos = new BufferedOutputStreamMock()) {
@@ -106,7 +109,7 @@ public class ParserTest {
 	@Parameters(method = "getData")
 	public void testWriteResponse(String filename, Map<String, List<Object>> headers, Function<Exchange, Object> setBody) throws IOException {
 		// BodyType type, Object body
-		Parser parser = createParser();
+		ExchangeFactory parser = createParser();
 		ByteArrayOutputStream expected = readFile("/parser/responses/" + filename);
 		try (BufferedOutputStreamMock bos = new BufferedOutputStreamMock()) {
 			Response response = new Response(StatusCode.OK, "HTTP/1.1");
@@ -117,6 +120,10 @@ public class ParserTest {
 
 			parser.write(response, bos);
 			
+			assertEquals(
+				new String(expected.toByteArray()).replace("\r", "\\r").replace("\n", "\\n"), 
+				new String(bos.get().toByteArray()).replace("\r", "\\r").replace("\n", "\\n")
+			);
 			assertTrue(Arrays.equals(expected.toByteArray(), bos.get().toByteArray()));
 		}
 	}
@@ -124,7 +131,7 @@ public class ParserTest {
 	@Test
 	@Parameters(method = "getData")
 	public void testReadRequest(String filename, Object headers, Function<Exchange, Object> setBody) throws IOException {
-		Parser parser = createParser();
+		ExchangeFactory parser = createParser();
 		try (InputStream is = getClass().getResourceAsStream("/parser/requests/" + filename);
 				BufferedInputStream bis = new BufferedInputStream(is)) {
 			Request request= parser.readRequest(bis);
@@ -133,7 +140,7 @@ public class ParserTest {
 			assertEquals("HTTP/1.1", request.getProtocol());
 			
 			assertEquals(headers, request.getHeaders());
-			assertBody(setBody.apply(null), request.getBody(), request.getBodyType());
+			assertBody(setBody.apply(null), request);
 			// assertEquals(setBody.apply(null), request.getBody());
 		}
 	}
@@ -141,7 +148,7 @@ public class ParserTest {
 	@Test
 	@Parameters(method = "getData")
 	public void testReadResponse(String filename, Map<String, List<Object>> headers, Function<Exchange, Object> setBody) throws IOException {
-		Parser parser = createParser();
+		ExchangeFactory parser = createParser();
 		try (InputStream is = getClass().getResourceAsStream("/parser/responses/" + filename);
 				BufferedInputStream bis = new BufferedInputStream(is)) {
 			Response response = parser.readResponse(bis);
@@ -150,13 +157,13 @@ public class ParserTest {
 			
 			assertEquals(headers, response.getHeaders());
 
-			assertBody(setBody.apply(null), response.getBody(), response.getBodyType());
+			assertBody(setBody.apply(null), response);
 		}
 	}
 	
 	@Test
 	public void testParseRequestUrlParameters() throws IOException {
-		Parser parser = createParser();
+		ExchangeFactory parser = createParser();
 		try (BufferedInputStream bis = new BufferedInputStremMock("PUT /my/uri?param=val&another=aaa HTTP/1.1")) {
 			Request request= parser.readRequest(bis);
 			assertEquals(HttpMethod.PUT, request.getMethod());
@@ -173,7 +180,7 @@ public class ParserTest {
 			);
 			
 			assertEquals(new HashMap<>(), request.getHeaders());
-			assertNull(request.getBody());
+			assertEquals(0, request.getBody().length);
 		}
 	}
 	
@@ -211,7 +218,10 @@ public class ParserTest {
 				.append("Some-header", Arrays.asList("my header value"))
 				.toMap(),
 				createFunction((ex)->{
-					return null;
+					if (ex != null) {
+						ex.setBody(new byte[0]);
+					}
+					return new byte[0];
 				})
 			},
 			new Object[] {
@@ -226,7 +236,7 @@ public class ParserTest {
 					if (ex == null) {
 						return res;
 					}
-					ex.setBodyText(res);
+					ex.setBody(res.getBytes());
 					return null;
 				})
 			},
@@ -235,11 +245,11 @@ public class ParserTest {
 				new MapInit<String, Object>()
 				.append("Some-header", Arrays.asList("my header value"))
 				.append("Content-Type", Arrays.asList("application/x-www-form-urlencoded"))
-				.append("Content-Length", Arrays.asList("221"))
+				.append("Content-Length", Arrays.asList("273"))
 				.toMap(),
 				createFunction((ex)->{
-					Map<String, Object> data = new MapInit<String, Object>()
-					.append(
+					RequestParameters data = (RequestParameters) new RequestParameters()
+					.put(
 						"list", 
 						Arrays.asList(
 							"value-list-1", 
@@ -247,14 +257,14 @@ public class ParserTest {
 							"value-list-3"
 						)
 					)
-					.append(
+					.put(
 						"map",
 						new MapInit<>()
 						.append("a", "value-map-a")
 						.append("b", "value-map-b")
 						.toMap()
 					)
-					.append(
+					.put(
 						"maplist",
 						new MapInit<>()
 						.append(
@@ -272,12 +282,11 @@ public class ParserTest {
 							)
 						)
 						.toMap()
-					)
-					.toMap();
+					);
 					if (ex == null) {
 						return data;
 					}
-					ex.setBodyUrlEncoded(data);
+					ex.setBodyUrlencoded(data);
 					return null;
 				})
 				
@@ -294,7 +303,7 @@ public class ParserTest {
 					if (ex == null) {
 						return res;
 					}
-					ex.setBodyBinary(res);
+					ex.setBody(res);
 					return null;
 				})
 			},
@@ -306,9 +315,8 @@ public class ParserTest {
 				.append("Some-header", Arrays.asList("my header value"))
 				.toMap(),
 				createFunction((ex)->{
-					Map<String, Object> res = 
-					new MapInit<String, Object>()
-					.append(
+					RequestParameters res = (RequestParameters) new RequestParameters()
+					.put(
 						"list", 
 						Arrays.asList(
 							"value-list-1", 
@@ -316,14 +324,14 @@ public class ParserTest {
 							"value-list-3"
 						)
 					)
-					.append(
+					.put(
 						"map",
 						new MapInit<>()
 						.append("a", "value-map-a")
 						.append("b", "value-map-b")
 						.toMap()
 					)
-					.append(
+					.put(
 						"maplist",
 						new MapInit<>()
 						.append(
@@ -341,8 +349,7 @@ public class ParserTest {
 							)
 						)
 						.toMap()
-					)
-					.toMap();
+					);
 					if (ex == null) {
 						return res;
 					}
@@ -355,13 +362,12 @@ public class ParserTest {
 				new MapInit<String, Object>()
 				.append("Some-header", Arrays.asList("my header value"))
 				.append("Content-Type", Arrays.asList("multipart/form-data; boundary=item-separator"))
-				.append("Content-Length", Arrays.asList("516"))
+				.append("Content-Length", Arrays.asList("526"))
 				.toMap(),
 				createFunction((ex)->{
-					Map<String, Object> res = MapInit.create()
-					.append("another", "value")
-					.append("fileinput", new UploadedFile("filename.xyz", "IMG", binaryData.toByteArray()))
-					.toMap();
+					RequestParameters res = (RequestParameters) new RequestParameters()
+					.put("another", "value")
+					.put("fileinput", new UploadedFile("filename.xyz", "IMG", binaryData.toByteArray()));
 					if (ex == null) {
 						return res;
 					}
@@ -381,24 +387,22 @@ public class ParserTest {
 		};
 	}
 	
-	private void assertBody(Object expected, Object actual, BodyType type) {
-		switch (type) {
-			case PLAIN_TEXT_OR_BINARY:
-				if (expected instanceof String) {
-					assertEquals(expected, new String((byte[])actual));
+	private void assertBody(Object expected, Exchange actual) {
+		switch (actual.getType()) {
+			case BASIC:
+				if (expected == null) {
+					assertNull(expected);
+					assertNull(actual);
+				} else if (expected instanceof String) {
+					assertEquals(expected, new String(actual.getBody()));
 				} else {
-					assertTrue(Arrays.equals((byte[])expected, (byte[])actual));
+					assertTrue(Arrays.equals((byte[])expected, actual.getBody()));
 				}
 				break;
-			case EMPTY:
-				assertNull(expected);
-				assertNull(actual);
-				break;
 			case FORM_DATA:
-			case JSON:
 			case URLENCODED_DATA:
 			default:
-				assertEquals(expected, actual);
+				assertEquals(expected, actual.getBodyInParameters());
 		}
 	}
 	
@@ -417,8 +421,48 @@ public class ParserTest {
 		}
 	}
 
-	private Parser createParser() {
-		return new Parser(new LoggerImpl(), 1024, Optional.empty(), ()->"item-separator");
+	private ExchangeFactory createParser() {
+		Logger logger = new LoggerImpl();
+		StreamReader reader = new StreamReader(1024) { // max size is 1 kB
+			@Override public void write(int b, OutputStream os) throws IOException {
+				if (os instanceof BufferedOutputStreamMock) {
+					super.write(b, os);
+				} else {
+					if (b == '\n') {
+						os.write('\r');
+					}
+					os.write(b);
+				}
+			}
+		};
+		Payload payload = new Payload();
+		return new ExchangeFactory(
+				new FirstLine(reader), new Headers(reader),
+				new Form(payload, reader), new Urlencode(payload, reader),
+				reader,
+				()->"item-separator",
+				logger
+		);
+		
+		/*
+		()->new ByteArrayOutputStream() {
+			@Override 
+			public void write(int b) {
+				if (b == '\n') {
+					super.write('\r');
+				}
+				super.write(b);
+			}
+			@Override
+			public void write(byte[] b) throws IOException {
+				if (Arrays.equals("\n".getBytes(), b)) {
+					super.write('\r');
+				}
+				super.write(b);
+			}
+		}
+		
+		*/
 	}
 	
 }

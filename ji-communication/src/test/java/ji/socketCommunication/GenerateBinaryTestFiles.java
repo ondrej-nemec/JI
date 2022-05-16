@@ -1,5 +1,6 @@
 package ji.socketCommunication;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import ji.common.structures.ThrowingConsumer;
 
@@ -25,9 +27,9 @@ public class GenerateBinaryTestFiles {
 		generate(
 			filename,
 			firstLine,
-			Arrays.asList(
+			l->Arrays.asList(
 				"Some-header: my header value",
-				"Content-Length: 516",
+				"Content-Length: " + l,
 				"Content-Type: multipart/form-data; boundary=item-separator"
 			), 
 			(os)->{
@@ -50,9 +52,9 @@ public class GenerateBinaryTestFiles {
 		generate(
 			filename,
 			firstLine,
-			Arrays.asList(
+			l->Arrays.asList(
 				"Some-header: my header value",
-				"Content-Length: 317",
+				"Content-Length: " + l,
 				"Content-Type: image/x-icon"
 			), 
 			(os)->writeBinaryFile(os)
@@ -60,22 +62,23 @@ public class GenerateBinaryTestFiles {
 	}
 	
 	private static void generate(
-			String filename, String firstLine, List<String> headers, 
+			String filename, String firstLine, Function<Integer, List<String>> headers, 
 			ThrowingConsumer<OutputStream, IOException> body) {
 		try (OutputStream os = new FileOutputStream(filename)) {
 
 			os.write(firstLine.getBytes());
 			os.write('\r');
 			os.write('\n');
-			for (String header : headers) {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			body.accept(bos);
+			for (String header : headers.apply(bos.size())) {
 				os.write(header.getBytes());
 				os.write('\r');
 				os.write('\n');
 			}
 			os.write('\r');
 			os.write('\n');
-			
-			body.accept(os);
+			os.write(bos.toByteArray());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -83,7 +86,7 @@ public class GenerateBinaryTestFiles {
 	
 	// file is 317
 	private static void writeBinaryFile(OutputStream os) throws IOException {
-		try(InputStream is = new FileInputStream("binary/icon.png")) {
+		try(InputStream is = new FileInputStream("index/icon.png")) {
 			int i;
 			while((i = is.read()) != -1) {
 				os.write(i);

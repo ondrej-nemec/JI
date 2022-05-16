@@ -1,5 +1,7 @@
 package ji.socketCommunication.http;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,10 +12,13 @@ import ji.socketCommunication.http.parsers.BodyType;
 
 public abstract class Exchange {
 	
-	private final Map<String, List<Object>> headers = new HashMap<>();	
-	private Object body;
-	private BodyType type = BodyType.EMPTY;
+	private final Map<String, List<Object>> headers = new HashMap<>();
 	
+	private BodyType type = BodyType.BASIC;
+	private RequestParameters parameters;
+	private byte[] body;
+	private WebSocket websocket;
+		
 	public abstract String getFirstLine();
 	
 	/**** headers section *****/
@@ -53,77 +58,43 @@ public abstract class Exchange {
 	}
 	
 	/**** body section ***/
-	/*
-	public void setBody(Map<String, Object> parameters) {
-		
-	}
-	*/
 	
-	public Map<String, Object> getBodyFormData() {
-		return getBodyUrlEncoded();
+	public void setBody(byte[] body) {
+		this.body = body;
 	}
 	
-	public Map<String, Object> getBodyJson() {
-		return getBodyUrlEncoded();
-	}
-	
-	public Map<String, Object> getBodyUrlEncoded() {
-		return new DictionaryValue(body).getMap();
-	}
-	
-	public byte[] getBodyBinary() {
-		
-		if (body instanceof byte[]) {
-			return (byte[])body;
-		}
-		return body.toString().getBytes();
-	}
-	
-	public String getBodyText() {
-		if (body instanceof byte[]) {
-			return new String((byte[])body);
-		}
-		return body.toString();
-	}
-	
-	public Object getBody() {
+	public byte[] getBody() {
 		return body;
 	}
 	
-	public BodyType getBodyType() {
-		return type;
-	}
-
-	// for full request binary or string
-	public void setBodyPlainOrBinary(byte[] body) {
-		this.body = body;
-		this.type = BodyType.PLAIN_TEXT_OR_BINARY;
-	}
-
-	public void setBodyText(String body) {
-		this.body = body;
-		this.type = BodyType.PLAIN_TEXT_OR_BINARY;
+	public RequestParameters getBodyInParameters() {
+		return parameters;
 	}
 	
-	public void setBodyBinary(byte[] body) {
-		this.body = body;
-		this.type = BodyType.PLAIN_TEXT_OR_BINARY;
-	}
-
-	public void setBodyJson(Map<String, Object> body) {
-		this.body = body;
-		this.type = BodyType.JSON;
+	public WebSocket getBodyWebsocket() {
+		return websocket;
 	}
 	
-	public void setBodyFormData(Map<String, Object> body) {
-		this.body = body;
+	public void setBodyFormData(RequestParameters body) {
+		this.parameters = body;
 		this.type = BodyType.FORM_DATA;
 	}
 	
-	public void setBodyUrlEncoded(Map<String, Object> body) {
-		this.body = body;
+	public void setBodyUrlencoded(RequestParameters body) {
+		this.parameters = body;
 		this.type = BodyType.URLENCODED_DATA;
 	}
+	
+	public void setBodyWebsocket(WebSocket webSocket) {
+		this.websocket = webSocket;
+		this.type = BodyType.WEBSOCKET;
+	}
+	
+	public BodyType getType() {
+		return type;
+	}
+
+	/************/
 	
 	@Override
 	public String toString() {
@@ -136,7 +107,19 @@ public abstract class Exchange {
 			});
 		});
 		b.append("\n");
-		b.append(body);
+		
+		if (body == null) {
+			b.append(parameters);
+		} else {
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			try {
+				os.write(body);
+			} catch (IOException e) {}
+			b.append(new String(os.toByteArray()));
+		}
+		
+		
+		
 		return b.toString();
 	}
 	

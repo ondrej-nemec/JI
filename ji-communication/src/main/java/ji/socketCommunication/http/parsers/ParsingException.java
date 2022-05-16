@@ -1,4 +1,4 @@
-package ji.socketCommunication.http;
+package ji.socketCommunication.http.parsers;
 
 import java.io.IOException;
 

@@ -1,6 +1,6 @@
 HTTP/1.1 200 OK
 Some-header: my header value
-Content-Length: 221
+Content-Length: 273
 Content-Type: application/x-www-form-urlencoded
 
-maplist[a][]=value-maplist-a-1&maplist[a][]=value-maplist-a-2&maplist[b][]=value-maplist-b-1&maplist[b][]=value-maplist-b-2&list[]=value-list-1&list[]=value-list-2&list[]=value-list-3&map[a]=value-map-a&map[b]=value-map-b
+maplist%5Ba%5D%5B%5D=value-maplist-a-1&maplist%5Ba%5D%5B%5D=value-maplist-a-2&maplist%5Bb%5D%5B%5D=value-maplist-b-1&maplist%5Bb%5D%5B%5D=value-maplist-b-2&list%5B%5D=value-list-1&list%5B%5D=value-list-2&list%5B%5D=value-list-3&map%5Ba%5D=value-map-a&map%5Bb%5D=value-map-b

@@ -7,7 +7,23 @@ import ji.common.Logger;
 public class LoggerImpl implements Logger {
 
     public void print(String severity, Object message) {
-		System.out.println(LocalDateTime.now() + " " + severity + " " + message.toString());
+    	StackTraceElement trace = null;
+    	for (StackTraceElement el : Thread.currentThread().getStackTrace()) {
+    		if (!el.getClassName().equals(Thread.class.getName()) && !el.getClassName().equals(LoggerImpl.class.getName())) {
+    			trace = el;
+    			break;
+    		}
+    	}
+		System.out.println(
+			String.format(
+				"%s %s [%s] (%s:%s) %s",
+				LocalDateTime.now().toString().replace("T", " "),
+				severity,
+				Thread.currentThread().getName(),
+				trace == null ? "" : trace.getFileName(),
+				trace == null ? "" : trace.getLineNumber(),
+				message.toString())
+		);
 	}
 	
 	public void print(String severity, Object message, Throwable t) {

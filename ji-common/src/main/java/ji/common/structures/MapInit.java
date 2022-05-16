@@ -6,6 +6,10 @@ import java.util.Properties;
 
 public class MapInit<K, V> {
 	
+	public static MapInit<String, Object> create() {
+		return new MapInit<String, Object>();
+	}
+	
 	private final Map<K, V> map;
 	
 	public MapInit() {

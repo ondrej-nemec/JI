@@ -1,36 +1,36 @@
 package ji.socketCommunication.http.parsers;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
 import ji.socketCommunication.http.Exchange;
 
-public interface HeaderParser extends Stream {
+public class Headers {
+	
+	private final StreamReader stream;
+	
+	public Headers(StreamReader stream) {
+		this.stream = stream;
+	}
 
-	default void writeHeaders(Exchange exchange, BufferedOutputStream bos) throws IOException {
-		// TODO add missing heades content length and type?
+	public void write(Exchange exchange, OutputStream bos) throws IOException {
 		for (Entry<String, List<Object>> header : exchange.getHeaders().entrySet()) {
 			for (Object headerValue : header.getValue()) {
-				bos.write('\n');// bw.newLine();
+				bos.write('\n'); // end of previous header or first line
 				bos.write(String.format("%s: %s", header.getKey(), headerValue).getBytes());
 			}
         }
-		if (exchange.getBody() != null) {
-			bos.write('\n');// bw.newLine();
-		}
+		bos.flush();
 	}
 	
-	default List<String> readHeaders(Exchange exchange, BufferedInputStream bis) throws IOException {
+	public List<String> read(Exchange exchange, InputStream bis) throws IOException {
 		List<String> errors = new LinkedList<>();
-		String line = readLine(bis);
+		String line = stream.readLine(bis, false);
         while (line != null && !line.isEmpty()) {
-        	if (line.isEmpty()) { // TODO is required?
-    			return errors;
-    		}
     		String[] property = line.split(": ", 2);
         	if (property.length == 2 && ! property[0].isEmpty()) {
         		exchange.addHeader(property[0], property[1]);
@@ -39,7 +39,7 @@ public interface HeaderParser extends Stream {
         	} else {
         		errors.add("Invalid header line " + line);
         	}
-        	line = readLine(bis);
+        	line = stream.readLine(bis, false);
         }
         return errors;
 	}

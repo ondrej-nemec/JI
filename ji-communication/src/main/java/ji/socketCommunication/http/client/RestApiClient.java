@@ -2,11 +2,7 @@ package ji.socketCommunication.http.client;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Optional;
 
@@ -14,9 +10,10 @@ import ji.common.Logger;
 import ji.common.structures.ThrowingConsumer;
 import ji.socketCommunication.SSL;
 import ji.socketCommunication.SslCredentials;
-import ji.socketCommunication.http.ApiRequest;
 import ji.socketCommunication.http.HttpMethod;
-import ji.socketCommunication.http.parsers.Parser;
+import ji.socketCommunication.http.Request;
+import ji.socketCommunication.http.Response;
+import ji.socketCommunication.http.parsers.ExchangeFactory;
 
 public class RestApiClient {
 	
@@ -25,9 +22,11 @@ public class RestApiClient {
 	
 	private final Logger logger;
 	
-	private final String charset;
+	@SuppressWarnings("unused")
+	private final String charset; // TODO remove
 	
 	private final Optional<SslCredentials> ssl;
+	private final ExchangeFactory factory;
 	
 	public RestApiClient(String serverUrl, Optional<SslCredentials> ssl, String charset, Logger logger) {
 		this(serverUrl, ssl.isPresent() ? 443 : 80, ssl, charset, logger);
@@ -39,33 +38,33 @@ public class RestApiClient {
 		this.charset = charset;
 		this.ssl = ssl;
 		this.port = port;
+		this.factory = ExchangeFactory.create(null, logger); // TODO response limit
 	}
 	
-	public ApiRequest get(String uri, ThrowingConsumer<ApiRequest, Exception> createRequest) throws Exception {
+	public Response get(String uri, ThrowingConsumer<Request, Exception> createRequest) throws Exception {
 		return send(HttpMethod.GET, uri, createRequest);
 	}
 	
-	public ApiRequest post(String uri, ThrowingConsumer<ApiRequest, Exception> createRequest) throws Exception {
+	public Response post(String uri, ThrowingConsumer<Request, Exception> createRequest) throws Exception {
 		return send(HttpMethod.POST, uri, createRequest);
 	}
 	
-	public ApiRequest put(String uri, ThrowingConsumer<ApiRequest, Exception> createRequest) throws Exception {
+	public Response put(String uri, ThrowingConsumer<Request, Exception> createRequest) throws Exception {
 		return send(HttpMethod.PUT, uri, createRequest);
 	}
 	
-	public ApiRequest delete(String uri, ThrowingConsumer<ApiRequest, Exception> createRequest) throws Exception {
+	public Response delete(String uri, ThrowingConsumer<Request, Exception> createRequest) throws Exception {
 		return send(HttpMethod.DELETE, uri, createRequest);
 	}
 	
-	public ApiRequest send(HttpMethod method, String uri, ThrowingConsumer<ApiRequest, Exception> createRequest) throws Exception {
-		ApiRequest request = new ApiRequest(method, uri, "HTTP/1.1");
+	public Response send(HttpMethod method, String uri, ThrowingConsumer<Request, Exception> createRequest) throws Exception {
+		Request request = new Request(method, uri, "HTTP/1.1"); // TODO set protocol?
 		createRequest.accept(request);
 		Socket con = createSocket(serverUrl, port, ssl);
 		return send(con, request);
 	}
 	
-	public ApiRequest send(ApiRequest request) throws Exception {
-		// TODO maybe parse url params to url but usualy in uri
+	public Response send(Request request) throws Exception {
 		Socket con = createSocket(serverUrl, port, ssl);
 		//HttpURLConnection con = getConnection(request.getFullUrl(), ssl);
 		return send(con, request);
@@ -82,14 +81,11 @@ public class RestApiClient {
 		}
     }
 	
-	protected ApiRequest send(Socket con, ApiRequest request) throws IOException {
-		Parser parser = new Parser(logger, 0, Optional.empty()); // TODO files limits
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), charset));
-	         	 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), charset));
-	         	 BufferedInputStream is = new BufferedInputStream(con.getInputStream());
-	         	 BufferedOutputStream os = new BufferedOutputStream(con.getOutputStream());) {
-			parser.writeRequest(request, bw, os);
-			ApiRequest response = parser.readRequest(br, is);
+	protected Response send(Socket con, Request request) throws IOException {
+		try (BufferedInputStream is = new BufferedInputStream(con.getInputStream());
+			BufferedOutputStream os = new BufferedOutputStream(con.getOutputStream());) {
+			factory.write(request, os);
+			Response response = factory.readResponse(is);
 			return response;
 	    }
 	}

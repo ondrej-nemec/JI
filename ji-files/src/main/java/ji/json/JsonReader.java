@@ -30,14 +30,13 @@ public class JsonReader {
 		}
 	}
 	
-	public Object read(String json) throws JsonStreamException {
+	public Object read(String json) {
 		InputStringProvider provider = new InputStringProvider(json);
 		try (InputJsonStream stream = new InputJsonStream(provider)) {
 			return read(stream);
-		} catch (JsonStreamException e) {
-			throw e;
 		} catch (IOException e) {
-			throw new JsonStreamException(e);
+			// ignore - no reason for it
+			throw new LogicException("Unexpected IOException with String provider " + e.getMessage());
 		}
 	}
 	
