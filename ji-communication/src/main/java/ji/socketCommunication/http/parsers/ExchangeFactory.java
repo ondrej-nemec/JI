@@ -14,12 +14,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import ji.common.Logger;
 import ji.common.structures.MapDictionary;
 import ji.common.structures.ThrowingSupplier;
-import ji.socketCommunication.http.Exchange;
-import ji.socketCommunication.http.Request;
-import ji.socketCommunication.http.Response;
-import ji.socketCommunication.http.WebSocket;
-import ji.socketCommunication.http.parsers.bodyParsers.Form;
-import ji.socketCommunication.http.parsers.bodyParsers.Urlencode;
+import ji.socketCommunication.http.structures.Exchange;
+import ji.socketCommunication.http.structures.Request;
+import ji.socketCommunication.http.structures.Response;
+import ji.socketCommunication.http.structures.WebSocket;
 
 public class ExchangeFactory {
 

@@ -5,11 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.Function;
 
-import ji.socketCommunication.http.Exchange;
 import ji.socketCommunication.http.HttpMethod;
-import ji.socketCommunication.http.Request;
-import ji.socketCommunication.http.Response;
 import ji.socketCommunication.http.StatusCode;
+import ji.socketCommunication.http.structures.Exchange;
+import ji.socketCommunication.http.structures.Request;
+import ji.socketCommunication.http.structures.Response;
 
 public class FirstLine {
 	

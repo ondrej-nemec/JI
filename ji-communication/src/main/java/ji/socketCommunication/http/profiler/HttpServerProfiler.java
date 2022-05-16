@@ -1,4 +1,4 @@
-package ji.socketCommunication.http.server.profiler;
+package ji.socketCommunication.http.profiler;
 
 public interface HttpServerProfiler {
 

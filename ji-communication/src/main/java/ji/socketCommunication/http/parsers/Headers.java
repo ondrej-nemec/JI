@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import ji.socketCommunication.http.Exchange;
+import ji.socketCommunication.http.structures.Exchange;
 
 public class Headers {
 	

@@ -1,11 +1,11 @@
-package ji.socketCommunication.http.server;
+package ji.socketCommunication.http;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import ji.socketCommunication.http.Request;
-import ji.socketCommunication.http.Response;
-import ji.socketCommunication.http.WebSocket;
+import ji.socketCommunication.http.structures.Request;
+import ji.socketCommunication.http.structures.Response;
+import ji.socketCommunication.http.structures.WebSocket;
 
 public interface ResponseFactory {
 

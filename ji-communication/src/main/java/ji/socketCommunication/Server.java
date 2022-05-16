@@ -18,8 +18,8 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 import ji.common.Logger;
 import ji.common.structures.NamedThredFactory;
-import ji.socketCommunication.http.server.RestApiServer;
-import ji.socketCommunication.http.server.ResponseFactory;
+import ji.socketCommunication.http.ResponseFactory;
+import ji.socketCommunication.http.RestApiServer;
 
 public class Server {
 	

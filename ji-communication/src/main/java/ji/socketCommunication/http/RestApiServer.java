@@ -1,4 +1,4 @@
-package ji.socketCommunication.http.server;
+package ji.socketCommunication.http;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -8,13 +8,12 @@ import java.util.Optional;
 
 import ji.common.Logger;
 import ji.socketCommunication.Servant;
-import ji.socketCommunication.http.Request;
-import ji.socketCommunication.http.Response;
-import ji.socketCommunication.http.StatusCode;
-import ji.socketCommunication.http.WebSocket;
 import ji.socketCommunication.http.parsers.ExchangeFactory;
-import ji.socketCommunication.http.server.profiler.HttpServerProfiler;
-import ji.socketCommunication.http.server.profiler.HttpServerProfilerEvent;
+import ji.socketCommunication.http.profiler.HttpServerProfiler;
+import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
+import ji.socketCommunication.http.structures.Request;
+import ji.socketCommunication.http.structures.Response;
+import ji.socketCommunication.http.structures.WebSocket;
 
 public class RestApiServer implements Servant {
 	

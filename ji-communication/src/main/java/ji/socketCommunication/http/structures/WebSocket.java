@@ -1,4 +1,4 @@
-package ji.socketCommunication.http;
+package ji.socketCommunication.http.structures;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

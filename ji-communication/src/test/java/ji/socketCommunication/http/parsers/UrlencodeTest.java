@@ -9,8 +9,7 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import ji.common.structures.MapInit;
-import ji.socketCommunication.http.RequestParameters;
-import ji.socketCommunication.http.parsers.bodyParsers.Urlencode;
+import ji.socketCommunication.http.structures.RequestParameters;
 
 public class UrlencodeTest {
 	

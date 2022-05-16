@@ -1,4 +1,4 @@
-package ji.socketCommunication.http.parsers.bodyParsers;
+package ji.socketCommunication.http.parsers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import ji.socketCommunication.http.RequestParameters;
-import ji.socketCommunication.http.parsers.Payload;
-import ji.socketCommunication.http.parsers.StreamReader;
+import ji.socketCommunication.http.structures.RequestParameters;
 
 public class Urlencode {
 	

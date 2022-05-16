@@ -10,7 +10,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 
 import ji.common.structures.DictionaryValue;
-import ji.socketCommunication.http.RequestParameters;
+import ji.socketCommunication.http.structures.RequestParameters;
 
 public class Payload {
 

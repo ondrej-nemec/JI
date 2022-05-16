@@ -1,4 +1,6 @@
-package ji.socketCommunication.http;
+package ji.socketCommunication.http.structures;
+
+import ji.socketCommunication.http.StatusCode;
 
 public class Response extends Exchange {
 

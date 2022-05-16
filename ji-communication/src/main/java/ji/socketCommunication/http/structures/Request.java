@@ -1,6 +1,7 @@
-package ji.socketCommunication.http;
+package ji.socketCommunication.http.structures;
 
 import ji.common.structures.MapDictionary;
+import ji.socketCommunication.http.HttpMethod;
 
 public class Request extends Exchange {
 	

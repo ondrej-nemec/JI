@@ -1,4 +1,4 @@
-package ji.socketCommunication.http.parsers.bodyParsers;
+package ji.socketCommunication.http.parsers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,11 +7,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ji.socketCommunication.http.RequestParameters;
-import ji.socketCommunication.http.UploadedFile;
-import ji.socketCommunication.http.parsers.ExceptionWrapper;
-import ji.socketCommunication.http.parsers.Payload;
-import ji.socketCommunication.http.parsers.StreamReader;
+import ji.socketCommunication.http.structures.RequestParameters;
+import ji.socketCommunication.http.structures.UploadedFile;
 
 public class Form {
 	
