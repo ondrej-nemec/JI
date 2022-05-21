@@ -25,5 +25,39 @@ public class Response extends Exchange {
 	public String getFirstLine() {
 		return String.format("%s %s %s", protocol, code.getCode(), code.getDescription());
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((protocol == null) ? 0 : protocol.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Response other = (Response) obj;
+		if (code != other.code) {
+			return false;
+		}
+		if (protocol == null) {
+			if (other.protocol != null) {
+				return false;
+			}
+		} else if (!protocol.equals(other.protocol)) {
+			return false;
+		}
+		return true;
+	}
 	
 }

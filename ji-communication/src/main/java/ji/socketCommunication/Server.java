@@ -143,6 +143,9 @@ public class Server {
 			logger.fatal("Server secket waiting time cannot be setted", e);
 		}
     	logger.info("Stopping server");
+    	if (clientWaitingFuture != null) {
+    		clientWaitingFuture.cancel(true);
+    	}
     	executor.shutdownNow();
         executor.awaitTermination(30, TimeUnit.SECONDS);
         sheduled.shutdownNow();

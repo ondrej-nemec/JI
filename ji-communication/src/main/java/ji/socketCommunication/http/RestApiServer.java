@@ -26,7 +26,7 @@ public class RestApiServer implements Servant {
 	
 	public RestApiServer(
 			ResponseFactory response,
-			int maxUploadFileSize,
+			Integer maxUploadFileSize,
 			Logger logger) {
 		this.logger = logger;
 		this.createResponce = response;
