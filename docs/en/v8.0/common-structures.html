@@ -1,0 +1,216 @@
+<h1>Structures</h1>
+
+<h2>Dictionary</h2>
+
+<p>Dictionary classes help to work with objects with unknown datatype, input data with variable datatype or data in string. Contains <code>MapDictionary</code>(<code>Map</code> wrapper), <code>ListDictionary</code>(<code>List</code> wrapper) and <code>DictionaryValue</code>(value wrapper)</p>
+
+<h3>DictionaryValue</h3>
+
+<p>Allows you to get a value in a given type. If the value is of a different type, it will try to parse or cast.
+	Supported:
+	<ul>
+		<li><code>Boolean</code>, <code>bool</code> - returns <code>true</code> if value is true or "true" or "on" or "1"</li>
+		<li>Numbers (including primitive types): <code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code></li>
+		<li>Text: <code>Character</code>, <code>char</code>, <code>String</code></li>
+		<li><code>Map</code>, <code>MapDictionary</code> - cast from <code>Map</code> to <code>MapDictionary</code> and vise versa automatically.</li>
+		<li><code>List</code>, <code>ListDictionary</code> and <code>Set</code> - cast from <code>List</code> to <code>ListDictionary</code>, from <code>List</code> to <code>Set</code>, from <code>Set</code> to <code>ListDictionary</code> and all vise versa automatically. Eventual can be <code>String</code> splited by given delimeter to get <code>List</code>. </li>
+		<li><code>array</code>: <code>Set</code>, <code>List</code> and <code>ListDictionary</code> can be cast to array and vise versa.</li>
+		<li><code>Enums</code></li>
+		<li>Time: <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>, <code>ZonedDateTime</code>. All times can be casted to another, parsed from <code>String</code> with ISO or set pattern. Also from number.</li>
+		<li>Arbitrary class - from <code>Map</code>. See <a href="?file=common-functions.html#H2-6">Mapper</a></li>
+	</ul>
+
+	If project contains classes for JSON parsing, <code>DictionaryValue</code> can parse <code>Map</code>, <code>MapDictionary</code>, <code>List</code> and <code>ListDictionary</code> from string. Or can be set function for parsing these classes.
+</p>
+
+<h3>Examples</h3>
+
+<h4>MapDictionary</h4>
+
+<strong>Construct</strong>
+
+<pre><code class="language-java">
+// with not empty Map
+Map&lt;K, V&gt; map = ...;
+new MapDictionary(map);
+
+// as empty HashMap
+MapDictionary.hashMap();
+// as empty Properties
+MapDictionary.properties();
+</code></pre>
+
+<strong>To Map</strong> 
+
+<pre><code class="language-java">
+// get Map from MapDictionary
+Map&lt;Object, Object&gt; map = MapDictionary.hashMap().put("key", "value").put("key2", 123).toMap();
+</code></pre>
+
+<strong>Get value</strong>	
+
+<pre><code class="language-java">
+MapDictionary&lt;Object, Object&gt; dictionary = MapDictionary.hashMap()
+	 .put("key1", "some value") 
+	 .put("key2", 123)
+	.toMap();
+// get "raw" value
+Object value = dictionary.get("key1"); // value will be String "some value"
+// or 
+Object value2 = dictionary.get("key2"); // value2 will be Integer 123 
+// to get new DictionaryValue from value
+DictionaryValue v = dictionary.get("key2");
+// to get with type
+String string = dictionary.getString("key1");
+Integer integer = dictionary.getInteger("key2");
+List&lt;String&gt; list = dictionary.getList(" "); // split value by ' ' -> list will contains two fields "some" and "value" 
+</code></pre>
+
+<strong>ForEach</strong>
+
+<pre><code class="language-java">
+MapDictionary&lt;Object, Object&gt; map = ...;
+map.forEach((key, value)->{
+	// key is Object or other given class
+	// !! value is DictionaryValue !!
+});
+// for standart forEach use forEach2 method
+</code></pre>
+
+<h4>ListDictionary</h4>
+
+<strong>Construct</strong>
+
+<pre><code class="language-java">
+// with not empty List
+Collection&lt;S&gt; collection = ...;
+new ListDictionary(collection);
+// as empty LinkedList
+ListDictionary.linkedList();
+// as empty ArrayList
+ListDictionary.arrayList();
+// as empty HashSet
+ListDictionary.hashSet();
+</code></pre>
+
+<strong>Get Collection</strong>
+
+<pre><code class="language-java">
+// get List from ListDictionary
+List&lt;Object&gt; list = ListDictionary.arrayList().add("on").add("2022-01-01T12:45:58").toList();
+// get Set from ListDictionary
+Set&lt;Object&gt; list = ListDictionary.hashSet().add("on").add("2022-01-01T12:45:58").toSet();
+</code></pre>
+
+<strong>Get value</strong> 
+
+<pre><code class="language-java">
+// get List from ListDictionary
+ListDictionary&lt;Object&gt; list = ListDictionary.arrayList().add(1).add("2022-01-01T12:45:58").toList();
+// get "raw" value
+Object value = list.get(0); // value will be Intger 1 
+// get new DictionaryValue from value
+DictionaryValue v = list.getDictionaryValue(0);
+// to get with type
+Integer integer = list.getInteger(0);
+Boolean boolean = list.getBoolean(0);
+Double doub = list.getDouble(0);
+LocalDate date = list.getDate(0);
+</code></pre>
+
+<strong>ForEach</strong>
+
+<pre><code class="language-java">
+ListDictionary&lt;Object&gt; list = ...; 
+list.forEach((value)->{ 
+	// !! value is DictionaryValue !! 
+}); 
+// for standart forEach use forEach2 method
+</code></pre>
+
+<h2>Builders</h2>
+
+<h3>IntegerBuilder</h3>
+
+<p>Wrapper for Integer. Allows add (+) or remove (-) value. Useful in callbacks.</p>
+
+<pre><code class="language-java">
+List&lt;User&gt; users = ...; 
+
+int usersAge = 0;
+users.forEach((user)->{
+	usersAge += user.getAge(); 
+});
+
+IntegerBuilder usersAge = new IntegerBuilder(); 
+users.forEach((user)->{	
+	usersAge.add(user.getAge());
+}); 
+</code></pre>
+
+<h3>ObjectBuilder</h3>
+
+<p>Object wrapper. You can set, get, clear or check (<code>isPresent()</code>) value. Userful in callbacks.</p>
+
+<h3>ListInit</h3>
+
+<p>List wrapper. Method <code>add</code> returns self.</p>
+
+<pre><code class="language-java">
+ListInit&lt;String&gt; init = new ListInit&lt;String&gt;() 
+	.add("first") 
+	.second("second"); 
+Set&lt;String&gt; set = init.toSet(); // convert to Set 
+List&lt;String&gt; list = init.toList(); // convert to List 
+ListDictionary&lt;String&gt; dictionary = init.toDictionaryList();
+</code></pre>
+
+<h3>MapInit</h3>
+
+<p>Map wrapper. Method <code>append</code>(instead of <code>put</code>) returns self.</p>
+
+<pre><code class="language-java">
+MapInit&lt;String, Object&gt; init = new MapInit&lt;String, Object&gt;() 
+	.append("first", false) 
+	.append("second", 42); 
+Map&lt;String, Object&gt; map = init.toMap(); // convert to Map 
+Properties prop = init.toProperties(); // convert to Properties 
+MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
+</code></pre>
+
+<h2>Callbacks</h2>
+
+<p>Java callbacks like <code>Function</code> or <code>Consumer</code> are very useful. But sometimes you need execute code throwing f.e. <code>IOException</code> inside <code>apply</code> method. And you have to do <code>try...catch</code>. But code that call <code>apply</code> is catched. Here help Throwing callbacks. Work like <code>Function</code> or <code>Consumer</code> or ... but throw given exception.</p>
+
+<p>
+	<ul>
+		<li>ThrowingConsumer</li>
+		<li>ThrowingBiConsumer</li>
+		<li>ThrowingFunction</li>
+		<li>ThrowingBiFunction</li>
+		<li>ThrowingSupplier</li>
+	</ul>
+</p>
+
+<h2>Tuple</h2>
+
+<p>Tuple holds more variables in one object.
+
+	<ul>
+		<li>Tuple2 - holds two values</li>
+		<li>TUple3 - holds three values</li>
+	</ul>
+
+</p>
+
+<h2>NamedThreadFactory</h2>
+
+<p>
+	<code>NamedThreadFactory</code> allows give custom name to thread in <code>Executors</code>. final thread name looks: <code>pool-<i>name</i>-thread-<i>number</i></code>
+</p>
+
+<pre><code class="language-java">
+Executors.newFixedThreadPool(threadCount, new NamedThredFactory(threadName));
+// OR
+Executors.newScheduledThreadPool(threadCount, new NamedThredFactory(threadName));
+</code></pre>

@@ -1,0 +1,76 @@
+<h1>Server</h1>
+
+<p>
+	For establish communication, one side has to wait for connection - server.
+</p>
+
+<p class="alert alert-info">
+	Classes like <code>Request</code>, <code>Response</code>, <code>Websocket</code> and <code>UplodignFile</code> are explained <a href="?file=communication-structures.html">here</a>.
+</p>
+
+<p>
+	<code>Server</code> class manage connections and their threads. This class is controlled by <code>start</code>, <code>pause</code> and <code>stop</code> methods. The communication itself happends in given instance of <code>Servant</code> (see below).
+</p>
+
+<strong>Construct</strong>
+
+<p>
+	The <code>Server</code> construct requires: port number, count of allowed connection (thread pool), read timeout, <code>Servant</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), charset (fe. <code>utf-8</code>) and <code>Logger</code> (from JI Common).
+</p>
+
+<pre><code class="language-java">
+Server server = new Server(
+	80, // port 
+	10, // thread pool
+	60000, // read timeout
+	servant, 
+	Optional.empty(), // SSL
+	"UTF-8",
+	logger
+);
+</code></pre>
+
+<h2>Servant</h2>
+
+<p>
+	<code>Servant</code> contains one method <code>serve</code>. The method get connected <code>Socket</code> and charset. All reading or writing to <code>Socket</code> is at you. <strong>The <code>serve</code> is called on someone connect.</strong>
+</p>
+
+<strong>Example of Socket methods:</strong>
+
+<pre><code class="language-java">
+socket.getInputStream();
+socket.getOutputStream();
+socket.getInetAddress();
+</code></pre>
+
+<h2>HTTP server</h2>
+
+<p>
+	Special case of server is HTTP server. The HTTP server can be created by calling static method <code>Server.createWebServer</code>. The method requires: port number, count of allowed connection (thread pool), read timeout, <code>ResponseFactory</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), maximal allowed request size (default null, means no limit), charset (fe. <code>utf-8</code>) and <code>Logger</code> (from JI Common).
+</p>
+
+<strong>Example</strong>
+
+<pre><code class="language-java">
+Server server = Server.createWebServer(
+	80, // port
+	150, // thread pool
+	120000, // read connection timeout
+	responseFactory,
+	Optional.empty(), // SSL
+	null, // upload file size
+	"UTF-8",
+	logger
+);
+</code></pre>
+
+<h3>ResponseFactory</h3>
+
+<p>
+	<code>ResponseFactory</code> get parsed request and returns <code>Response</code>. There is required <code>accept</code> method and optional method <code>catchException</code> (what happend when exception occur. By default, server throws that exception).
+</p>
+
+<p>
+	<code>accept</code> method provides: <code>Request</code>, client IP address and <code>Optional</code> of <code>WebSocket</code> (see bellow; if present, request is websocket request).
+</p>

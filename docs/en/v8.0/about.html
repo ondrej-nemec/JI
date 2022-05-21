@@ -1,0 +1,58 @@
+<h1>About JI</h1>
+
+<a href="https://jitpack.io/#ondrej-nemec/JI"><img src="https://jitpack.io/v/ondrej-nemec/JI.svg"></a>
+<a href="https://github.com/ondrej-nemec/JI/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg"></a>
+
+<p>
+Project contains some useful libraries, functions and structures.
+</p>
+
+<h2>Libraries</h2>
+
+<ul>
+	<li><a href="?file=common-about.html">Common</a> - Often used logic, useful structures and exceptions</li>
+	<li><a href="?file=files-about.html">File reading/writing</a> - Factories for Buffered Reader/Writer and JSON stream</li>
+	<li><a href="?file=translate.html">Lokalization</a> - Package supports multilingual applications.</li>
+	<li><a href="">Database</a> - Contains: database communication, SQL Query Builder and database migrations.</li>
+	<li><a href="">Database Test Case</a> - Extends jUnit for testing with database</li>
+	<li><a href="">Client-Server communication</a> - Provide server/client communication (secured or unsecured) using Java sockets. Implements web server too.</li>
+</ul>
+
+<h2>Compatibility</h2>
+
+<table>
+	<tr>
+		<th>Java</th>
+		<th>Compatible</th>
+	</tr>
+	<tr>
+		<td>&gt;8</td>
+		<td>No</td>
+	</tr>
+	<tr>
+		<td>8</td>
+		<td>Yes</td>
+	</tr>
+	<tr>
+		<td>&gt;17</td>
+		<td>Yes</td>
+	</tr>
+</table>
+
+<h2>Dependency</h2>
+
+<p>You can add whole JI or only selected parts to the project. Adding a selected part - see the instructions in that part. How to add whole project see <a href="https://jitpack.io/#ondrej-nemec/JI">JitPack</a>) or you can use Gradle:</p>
+
+<p>gradle.build</p>
+
+<pre><code>
+repositories { 
+	...
+	maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.ondrej-nemec.JI:JI:Tag'
+}
+
+</code></pre>
