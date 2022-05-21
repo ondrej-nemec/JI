@@ -1,0 +1,143 @@
+<h1>Structures</h1>
+
+<h2>Request</h2>
+
+<p>
+	Represent request from client to server. Holds information about HTTP method, HTTP protocol, URI, request headers and request body.
+</p>
+
+<strong>Construct</strong>
+
+<pre><code class="language-java">
+Request request = new Request(HttpMethod.GET, "/my/page/link", "HTTP/1.1");
+// OR
+Reqeust request = new Request(HttpMethod.GET, "/my/page/link?foo=bar", "HTTP/1.1");
+</code></pre>
+
+<strong>Methods</strong>
+<p>
+	<ul>
+		<li><code>getMethod()</code>: returns <code>HttpMethod</code></li>
+		<li><code>getProtocol()</code>: returns protocol as string</li>
+		<li><code>getUri()</code> returns request URI as string including URL parameters (<code>?foo=bar</code>)</li>
+		<li><code>getPlainUri()</code>: returns URI without URL parameters</li>
+		<li><code>getUlrParameters()</code>: returns <code>MapDictionary</code> of all URL parameters</li>
+
+
+		<li><code>getHeaders()</code>: returns all headers as <code>Map&lt;String, List&lt;Object&gt;&gt;</code></li>
+		<li><code>getHeaders(String name)</code>: returns headers associate with given name (as <code>List</code>)</li>
+		<li><code>getHeader(String name)</code>: returns first header in list associate with given name or null</li>
+		<li><code>containsHeader(String name)</code>: check if header exists</li>
+		<li><code>getHeader(String name, Class&lt;T&gt; clazz)</code>: returns first header in list as given class or null</li>
+		<li><code>addHeader(String name, Object value)</code>: add header to header list associate with given name</li>
+
+
+		<li><code>getType()</code>: returns <code>BodyType</code></li>
+		<li><code>getBody()</code>: returns byte array of request data. Filled if type is <code>BASIC</code></li>
+		<li><code>getBodyInParameters()</code>: returns <code>RequestParameters</code> representing body. This is not empty if type is <code>FORM_DATA</code> or <code>URLENCODED</code></li>
+		<li><code>getBodyWebsocket()</code>: returns <code>Websocket</code>. Not returns null if type is <code>WEBSOCKET</code></li>
+		<li><code>setBody(byte[] body)</code>: set bytes to body</li>
+		<li><code>setBdoyFormData(RequestParameters params)</code>: set params as body. Body will be send as <code>multipart/form-data</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
+		<li><code>setBodyUrlEncoded(RequestParameters params)</code>: set params as body. Body will be send as <code>application/x-www-form-urlencoded</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
+	</ul>
+</p>
+
+<h2>Response</h2>
+
+<p>
+	Represent response from client to server. Holds information about HTTP status code, HTTP protocol, response headers and response body.
+</p>
+
+<strong>Construct</strong>
+
+<pre><code class="language-java">
+Response response = new Response(StatusCode.OK, "HTTP/1.1");
+</code></pre>
+<strong>Methods</strong>
+<p>
+	<ul>
+		<li><code>getCode()</code>: returns <code>StatusCode</code></li>
+		<li><code>getProtocol()</code>: returns protocol as string</li>
+
+		<li><code>getHeaders()</code>: returns all headers as <code>Map&lt;String, List&lt;Object&gt;&gt;</code></li>
+		<li><code>getHeaders(String name)</code>: returns headers associate with given name (as <code>List</code>)</li>
+		<li><code>getHeader(String name)</code>: returns first header in list associate with given name or null</li>
+		<li><code>containsHeader(String name)</code>: check if header exists</li>
+		<li><code>getHeader(String name, Class&lt;T&gt; clazz)</code>: returns first header in list as given class or null</li>
+		<li><code>addHeader(String name, Object value)</code>: add header to header list associate with given name</li>
+
+
+		<li><code>getType()</code>: returns <code>BodyType</code></li>
+		<li><code>getBody()</code>: returns byte array of request data. Filled if type is <code>BASIC</code></li>
+		<li><code>getBodyInParameters()</code>: returns <code>RequestParameters</code> representing body. This is not empty if type is <code>FORM_DATA</code> or <code>URLENCODED</code></li>
+		<li><code>getBodyWebsocket()</code>: returns <code>Websocket</code>. Not returns null if type is <code>WEBSOCKET</code></li>
+		<li><code>setBody(byte[] body)</code>: set bytes to body</li>
+		<li><code>setBdoyFormData(RequestParameters params)</code>: set params as body. Body will be send as <code>multipart/form-data</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
+		<li><code>setBodyUrlEncoded(RequestParameters params)</code>: set params as body. Body will be send as <code>application/x-www-form-urlencoded</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
+	</ul>
+</p>
+
+<h2>Websocket</h2>
+
+<p>
+	Connection is opened until is closed by client or <code>close</code> method is called.
+</p>
+
+<strong>API</strong>:
+
+<ul>
+	<li><code>send</code>: send given String</li>
+	<li><code>close</code>: close websocket</li>
+	<li><code>isRunning</code>: if websocket is running</li>
+	<li><code>isClosed</code>: if websocket is closed</li>
+	<li><code>getOrigin</code>: returns content of 'Origin' header</li>
+</ul>
+
+<strong>Example</strong>
+
+<pre><code class="language-java">
+@Override
+public Response accept(Request request, String ip, Optional&lt;WebSocket&gt; websocket) throws IOException {
+	// ...
+	if (websocket.isPresent()) { // is websocket request
+		// there could be more validation like: url.equals("/ws")
+		// ADVICE: provide 'websocket' variable to another thread for sending messages without client request
+		Response wbRes = new Response(StatusCode.SWITCHING_PROTOCOL, request.getProtocol());
+		websocket.get().accept(
+			(message)->{
+				try {
+					if (message.equals("end")) {
+						websocket.get().close();
+					} else {
+						websocket.get().send("Response: " + message);
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			},
+			(e)->{
+				e.printStackTrace();
+			}
+		);
+		return wbRes;
+	}
+	// ...
+}
+</code></pre>
+
+<h2>RequestParameters</h2>
+
+<p>
+	<code>RequestParameters</code> is child of <code>MapDictionary</code> (from <a href="?file=common-structures.html">JI Common</a>). Each key is name of parameter. 
+	Files can be getted by calling <code>getUploadedFile</code> with name of input as parameter. The <code>UploadedFile</code> is returned (see below).
+</p>
+
+<h2>UploadedFile</h2>
+
+<p>
+	<code>UploadedFile</code> holds information about file: name (<code>getFileName</code>) and type (<code>getContentType</code>). Content of file is in <code>ByteArrayOutputStream</code> (<code>getContent</code>).
+</p>
+
+<p>
+	File can be saved to disk by using <code>save</code> method. You have to specifi path on disk and optionally you can give new name of file.
+</p>
