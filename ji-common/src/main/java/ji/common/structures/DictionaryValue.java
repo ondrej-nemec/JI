@@ -368,6 +368,34 @@ public class DictionaryValue {
 			return value;
 		});
 	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T[] getArray() {
+		if (value == null) {
+			return null;
+		}
+		if (value.getClass().isArray()) {
+			return (T[])value;
+		}
+		Object val = value;
+		if (val instanceof String && fromStringToListCallback != null) {
+			val = fromStringToListCallback.apply(val.toString());
+		}
+		if (val == null) {
+			return null;
+		}
+		if (val instanceof ListDictionary<?>) {
+			return (T[])getDictionaryList().toList().toArray();
+		}
+		if (val instanceof List<?>) {
+			return (T[])getList().toArray();
+		}
+		if (val instanceof Set<?>) {
+			return (T[])getSet().toArray();
+		}
+		return (T[])val;
+	}
+	
 	/*
 	@SuppressWarnings("unchecked")
 	public <T> Iterable<T> getIterable() {
