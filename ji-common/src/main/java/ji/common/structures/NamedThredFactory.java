@@ -12,18 +12,13 @@ public class NamedThredFactory implements ThreadFactory {
 
     public NamedThredFactory(String name) {
         SecurityManager s = System.getSecurityManager();
-        group = (s != null) ? s.getThreadGroup() :
-                              Thread.currentThread().getThreadGroup();
-        namePrefix = "pool-" +
-                      name +
-                     "-thread-";
+        group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+        namePrefix = "pool-" + name +  "-thread-";
     }
 
     @Override
     public Thread newThread(Runnable r) {
-        Thread t = new Thread(group, r,
-                              namePrefix + threadNumber.getAndIncrement(),
-                              0);
+        Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
         if (t.isDaemon())
             t.setDaemon(false);
         if (t.getPriority() != Thread.NORM_PRIORITY)
