@@ -1,17 +1,9 @@
 package ji.socketCommunication.http;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import ji.common.Logger;
 import ji.common.structures.MapDictionary;
@@ -22,8 +14,6 @@ import ji.socketCommunication.Server;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 
 public class RestApiendToEndTest {
 
