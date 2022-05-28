@@ -3,7 +3,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 
-import ji.common.Logger;
+import ji.common.Log4j2LoggerTestImpl;
 import ji.common.structures.DictionaryValue;
 import ji.database.Database;
 import ji.database.DatabaseConfig;
@@ -61,7 +61,7 @@ if (Timestamp.class.isInstance(object)) {
 						1
 					)
 		}) {
-			Database db = new Database(c, getLogger());
+			Database db = new Database(c, new Log4j2LoggerTestImpl(null));
 			System.out.println("-----------------");
 			System.out.println("Database: " + c.type);
 			try {
@@ -223,69 +223,5 @@ if (Timestamp.class.isInstance(object)) {
 	}
 	*/
 	
-	private static Logger getLogger() {
-		return new Logger() {
-			
-			@Override
-			public void warn(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void warn(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void info(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void info(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void fatal(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void fatal(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void error(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void error(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void debug(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void debug(Object message) {
-				System.out.println(message);
-			}
-
-			@Override
-			public void trace(Object message) {
-				System.out.println(message);
-			}
-
-			@Override
-			public void trace(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-		};
-	}
 	
 }

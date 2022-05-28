@@ -29,7 +29,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.functions.Terminal;
 import ji.common.structures.ThrowingBiConsumer;
 import ji.database.support.DatabaseRow;

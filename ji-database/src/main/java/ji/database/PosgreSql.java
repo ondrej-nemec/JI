@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.exceptions.NotImplementedYet;
 import ji.querybuilder.QueryBuilderFactory;
 import ji.querybuilder.postgresql.PostgreSqlQueryBuilder;

@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.database.Database;
 import ji.database.DatabaseConfig;
 import ji.database.support.ConnectionFunction;

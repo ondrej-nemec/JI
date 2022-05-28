@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.querybuilder.QueryBuilder;
 import ji.querybuilder.mysql.MySqlQueryBuilder;
 import junitparams.JUnitParamsRunner;

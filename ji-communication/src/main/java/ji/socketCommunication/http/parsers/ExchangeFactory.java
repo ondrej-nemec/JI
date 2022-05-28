@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.structures.MapDictionary;
 import ji.common.structures.ThrowingSupplier;
 import ji.socketCommunication.http.structures.Exchange;

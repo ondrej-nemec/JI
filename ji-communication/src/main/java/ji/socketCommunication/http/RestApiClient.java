@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Optional;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.structures.ThrowingConsumer;
 import ji.socketCommunication.Client;
 import ji.socketCommunication.SslCredentials;

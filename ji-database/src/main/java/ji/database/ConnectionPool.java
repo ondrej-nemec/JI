@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.database.wrappers.ConnectionWrapper;
 
 public class ConnectionPool {

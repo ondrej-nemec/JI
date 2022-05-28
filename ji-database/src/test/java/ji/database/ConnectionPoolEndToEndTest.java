@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import ji.common.Logger;
+import ji.common.Log4j2LoggerTestImpl;
 
 public class ConnectionPoolEndToEndTest {
 
@@ -21,68 +21,7 @@ public class ConnectionPoolEndToEndTest {
 				2
 		);
 		
-		Database d = new Database(config, new Logger() {
-			
-			@Override
-			public void warn(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void warn(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void info(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void info(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void fatal(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void fatal(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void error(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void error(Object message) {
-				System.out.println(message);
-			}
-			
-			@Override
-			public void debug(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-			
-			@Override
-			public void debug(Object message) {
-				System.out.println(message);
-			}
-
-			@Override
-			public void trace(Object message) {
-				System.out.println(message);
-			}
-
-			@Override
-			public void trace(Object message, Throwable t) {
-				System.out.println(message + " " + t.getMessage());
-			}
-		});
+		Database d = new Database(config, new Log4j2LoggerTestImpl(null));
 		
 		ExecutorService exec = Executors.newFixedThreadPool(5);
 	

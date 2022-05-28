@@ -8,8 +8,9 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import ji.common.Logger;
-import ji.socketCommunication.LoggerImpl;
+import org.apache.logging.log4j.Logger;
+
+import ji.common.Log4j2LoggerTestImpl;
 import ji.socketCommunication.Server;
 import ji.socketCommunication.http.profiler.HttpServerProfiler;
 import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
@@ -22,7 +23,7 @@ public class RestApiServerEndToEndTest {
 
 	public static void main(String[] args) {
 		try {
-			Logger logger = new LoggerImpl();
+			Logger logger = new Log4j2LoggerTestImpl(null);
 			RestApiServer.PROFILER = new HttpServerProfiler() {
 				
 				@Override

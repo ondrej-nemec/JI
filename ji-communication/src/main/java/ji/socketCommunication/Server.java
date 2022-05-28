@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.structures.NamedThredFactory;
 import ji.socketCommunication.http.ResponseFactory;
 import ji.socketCommunication.http.RestApiServer;

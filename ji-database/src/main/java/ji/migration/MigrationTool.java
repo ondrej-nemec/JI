@@ -4,7 +4,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.files.text.Text;
 import ji.migration.migrations.JavaMigration;
 import ji.migration.migrations.SqlMigration;

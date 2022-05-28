@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.exceptions.NotImplementedYet;
 import ji.querybuilder.QueryBuilderFactory;
 import ji.querybuilder.sqlserver.SqlServerQueryBuilder;

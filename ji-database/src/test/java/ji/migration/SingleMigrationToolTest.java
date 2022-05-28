@@ -8,7 +8,7 @@ import java.sql.Connection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.migration.migrations.JavaMigration;
 import ji.migration.migrations.SqlMigration;
 import ji.querybuilder.QueryBuilder;

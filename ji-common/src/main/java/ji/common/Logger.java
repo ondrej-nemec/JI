@@ -1,5 +1,6 @@
 package ji.common;
 
+@Deprecated
 public interface Logger {
 
 	public void trace(final Object message);

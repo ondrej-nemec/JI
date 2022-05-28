@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.common.functions.Env;
 import ji.database.Database;
 import ji.database.DatabaseConfig;

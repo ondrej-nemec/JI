@@ -3,6 +3,7 @@ package ji.translator;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import ji.common.Log4j2LoggerTestImpl;
 import ji.common.structures.ListInit;
 
 public class PropertiesTranslatorEndToEndTest {
@@ -17,7 +18,7 @@ public class PropertiesTranslatorEndToEndTest {
 				new Locale("en", true, Arrays.asList())
 			)),
 			new ListInit<String>().add("modules").add("modules2").add("langs").toSet(),
-			new LoggerImpl()
+			new Log4j2LoggerTestImpl(null)
 		);
 		
 		System.out.println(translator.translate("common.some.key"));

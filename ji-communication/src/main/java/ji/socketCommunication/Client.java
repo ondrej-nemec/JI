@@ -3,7 +3,7 @@ package ji.socketCommunication;
 import java.net.Socket;
 import java.util.Optional;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 
 public interface Client {
 

@@ -20,9 +20,10 @@ import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
+
+import ji.common.Log4j2LoggerTestImpl;
 import ji.common.structures.MapInit;
-import ji.socketCommunication.LoggerImpl;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.StatusCode;
 import ji.socketCommunication.http.structures.Exchange;
@@ -178,7 +179,7 @@ public class ExchangeFactoryTest {
 			);
 			
 			assertEquals(new HashMap<>(), request.getHeaders());
-			assertEquals(0, request.getBody().length);
+			assertNull(request.getBody());
 		}
 	}
 	
@@ -217,9 +218,9 @@ public class ExchangeFactoryTest {
 				.toMap(),
 				createFunction((ex)->{
 					if (ex != null) {
-						ex.setBody(new byte[0]);
+						ex.setBodyUrlencoded(new RequestParameters());
 					}
-					return new byte[0];
+					return new RequestParameters();
 				})
 			},
 			new Object[] {
@@ -420,7 +421,7 @@ public class ExchangeFactoryTest {
 	}
 
 	private ExchangeFactory createParser() {
-		Logger logger = new LoggerImpl();
+		Logger logger = new Log4j2LoggerTestImpl(null);
 		StreamReader reader = new StreamReader(1024) { // max size is 1 kB
 			@Override public void write(int b, OutputStream os) throws IOException {
 				if (os instanceof BufferedOutputStreamMock) {

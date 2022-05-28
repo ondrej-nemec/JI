@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.Properties;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.database.support.ConnectionFunction;
 import ji.database.support.DoubleConsumer;
 import ji.database.support.QueryBuilderFunction;

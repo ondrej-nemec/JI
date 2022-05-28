@@ -5,11 +5,12 @@ import static org.junit.Assert.fail;
 import java.util.Map;
 import java.util.Optional;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
+
+import ji.common.Log4j2LoggerTestImpl;
 import ji.common.structures.MapDictionary;
 import ji.common.structures.MapInit;
 import ji.common.structures.Tuple2;
-import ji.socketCommunication.LoggerImpl;
 import ji.socketCommunication.Server;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.structures.Request;
@@ -18,7 +19,7 @@ import ji.socketCommunication.http.structures.Response;
 public class RestApiendToEndTest {
 
 	public static void main(String[] args) {
-		Logger logger = new LoggerImpl();
+		Logger logger = new Log4j2LoggerTestImpl(null);
 		String charset = "";
 		Optional<SslCredentials> ssl = Optional.empty();
 		int port = 10123;

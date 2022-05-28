@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.junit.runners.Parameterized.Parameters;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
 import ji.files.text.basic.ReadText;

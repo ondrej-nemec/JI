@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import ji.common.Logger;
+import org.apache.logging.log4j.Logger;
 
 public interface Translator {
 	
