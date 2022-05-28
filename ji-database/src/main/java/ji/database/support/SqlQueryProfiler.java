@@ -8,9 +8,9 @@ public interface SqlQueryProfiler {
 	
 	void execute(String identifier);
 	
-	void executed();
+	// void executed(String identifier);
 	
-	void executed(Object res);
+	void executed(String identifier, Object res);
 	
 	void prepare(String identifier, String sql);
 	
