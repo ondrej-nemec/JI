@@ -16,7 +16,7 @@ public abstract class Exchange {
 	private final Map<String, List<Object>> headers = new HashMap<>();
 	
 	private BodyType type = BodyType.BASIC;
-	private RequestParameters parameters;
+	private RequestParameters parameters = new RequestParameters();
 	private byte[] body;
 	private WebSocket websocket;
 		
