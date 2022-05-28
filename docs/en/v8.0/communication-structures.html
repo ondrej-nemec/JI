@@ -37,7 +37,7 @@ Reqeust request = new Request(HttpMethod.GET, "/my/page/link?foo=bar", "HTTP/1.1
 		<li><code>getBodyInParameters()</code>: returns <code>RequestParameters</code> representing body. This is not empty if type is <code>FORM_DATA</code> or <code>URLENCODED</code></li>
 		<li><code>getBodyWebsocket()</code>: returns <code>Websocket</code>. Not returns null if type is <code>WEBSOCKET</code></li>
 		<li><code>setBody(byte[] body)</code>: set bytes to body</li>
-		<li><code>setBdoyFormData(RequestParameters params)</code>: set params as body. Body will be send as <code>multipart/form-data</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
+		<li><code>setBodyFormData(RequestParameters params)</code>: set params as body. Body will be send as <code>multipart/form-data</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
 		<li><code>setBodyUrlEncoded(RequestParameters params)</code>: set params as body. Body will be send as <code>application/x-www-form-urlencoded</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
 	</ul>
 </p>
@@ -72,7 +72,7 @@ Response response = new Response(StatusCode.OK, "HTTP/1.1");
 		<li><code>getBodyInParameters()</code>: returns <code>RequestParameters</code> representing body. This is not empty if type is <code>FORM_DATA</code> or <code>URLENCODED</code></li>
 		<li><code>getBodyWebsocket()</code>: returns <code>Websocket</code>. Not returns null if type is <code>WEBSOCKET</code></li>
 		<li><code>setBody(byte[] body)</code>: set bytes to body</li>
-		<li><code>setBdoyFormData(RequestParameters params)</code>: set params as body. Body will be send as <code>multipart/form-data</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
+		<li><code>setBodyFormData(RequestParameters params)</code>: set params as body. Body will be send as <code>multipart/form-data</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
 		<li><code>setBodyUrlEncoded(RequestParameters params)</code>: set params as body. Body will be send as <code>application/x-www-form-urlencoded</code>, <code>Content-Length</code> and <code>Content-Type</code> headers are added automatically.</li>
 	</ul>
 </p>
