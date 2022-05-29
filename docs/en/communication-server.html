@@ -15,7 +15,7 @@
 <strong>Construct</strong>
 
 <p>
-	The <code>Server</code> construct requires: port number, count of allowed connection (thread pool), read timeout, <code>Servant</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), charset (fe. <code>utf-8</code>) and <code>Logger</code> (from JI Common).
+	The <code>Server</code> construct requires: port number, count of allowed connection (thread pool), read timeout, <code>Servant</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), charset (fe. <code>utf-8</code>) and <code>Logger</code> (see JI Common).
 </p>
 
 <pre><code class="language-java">
@@ -48,7 +48,7 @@ socket.getInetAddress();
 
 <div class="diff" from="v8.0">
 	<p>
-		Special case of server is HTTP server. The HTTP server can be created by calling static method <code>Server.createWebServer</code>. The method requires: port number, count of allowed connection (thread pool), read timeout, <code>ResponseFactory</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), maximal allowed request size (default null, means no limit), charset (fe. <code>utf-8</code>) and <code>Logger</code> (from JI Common).
+		Special case of server is HTTP server. The HTTP server can be created by calling static method <code>Server.createWebServer</code>. The method requires: port number, count of allowed connection (thread pool), read timeout, <code>ResponseFactory</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), maximal allowed request size (default null, means no limit), charset (fe. <code>utf-8</code>) and <code>Logger</code> (see JI Common).
 	</p>
 
 	<strong>Example</strong>
@@ -79,7 +79,7 @@ socket.getInetAddress();
 
 <div class="diff" to="v7.1">
 	<p>
-		Special case of server is HTTP server. The HTTP server can be created by calling static method <code>Server.createWebServer</code>. The method requires: port number, count of allowed connection (thread pool), read timeout, <code>RestApiServerResponseFactory</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), maximal allowed uploaded-file size, <code>Optional</code> of <code>List</code> of allowed file formats, charset (fe. <code>utf-8</code>) and <code>Logger</code> (from JI Common).
+		Special case of server is HTTP server. The HTTP server can be created by calling static method <code>Server.createWebServer</code>. The method requires: port number, count of allowed connection (thread pool), read timeout, <code>RestApiServerResponseFactory</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), maximal allowed uploaded-file size, <code>Optional</code> of <code>List</code> of allowed file formats, charset (fe. <code>utf-8</code>) and <code>Logger</code> (see JI Common).
 	</p>
 
 	<strong>Example</strong>
