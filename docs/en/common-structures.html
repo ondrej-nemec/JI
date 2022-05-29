@@ -178,6 +178,11 @@ Properties prop = init.toProperties(); // convert to Properties
 MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
 </code></pre>
 
+<pre><code class="language-java">
+// also there is factory for most used generic combination
+MapInit&lt;String, Object&gt; init = MapInit.create();
+</code></pre>
+
 <h2>Callbacks</h2>
 
 <p>Java callbacks like <code>Function</code> or <code>Consumer</code> are very useful. But sometimes you need execute code throwing f.e. <code>IOException</code> inside <code>apply</code> method. And you have to do <code>try...catch</code>. But code that call <code>apply</code> is catched. Here help Throwing callbacks. Work like <code>Function</code> or <code>Consumer</code> or ... but throw given exception.</p>
