@@ -14,6 +14,7 @@
 		<li>Text: <code>Character</code>, <code>char</code>, <code>String</code></li>
 		<li><code>Map</code>, <code>MapDictionary</code> - cast from <code>Map</code> to <code>MapDictionary</code> and vise versa automatically.</li>
 		<li><code>List</code>, <code>ListDictionary</code> and <code>Set</code> - cast from <code>List</code> to <code>ListDictionary</code>, from <code>List</code> to <code>Set</code>, from <code>Set</code> to <code>ListDictionary</code> and all vise versa automatically. Eventual can be <code>String</code> splited by given delimeter to get <code>List</code>. </li>
+		<li class="diff" from="v8.0"><code>array</code>: <code>Set</code>, <code>List</code> and <code>ListDictionary</code> can be cast to array and vise versa.</li>
 		<li><code>Enums</code></li>
 		<li>Time: <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>, <code>ZonedDateTime</code>. All times can be casted to another, parsed from <code>String</code> with ISO or set pattern. Also from number.</li>
 		<li>Arbitrary class - from <code>Map</code>. See <a href="?file=common-functions.html#H2-6">Mapper</a></li>
@@ -201,3 +202,17 @@ MapDictionary&lt;String, Object&gt; dictionary = init.toDictionaryMap();
 	</ul>
 
 </p>
+
+<div class="diff" from="v8.0">
+	<h2>NamedThreadFactory</h2>
+
+	<p>
+		<code>NamedThreadFactory</code> allows give custom name to thread in <code>Executors</code>. final thread name looks: <code>pool-<i>name</i>-thread-<i>number</i></code>
+	</p>
+
+	<pre><code class="language-java">
+	Executors.newFixedThreadPool(threadCount, new NamedThredFactory(threadName));
+	// OR
+	Executors.newScheduledThreadPool(threadCount, new NamedThredFactory(threadName));
+	</code></pre>
+</div>

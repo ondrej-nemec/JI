@@ -1,0 +1,114 @@
+<h1>Clients</h1>
+
+<div class="diff" from="v8.0">
+	<p class="alert alert-info">
+		Classes like <code>Request</code>, <code>Response</code>, <code>Websocket</code> and <code>UplodignFile</code> are explained <a href="?file=communication-structures.html">here</a>.
+	</p>
+
+	<p>
+		JI provide <code>Client</code> interface with one method: <code>createSocket(String ip, int port, Optional&lt;SslCredentials&gt;): Socket</code> (for SSL see <a href="?file=communication-ssl.html">here</a>. This method has default implementation and provides connection to given IP.
+	</p>
+
+	<h2>RestApiClient</h2>
+
+	<p>
+		For making HTTP requests.
+	</p>
+
+	<strong>Construct</strong>
+
+	<pre><code class="language-java">
+	RestApiClient client = new RestApiClient(
+		"", // server URL or IP WITHOUT protocol [HTTP(S)]
+		80, // port
+		"HTTP/1.1", // protocol
+		Optional.empty(), // SSL
+		"UTF-8", // charset
+		null, // maximal response body size in bytes, if null no limit
+		logger
+	);
+	// OR
+	// protocol is HTTP/1.1
+	// maximal response body is null
+	// port is 80 (if ssl is empty) or 443
+	RestApiClient client = new RestApiClient(
+		"", // server URL or IP WITHOUT protocol [HTTP(S)]
+		Optional.empty(), // SSL
+		"UTF-8", // charset
+		logger
+	);
+	</code></pre>
+
+	<h3>Send request</h3>
+
+	<p>
+		<code>RestApiClient</code> provides general method <code>send(Request request): Response</code>.
+	</p>
+
+	<p>
+		Otherwise you can use:
+		<pre><code class="language-java">
+	client.send(HttpMethod.POST, "/my/page/link?foo=bar", (request)->{
+		request.setBody(new byte[] { /* ... */ });
+	});
+		</code></pre>
+		There are methods <code>get</code>, <code>post</code>, <code>put</code> and <code>delete</code>. That methods work same as method in example, just HTTP method is not required.
+	</p>
+</div>
+
+<div class="diff" to="v7.1">
+	<p>
+		JI provide two implementation of clients - <code>P2PClient</code> for P2P and <code>RestApiClient</code> for RestApi.
+	</p>
+
+	<h2>P2PClient</h2>
+
+	<p>
+		For complex communication, usualy P2P. Requrires <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">SSL</a>). The client connect to server with <code>connect</code> method, disconnect with <code>disconnect</code>. For sending/receiving messages, you have to call <code>communicate</code>.
+	</p>
+
+	<strong>Construct</strong>
+
+	<pre><code class="language-java">
+	P2PClient client = new P2PClient(
+		"", // server IP or DNS - without protocol
+		80, // port 
+		15000, // connection timeout
+		60000, // read timeout 
+		Optional.empty(), // SSL
+		"UTF-8", // charset
+		logger
+	);
+	</code></pre>
+
+	<strong>communicate</strong>
+
+	<pre><code class="language-java">
+	client.communicate((bufferedReader, bufferedWriter)->{
+		// ...
+	});
+	</code></pre>
+
+	<h2>RestApiClient</h2>
+
+	<p>
+		For making requests. Requrires <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">SSL</a>). For making request, call <code>get</code>/<code>post</code>/<code>put</code>/<code>delete</code>. These methods return <code>RestApiResponse</code> (holds response code, message and content).
+	</p>
+
+	<strong>Construct</strong>
+
+	<pre><code class="language-java">
+	RestApiClient client = new RestApiClient(
+		"", // server URL or IP including protocol [HTTP(S)] and port if required
+		Optional.empty(), // SSL
+		"UTF-8", // charset
+		logger
+	);
+	</code></pre>
+
+	<h3>Request</h3>
+
+	<p>
+		Methods: <code>get</code>, <code>post</code>, <code>put</code> and <code>delete</code>. Have same API: URI ('/some/path'), request headers (<code>Properties</code>) and request parameters (<code>Properties</code>).
+	</p>
+</div>
