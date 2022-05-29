@@ -9,9 +9,6 @@
 
 ## FIX and Bugs
 
-* Communication:
-	* Exception `Content length not match expecation. Expected: 610, actual: 0` - with file upload
-
 ## TODO
 
 * More unit tests
@@ -25,10 +22,7 @@
     * FK on* action cascade,delete - not supported in derby, sql server
 * Communication:
     * Try trusted certificates (improve doc)
-    * Try higher version of TLS (Server class)
     * Try load file and maybe add content type as extension to name for higher security
-    * Parsers - support for binary, file limits,... see todos in code
-    * Use new parsing for server, too
 * Files
     * sometimes infinite loop happends - with some nativ objects
 * Translations
