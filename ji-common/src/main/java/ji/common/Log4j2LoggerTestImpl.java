@@ -14,14 +14,22 @@ import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.util.MessageSupplier;
 import org.apache.logging.log4j.util.Supplier;
 
-public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
+public class Log4j2LoggerTestImpl implements Logger {
 	
 	private final String file;
+	private final String name;
 	
-	public Log4j2LoggerTestImpl(String file) {
-		this.file = file;
+	public Log4j2LoggerTestImpl(String name) {
+		this.name = name;
+		this.file = null;
 	}
-
+	
+	public Log4j2LoggerTestImpl(String name, String file) {
+		this.file = file;
+		this.name = name;
+	}
+	
+	
 	@Override
 	public void debug(Object message) {
 		print("DEBUG", message);
@@ -91,18 +99,32 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
     		}
     	}
     	StringBuilder text = new StringBuilder(String.format(
-				"%s %s [%s] (%s:%s) %s",
+				"%s %s [%s]%s (%s:%s) %s",
 				LocalDateTime.now().toString().replace("T", " "),
 				severity,
 				Thread.currentThread().getName(),
+				name == null ? "" : " - " + name,
 				trace == null ? "" : trace.getFileName(),
 				trace == null ? "" : trace.getLineNumber(),
 				message.toString()
 		));
     	if (t != null) {
-    		for (StackTraceElement ste : t.getStackTrace()) {
-    			text.append("\n\t");
-    			text.append(ste);
+    		Throwable ext = t;
+    		while(ext != null) {
+    			for (StackTraceElement ste : ext.getStackTrace()) {
+        			text.append("\n\t");
+        			text.append(String.format(
+        				"at %s.%s (%s:%s)", 
+        				ste.getClassName(),
+        				ste.getMethodName(),
+        				ste.getFileName(),
+        				ste.getLineNumber()
+        			));
+        		}
+        		ext = ext.getCause();
+        		if (ext != null) {
+            		text.append("\n\tCaused:");
+        		}
     		}
     	}
 		System.out.println(text);
@@ -545,8 +567,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void error(String message) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message);
 	}
 
 	@Override
@@ -563,8 +584,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void error(String message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, throwable);
 	}
 
 	@Override
@@ -828,20 +848,17 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void fatal(CharSequence message) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message);
 	}
 
 	@Override
 	public void fatal(CharSequence message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, throwable);
 	}
 
 	@Override
 	public void fatal(String message) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message);
 	}
 
 	@Override
@@ -858,8 +875,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void fatal(String message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, throwable);
 	}
 
 	@Override
@@ -1015,7 +1031,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public String getName() {
-		throw new NotImplementedException();
+		return name;
 		
 	}
 
@@ -1129,20 +1145,17 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void info(CharSequence message) {
-		throw new NotImplementedException();
-		
+		print("INFO", message);
 	}
 
 	@Override
 	public void info(CharSequence message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, throwable);
 	}
 
 	@Override
 	public void info(String message) {
-		throw new NotImplementedException();
-		
+		print("INFO", message);
 	}
 
 	@Override
@@ -1159,8 +1172,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void info(String message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, throwable);
 	}
 
 	@Override
@@ -1803,20 +1815,17 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void trace(CharSequence message) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message);
 	}
 
 	@Override
 	public void trace(CharSequence message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, throwable);
 	}
 
 	@Override
 	public void trace(String message) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message);
 	}
 
 	@Override
@@ -1833,8 +1842,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void trace(String message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, throwable);
 	}
 
 	@Override
@@ -2141,17 +2149,17 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void warn(CharSequence message) {
-		throw new NotImplementedException();
+		print("WARN", message);
 	}
 
 	@Override
 	public void warn(CharSequence message, Throwable throwable) {
-		throw new NotImplementedException();
+		print("WARN", message);
 	}
 
 	@Override
 	public void warn(String message) {
-		throw new NotImplementedException();
+		print("WARN", message);
 	}
 
 	@Override
@@ -2166,7 +2174,7 @@ public class Log4j2LoggerTestImpl implements Logger, ji.common.Logger {
 
 	@Override
 	public void warn(String message, Throwable throwable) {
-		throw new NotImplementedException();
+		print("WARN", message, throwable);
 	}
 
 	@Override
