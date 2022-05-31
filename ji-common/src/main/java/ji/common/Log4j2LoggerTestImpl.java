@@ -272,8 +272,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void debug(String message) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message);
 	}
 
 	@Override
@@ -290,8 +289,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void debug(String message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, throwable);
 	}
 
 	@Override
