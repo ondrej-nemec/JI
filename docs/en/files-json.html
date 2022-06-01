@@ -179,6 +179,7 @@ new JsonWritter().write(stream, data);
 		<li><code>Boolean</code> and <code>Number</code> are written with <code>toString</code> without quotes</li>
 		<li><code>DictionaryValue</code> is written as it's value</li>
 		<li><code>Optional</code> - if present, the value is written, otherwise <code>null</code></li>
+		<li><code>Tuple2</code> and <code>Tuple3</code> are serialized with JI Common <code>Mapper</code></li>
 		<li>Any other objects are written as text (using <code>toString()</code>) with quotes</li>
 	</ul>
 </p>
