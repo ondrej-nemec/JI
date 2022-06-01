@@ -151,7 +151,7 @@ OutputJsonStream stream = ...;
 new JsonWritter().write(stream, data);
 </code></pre>
 
-<p>
+<p class="diff" to="v7.1">
 	The object will be written with following rules:
 	<ul>
 		<li><code>NULL</code> is <code>null</code></li>
@@ -169,14 +169,32 @@ new JsonWritter().write(stream, data);
 	</ul>
 </p>
 
+<p class="diff" from="v8.0">
+	The object will be written with following rules:
+	<ul>
+		<li><code>NULL</code> is <code>null</code></li>
+		<li><code>Iterable</code> and <code>ListDictionary</code> are JSON list</li>
+		<li><code>Map</code> and <code>MapDictionary</code> are JSON object</li>
+		<li><code>Jsonable</code> (see bellow) - the final JSON is defined by <code>toJson</code> method</li>
+		<li><code>Boolean</code> and <code>Number</code> are written with <code>toString</code> without quotes</li>
+		<li><code>DictionaryValue</code> is written as it's value</li>
+		<li><code>Optional</code> - if present, the value is written, otherwise <code>null</code></li>
+		<li>Any other objects are written as text (using <code>toString()</code>) with quotes</li>
+	</ul>
+</p>
+
 <p class="alert alert-danger">
 	<strong>NOTE:</strong> serializing some native classes with <code>Mapper</code> can cause infinite recursion.
 </p>
 
 <h3>Jsonable</h3>
 
-<p>
+<p class="diff" to="v7.1">
 	This interface allow you define how to parse your object to JSON. <code>toJson</code> returns object and the rules upper will be applied on it.
+</p>
+
+<p class="diff" from="v8.0">
+	This interface allow you define how to parse your object to JSON. <code>toJson</code> returns object and the rules upper will be applied on it. The method has default implementation - serialize object with JI Common <code>Mapper</code>
 </p>
 
 <h2>JsonReader</h2>

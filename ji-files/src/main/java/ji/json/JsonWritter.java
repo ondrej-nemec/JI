@@ -1,17 +1,12 @@
 package ji.json;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
-import ji.common.functions.Mapper;
 import ji.common.structures.DictionaryValue;
 import ji.common.structures.ListDictionary;
 import ji.common.structures.MapDictionary;
@@ -88,7 +83,7 @@ public class JsonWritter {
 			write(stream, ListDictionary.class.cast(value).toList(), name);
 		} else if (value instanceof Jsonable) {
 			writeObject(stream, ((Jsonable)value).toJson(), name);
-		} else if (value instanceof Number || value instanceof Boolean
+	/*	} else if (value instanceof Number || value instanceof Boolean
 				|| value instanceof Character || value instanceof String
 				|| value instanceof Enum 
 				|| value instanceof LocalDateTime|| value instanceof ZonedDateTime
@@ -97,7 +92,7 @@ public class JsonWritter {
 				stream.writeListValue(value);
 			} else {
 				stream.writeObjectValue(name, value);
-			}
+			}*/
 		} else if (value instanceof Date) {
 			String date = DateFormatUtils.format(Date.class.cast(value).getTime(), "yyyy-MM-dd HH:mm:ss.SSS");
 			if (name == null) {
@@ -109,8 +104,15 @@ public class JsonWritter {
 			writeObject(stream, DictionaryValue.class.cast(value).getValue(), name);
 		} else if (value instanceof Optional) {
 			writeObject(stream, Optional.class.cast(value).orElse(null), name);
+		/*} else if (value instanceof Class<?>) {
+			writeObject(stream, Class.class.cast(value).toString(), name);*/
 		} else {
-			writeObject(stream, Mapper.get().serialize(value), name);
+			//writeObject(stream, Mapper.get().serialize(value), name);
+			if (name == null) {
+				stream.writeListValue(value);
+			} else {
+				stream.writeObjectValue(name, value);
+			}
 		}	
 	}
 	

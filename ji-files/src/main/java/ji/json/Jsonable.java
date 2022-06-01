@@ -1,7 +1,11 @@
 package ji.json;
 
+import ji.common.functions.Mapper;
+
 public interface Jsonable {
 
-	Object toJson();
+	default Object toJson() {
+		return Mapper.get().serialize(this);
+	}
 	
 }
