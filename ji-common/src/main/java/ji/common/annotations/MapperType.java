@@ -13,4 +13,6 @@ public @interface MapperType {
 	
 	String dateTimeFormat() default "";
 	
+	boolean ignoreOnNull() default false;
+	
 }

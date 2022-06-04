@@ -71,6 +71,8 @@ public class MapperTest {
 			private List<String> list = Arrays.asList("a", "b", "c");
 			@MapperIgnored
 			private double ignored = 12.3;
+			@MapperParameter({@MapperType(value="NullParameter", ignoreOnNull = true)})
+			private String nullParam = null;
 			@MapperParameter({@MapperType("realName")})
 			private String anotherName = "renamed";
 		};

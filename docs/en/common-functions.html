@@ -59,7 +59,7 @@ Properties prop = PropertiesLoader.loadProperties("res/app.properties", "windows
 <h3>Serialize</h3>
 
 <p>
-	During serialization JI come thru all fields of entity and uses then as key in new <code>Map</code>. Values of fields become values. Serializations works recursivelly. If you wish ignore field during serialization, just add <code>MapperIgnored</code> annotation. If you do not wish use field name as key, you need to annotate this field with <code>MapperParameter</code> and as value to put <code>MapperType</code> (see examples).
+	During serialization JI come thru all fields of entity and uses then as key in new <code>Map</code>. Values of fields become values. Serializations works recursivelly. If you wish ignore field during serialization, just add <code>MapperIgnored</code> annotation. If you do not wish use field name as key, you need to annotate this field with <code>MapperParameter</code> and as value to put <code>MapperType</code> (see examples). The null field value will not be serialized if <code>ignoreOnNull</code> is set.
 </p>
 
 <strong>Entity</strong>
@@ -71,6 +71,8 @@ public class UserEntity {
 	private String name; // this field will be saved as 'name'
 	@MapperIgnored
 	private int age; // this field will be ignored
+	@MapperParameter({@MapperType(value="is_marrige", ignoreOnNull=true)})
+	private Boolean marrige; // this field will be ignored if value is null
 }
 </code></pre>
 <strong>Call:</strong>

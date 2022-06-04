@@ -57,7 +57,9 @@ public class Mapper {
 							toUse = mapperType; // key match
 						}
 					}
-					if (toUse != null) {
+					if (toUse != null && toUse.ignoreOnNull() && field.get(value) == null) {
+						continue;
+					} else if (toUse != null) {
 						name = toUse.value();
 					}
 				}
