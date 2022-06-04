@@ -20,12 +20,14 @@ public class Log4j2LoggerTestImpl implements Logger {
 	private final String name;
 	
 	public Log4j2LoggerTestImpl(String name) {
-		this.name = name;
-		this.file = null;
+		this(name, null);
 	}
 	
 	public Log4j2LoggerTestImpl(String name, String file) {
-		this.file = file;
+		this.file = file == null ? null : file.replace(
+			".", 
+			LocalDateTime.now().toString().replace(".", "-").replace(":", "-") + "."
+		);
 		this.name = name;
 	}
 	
@@ -112,6 +114,8 @@ public class Log4j2LoggerTestImpl implements Logger {
     		Throwable ext = t;
     		while(ext != null) {
     			for (StackTraceElement ste : ext.getStackTrace()) {
+    				text.append("\n\t");
+    				text.append(String.format("%s: %s", t.getClass(), t.getMessage()));
         			text.append("\n\t");
         			text.append(String.format(
         				"at %s.%s (%s:%s)", 
@@ -131,6 +135,8 @@ public class Log4j2LoggerTestImpl implements Logger {
 		if (file != null) {
 			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
 				bw.write(text.toString());
+				bw.write("\n");
+				bw.flush();
 			} catch (Exception e) {}
 		}
 	}
