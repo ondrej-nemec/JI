@@ -15,7 +15,6 @@
 * Check TODOs - remove or add here
 * Common
      * Mapper – create instance with parametrized constructor
-     * Mapper - serialize - ignore value if is null parameter
 * Database:
     * Known issue: SQL Server: The operation 'ALTER TABLE DROP INDEX' is supported only with memory optimized tables
     * Known issue: Derby: Alter table create/delete foreign key not working
@@ -23,8 +22,10 @@
 * Communication:
     * Try trusted certificates (improve doc)
     * Try load file and maybe add content type as extension to name for higher security
+    * Custom errors ?
 * Files
     * sometimes infinite loop happends - with some nativ objects
+    * Serialize
 * Translations
 	* Translation base on parameter - count, class,..
 
