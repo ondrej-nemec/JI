@@ -13,11 +13,11 @@ repositories {
 }
 
 dependencies {
-	implementation project('ji-common')
-	implementation project('ji-translate')
-	implementation project('ji-communication')
-	implementation project('ji-database')
-	implementation project('ji-testing')
-	implementation project('ji-files')
+	api project('ji-common')
+	api project('ji-translate')
+	api project('ji-communication')
+	api project('ji-database')
+	api project('ji-testing')
+	api project('ji-files')
 }
 
