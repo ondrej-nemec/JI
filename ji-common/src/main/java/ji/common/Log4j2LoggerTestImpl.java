@@ -113,9 +113,9 @@ public class Log4j2LoggerTestImpl implements Logger {
     	if (t != null) {
     		Throwable ext = t;
     		while(ext != null) {
+    			text.append("\n\t");
+    			text.append(String.format("%s: %s", ext.getClass(), ext.getMessage()));
     			for (StackTraceElement ste : ext.getStackTrace()) {
-    				text.append("\n\t");
-    				text.append(String.format("%s: %s", t.getClass(), t.getMessage()));
         			text.append("\n\t");
         			text.append(String.format(
         				"at %s.%s (%s:%s)", 
