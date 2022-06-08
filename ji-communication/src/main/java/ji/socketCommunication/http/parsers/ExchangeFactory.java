@@ -65,8 +65,8 @@ public class ExchangeFactory {
 	public Request readRequest(InputStream bis) throws IOException {
 		return read(bis, ()->{
 			Request r = firstLine.createRequest(bis);
-			String[] uri = r.getUri().split("\\?", 2);
-			if (uri.length == 2) {
+			String[] uri = r.getUri().split("\\?");
+			if (uri.length > 1) {
 				r.setUriParams(uri[0], urlencode.decode(uri[1]));
 			} else {
 				r.setUriParams(uri[0], MapDictionary.hashMap());
