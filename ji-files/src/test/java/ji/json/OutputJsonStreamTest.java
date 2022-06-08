@@ -106,6 +106,19 @@ public class OutputJsonStreamTest {
 						}),
 						false
 				},
+				
+				new Object[] {
+						"{\"name\":\"some \\n text \\t with \\r escaped \\\" chars \\\\ like \\b and \\f here\"}",
+						c((stream)->{
+							stream.writeObjectStart();
+							stream.writeObjectValue(
+								"name",
+								"some \n text \t with \r escaped \" chars \\ like \b and \f here"
+							);
+							stream.writeObjectEnd();
+						}),
+						false
+				},
 
 				new Object[] {
 						"{\n"
