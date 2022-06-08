@@ -214,6 +214,8 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-empty.txt",
 				new MapInit<String, Object>()
+				.append("Content-Length", Arrays.asList("0"))
+				.append("Content-Type", Arrays.asList("application/x-www-form-urlencoded"))
 				.append("Some-header", Arrays.asList("my header value"))
 				.toMap(),
 				createFunction((ex)->{
