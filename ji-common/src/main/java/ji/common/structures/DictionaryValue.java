@@ -216,7 +216,7 @@ public class DictionaryValue {
 	}
 	
 	private <T> T parsePrimitive(String s, Supplier<T> supplier) {
-		if (s == null || s.equalsIgnoreCase("null")) {
+		if (s == null || s.equals("") || s.equalsIgnoreCase("null")) {
 			return null;
 		}
 		return supplier.get();
