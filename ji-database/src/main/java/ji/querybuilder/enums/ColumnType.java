@@ -8,7 +8,8 @@ public class ColumnType {
 		STRING,
 		TEXT,
 		DATETIME,
-		// TODO date, time
+		DATE,
+		TIME,
 		CHAR
 	}
 
