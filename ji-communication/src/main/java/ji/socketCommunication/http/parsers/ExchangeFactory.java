@@ -121,8 +121,8 @@ public class ExchangeFactory {
 				
 				headers.write(exchange, bos);
 				if (formbody.length > 0) {
-					stream.write('\n', bos); // end of header section or first line
-					stream.write('\n', bos); // separator
+				//	stream.write('\n', bos); // end of header section or first line
+				//	stream.write('\n', bos); // separator
 					stream.write(formbody, bos);
 				}
 				break;
@@ -132,8 +132,8 @@ public class ExchangeFactory {
 				
 				headers.write(exchange, bos);
 				if (body.length > 0) {
-					stream.write('\n', bos); // end of header section or first line
-					stream.write('\n', bos); // separator
+				//	stream.write('\n', bos); // end of header section or first line
+				//	stream.write('\n', bos); // separator
 					stream.write(body, bos);
 				}
 				break;
@@ -149,8 +149,8 @@ public class ExchangeFactory {
 				));
 				
 				headers.write(exchange, bos);
-				stream.write('\n', bos); // end of header section or first line
-				stream.write('\n', bos); // separator
+			//	stream.write('\n', bos); // end of header section or first line
+			//	stream.write('\n', bos); // separator
 				websocket.waitOnMessages();
 				break;
 			case BASIC:
@@ -158,8 +158,8 @@ public class ExchangeFactory {
 				// addHeaders(exchange, exchange.getBody().length, null);
 				headers.write(exchange, bos);
 				if (exchange.getBody() != null && exchange.getBody().length > 0) {
-					stream.write('\n', bos); // end of header section or first line
-					stream.write('\n', bos); // separator
+				//	stream.write('\n', bos); // end of header section or first line
+				//	stream.write('\n', bos); // separator
 					stream.write(exchange.getBody(), bos);
 				}
 				break;

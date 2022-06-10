@@ -20,10 +20,12 @@ public class Headers {
 	public void write(Exchange exchange, OutputStream bos) throws IOException {
 		for (Entry<String, List<Object>> header : exchange.getHeaders().entrySet()) {
 			for (Object headerValue : header.getValue()) {
-				bos.write('\n'); // end of previous header or first line
+			//	bos.write('\n'); // end of previous header or first line
 				bos.write(String.format("%s: %s", header.getKey(), headerValue).getBytes());
+				bos.write('\n'); // end of header line
 			}
         }
+		bos.write('\n'); // separator
 		bos.flush();
 	}
 	
