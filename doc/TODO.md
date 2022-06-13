@@ -24,7 +24,6 @@
     * Try load file and maybe add content type as extension to name for higher security
     * Custom errors ?
 * Files
-    * sometimes infinite loop happends - with some nativ objects
     * Serialize
 * Translations
 	* Translation base on parameter - count, class,..
@@ -35,7 +34,6 @@
 	* Env: load configuration from another files like xml, too.
 * Database
 	* Migrations: revert - remove or add to documentation
-	* QueryBuilder: date and time data time
 	* QueryBuilder: add multicolumn primary key, then use in migrations
 	* QueryBuilder: create view from MultiSelect
 	* DB: start/stop database server if is not external (maybe: https://stackoverflow.com/questions/9075098/start-windows-service-from-java/9075237#9075237)
@@ -56,9 +54,8 @@
     * Improve and add: OperationSystem, StackTrace, Terminal
     * DictionaryValue: support for serialize (to JSON too), collection/set
 * Communication:
-    * RestApiClient - own implementation, including websockets
+    * RestApiClient - websockets
     * SSL: some cache for loading *Store
-    * RestApiServer: Parse some request types like xml, html and JS
 * Database:
    * Materialization
    * QueryBuilder - high validation - like MultipleSelectBuilder::orderBy

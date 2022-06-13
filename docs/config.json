@@ -4,9 +4,9 @@
 		"en": "English"
 	},
 	"versions": {
+		"v8.0": "v8.0.0",
 		"v7.1": "v7.1.0",
-		"v7.0": "v7.0.1",
-		"v8.0": "v8.0.0"
+		"v7.0": "v7.0.1"
 	},
 	"social": {
 		"author": "Ondřej Němec",
