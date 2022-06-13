@@ -3,6 +3,7 @@ package ji.querybuilder.enums;
 import java.time.temporal.Temporal;
 
 import ji.common.functions.Implode;
+import ji.common.structures.DictionaryValue;
 import ji.common.structures.ListDictionary;
 
 public class SQL {
@@ -17,6 +18,8 @@ public class SQL {
 		} else if (value instanceof ListDictionary) {
 			ListDictionary<?> iterable = ListDictionary.class.cast(value);
 			return Implode.implode(item->escapeScalar(item), ",", iterable.toList());
+		} else if (value instanceof DictionaryValue) {
+			return escapeScalar(DictionaryValue.class.cast(value).getValue());
 		} else {
 			return escapeScalar(value);
 		}
