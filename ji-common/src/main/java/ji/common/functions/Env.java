@@ -42,7 +42,7 @@ public class Env implements Dictionary<String> {
 	}
 	
 	public Env getModule(String key) {
-		return new Env(properties, key);
+		return new Env(properties, (this.key == null ? "" : this.key + ".") + key);
 	}
 
 }
