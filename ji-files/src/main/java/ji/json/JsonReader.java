@@ -33,7 +33,7 @@ public class JsonReader {
 	public Object read(String json) {
 		InputStringProvider provider = new InputStringProvider(json);
 		try (InputJsonStream stream = new InputJsonStream(provider)) {
-			return read(stream);
+			return read(stream); // list or map
 		} catch (IOException e) {
 			// ignore - no reason for it
 			throw new LogicException("Unexpected IOException with String provider " + e.getMessage());
