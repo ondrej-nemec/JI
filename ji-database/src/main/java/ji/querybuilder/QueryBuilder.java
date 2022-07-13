@@ -15,7 +15,7 @@ import ji.querybuilder.builders.MultipleSelectBuilder;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
 
-public class QueryBuilder implements QueryBuilderFactory {
+public class QueryBuilder implements QueryBuilderFactory, PreparedQueries {
 
 	private final QueryBuilderFactory factory;
 	
@@ -80,7 +80,7 @@ public class QueryBuilder implements QueryBuilderFactory {
 	}
 
 	@Override
-	public SelectBuilder select(String select) {
+	public SelectBuilder select(String... select) {
 		return factory.select(select);
 	}
 

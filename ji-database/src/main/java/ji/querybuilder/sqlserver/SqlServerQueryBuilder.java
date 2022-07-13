@@ -43,7 +43,7 @@ public class SqlServerQueryBuilder implements QueryBuilderFactory {
 	}
 
 	@Override
-	public SelectBuilder select(String select) {
+	public SelectBuilder select(String... select) {
 		return new SqlServerSelectBuilder(connection, select);
 	}
 

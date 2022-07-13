@@ -22,7 +22,7 @@ public interface QueryBuilderFactory {
 	
 	 UpdateBuilder update(String table);
 	
-	 SelectBuilder select(String select);
+	 SelectBuilder select(String... select);
 		
 	 ExecuteBuilder deleteTable(String table);
 	

@@ -39,7 +39,7 @@ public class DerbyQueryBuilder implements QueryBuilderFactory {
 		return new DerbyUpdateBuilder(connection, table);
 	}
 	@Override
-	public SelectBuilder select(String select) {
+	public SelectBuilder select(String... select) {
 		return new DerbySelectBuilder(connection, select);
 	}
 	@Override

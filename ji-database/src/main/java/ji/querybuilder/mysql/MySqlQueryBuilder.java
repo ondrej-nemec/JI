@@ -43,7 +43,7 @@ public class MySqlQueryBuilder implements QueryBuilderFactory {
 	}
 
 	@Override
-	public SelectBuilder select(String select) {
+	public SelectBuilder select(String... select) {
 		return new MySqlSelectBuilder(connection, select);
 	}
 

@@ -43,7 +43,7 @@ public class PostgreSqlQueryBuilder implements QueryBuilderFactory {
 	}
 
 	@Override
-	public SelectBuilder select(String select) {
+	public SelectBuilder select(String... select) {
 		return new PostgreSqlSelectBuilder(connection, select);
 	}
 
