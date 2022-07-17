@@ -460,6 +460,9 @@ public class DictionaryValue {
 
 	@Override
 	public String toString() {
+		if (value == null) {
+			return "NULL";
+		}
 		return value.toString();
 	}
 	
