@@ -11,6 +11,7 @@ import java.util.function.Function;
 import ji.common.structures.DictionaryValue;
 import ji.common.structures.ThrowingBiConsumer;
 import ji.common.structures.ThrowingConsumer;
+import ji.common.structures.ThrowingFunction;
 import ji.common.structures.ThrowingSupplier;
 import ji.database.support.DatabaseRow;
 import ji.querybuilder.builders.InsertBuilder;
@@ -38,7 +39,7 @@ public interface PreparedQueries {
 		return getAll(builder, table, r->r, select);
 	}
 	
-	default <T> List<T> getAll(QueryBuilder builder, String table, Function<DatabaseRow, T> create, String... select) throws SQLException {
+	default <T> List<T> getAll(QueryBuilder builder, String table, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
 		return _getAll(builder, table, select).fetchAll(create);
 	}
 	
@@ -52,7 +53,7 @@ public interface PreparedQueries {
 		return getAllBy(builder, table, idName, id, r->r, select);
 	}
 	
-	default <T> List<T> getAllBy(QueryBuilder builder, String table, String idName, Object id, Function<DatabaseRow, T> create, String... select) throws SQLException {
+	default <T> List<T> getAllBy(QueryBuilder builder, String table, String idName, Object id, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
 		return builder.select(_createSelect(select)).from(table)
 			.where(idName + " = :id").addParameter(":id", id)
 			.fetchAll(create);
@@ -64,7 +65,7 @@ public interface PreparedQueries {
 		return getAllIn(builder, table, idName, ids, r->r, select);
 	}
 	
-	default <T> List<T> getAllIn(QueryBuilder builder, String table, String idName, Collection<Object> ids, Function<DatabaseRow, T> create, String... select) throws SQLException {
+	default <T> List<T> getAllIn(QueryBuilder builder, String table, String idName, Collection<Object> ids, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
 		return builder.select(_createSelect(select)).from(table)
 				.where(idName + " in (:id)").addParameter(":id", ids)
 				.fetchAll(create);

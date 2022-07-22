@@ -13,7 +13,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -104,7 +103,7 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 		return fetchAll((r)->r);
 	}
 
-	default <T> List<T> fetchAll(Function<DatabaseRow, T> function) throws SQLException {
+	default <T> List<T> fetchAll(ThrowingFunction<DatabaseRow, T, SQLException> function) throws SQLException {
 		return _execute((res)->{
 			List<T> rows = new LinkedList<>();
 			while (res.next()) {
