@@ -8,10 +8,8 @@
 		"v7.1": "v7.1.0",
 		"v7.0": "v7.0.1"
 	},
-	"social": {
-		"author": "Ondřej Němec",
-		"from": 2018,
-		"icon": "",
-		"description": ""
-	}
+	"author": "Ondřej Němec",
+	"from": 2018,
+	"icon": "",
+	"description": ""
 }
