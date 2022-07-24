@@ -100,7 +100,7 @@ builder.select("*")
 <strong>Example</strong>
 
 <pre><code class="language-java">
-builder.select("*")
+builder.select("a.id a_id", "b.id b_id", "b.number")
 	.from("Table1 a")
 	.join("Table2 b", Join.INNER_JOIN, "a.id = b.a_id")
 	.join(
@@ -117,7 +117,7 @@ builder.select("*")
 	.limit(10, 5)
 	.addParameter(":id", 18)
 	.addParameter(":name", "admin")
-	.addParameter(":in", Arrays.asList(1,2,3,4))
+	.addParameter(":in", Arrays.asList(1,2,3,4));
 </code></pre>
 
 <p>SQL without translated parameters:</p>
@@ -526,3 +526,130 @@ WHERE (id = 42);
 <p>
 	Group of some SQL functions. Returns given function in correct spelling for given SQL platform.
 </p>
+
+<h3>Prepared queries</h3>
+
+<p>
+	<code>QueryBuilder</code> provides some prepared queries.
+</p>
+
+<p>
+	In examples will be used following database.
+</p>
+
+<img src="../images/query-builder-db.png">
+
+<h4>Get one item</h4>
+
+<p>
+	<code>get</code> method returns one <code>DatabaseRow</code> (or null) in given table by given column.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+// get all columns (select *)
+DatabaseRow row = builder.get(builder, "MainTable", "ID", 42);
+// or get specified columns
+DatabaseRow row = builder.get(builder, "MainTable", "ID", 42, "Col_1", "Col_2");
+</code></pre>
+
+<h4>Get all items</h4>
+
+<p>
+	<code>getAll</code> method returns all
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+// get all columns (select *)
+List&lt;DatabaseRow&gt; rows = builder.getAll(builder, "MainTable");
+// or get specified columns
+List&lt;DatabaseRow&gt; rows = builder.getAll(builder, "MainTable");
+// or change DatabaseRow to given class
+List&lt;T&gt; rows = builder.getAll(builder, "MainTable", (row)->{
+	// here return new T
+});
+</code></pre>
+
+<h4>Get all items by</h4>
+
+<p>
+	<code>getAllBy</code> methods returns all items by specific column.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+// get all columns (select *)
+List&lt;DatabaseRow&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value");
+// or get specified columns
+List&lt;DatabaseRow&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value");
+// or change DatabaseRow to given class
+List&lt;T&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value", (row)->{
+	// here return new T
+});
+</code></pre>
+
+<h4>Get all items in</h4>
+
+<p>
+	<code>getAllIn</code> methods returns all items by specific column (with list of values).
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+// get all columns (select *)
+List&lt;DatabaseRow&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"));
+// or get specified columns
+List&lt;DatabaseRow&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"));
+// or change DatabaseRow to given class
+List&lt;T&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"), (row)->{
+	// here return new T
+});
+</code></pre>
+
+<h4>Delete item</h4>
+
+<p>
+	<code>delete</code> methods delete rows with speficied column. Returns count of affected rows.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+int affectedRows = builder.delete(builder, "MainTable", "ID", 42);
+</code></pre>
+
+<h4>Update item</h4>
+
+<p>
+	<code>update</code> method update rows specified by column. New values are stored in <code>Map</code> - keys are column names and values are values. Values are escaped <strong>but keys not.</strong>. Method returns count of affected rows.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+Map&lt;String, Object&gt; data = ....;
+int affectedRows = builder.update(builder, "MainTable", "ID", 42, data);
+</code></pre>
+
+<h4>Insert item</h4>
+
+<p>
+	<code>insert</code> method insert one new row and returns generated id as <code>DictionaryValue</code>. New values are stored in <code>Map</code> - keys are column names and values are values. Values are escaped <strong>but keys not.</strong>.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+Map&lt;String, Object&gt; data = ....;
+DictionaryValue id = builder.insert(builder, "MainTable", data);
+</code></pre>
+
+<h4>Save relation</h4>
+
+<p>
+	<code>saveRelation</code> methods update/create/delete rows in related table.
+</p>
+
+<pre><code class="language-java">
+QueryBuilder builder = ....;
+Map&lt;String, Object&gt; data = ....; // data in RelatedTable
+builder.saveRelation(builder, "RelatedTable", "ID" /*from RelatedTable*/, "MainTable_id", 42, data);
+</code></pre>
