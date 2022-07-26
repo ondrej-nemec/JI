@@ -74,6 +74,10 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 		}
 	}
 	
+	public Set<Map.Entry<K, V>> entrySet() {
+		return map.entrySet();
+	}
+	
 	@Override
 	public String toString() {
 		return map.toString();
