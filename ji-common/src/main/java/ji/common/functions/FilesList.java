@@ -49,7 +49,7 @@ public class FilesList {
 		} else if (url.toString().startsWith("file:")) {
 		    return dirTree(folder, recursive);
 		} else {
-		    throw new IOException("Folder not foud neither in classpath neider in dir tree: " + url);
+		    throw new IOException("Folder not found neither in classpath neitder in dir tree: " + url);
 		}
 	}
 
