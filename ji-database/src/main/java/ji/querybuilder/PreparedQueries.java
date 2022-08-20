@@ -3,9 +3,9 @@ package ji.querybuilder;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 
 import ji.common.structures.DictionaryValue;
@@ -21,7 +21,7 @@ import ji.querybuilder.builders.UpdateBuilder;
 public interface PreparedQueries {
 	
 	default String[] _createSelect(String... select) {
-		if (select == null) {
+		if (select == null || select.length == 0) {
 			return new String[] {"*"};
 		}
 		return select;
@@ -228,8 +228,14 @@ public interface PreparedQueries {
 			ThrowingBiConsumer<T, T, SQLException> update,
 			ThrowingConsumer<T, SQLException> insert) throws SQLException {
 		Map<Object, T> loaded = new HashMap<>();
+		List<T> forInsert = new LinkedList<>();
 		for (T t : data) {
-			loaded.put(createId.apply(t), t);
+            Object id = createId.apply(t);
+            if (id == null) {
+                forInsert.add(t);
+            } else {
+                loaded.put(id, t);
+            }
 		}
 		List<T> database = select.get();
 		for (T origin : database) {
@@ -242,9 +248,10 @@ public interface PreparedQueries {
 				}
 			}
 		}
-		for (Entry<Object, T> toInsert : loaded.entrySet()) {
-			insert.accept(toInsert.getValue());
-		}
+        forInsert.addAll(loaded.values());
+        for (T toInsert : forInsert) {
+             insert.accept(toInsert);
+        }
 	}
 	
 }
