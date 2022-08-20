@@ -29,7 +29,7 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 	default <T> T _execute(ThrowingFunction<ResultSet, T, SQLException> callback) throws SQLException {
 		String query = createSql();
 		try (Statement stat = getConnection().createStatement(); ResultSet res = stat.executeQuery(query);) {
-			if (Database.PROFILER != null) {
+			if (Database.PROFILER != null && stat instanceof StatementWrapper) {
 				StatementWrapper w = StatementWrapper.class.cast(stat);
 				Database.PROFILER.builderQuery(w.ID, getSql(), query, getParameters());
 			}

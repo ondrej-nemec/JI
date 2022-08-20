@@ -12,7 +12,7 @@ public interface SingleExecute<B> extends Execute, ParametrizedBuilder<B> {
 	default int execute() throws SQLException {
 		String query = createSql();
 		try (Statement stat = getConnection().createStatement();) {
-			if (Database.PROFILER != null) {
+			if (Database.PROFILER != null && stat instanceof StatementWrapper) {
 				StatementWrapper w = StatementWrapper.class.cast(stat);
 				Database.PROFILER.builderQuery(w.ID, getSql(), query, getParameters());
 			}
