@@ -40,7 +40,9 @@ public interface PreparedQueries {
 	 * @throws SQLException
 	 */
 	default DatabaseRow get(QueryBuilder builder, String table, String idName, Object id, String... select) throws SQLException {
-		return builder.select(_createSelect(select)).from(table).fetchRow();
+		return builder.select(_createSelect(select)).from(table)
+				.where(idName + " = :id").addParameter(":id", id)
+				.fetchRow();
 	}
 	
 	/******/
