@@ -6,15 +6,23 @@ import ji.querybuilder.enums.Join;
 public interface Select<C> extends Builder {
 
 	C from(String table);
+
+	default C from(String table, String alias) {
+		return from(String.format("%s %s", table, alias));
+	}
 	
-	default C from(Select<SelectBuilder> builder, String name) {
-		return from(String.format("(%s) %s", builder.createSql(), name));
+	default C from(Select<SelectBuilder> builder, String alias) {
+		return from(String.format("(%s) %s", builder.createSql(), alias));
 	}
 	
 	C join(String table, Join join, String on);
+	
+	default C join(String table, String alias, Join join, String on) {
+		return join(String.format("%s %s", table, alias), join, on);
+	}
 
-	default C join(Select<SelectBuilder> builder, String name, Join join, String on) {
-		return join(String.format("(%s) %s", builder.createSql(), name), join, on);
+	default C join(Select<SelectBuilder> builder, String alias, Join join, String on) {
+		return join(String.format("(%s) %s", builder.createSql(), alias), join, on);
 	}
 	
 	C where(String where);
