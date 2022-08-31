@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -108,6 +110,19 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 			List<T> rows = new LinkedList<>();
 			while (res.next()) {
 				rows.add(function.apply(_parseRow(res)));
+			}
+			return rows;
+		});
+	}
+
+	default <K, V> Map<K, V> fetchAll(
+			ThrowingFunction<DatabaseRow, K, SQLException> key,
+			ThrowingFunction<DatabaseRow, V, SQLException> value) throws SQLException {
+		return _execute((res)->{
+			Map<K, V> rows = new HashMap<>();
+			while (res.next()) {
+				DatabaseRow row = _parseRow(res);
+				rows.put(key.apply(row), value.apply(row));
 			}
 			return rows;
 		});
