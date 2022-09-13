@@ -20,26 +20,26 @@ public class RestApiClient implements Client {
 	private final int port;
 	private final String protocol;
 	
+	private final int timeOut;
 	private final Logger logger;
 	
-	@SuppressWarnings("unused")
-	private final String charset; // TODO remove
+	// private final String charset;
 	
 	private final Optional<SslCredentials> ssl;
 	private final ExchangeFactory factory;
 	
-	public RestApiClient(String serverUrl, Optional<SslCredentials> ssl, String charset, Logger logger) {
-		this(serverUrl, ssl.isPresent() ? 443 : 80, "HTTP/1.1", ssl, charset, null, logger);
+	public RestApiClient(String serverUrl, Optional<SslCredentials> ssl, Logger logger) {
+		this(serverUrl, ssl.isPresent() ? 443 : 80, "HTTP/1.1", ssl, 60000, null, logger);
 	}
 	
 	public RestApiClient(
 			String serverUrl, int port, String protocol,
 			Optional<SslCredentials> ssl, 
-			String charset, Integer maxResponseBodySize,
+			int timeOut, Integer maxResponseBodySize,
 			Logger logger) {
 		this.serverUrl = serverUrl;
 		this.logger = logger;
-		this.charset = charset;
+		this.timeOut = timeOut;
 		this.ssl = ssl;
 		this.port = port;
 		this.protocol = protocol;
@@ -66,12 +66,13 @@ public class RestApiClient implements Client {
 		Request request = new Request(method, uri, protocol);
 		createRequest.accept(request);
 		Socket con = createSocket(serverUrl, port, ssl, logger);
+		con.setSoTimeout(timeOut);
 		return send(con, request);
 	}
 	
 	public Response send(Request request) throws Exception {
 		Socket con = createSocket(serverUrl, port, ssl, logger);
-		//HttpURLConnection con = getConnection(request.getFullUrl(), ssl);
+		con.setSoTimeout(timeOut);
 		return send(con, request);
 	}
 	

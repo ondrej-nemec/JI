@@ -28,7 +28,7 @@ public class RestApiendToEndTest {
 		Map<String, Tuple2<Request, Response>> data = getData();
 		
 		try {
-			RestApiClient client = new RestApiClient("localhost", port, "HTTP/1.1", ssl, charset, maxBodySize, logger);
+			RestApiClient client = new RestApiClient("localhost", port, "HTTP/1.1", ssl, 60000, maxBodySize, logger);
 			Server server = Server.createWebServer(
 				port, 1, 60000, (req, ipAddress, websocket)->{
 					Tuple2<Request, Response> res = data.get(req.getPlainUri());
