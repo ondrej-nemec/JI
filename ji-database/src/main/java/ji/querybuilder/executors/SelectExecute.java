@@ -93,13 +93,21 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 		});
 	}
 	
-	default <T> T fetchRow(Class<T> clazz) throws Exception {
+	default <T> T fetchRow(Class<T> clazz) throws SQLException {
 		DatabaseRow row = fetchRow();
 		if (row == null) {
 			return null;
 		}
 		return row.parse(clazz);
 	}
+	
+	default <T> T fetchRow(ThrowingFunction<DatabaseRow, T, SQLException> function) throws Exception {
+        DatabaseRow row = fetchRow();
+        if (row == null) {
+             return null;
+        }
+        return function.apply(row);
+    }
 
 	default List<DatabaseRow> fetchAll() throws SQLException {
 		return fetchAll((r)->r);
