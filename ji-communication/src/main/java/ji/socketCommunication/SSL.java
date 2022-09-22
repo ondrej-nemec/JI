@@ -2,6 +2,7 @@ package ji.socketCommunication;
 
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -22,10 +23,17 @@ public class SSL {
 	    sc.init(
 	    	getCertificateManager(credentians),
 	    	getTrustManager(credentians), 
-	    	SecureRandom.getInstanceStrong()
+	    	getRandom()
 	    );
 		return sc;
 	}
+	
+    public static SecureRandom getRandom() throws NoSuchAlgorithmException {
+        if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+             return SecureRandom.getInstance("NativePRNGNonBlocking");
+        }
+        return SecureRandom.getInstanceStrong();
+    }
 	
 	public static TrustManager[] getTrustManager(SslCredentials credentians) throws Exception {
 		if (credentians.useTrustedClients()) {
