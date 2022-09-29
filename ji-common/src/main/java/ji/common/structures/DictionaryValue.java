@@ -232,7 +232,12 @@ public class DictionaryValue {
 		return getTimestamp(
 			LocalTime.class, 
 			time->LocalTime.from(time),
-			string->LocalTime.parse(string, pattern == null ? DateTimeFormatter.ISO_TIME : DateTimeFormatter.ofPattern(pattern))
+			string->{
+				if (string.isEmpty()) {
+					return null;
+				}
+				return LocalTime.parse(string, pattern == null ? DateTimeFormatter.ISO_TIME : DateTimeFormatter.ofPattern(pattern));
+			}
 		);
 	}
 	
@@ -244,7 +249,12 @@ public class DictionaryValue {
 		return getTimestamp(
 			LocalDate.class, 
 			time->LocalDate.from(time),
-			string->LocalDate.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE : DateTimeFormatter.ofPattern(pattern))
+			string->{
+				if (string.isEmpty()) {
+					return null;
+				}
+				return LocalDate.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE : DateTimeFormatter.ofPattern(pattern));
+			}
 		);
 	}
 	
@@ -256,7 +266,12 @@ public class DictionaryValue {
 		return getTimestamp(
 			LocalDateTime.class, 
 			time->LocalDateTime.from(time), 
-			(string)->LocalDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE_TIME : DateTimeFormatter.ofPattern(pattern))
+			(string)->{
+				if (string.isEmpty()) {
+					return null;
+				}
+				return LocalDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE_TIME : DateTimeFormatter.ofPattern(pattern));
+			}
 		);
 	}
 	
@@ -268,7 +283,12 @@ public class DictionaryValue {
 		return getTimestamp(
 			ZonedDateTime.class, 
 			time->ZonedDateTime.from(time), 
-			(string)->ZonedDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_ZONED_DATE_TIME : DateTimeFormatter.ofPattern(pattern))
+			(string)->{
+				if (string.isEmpty()) {
+					return null;
+				}
+				return ZonedDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_ZONED_DATE_TIME : DateTimeFormatter.ofPattern(pattern));
+			}
 		);
 	}
 	
@@ -276,6 +296,9 @@ public class DictionaryValue {
 		return parseValue(
 			clazz,
 			(string)->{
+				if (string.isEmpty()) {
+					return null;
+				}
 				try {
 					return fromString.apply(string);
 				} catch (Exception e) {
