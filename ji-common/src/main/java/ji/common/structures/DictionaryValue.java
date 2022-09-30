@@ -119,6 +119,8 @@ public class DictionaryValue {
 			return getDictionaryMap();
 		} else if (clazz.isAssignableFrom(ListDictionary.class)) {
 			return getDictionaryList();
+		} else if (clazz.isAssignableFrom(SortedMap.class)) {
+			return getSortedMap();
 		} else if (clazz.isEnum()) {
 			return getEnum((Class<E>)clazz);
 		} else if (clazz.isAssignableFrom(LocalDate.class)) {
@@ -358,6 +360,19 @@ public class DictionaryValue {
 		return parseValue(MapDictionary.class, fromStringToMapCallback, (value)->{
 			if (value instanceof Map<?, ?>) {
 				return new MapDictionary<T, E>(Map.class.cast(value));
+			}
+			return value;
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T, E> SortedMap<T, E> getSortedMap() {
+		return parseValue(SortedMap.class, fromStringToListCallback, (value)->{
+			if (value instanceof Map<?, ?>) {
+				return new SortedMap<T, E>().putAll(Map.class.cast(value));
+			}
+			if (value instanceof MapDictionary<?, ?>) {
+				return new SortedMap<T, E>().putAll(MapDictionary.class.cast(value).toMap());
 			}
 			return value;
 		});

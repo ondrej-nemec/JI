@@ -34,6 +34,10 @@ public class MapInit<K, V> {
 		return map;
 	}
 	
+	public SortedMap<K, V> toSortedMap() {
+		return new SortedMap<K, V>().putAll(map);
+	}
+	
 	public Properties toProperties() {
 		Properties prop = new Properties();
 		prop.putAll(map);
