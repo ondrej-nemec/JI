@@ -101,7 +101,7 @@ public interface SelectExecute<B> extends Execute, ParametrizedBuilder<B> {
 		return row.parse(clazz);
 	}
 	
-	default <T> T fetchRow(ThrowingFunction<DatabaseRow, T, SQLException> function) throws Exception {
+	default <T> T fetchRow(ThrowingFunction<DatabaseRow, T, SQLException> function) throws SQLException {
         DatabaseRow row = fetchRow();
         if (row == null) {
              return null;
