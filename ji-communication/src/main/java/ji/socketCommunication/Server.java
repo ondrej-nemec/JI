@@ -45,14 +45,14 @@ public class Server {
     		long readTimeout,
     		ResponseFactory response,
     		Optional<SslCredentials> ssl,
-    		Integer maxUploadFileSize,
+    		Integer maxRequestBodySize,
     		String charset,
     		Logger logger) throws Exception {
     	return new Server(
     			port, 
     			threadPool,
     			readTimeout,
-    			new RestApiServer(response, maxUploadFileSize, logger),
+    			new RestApiServer(response, maxRequestBodySize, logger),
     			ssl,
     			charset,
     			logger

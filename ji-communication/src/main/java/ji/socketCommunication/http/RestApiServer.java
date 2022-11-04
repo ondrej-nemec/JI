@@ -26,11 +26,11 @@ public class RestApiServer implements Servant {
 	
 	public RestApiServer(
 			ResponseFactory response,
-			Integer maxUploadFileSize,
+			Integer maxRequestBodySize,
 			Logger logger) {
 		this.logger = logger;
 		this.createResponce = response;
-		this.factory = ExchangeFactory.create(maxUploadFileSize, logger);
+		this.factory = ExchangeFactory.create(maxRequestBodySize, logger);
 	}
 	
 	@Override
