@@ -83,6 +83,7 @@ public class RestApiClient implements Client {
 			BufferedOutputStream os = new BufferedOutputStream(con.getOutputStream());) {
 			factory.write(request, os);
 			Response response = factory.readResponse(is);
+			con.close();
 			return response;
 	    }
 	}
