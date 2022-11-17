@@ -3,10 +3,11 @@ package ji.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.apache.logging.log4j.Logger;
 import ji.database.wrappers.ConnectionWrapper;
@@ -23,7 +24,7 @@ public class ConnectionPool {
 	
 	private final Logger logger;
 	
-	private final LinkedList<Connection> available;
+	private final ConcurrentLinkedDeque<Connection> available;
 	private final Map<Integer, Connection> borrowed;
 	
 	public ConnectionPool(String connectionString, Properties prop, int maxSize, Logger logger, boolean temp) {
@@ -32,8 +33,10 @@ public class ConnectionPool {
 		this.prop = prop;
 		this.connectionString = connectionString;
 		this.logger = logger;
-		this.available = new LinkedList<>();
-		this.borrowed = new HashMap<>();
+		//this.available = new LinkedList<>();
+		//this.borrowed = new HashMap<>();
+		this.available = new ConcurrentLinkedDeque<>();
+		this.borrowed = Collections.synchronizedMap(new HashMap<Integer, Connection>());
 	}
 	
 	/**
