@@ -1,6 +1,7 @@
 package ji.socketCommunication.http.structures;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import ji.common.structures.MapDictionary;
 
@@ -13,6 +14,18 @@ public class RequestParameters extends MapDictionary<String, Object> {
 	public UploadedFile getUploadedFile(String key) {
 		return UploadedFile.class.cast(getValue(key));
 	}
+	
+	@Override
+    public RequestParameters put(String key, Object value) {
+        super.put(key, value);
+        return this;
+    }
+
+    @Override
+    public RequestParameters putAll(Map<String, Object> values) {
+        super.putAll(values);
+        return this;
+    }
 	
 	@Override
 	public boolean equals(Object o) {
