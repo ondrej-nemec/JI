@@ -61,6 +61,24 @@ public class ConnectionPool {
 	}
 
 	private Connection getAvailableConnection() throws SQLException {
+		try {
+			Connection poll = available.poll();
+			if (poll == null) {
+                Connection c = createConnection();
+                logger.debug("Connection created: " + c.hashCode());
+                return c;
+            }
+			if (!poll.isValid(VALID_TIMEOUT)) {
+                logger.debug("Closing invalid connection: " + poll.hashCode() + " ." + getState());
+                poll.close();
+                return getAvailableConnection();
+             }
+             return poll;
+		} catch (Exception e) {
+            logger.error("Get connection: Available: " + available.size() + ", Borrowed:" + borrowed.size(), e);
+            throw new SQLException(e);
+       }
+		/*
 		// no available - create
 		if (available.size() == 0) {
 			Connection c = createConnection();
@@ -74,6 +92,7 @@ public class ConnectionPool {
 			return getAvailableConnection();
 		}
 		return c;
+		*/
 	}
 	
 	private Connection createConnection() throws SQLException {
