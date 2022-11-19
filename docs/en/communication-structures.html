@@ -136,7 +136,10 @@ public Response accept(Request request, String ip, Optional&lt;WebSocket&gt; web
 <h2>UploadedFile</h2>
 
 <p>
-	<code>UploadedFile</code> holds information about file: name (<code>getFileName</code>) and type (<code>getContentType</code>). Content of file is in <code>ByteArrayOutputStream</code> (<code>getContent</code>).
+	<code>UploadedFile</code> holds information about file: name (<code>getFileName</code>)
+		<span to="7.1"> and content type (<code>getContentType</code>)</span>
+		<span from="8.0">, content type (<code>getContentType</code>) and BOM (<code>getBom</code>)</span>.
+	Content of file is in <code>ByteArrayOutputStream</code> (<code>getContent</code>).
 </p>
 
 <p>

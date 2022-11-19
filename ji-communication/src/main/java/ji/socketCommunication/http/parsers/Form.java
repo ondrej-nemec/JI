@@ -81,6 +81,7 @@ public class Form {
 		String elementValue = null;
 		String filename = null;
 		String contentType = null;
+		String bom = null;
 		boolean isValue = false;
 		ByteArrayOutputStream fileContent = null;
 		Boolean useRN = null;
@@ -97,7 +98,7 @@ public class Form {
 			if (requestLine.startsWith(boundary)) { // start element
 				if (elementName != null && fileContent != null) {
 					data.put(elementName, new UploadedFile(
-						filename, contentType, 
+						filename, contentType, bom,
 						Arrays.copyOfRange(fileContent.toByteArray(), 0, fileContent.size() - (useRN ? 2 : 1)))
 					);
 				} else if (elementName != null && elementValue != null) {
@@ -127,7 +128,7 @@ public class Form {
 			} else if (isValue) {
 				if (fileContent == null) {
 					fileContent = new ByteArrayOutputStream();
-					// TODO add this
+					bom = requestLine.replace("‰", "");
 					/*if (requestLine.startsWith("‰")) {
 						contentType = requestLine.replace("‰", "");
 					}*/

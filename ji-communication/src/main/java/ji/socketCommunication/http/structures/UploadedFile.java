@@ -9,18 +9,20 @@ public class UploadedFile {
 
 	private final String fileName;
 	private final String contentType;
+	private final String bom;
 	private final byte[] content;
 	private final Binary binary;
 	
-	public UploadedFile(String fileName, String contentType, byte[] content) {
-		this(fileName, contentType, content, Binary.get());
+	public UploadedFile(String fileName, String contentType, String bom, byte[] content) {
+		this(fileName, contentType, bom, content, Binary.get());
 	}
 	
-	protected UploadedFile(String fileName, String contentType, byte[] content, Binary binary) {
+	protected UploadedFile(String fileName, String contentType, String bom, byte[] content, Binary binary) {
 		this.fileName = fileName;
 		this.contentType = contentType;
 		this.content = content;
 		this.binary = binary;
+		this.bom = bom;
 	}
 
 	public String getFileName() {
@@ -31,6 +33,10 @@ public class UploadedFile {
 		return contentType;
 	}
 
+	public String getFileBom() {
+		return bom;
+	}
+	
 	public byte[] getContent() {
 		return content;
 	}

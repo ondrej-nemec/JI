@@ -368,7 +368,7 @@ public class ExchangeFactoryTest {
 				createFunction((ex)->{
 					RequestParameters res = (RequestParameters) new RequestParameters()
 					.put("another", "value")
-					.put("fileinput", new UploadedFile("filename.xyz", "IMG", binaryData.toByteArray()));
+					.put("fileinput", new UploadedFile("filename.xyz", "IMG", "PNG", binaryData.toByteArray()));
 					if (ex == null) {
 						return res;
 					}
