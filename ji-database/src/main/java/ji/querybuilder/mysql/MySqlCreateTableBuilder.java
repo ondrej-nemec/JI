@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 
+import ji.common.functions.Implode;
 import ji.querybuilder.builders.CreateTableBuilder;
 import ji.querybuilder.buildersparent.Builder;
 import ji.querybuilder.buildersparent.QueryBuilderParent;
@@ -58,6 +59,12 @@ public class MySqlCreateTableBuilder extends QueryBuilderParent implements Creat
 				EnumToMysqlString.onActionToString(onDelete),
 				EnumToMysqlString.onActionToString(onUpdate)
 		));
+		return this;
+	}
+
+	@Override
+	public CreateTableBuilder setPrimaryKey(String... columns) {
+		query.append(String.format(", PRIMARY KEY (%s)", Implode.implode(", ", columns)));
 		return this;
 	}
 

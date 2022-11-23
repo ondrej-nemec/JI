@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 
+import ji.common.functions.Implode;
 import ji.querybuilder.builders.CreateTableBuilder;
 import ji.querybuilder.buildersparent.Builder;
 import ji.querybuilder.buildersparent.QueryBuilderParent;
@@ -60,6 +61,12 @@ public class PostgreSqlCreateTableBuilder extends QueryBuilderParent implements 
 				EnumToPostgresqlString.onActionToString(onDelete),
 				EnumToPostgresqlString.onActionToString(onUpdate)
 		));
+		return this;
+	}
+
+	@Override
+	public CreateTableBuilder setPrimaryKey(String... columns) {
+		query.append(String.format(", PRIMARY KEY (%s)", Implode.implode(", ", columns)));
 		return this;
 	}
 

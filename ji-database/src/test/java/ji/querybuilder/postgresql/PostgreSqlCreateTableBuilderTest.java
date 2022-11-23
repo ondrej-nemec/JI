@@ -23,7 +23,8 @@ public class PostgreSqlCreateTableBuilderTest {
 					.addColumn("Column_3", ColumnType.datetime(), ColumnSetting.UNIQUE)
 					.addColumn("Column_4", ColumnType.text(), ColumnSetting.NULL)
 					.addColumn("Column_5", ColumnType.string(50), "some text", ColumnSetting.NOT_NULL)
-					.addForeingKey("Column_4", "Table2", "id", OnAction.CASCADE, OnAction.SET_NULL);
+					.addForeingKey("Column_4", "Table2", "id", OnAction.CASCADE, OnAction.SET_NULL)
+					.setPrimaryKey("col1", "col2");
 		
 		String expected = "CREATE TABLE Table1 ("
 				+ " Column_1 SERIAL,"
@@ -32,6 +33,7 @@ public class PostgreSqlCreateTableBuilderTest {
 				+ " Column_4 TEXT NULL,"
 				+ " Column_5 VARCHAR(50) DEFAULT 'some text' NOT NULL,"
 				+ " CONSTRAINT FK_Column_4 FOREIGN KEY (Column_4) REFERENCES Table2(id) ON DELETE CASCADE ON UPDATE SET NULL,"
+				+ " PRIMARY KEY (col1, col2),"
 				+ " PRIMARY KEY (Column_1)"
 				+ ")";
 		

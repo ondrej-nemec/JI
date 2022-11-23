@@ -15,4 +15,6 @@ public interface CreateTableBuilder extends MultipleExecute<CreateTableBuilder> 
 	
 	CreateTableBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate);
 
+	CreateTableBuilder setPrimaryKey(String... columns);
+	
 }
