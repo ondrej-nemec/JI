@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import ji.common.functions.PropertiesLoader;
@@ -56,6 +57,11 @@ public class PropertiesTranslator implements Translator {
 		this.settings = settings;
 		this.selectedLang = selectedLang;
 	}
+	
+	@Override
+    public Set<String> getSupportedLocales() {
+        return settings.getLocales().stream().map(l->l.getLang()).collect(Collectors.toSet());
+    }
 	
 	@Override
 	public Locale getLocale() {

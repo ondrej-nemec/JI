@@ -36,6 +36,8 @@ public interface Translator {
 	
 	Translator withLocale(Locale locale);
 	
+	Set<String> getSupportedLocales();
+	
 	default Translator withLocale(String locale) {
 		return withLocale(getLocale(locale));
 	}
