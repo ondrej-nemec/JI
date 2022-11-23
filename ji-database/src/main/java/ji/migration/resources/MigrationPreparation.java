@@ -68,13 +68,13 @@ public class MigrationPreparation {
 				});
 		} catch (Exception ignored) {
 			builder.rollback();
-			// TODO add multi column primary key
 			builder
 				.createTable(migrationTable)
 				.addColumn("module", ColumnType.string(400), ColumnSetting.NULL)
 				.addColumn("id", ColumnType.string(100), ColumnSetting.NOT_NULL)
 				.addColumn("description", ColumnType.string(100), ColumnSetting.NOT_NULL)
 				.addColumn("datetime", ColumnType.string(100), ColumnSetting.NOT_NULL)
+				.setPrimaryKey("id", "module")
 				.execute();
 		}
 		return new LinkedList<>();
