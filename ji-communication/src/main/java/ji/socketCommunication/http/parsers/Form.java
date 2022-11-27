@@ -1,8 +1,10 @@
 package ji.socketCommunication.http.parsers;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +83,7 @@ public class Form {
 		String elementValue = null;
 		String filename = null;
 		String contentType = null;
-		String bom = null;
+	//	String bom = null;
 		boolean isValue = false;
 		ByteArrayOutputStream fileContent = null;
 		Boolean useRN = null;
@@ -97,6 +99,10 @@ public class Form {
 
 			if (requestLine.startsWith(boundary)) { // start element
 				if (elementName != null && fileContent != null) {
+					String bom = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(
+						fileContent.toByteArray()
+					));
+					// URLConnection.guessContentTypeFromName(filename);
 					data.put(elementName, new UploadedFile(
 						filename, contentType, bom,
 						Arrays.copyOfRange(fileContent.toByteArray(), 0, fileContent.size() - (useRN ? 2 : 1)))
@@ -128,10 +134,23 @@ public class Form {
 			} else if (isValue) {
 				if (fileContent == null) {
 					fileContent = new ByteArrayOutputStream();
-					bom = requestLine.replace("‰", "");
+					//bom = requestLine.replace("‰", "");
 					/*if (requestLine.startsWith("‰")) {
 						contentType = requestLine.replace("‰", "");
 					}*/
+					/*byte[] lineBytes = requestLine.getBytes();
+					// UTF-8:    0xEF 0xBB 0xBF
+					// UTF-16 1: 0xFE 0xFF
+					// UTF-16 2: 0xFF 0xFE
+                    if (lineBytes.length > 3) {
+                    	System.err.println(lineBytes[0] + " " + ((byte)lineBytes[0]) + " " + (byte)0xEF);
+                    	System.err.println(lineBytes[1] + " " + ((byte)lineBytes[1]) + " " + (byte)0xBB);
+                    	System.err.println(lineBytes[2] + " " + ((byte)lineBytes[2]) + " " + (byte)0xBF);
+                        //if (lineBytes[0] == (byte)0xEF && lineBytes[1] == (byte)0xBB && lineBytes[2] == (byte)0xBF) {
+                             byte[] n = Arrays.copyOfRange(lineBytes, 3, lineBytes.length);
+                             bom = new String(Arrays.copyOfRange(lineBytes, 3, lineBytes.length));
+                        //}
+                    }*/
 				}
 				//if (readedData.length + fileContent.size() > maxUploadFileSize) {
 				//	throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
