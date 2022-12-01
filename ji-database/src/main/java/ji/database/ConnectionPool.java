@@ -52,6 +52,7 @@ public class ConnectionPool {
 			logger.debug("Connection pool is busy, waiting. " + getState());
 			try {Thread.sleep(WAIT_TIME);} catch (InterruptedException e) {e.printStackTrace();}
 		}
+		logger.debug("Try get connnection." + getState());
 		Connection c = getAvailableConnection();
 	//	System.err.println(String.format("Get connection: A: %s, B: %s", available.size(), borrowed.size()));
 		c.setAutoCommit(!isTemp);
@@ -65,7 +66,7 @@ public class ConnectionPool {
 			Connection poll = available.poll();
 			if (poll == null) {
                 Connection c = createConnection();
-                logger.debug("Connection created: " + c.hashCode());
+                logger.debug("Connection created: " + c.hashCode() + " ." + getState());
                 return c;
             }
 			if (!poll.isValid(VALID_TIMEOUT)) {
@@ -116,6 +117,7 @@ public class ConnectionPool {
 		available.add(
 			borrowed.remove(connection.hashCode())
 		);
+		logger.debug("Connection returned: " + connection.hashCode() + ". " + getState());
 	//	System.err.println(String.format("Return connection: A: %s, B: %s", available.size(), borrowed.size()));
 	}
 
