@@ -388,8 +388,13 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2) {
-		throw new NotImplementedException();
-		
+		print(
+			"DEBUG",
+			message
+				.replaceFirst("\\{\\}", p0.toString())
+				.replaceFirst("\\{\\}", p1.toString())
+				.replaceFirst("\\{\\}", p2.toString())
+		);
 	}
 
 	@Override
