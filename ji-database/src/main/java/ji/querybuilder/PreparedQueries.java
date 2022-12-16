@@ -18,7 +18,7 @@ import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
 
-public interface PreparedQueries {
+public interface PreparedQueries extends QueryBuilderFactory {
 	
 	default String[] _createSelect(String... select) {
 		if (select == null || select.length == 0) {
@@ -39,8 +39,8 @@ public interface PreparedQueries {
 	 * @return DatabaseRow or NULL
 	 * @throws SQLException
 	 */
-	default DatabaseRow get(QueryBuilder builder, String table, String idName, Object id, String... select) throws SQLException {
-		return builder.select(_createSelect(select)).from(table)
+	default DatabaseRow get(String table, String idName, Object id, String... select) throws SQLException {
+		return select(_createSelect(select)).from(table)
 				.where(idName + " = :id").addParameter(":id", id)
 				.fetchRow();
 	}
@@ -55,8 +55,8 @@ public interface PreparedQueries {
 	 * @return List of DatabaseRow
 	 * @throws SQLException
 	 */
-	default List<DatabaseRow> getAll(QueryBuilder builder, String table, String... select) throws SQLException {
-		return getAll(builder, table, r->r, select);
+	default List<DatabaseRow> getAll(String table, String... select) throws SQLException {
+		return getAll(table, r->r, select);
 	}
 	
 	/**
@@ -69,12 +69,12 @@ public interface PreparedQueries {
 	 * @return List of T
 	 * @throws SQLException
 	 */
-	default <T> List<T> getAll(QueryBuilder builder, String table, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
-		return _getAll(builder, table, select).fetchAll(create);
+	default <T> List<T> getAll(String table, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
+		return _getAll(table, select).fetchAll(create);
 	}
 	
-	default SelectBuilder _getAll(QueryBuilder builder, String table, String... select) {
-		 return builder.select(_createSelect(select)).from(table);
+	default SelectBuilder _getAll(String table, String... select) {
+		 return select(_createSelect(select)).from(table);
 	}
 	
 	/******/
@@ -89,8 +89,8 @@ public interface PreparedQueries {
 	 * @return List of DatabaseRow
 	 * @throws SQLException
 	 */
-	default List<DatabaseRow> getAllBy(QueryBuilder builder, String table, String idName, Object id, String... select) throws SQLException {
-		return getAllBy(builder, table, idName, id, r->r, select);
+	default List<DatabaseRow> getAllBy(String table, String idName, Object id, String... select) throws SQLException {
+		return getAllBy(table, idName, id, r->r, select);
 	}
 	
 	/**
@@ -105,8 +105,8 @@ public interface PreparedQueries {
 	 * @return List of T
 	 * @throws SQLException
 	 */
-	default <T> List<T> getAllBy(QueryBuilder builder, String table, String idName, Object id, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
-		return builder.select(_createSelect(select)).from(table)
+	default <T> List<T> getAllBy(String table, String idName, Object id, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
+		return select(_createSelect(select)).from(table)
 			.where(idName + " = :id").addParameter(":id", id)
 			.fetchAll(create);
 	}
@@ -123,8 +123,8 @@ public interface PreparedQueries {
 	 * @return List of DatabaseRow
 	 * @throws SQLException
 	 */
-	default List<DatabaseRow> getAllIn(QueryBuilder builder, String table, String idName, Collection<Object> ids, String... select) throws SQLException {
-		return getAllIn(builder, table, idName, ids, r->r, select);
+	default List<DatabaseRow> getAllIn(String table, String idName, Collection<Object> ids, String... select) throws SQLException {
+		return getAllIn(table, idName, ids, r->r, select);
 	}
 	
 	/**
@@ -139,8 +139,8 @@ public interface PreparedQueries {
 	 * @return List of T
 	 * @throws SQLException
 	 */
-	default <T> List<T> getAllIn(QueryBuilder builder, String table, String idName, Collection<Object> ids, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
-		return builder.select(_createSelect(select)).from(table)
+	default <T> List<T> getAllIn(String table, String idName, Collection<Object> ids, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
+		return select(_createSelect(select)).from(table)
 				.where(idName + " in (:id)").addParameter(":id", ids)
 				.fetchAll(create);
 	}
@@ -156,8 +156,8 @@ public interface PreparedQueries {
 	 * @return count of affected rows
 	 * @throws SQLException
 	 */
-	default int delete(QueryBuilder builder, String table, String idName, Object id) throws SQLException {
-		return builder.delete(table).where(idName + " = :id").addParameter(":id", id).execute();
+	default int delete(String table, String idName, Object id) throws SQLException {
+		return delete(table).where(idName + " = :id").addParameter(":id", id).execute();
 	}
 	
 	/**
@@ -170,8 +170,8 @@ public interface PreparedQueries {
 	 * @return count of affected rows
 	 * @throws SQLException
 	 */
-	default int update(QueryBuilder builder, String table, String idName, Object id, Map<String, Object> data) throws SQLException {
-		UpdateBuilder b = builder.update(table);
+	default int update(String table, String idName, Object id, Map<String, Object> data) throws SQLException {
+		UpdateBuilder b = update(table);
 		data.forEach((name, value)->{
 			b.set(String.format("%s = :%s", name, name)).addParameter(":" + name, value);
 		});
@@ -187,8 +187,8 @@ public interface PreparedQueries {
 	 * @return id as DictionaryValue
 	 * @throws SQLException
 	 */
-	default DictionaryValue insert(QueryBuilder builder, String table, Map<String, Object> data) throws SQLException {
-		InsertBuilder b = builder.insert(table);
+	default DictionaryValue insert(String table, Map<String, Object> data) throws SQLException {
+		InsertBuilder b = insert(table);
 		data.forEach((name, value)->{
 			b.addValue(name, value);
 		});
@@ -207,19 +207,19 @@ public interface PreparedQueries {
 	 * @throws SQLException
 	 */
 	default <T> void saveRelation(
-			QueryBuilder builder, String relationTable,
+			String relationTable,
 			String primaryKeyName, String foreignKeyName,
 			Object id, List<DatabaseRow> data) throws SQLException {
 		saveRelation(
 			data,
 			row->row.getValue(primaryKeyName),
-			()->getAllBy(builder, relationTable, foreignKeyName, id, primaryKeyName),
-			row->delete(builder, relationTable, primaryKeyName, row.getValue(primaryKeyName)),
+			()->getAllBy( relationTable, foreignKeyName, id, primaryKeyName),
+			row->delete(relationTable, primaryKeyName, row.getValue(primaryKeyName)),
 			(origin, newOne)->
-				update(builder, relationTable, primaryKeyName, origin.getValue(primaryKeyName), newOne.toMap()),
+				update(relationTable, primaryKeyName, origin.getValue(primaryKeyName), newOne.toMap()),
 			row->{
 				row.put(foreignKeyName, id);
-				insert(builder, relationTable, row.toMap());
+				insert(relationTable, row.toMap());
 			}
 		);
 	}
