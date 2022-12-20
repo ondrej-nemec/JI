@@ -91,11 +91,11 @@ public class ExchangeFactory {
 			
 			Object type = exchange.getHeader("Content-Type");
 			Integer length = exchange.getHeader("Content-Length", Integer.class);
-			if (type == null || type.equals("") || type.toString().equalsIgnoreCase("application/x-www-form-urlencoded")) {
+			if (type == null || type.equals("") || type.toString().toLowerCase().startsWith("application/x-www-form-urlencoded")) {
 				exchange.setBodyUrlencoded(urlencode.decode(bis, length));
-			} else if (type != null && type.toString().startsWith("multipart/form-data")) {
+			} else if (type != null && type.toString().toLowerCase().startsWith("multipart/form-data")) {
 				exchange.setBodyFormData(form.read(type.toString(), length, bis));
-			/*} else if (type != null && type.toString().equalsIgnoreCase("application/json")) {
+			/*} else if (type != null && type.toString().toLowerCase().startsWith("application/json")) {
 				exchange.setBodyUrlencoded(new DictionaryValue(new JsonReader().read(new String(data.toByteArray()))));*/
 			} else {
 				exchange.setBody(stream.readData(length, bis, 0, (a)->false, false, false));
