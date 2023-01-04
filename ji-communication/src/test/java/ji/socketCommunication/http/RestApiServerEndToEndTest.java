@@ -25,13 +25,16 @@ public class RestApiServerEndToEndTest {
 		try {
 			Logger logger = new Log4j2LoggerTestImpl(null);
 			RestApiServer.PROFILER = new HttpServerProfiler() {
-				
 				@Override
 				public void log(HttpServerProfilerEvent event) {
 					logger.debug("---- " + event + " ---");
 				}
 			};
-			Server server = Server.createWebServer(
+			
+			RestApiServer restApi = new RestApiServer(10 * 1000 * 1000, logger);
+			 restApi.addApplication(apiResponse(), "localhost", "example.com");
+			Server server = restApi.createWebServer(80, 5, 120000, Optional.empty(), "UTF-8");
+			/*Server server = Server.createWebServer(
 				80,
 				5,
 				120000,
@@ -41,7 +44,7 @@ public class RestApiServerEndToEndTest {
 				//Optional.empty(),
 				"UTF-8",
 				logger
-			);
+			);*/
 			server.start();
 			for (int i = 0; i < 30; i++) {
 	            Thread.sleep(i * 10000);
@@ -58,7 +61,7 @@ public class RestApiServerEndToEndTest {
 			switch (request.getPlainUri()) {
 				case "/image.png": 
 				case "/favicon.ico": return getFileResponse(request, "icon.png", "image/icon");
-				case "/":
+				case "/": // return getTextResponse(request, "OK");
 				case "/index": return getFileResponse(request, "index.html", "text/html");
 				case "/form": return getFileResponse(request, "form.html", "text/html");
 				case "/fileform": return getFileResponse(request, "fileform.html", "text/html");

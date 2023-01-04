@@ -18,8 +18,6 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 import org.apache.logging.log4j.Logger;
 import ji.common.structures.NamedThredFactory;
-import ji.socketCommunication.http.ResponseFactory;
-import ji.socketCommunication.http.RestApiServer;
 
 public class Server {
 	
@@ -40,7 +38,7 @@ public class Server {
     
     private final Servant servant;
         
-    public static Server createWebServer(int port,
+   /* public static Server createWebServer(int port,
     		int threadPool,
     		long readTimeout,
     		ResponseFactory response,
@@ -57,7 +55,7 @@ public class Server {
     			charset,
     			logger
     	);
-    }
+    }*/
     
     public Server(
     		int port,
@@ -133,7 +131,6 @@ public class Server {
 	    	clientWaitingFuture = null;
 	    	logger.info("Server paused - no serving to clients");
     	}
-    	
     }
     
     public void stop() throws InterruptedException {

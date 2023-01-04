@@ -29,25 +29,33 @@ public class RestApiendToEndTest {
 		
 		try {
 			RestApiClient client = new RestApiClient("localhost", port, "HTTP/1.1", ssl, 60000, maxBodySize, logger);
-			Server server = Server.createWebServer(
-				port, 1, 60000, (req, ipAddress, websocket)->{
-					Tuple2<Request, Response> res = data.get(req.getPlainUri());
-					if (res != null) {
-						if (!req.equals(res._1())) {
-							logger.error("Request Failure: " + req.getPlainUri());
-							logger.error(" Expected:");
-							logger.error(res._1());
-							logger.error(" But was:");
-							logger.error(req);
-						} else {
-							logger.info("Request Success: " + req.getPlainUri());
-						}
-						return res._2();
+			
+			/*Server server = Server.createWebServer(
+				port, 1, 60000, ssl, maxBodySize, charset, logger
+			);*/
+			
+			RestApiServer restApi = new RestApiServer(maxBodySize, logger);
+			//*/
+			restApi.addApplication((req, ipAddress, websocket)->{
+				Tuple2<Request, Response> res = data.get(req.getPlainUri());
+				if (res != null) {
+					if (!req.equals(res._1())) {
+						logger.error("Request Failure: " + req.getPlainUri());
+						logger.error(" Expected:");
+						logger.error(res._1());
+						logger.error(" But was:");
+						logger.error(req);
+					} else {
+						logger.info("Request Success: " + req.getPlainUri());
 					}
-					logger.error("Request Failure (null): " + req.getPlainUri());
-					return new Response(StatusCode.BAD_REQUEST, req.getProtocol());
-				}, ssl, maxBodySize, charset, logger
-			);
+					return res._2();
+				}
+				logger.error("Request Failure (null): " + req.getPlainUri());
+				return new Response(StatusCode.BAD_REQUEST, req.getProtocol());
+			}, "localhost", "example.com");
+			//*/
+			Server server = restApi.createWebServer(port, 1, 60000, ssl, charset);
+			
 			server.start();
 			
 			try {

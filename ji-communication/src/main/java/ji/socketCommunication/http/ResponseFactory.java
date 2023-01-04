@@ -10,9 +10,5 @@ import ji.socketCommunication.http.structures.WebSocket;
 public interface ResponseFactory {
 
 	Response accept(Request request, String ipAddress, Optional<WebSocket> webSocket) throws IOException;
-
-	default void catchException(Exception e) throws IOException {
-		throw new IOException(e);
-	}
 	
 }
