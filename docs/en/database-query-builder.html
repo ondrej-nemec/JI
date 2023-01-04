@@ -548,9 +548,9 @@ WHERE (id = 42);
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 // get all columns (select *)
-DatabaseRow row = builder.get(builder, "MainTable", "ID", 42);
+DatabaseRow row = builder.get("MainTable", "ID", 42);
 // or get specified columns
-DatabaseRow row = builder.get(builder, "MainTable", "ID", 42, "Col_1", "Col_2");
+DatabaseRow row = builder.get("MainTable", "ID", 42, "Col_1", "Col_2");
 </code></pre>
 
 <h4>Get all items</h4>
@@ -562,11 +562,11 @@ DatabaseRow row = builder.get(builder, "MainTable", "ID", 42, "Col_1", "Col_2");
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 // get all columns (select *)
-List&lt;DatabaseRow&gt; rows = builder.getAll(builder, "MainTable");
+List&lt;DatabaseRow&gt; rows = builder.getAll("MainTable");
 // or get specified columns
-List&lt;DatabaseRow&gt; rows = builder.getAll(builder, "MainTable");
+List&lt;DatabaseRow&gt; rows = builder.getAll("MainTable");
 // or change DatabaseRow to given class
-List&lt;T&gt; rows = builder.getAll(builder, "MainTable", (row)->{
+List&lt;T&gt; rows = builder.getAll("MainTable", (row)->{
 	// here return new T
 });
 </code></pre>
@@ -580,11 +580,11 @@ List&lt;T&gt; rows = builder.getAll(builder, "MainTable", (row)->{
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 // get all columns (select *)
-List&lt;DatabaseRow&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value");
+List&lt;DatabaseRow&gt; rows = builder.getAllBy("MainTable", "Col_1", "some-value");
 // or get specified columns
-List&lt;DatabaseRow&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value");
+List&lt;DatabaseRow&gt; rows = builder.getAllBy("MainTable", "Col_1", "some-value");
 // or change DatabaseRow to given class
-List&lt;T&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value", (row)->{
+List&lt;T&gt; rows = builder.getAllBy("MainTable", "Col_1", "some-value", (row)->{
 	// here return new T
 });
 </code></pre>
@@ -598,11 +598,11 @@ List&lt;T&gt; rows = builder.getAllBy(builder, "MainTable", "Col_1", "some-value
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 // get all columns (select *)
-List&lt;DatabaseRow&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"));
+List&lt;DatabaseRow&gt; rows = builder.getAllIn("MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"));
 // or get specified columns
-List&lt;DatabaseRow&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"));
+List&lt;DatabaseRow&gt; rows = builder.getAllIn("MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"));
 // or change DatabaseRow to given class
-List&lt;T&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"), (row)->{
+List&lt;T&gt; rows = builder.getAllIn("MainTable", "Col_2", Arrays.asList("some-value-1", "some-value-2"), (row)->{
 	// here return new T
 });
 </code></pre>
@@ -615,7 +615,7 @@ List&lt;T&gt; rows = builder.getAllIn(builder, "MainTable", "Col_2", Arrays.asLi
 
 <pre><code class="language-java">
 QueryBuilder builder = ....;
-int affectedRows = builder.delete(builder, "MainTable", "ID", 42);
+int affectedRows = builder.delete("MainTable", "ID", 42);
 </code></pre>
 
 <h4>Update item</h4>
@@ -627,7 +627,7 @@ int affectedRows = builder.delete(builder, "MainTable", "ID", 42);
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 Map&lt;String, Object&gt; data = ....;
-int affectedRows = builder.update(builder, "MainTable", "ID", 42, data);
+int affectedRows = builder.update("MainTable", "ID", 42, data);
 </code></pre>
 
 <h4>Insert item</h4>
@@ -639,7 +639,7 @@ int affectedRows = builder.update(builder, "MainTable", "ID", 42, data);
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 Map&lt;String, Object&gt; data = ....;
-DictionaryValue id = builder.insert(builder, "MainTable", data);
+DictionaryValue id = builder.insert("MainTable", data);
 </code></pre>
 
 <h4>Save relation</h4>
@@ -651,5 +651,5 @@ DictionaryValue id = builder.insert(builder, "MainTable", data);
 <pre><code class="language-java">
 QueryBuilder builder = ....;
 Map&lt;String, Object&gt; data = ....; // data in RelatedTable
-builder.saveRelation(builder, "RelatedTable", "ID" /*from RelatedTable*/, "MainTable_id", 42, data);
+builder.saveRelation("RelatedTable", "ID" /*from RelatedTable*/, "MainTable_id", 42, data);
 </code></pre>
