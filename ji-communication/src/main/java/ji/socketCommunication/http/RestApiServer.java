@@ -91,14 +91,20 @@ public class RestApiServer implements Servant {
 		}
 		
 		Object hostname = request.getHeader("Host");
-		if (hostname != null && applications.containsKey(hostname.toString())) {
-			Response response = applications.get(hostname.toString()).accept(request, clientIp, websocket);
-			if (websocket.isPresent() && websocket.get().isAccepted()) {
-				response.setBodyWebsocket(websocket.get());
+		if (hostname != null) {
+			String host = hostname.toString().split(":")[0];
+			if (applications.containsKey(host)) {
+				Response response = applications.get(host).accept(request, clientIp, websocket);
+				if (websocket.isPresent() && websocket.get().isAccepted()) {
+					response.setBodyWebsocket(websocket.get());
+				}
+				factory.write(response, os);
+			} else {
+				logger.warn("Request on not existing hostname: " + host);
+				factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
 			}
-			factory.write(response, os);
 		} else {
-			logger.warn("Request on not existing hostname: " + hostname);
+			logger.warn("Request Host header not specified");
 			factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
 			return;
 		}
