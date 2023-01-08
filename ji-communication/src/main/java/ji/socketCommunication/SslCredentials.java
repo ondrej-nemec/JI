@@ -40,8 +40,8 @@ public class SslCredentials {
 		this.certificateStorePassword = certificateStorePassword;
 	}
 	
-	public void setTrustAll() {
-		this.trustAll = true;
+	public void setTrustAll(boolean trustAll) {
+		this.trustAll = trustAll;
 	}
 	
 	public void setTrustedClientsStore(String trustedClientsStore, String clientTrustStorePassword) {
