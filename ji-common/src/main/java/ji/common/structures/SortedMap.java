@@ -68,4 +68,16 @@ public class SortedMap<K, V> implements Dictionary<K> {
 		});
 	}
 
+	@Override
+	public String toString() {
+		if (order.isEmpty()) {
+			return "[]";
+		}
+		StringBuilder result = new StringBuilder();
+		forEach((k, v)->{
+			result.append(String.format(",{%s: %s}", k, v));
+		});
+		return "[" + result.toString().substring(1) + "]";
+	}
+	
 }
