@@ -57,7 +57,7 @@ public abstract class DatabaseTestCase {
 		database.rollback();
 	}
 	
-	protected Database getDatabase() {
+	public Database getDatabase() {
 		return database;
 	}
 

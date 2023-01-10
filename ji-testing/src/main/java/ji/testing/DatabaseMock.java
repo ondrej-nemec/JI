@@ -78,6 +78,13 @@ public class DatabaseMock extends Database {
 	}
 	
 	protected void rollback() throws SQLException {
+		connection.rollback();
+		//pool.close();
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
 		pool.close();
+		super.finalize();
 	}
 }
