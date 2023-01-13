@@ -33,6 +33,10 @@ public class ConnectionWrapper implements Connection {
 	private String getId() {
 		return "ConnectionWrapper_" + connection.hashCode() + "_" + new Random().nextDouble();
 	}
+	
+	public Connection getConnection() {
+		return connection;
+	}
 
 	/***/
 	

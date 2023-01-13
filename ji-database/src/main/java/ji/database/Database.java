@@ -10,6 +10,7 @@ import ji.database.support.ConnectionFunction;
 import ji.database.support.DoubleConsumer;
 import ji.database.support.QueryBuilderFunction;
 import ji.database.support.SqlQueryProfiler;
+import ji.database.wrappers.ConnectionWrapper;
 import ji.migration.MigrationTool;
 import ji.querybuilder.QueryBuilder;
 
@@ -82,6 +83,16 @@ public class Database {
 		return getDoubleFunction((con)->{
 			return consumer.apply(getQueryBuilder(con));
 		}).get();
+	}
+	
+	public Connection getConnection() throws SQLException {
+		return new ConnectionWrapper(pool.getConnection()) {
+			@Override
+			public void close() throws SQLException {
+				// super.close();
+				pool.returnConnection(getConnection());
+			}
+		};
 	}
 
 	/***************************/
