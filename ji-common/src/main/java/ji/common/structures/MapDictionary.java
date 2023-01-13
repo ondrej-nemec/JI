@@ -3,6 +3,7 @@ package ji.common.structures;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -69,8 +70,8 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	}
 	
 	public <E extends Throwable> void forEach(ThrowingBiConsumer<K, DictionaryValue, E> action) throws E {
-		for (K k : map.keySet()) {
-			action.accept(k, new DictionaryValue(map.get(k)));
+		for (Entry<K, V> entry : map.entrySet()) {
+			action.accept(entry.getKey(), new DictionaryValue(entry.getValue()));
 		}
 	}
 	
