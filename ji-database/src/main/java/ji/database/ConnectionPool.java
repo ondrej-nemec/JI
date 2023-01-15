@@ -10,6 +10,8 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.apache.logging.log4j.Logger;
+
+import ji.database.support.SqlQueryProfiler;
 import ji.database.wrappers.ConnectionWrapper;
 
 public class ConnectionPool {
@@ -27,12 +29,15 @@ public class ConnectionPool {
 	private final ConcurrentLinkedDeque<Connection> available;
 	private final Map<Integer, Connection> borrowed;
 	
-	public ConnectionPool(String connectionString, Properties prop, int maxSize, Logger logger, boolean temp) {
+	private final SqlQueryProfiler profiler;
+	
+	public ConnectionPool(String connectionString, Properties prop, int maxSize, Logger logger, boolean temp, SqlQueryProfiler profiler) {
 		this.maxSize = maxSize;
 		this.isTemp = temp;
 		this.prop = prop;
 		this.connectionString = connectionString;
 		this.logger = logger;
+		this.profiler = profiler;
 		//this.available = new LinkedList<>();
 		//this.borrowed = new HashMap<>();
 		this.available = new ConcurrentLinkedDeque<>();
@@ -98,10 +103,10 @@ public class ConnectionPool {
 	
 	private Connection createConnection() throws SQLException {
 		Connection c = DriverManager.getConnection(connectionString, prop);
-		if (Database.PROFILER == null) {
+		if (profiler == null) {
 			return c;
 		}
-		return new ConnectionWrapper(c);
+		return new ConnectionWrapper(c, profiler);
 	}
 	
 	public void returnAllConnections() throws SQLException {		

@@ -21,10 +21,10 @@ public class SQLTest {
 	public Object[] dataEscape() {
 		return new Object[] {
 			new Object[] {
-				"not-escaped", "not-escaped"
+				"'not-escaped'", "not-escaped"
 			},
 			new Object[] {
-				"single''quote", "single'quote"
+				"'single''quote'", "single'quote"
 			}
 		};
 	}

@@ -3,6 +3,7 @@ package ji.database;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
@@ -16,7 +17,7 @@ import ji.querybuilder.QueryBuilder;
 
 public class Database {
 	
-	public static SqlQueryProfiler PROFILER = null;
+	private SqlQueryProfiler profiler;
 	
 	private final DatabaseConfig config;
 	
@@ -27,13 +28,18 @@ public class Database {
 	protected final ConnectionPool pool;
 
 	public Database(DatabaseConfig config, Logger logger) {
-		this(config, false, logger);
+		this(config, false, null, logger);
 	}
 
-	protected Database(DatabaseConfig config, boolean isTemp, Logger logger) {
+	public Database(DatabaseConfig config, SqlQueryProfiler profiler, Logger logger) {
+		this(config, false, profiler, logger);
+	}
+
+	protected Database(DatabaseConfig config, boolean isTemp, SqlQueryProfiler profiler, Logger logger) {
 		this.config = config;
 		this.logger = logger;
-		this.pool = new ConnectionPool(createSchemaConnectionString(), createProperties(), config.poolSize, logger, isTemp);
+		this.profiler = profiler == null ? createEmptyProfiler() : profiler;
+		this.pool = new ConnectionPool(createSchemaConnectionString(), createProperties(), config.poolSize, logger, isTemp, this.profiler);
 		this.instance = createInstance(config.schemaName, logger);
 	}
 
@@ -42,6 +48,17 @@ public class Database {
 		this.logger = logger;
 		this.instance = instance;
 		this.pool = pool;
+	}
+	
+	private SqlQueryProfiler createEmptyProfiler() {
+		return new SqlQueryProfiler() {
+			@Override public void prepare(String identifier, String sql) {}
+			@Override public void executed(String identifier, Object res) {}
+			@Override public void execute(String identifier) {}
+			@Override public void execute(String identifier, String sql) {}
+			@Override public void builderQuery(String identifier, String query, String sql, Map<String, String> params) {}
+			@Override public void addParam(String identifier, Object param) {}
+		};
 	}
 	
 	private DatabaseInstance createInstance(String name, Logger logger) {
@@ -86,7 +103,7 @@ public class Database {
 	}
 	
 	public Connection getConnection() throws SQLException {
-		return new ConnectionWrapper(pool.getConnection()) {
+		return new ConnectionWrapper(pool.getConnection(), profiler) {
 			@Override
 			public void close() throws SQLException {
 				// super.close();

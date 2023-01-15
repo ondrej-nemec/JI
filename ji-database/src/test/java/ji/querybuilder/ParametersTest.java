@@ -41,7 +41,7 @@ public class ParametersTest {
 				Arrays.asList("a", "b", "c"),
 				"'a','b','c'"
 			},
-			new Object[] {LocalDateTime.of(2021, 10, 23, 19, 18), "2021-10-23 19:18"}
+			new Object[] {LocalDateTime.of(2021, 10, 23, 19, 18), "'2021-10-23 19:18'"}
 		};
 	}
 	

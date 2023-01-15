@@ -21,186 +21,186 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import ji.database.Database;
+import ji.database.support.SqlQueryProfiler;
 
 public class PreparedStatementWrapper extends StatementWrapper implements PreparedStatement {
 
 	private final PreparedStatement statement;
 	
-	public PreparedStatementWrapper(PreparedStatement statement, String id) {
-		super(statement, id);
+	public PreparedStatementWrapper(PreparedStatement statement, String id, SqlQueryProfiler profiler) {
+		super(statement, id, profiler);
 		this.statement = statement;
 	}
 
 	@Override
 	public ResultSet executeQuery() throws SQLException {
-		Database.PROFILER.execute(ID);
+		profiler.execute(ID);
 		ResultSet rs = statement.executeQuery();
-		Database.PROFILER.executed(ID, rs.getClass().getName());
+		profiler.executed(ID, rs.getClass().getName());
 		return rs;
 	}
 
 	@Override
 	public int executeUpdate() throws SQLException {
-		Database.PROFILER.execute(ID);
+		profiler.execute(ID);
 		int res = statement.executeUpdate();
-		Database.PROFILER.executed(ID, res);
+		profiler.executed(ID, res);
 		return res;
 	}
 
 	@Override
 	public boolean execute() throws SQLException {
-		Database.PROFILER.execute(ID);
+		profiler.execute(ID);
 		boolean res = statement.execute();
-		Database.PROFILER.executed(ID, res);
+		profiler.executed(ID, res);
 		return res;
 	}
 
 	@Override
 	public void setObject(int parameterIndex, Object x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setObject(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 	
 	@Override
 	public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setObject(parameterIndex, x, targetSqlType);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 	
 	@Override
 	public void setObject(int parameterIndex, Object x, int targetSqlType, int scaleOrLength) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setDate(parameterIndex, x, cal);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setTime(parameterIndex, x, cal);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setTimestamp(parameterIndex, x, cal);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setNull(int parameterIndex, int sqlType, String typeName) throws SQLException {
-		Database.PROFILER.addParam(ID, null);
+		profiler.addParam(ID, null);
 		statement.setNull(parameterIndex, sqlType, typeName);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 	
 	@Override
 	public void setNull(int parameterIndex, int sqlType) throws SQLException {
-		Database.PROFILER.addParam(ID, null);
+		profiler.addParam(ID, null);
 		statement.setNull(parameterIndex, sqlType);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setBoolean(int parameterIndex, boolean x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setBoolean(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setByte(int parameterIndex, byte x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setByte(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setShort(int parameterIndex, short x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setShort(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setInt(int parameterIndex, int x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setInt(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setLong(int parameterIndex, long x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setLong(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setFloat(int parameterIndex, float x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setFloat(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setDouble(int parameterIndex, double x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setDouble(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setBigDecimal(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setString(int parameterIndex, String x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setString(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setBytes(int parameterIndex, byte[] x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setBytes(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setDate(int parameterIndex, Date x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setDate(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setTime(int parameterIndex, Time x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setTime(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 
 	@Override
 	public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
-		Database.PROFILER.addParam(ID, x);
+		profiler.addParam(ID, x);
 		statement.setTimestamp(parameterIndex, x);
-	//	Database.PROFILER.executed();
+	//	profiler.executed();
 	}
 	
 	/************/
