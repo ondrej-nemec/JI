@@ -24,7 +24,7 @@ public class DatabaseMock extends Database {
 	private final Connection connection;
 	
 	public DatabaseMock(DatabaseConfig config, final List<Table> tables, Logger logger) {
-		super(config, true, logger);
+		super(config, true, null, logger); // profiler is null
 		this.tables = tables;
 		try {
 			createDbIfNotExists();
