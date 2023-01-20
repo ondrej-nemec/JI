@@ -13,7 +13,6 @@ import ji.socketCommunication.Servant;
 import ji.socketCommunication.Server;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.parsers.ExchangeFactory;
-import ji.socketCommunication.http.profiler.HttpServerProfiler;
 import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
@@ -21,7 +20,7 @@ import ji.socketCommunication.http.structures.WebSocket;
 
 public class RestApiServer implements Servant {
 	
-	public static HttpServerProfiler PROFILER = null;
+	// public static HttpServerProfiler PROFILER = null;
 		
 	private final Logger logger;
 	private final Map<String, ResponseFactory> applications;
@@ -75,15 +74,19 @@ public class RestApiServer implements Servant {
     }
 	
 	protected void serve(BufferedInputStream is, BufferedOutputStream os, String clientIp) throws IOException {
-		profile(HttpServerProfilerEvent.REQUEST_ACCEPT);
+		//profile(HttpServerProfilerEvent.REQUEST_ACCEPT);
+		Map<HttpServerProfilerEvent, Long> events = new HashMap<>();
+		events.put(HttpServerProfilerEvent.REQUEST_ACCEPT, System.currentTimeMillis());
+		
 		Request request = factory.readRequest(is);
-		profile(HttpServerProfilerEvent.REQUEST_PARSED);
+		// profile(HttpServerProfilerEvent.REQUEST_PARSED);
+		events.put(HttpServerProfilerEvent.REQUEST_PARSED, System.currentTimeMillis());
 		if (request == null) {
 			logger.error("Unparsed request");
 			factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
 			return;
 		}
-		profile(HttpServerProfilerEvent.RESPONSE_CREATED);
+		//profile(HttpServerProfilerEvent.RESPONSE_CREATED);
 		
 		Optional<WebSocket> websocket = Optional.empty();
 		if ("websocket".equals(request.getHeader("Upgrade"))) {
@@ -94,11 +97,17 @@ public class RestApiServer implements Servant {
 		if (hostname != null) {
 			String host = hostname.toString().split(":")[0];
 			if (applications.containsKey(host)) {
-				Response response = applications.get(host).accept(request, clientIp, websocket);
+				ResponseFactory resFactory = applications.get(host);
+				Response response = resFactory.accept(request, clientIp, websocket);
+				events.put(HttpServerProfilerEvent.RESPONSE_CREATED, System.currentTimeMillis());
 				if (websocket.isPresent() && websocket.get().isAccepted()) {
 					response.setBodyWebsocket(websocket.get());
 				}
 				factory.write(response, os);
+				events.put(HttpServerProfilerEvent.RESPONSE_SENDED, System.currentTimeMillis());
+				if (resFactory.getProfiler() != null) {
+					resFactory.getProfiler().log(events);
+				}
 			} else {
 				logger.warn("Request on not existing hostname: " + host);
 				factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
@@ -113,13 +122,13 @@ public class RestApiServer implements Servant {
 			response.setBodyWebsocket(websocket.get());
 		}
 		factory.write(response, os);*/
-		profile(HttpServerProfilerEvent.RESPONSE_SENDED);
+		// profile(HttpServerProfilerEvent.RESPONSE_SENDED);
 	}
-	
+	/*
 	private void profile(HttpServerProfilerEvent event) {
 		if (PROFILER != null) {
 			PROFILER.log(event);
 		}
 	}
-	
+	*/
 }
