@@ -6,7 +6,7 @@ import java.util.List;
 
 public class LanguageSettings {
 	
-	public static TransProfiler PROFILER = null;
+	private TransProfiler profiler = null;
 
 	private final Locale defaultLang;
 	
@@ -56,6 +56,14 @@ public class LanguageSettings {
 	@Override
 	public String toString() {
 		return "LanguageSettings [defaultLang=" + defaultLang + ", locales=" + locales + "]";
+	}
+	
+	public void setProfiler(TransProfiler profiler) {
+		this.profiler = profiler;
+	}
+	
+	public TransProfiler getProfiler() {
+		return profiler;
 	}
 	
 }

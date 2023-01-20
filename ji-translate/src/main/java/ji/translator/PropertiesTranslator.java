@@ -95,8 +95,8 @@ public class PropertiesTranslator implements Translator {
 					"Missing translation [%s] in %s: %s (%s)",
 					locale, module, transKey, variables
 				));
-				if (LanguageSettings.PROFILER != null) {
-					LanguageSettings.PROFILER.missingParameter(module, transKey, variables, locale);
+				if (settings.getProfiler() != null) {
+					settings.getProfiler().missingParameter(module, transKey, variables, locale);
 				}
 				value = key;
 				prop.put(transKey, value);
@@ -120,8 +120,8 @@ public class PropertiesTranslator implements Translator {
 		Locale resourceKey = substitution.get(locale);
 		if (resourceKey == null) {
 			logger.info("Given locale not found (including substitutions): " + locale + ", default used");
-			if (LanguageSettings.PROFILER != null) {
-				LanguageSettings.PROFILER.missingLocale(locale);
+			if (settings.getProfiler() != null) {
+				settings.getProfiler().missingLocale(locale);
 			}
 			resourceKey = settings.getDefaultLang();
 		}
