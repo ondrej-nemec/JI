@@ -45,4 +45,9 @@ public class Env implements Dictionary<String> {
 		return new Env(properties, (this.key == null ? "" : this.key + ".") + key);
 	}
 
+	@Override
+	public String toString() {
+		return key + ": " +  properties.toString();
+	}
+	
 }
