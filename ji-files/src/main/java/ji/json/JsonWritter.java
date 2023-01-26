@@ -11,6 +11,7 @@ import ji.common.functions.Mapper;
 import ji.common.structures.DictionaryValue;
 import ji.common.structures.ListDictionary;
 import ji.common.structures.MapDictionary;
+import ji.common.structures.SortedMap;
 import ji.common.structures.Tuple2;
 import ji.common.structures.Tuple3;
 import ji.json.providers.OutputStringProvider;
@@ -80,6 +81,8 @@ public class JsonWritter {
 			write(stream, (Iterable<Object>)value, name);
 		} else if (value instanceof Map) {
 			write(stream, (Map<String, Object>)value, name);
+		} else if (value instanceof SortedMap<?, ?>) {
+			write(stream, SortedMap.class.cast(value).toList(), name);
 		} else if (value instanceof MapDictionary<?, ?>) {
 			write(stream, MapDictionary.class.cast(value).toMap(), name);
 		} else if (value instanceof ListDictionary<?>) {
