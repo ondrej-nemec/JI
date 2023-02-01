@@ -121,42 +121,6 @@ public class Form {
 				isValue = false;
 				fileContent = null;
 				elementValue = null;
-			//} else if (requestLine.equals(boundary + "--")) { // close
-			} else if (!isValue && requestLine.isEmpty()) { // start element value
-				isValue = true;
-			} else if (isValue && filename == null) {
-				if (elementValue == null) {
-					elementValue = "";
-				} else {
-					elementValue += "\n";
-				}
-				elementValue += requestLine;
-			} else if (isValue) {
-				if (fileContent == null) {
-					fileContent = new ByteArrayOutputStream();
-					//bom = requestLine.replace("‰", "");
-					/*if (requestLine.startsWith("‰")) {
-						contentType = requestLine.replace("‰", "");
-					}*/
-					/*byte[] lineBytes = requestLine.getBytes();
-					// UTF-8:    0xEF 0xBB 0xBF
-					// UTF-16 1: 0xFE 0xFF
-					// UTF-16 2: 0xFF 0xFE
-                    if (lineBytes.length > 3) {
-                    	System.err.println(lineBytes[0] + " " + ((byte)lineBytes[0]) + " " + (byte)0xEF);
-                    	System.err.println(lineBytes[1] + " " + ((byte)lineBytes[1]) + " " + (byte)0xBB);
-                    	System.err.println(lineBytes[2] + " " + ((byte)lineBytes[2]) + " " + (byte)0xBF);
-                        //if (lineBytes[0] == (byte)0xEF && lineBytes[1] == (byte)0xBB && lineBytes[2] == (byte)0xBF) {
-                             byte[] n = Arrays.copyOfRange(lineBytes, 3, lineBytes.length);
-                             bom = new String(Arrays.copyOfRange(lineBytes, 3, lineBytes.length));
-                        //}
-                    }*/
-				}
-				//if (readedData.length + fileContent.size() > maxUploadFileSize) {
-				//	throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
-				//}
-				fileContent.write(readedData);
-				fileContent.flush();
 			} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isValue) {
 				Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
 						.matcher(requestLine);
@@ -171,6 +135,46 @@ public class Form {
 				//if (allowedFileTypes.isPresent() && !allowedFileTypes.get().contains(contentType)) {
 				//	throw new IOException("Uploading file content type is not allowed " + contentType);
 				//}
+			//} else if (requestLine.equals(boundary + "--")) { // close
+			} else {
+				isValue = true;
+				if (filename == null && requestLine.isEmpty()) {
+				} else if (filename == null) {
+					if (elementValue == null) {
+						elementValue = "";
+					} else {
+						elementValue += "\n";
+					}
+					elementValue += requestLine;
+				} else if (fileContent == null && requestLine.isEmpty()) {
+					// ignore
+				} else {
+					if (fileContent == null) {
+						fileContent = new ByteArrayOutputStream();
+						//bom = requestLine.replace("‰", "");
+						/*if (requestLine.startsWith("‰")) {
+							contentType = requestLine.replace("‰", "");
+						}*/
+						/*byte[] lineBytes = requestLine.getBytes();
+						// UTF-8:    0xEF 0xBB 0xBF
+						// UTF-16 1: 0xFE 0xFF
+						// UTF-16 2: 0xFF 0xFE
+	                    if (lineBytes.length > 3) {
+	                    	System.err.println(lineBytes[0] + " " + ((byte)lineBytes[0]) + " " + (byte)0xEF);
+	                    	System.err.println(lineBytes[1] + " " + ((byte)lineBytes[1]) + " " + (byte)0xBB);
+	                    	System.err.println(lineBytes[2] + " " + ((byte)lineBytes[2]) + " " + (byte)0xBF);
+	                        //if (lineBytes[0] == (byte)0xEF && lineBytes[1] == (byte)0xBB && lineBytes[2] == (byte)0xBF) {
+	                             byte[] n = Arrays.copyOfRange(lineBytes, 3, lineBytes.length);
+	                             bom = new String(Arrays.copyOfRange(lineBytes, 3, lineBytes.length));
+	                        //}
+	                    }*/
+					}
+					//if (readedData.length + fileContent.size() > maxUploadFileSize) {
+					//	throw new IOException("Maximal upload file size overflow " + maxUploadFileSize);
+					//}
+					fileContent.write(readedData);
+					fileContent.flush();
+				}
 			}
 		}
 		return data;
