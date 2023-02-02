@@ -40,7 +40,7 @@ public class SortedMap<K, V> implements Dictionary<K> {
 	}
 	
 	@Override
-	public Object getValue(K key) {
+	public V getValue(K key) {
 		return data.get(key);
 	}
 
@@ -66,6 +66,18 @@ public class SortedMap<K, V> implements Dictionary<K> {
 		order.forEach((key)->{
 			callback.accept(key, data.get(key));
 		});
+	}
+	
+	public Map<K, V> toMap() {
+		return data;
+	}
+	
+	public List<V> toList() {
+		List<V> list = new LinkedList<>();
+		forEach((k, v)->{
+			list.add(v);
+		});
+		return list;
 	}
 
 	@Override
