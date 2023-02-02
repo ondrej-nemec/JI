@@ -39,7 +39,8 @@ public class SSL {
 		if (credentians.useTrustedClients()) {
 			KeyStore trustStore = loadStore(
 				credentians.getTrustedClientsStore(),
-				credentians.getClientTrustStorePassword()
+				credentians.getClientTrustStorePassword(),
+				credentians.getClientTrustedType()
 			);
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 	        tmf.init(trustStore);
@@ -61,7 +62,8 @@ public class SSL {
 		if (credentians.useCertificate()) {
 			KeyStore keyStore = loadStore(
 				credentians.getCertificateStore(),
-				credentians.getCertificateStorePassword()
+				credentians.getCertificateStorePassword(),
+				credentians.getCertificateType()
 			);
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 	        kmf.init(keyStore, credentians.getCertificateStorePassword().toCharArray());
@@ -70,8 +72,8 @@ public class SSL {
 		return new KeyManager[]{};
 	}
 	
-	private static KeyStore loadStore(String storePath, String password) throws Exception {
-		KeyStore store = KeyStore.getInstance(KeyStore.getDefaultType());
+	private static KeyStore loadStore(String storePath, String password, String type) throws Exception {
+		KeyStore store = KeyStore.getInstance(type); // KeyStore.getDefaultType()
         InputStream storeIS = InputStreamLoader.createInputStream(SSL.class, storePath);
         store.load(storeIS, password.toCharArray());
         storeIS.close();
