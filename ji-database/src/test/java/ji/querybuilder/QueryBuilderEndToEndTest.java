@@ -114,6 +114,7 @@ public class QueryBuilderEndToEndTest {
 				"mysql"
 		));
 		//*/
+		// TODO add SQLite
 		//*
 	  	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
