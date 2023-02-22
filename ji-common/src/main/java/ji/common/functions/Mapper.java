@@ -83,7 +83,9 @@ public class Mapper {
 		DictionaryValue parameterValue = new DictionaryValue(source);
 		onValue.accept(parameterValue);
 		T target = createNewInstance(valueCandidate, clazz);
-		if ( Map.class.isAssignableFrom(source.getClass()) && !Map.class.isAssignableFrom(clazz)) {
+		if (source == null) {
+			return null;
+		} else if ( Map.class.isAssignableFrom(source.getClass()) && !Map.class.isAssignableFrom(clazz)) {
 			Field[] fields = clazz.getDeclaredFields();
 			MapDictionary<String, Object> values = parameterValue.getDictionaryMap();
 			for (Field field : fields) {
