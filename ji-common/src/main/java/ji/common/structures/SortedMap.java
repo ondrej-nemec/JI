@@ -68,6 +68,12 @@ public class SortedMap<K, V> implements Dictionary<K> {
 		});
 	}
 	
+	public <E extends Throwable> void forEach(ThrowingBiConsumer<K, V, E> callback, Class<E> clazz) throws E {
+        for (K key : order) {
+             callback.accept(key, data.get(key));
+        }
+    }
+	
 	public Map<K, V> toMap() {
 		return data;
 	}
