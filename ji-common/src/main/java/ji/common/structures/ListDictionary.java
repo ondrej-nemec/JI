@@ -89,6 +89,13 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 		}
 	}
 	
+	public <E extends Throwable> void forEach(ThrowingBiConsumer<Integer, DictionaryValue, E> action) throws E {
+		int index = 0;
+		for (S s : collection) {
+			action.accept(index++, new DictionaryValue(s));
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return collection.toString();
