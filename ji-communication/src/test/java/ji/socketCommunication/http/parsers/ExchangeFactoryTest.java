@@ -175,7 +175,7 @@ public class ExchangeFactoryTest {
 				.append("param", "val")
 				.append("another", "aaa")
 				.toDictionaryMap(),
-				request.getUrlParameters()
+				request.getQueryParameters()
 			);
 			
 			assertEquals(new HashMap<>(), request.getHeaders());

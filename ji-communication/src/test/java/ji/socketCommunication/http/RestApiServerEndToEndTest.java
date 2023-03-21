@@ -87,7 +87,7 @@ public class RestApiServerEndToEndTest {
 						params
 							.append("URI params:")
 							.append("<br>")
-							.append(request.getUrlParameters())
+							.append(request.getQueryParameters())
 							.append("<br><hr><br>")
 							.append("Body parameters:")
 							.append("<br>")

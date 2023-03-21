@@ -10,7 +10,7 @@ public class Request extends Exchange {
 	private final String uri; // full uri with parameter
 	
 	private String plainUri;
-	private MapDictionary<String, Object> urlParams;
+	private MapDictionary<String, Object> queryParams;
 	
 	public Request(HttpMethod method, String uri, String protocol) {
 		super();
@@ -35,13 +35,13 @@ public class Request extends Exchange {
 		return plainUri;
 	}
 	
-	public MapDictionary<String, Object> getUrlParameters() {
-		return urlParams;
+	public MapDictionary<String, Object> getQueryParameters() {
+		return queryParams;
 	}
 
-	public void setUriParams(String plainUri, MapDictionary<String, Object> urlParams) {
+	public void setUriParams(String plainUri, MapDictionary<String, Object> queryParams) {
 		this.plainUri = plainUri;
-		this.urlParams = urlParams;
+		this.queryParams = queryParams;
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class Request extends Exchange {
 		result = prime * result + ((plainUri == null) ? 0 : plainUri.hashCode());
 		result = prime * result + ((protocol == null) ? 0 : protocol.hashCode());
 		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-		result = prime * result + ((urlParams == null) ? 0 : urlParams.hashCode());
+		result = prime * result + ((queryParams == null) ? 0 : queryParams.hashCode());
 		return result;
 	}
 
@@ -98,11 +98,11 @@ public class Request extends Exchange {
 		} else if (!uri.equals(other.uri)) {
 			return false;
 		}
-		if (urlParams == null) {
-			if (other.urlParams != null) {
+		if (queryParams == null) {
+			if (other.queryParams != null) {
 				return false;
 			}
-		} else if (!urlParams.equals(other.urlParams)) {
+		} else if (!queryParams.equals(other.queryParams)) {
 			return false;
 		}
 		return true;
