@@ -152,14 +152,23 @@ public class PropertiesTranslator implements Translator {
 				domain,
 				locale.isEmpty() ? locale : String.format(".%s", locale)
 			);
-			try {
-				Properties prop = PropertiesLoader.loadProperties(name);
-				moduleProperties.putAll(prop);
-			} catch (IOException e) {
-				logger.warn("Cannot load properies file: " + name);
+			boolean loaded = loadDomainResource(moduleProperties, name);
+			if (settings.getProfiler() != null) {
+				settings.getProfiler().loadFile(locale, domain, name, loaded);
 			}
 		}
 		return moduleProperties;
+	}
+
+	private boolean loadDomainResource(Properties moduleProperties, String name) {
+		try {
+			Properties prop = PropertiesLoader.loadProperties(name);
+			moduleProperties.putAll(prop);
+			return true;
+		} catch (IOException e) {
+			logger.warn("Cannot load properies file: " + name);
+			return false;
+		}
 	}
 	
 }
