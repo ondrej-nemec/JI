@@ -59,9 +59,9 @@ public class StreamReader {
 				int value = bis.read();
 				if ( ! (ignoreNewLine && (value == '\n' || value == '\r'))) {
 	        		 bytes.write(value);
-	        		 readed = bytes.size();
+	        		 readed = bytes.size() + readedBytes;
 	        	}
-				if (bis.available() == 0 && length != readed + readedBytes && value != -1) {
+				if (bis.available() == 0 && length != readed && value != -1) {
 	            	throw new IOException("Content length not match expecation. Expected: " + length + ", actual: " + (readed + readedBytes));
 	            }
 	            if (close.apply(value)) {
