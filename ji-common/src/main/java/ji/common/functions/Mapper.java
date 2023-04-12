@@ -143,9 +143,9 @@ public class Mapper {
 	private Consumer<DictionaryValue> setDV(MapperType toUse) {
 		return (v)->{
 			if (toUse != null && !toUse.dateTimeFormat().equals("")) {
-				v.setDateTimeFormat(toUse.dateTimeFormat());
+				v.withDateTimeFormat(toUse.dateTimeFormat());
 				if (!toUse.key().equals("")) {
-					v.setOnlyKey(toUse.key());
+					v.withOnlyKey(toUse.key());
 				}
 			}
 		};

@@ -3,6 +3,7 @@ package ji.common.structures;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -103,10 +104,21 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if ( ! (obj instanceof ListDictionary) )
+		if ( ! (obj instanceof ListDictionary) ) {
 			return false;
+		}
 		ListDictionary<?> dictionary = (ListDictionary<?>)obj;
-		return collection.equals(dictionary.collection);
+		if (collection.size() != dictionary.collection.size()) {
+			return false;
+		}
+		Iterator<?> targetIt = dictionary.collection.iterator();
+		for (Object item : collection) {
+			if (!item.equals(targetIt.next())) {
+			    return false;	
+			}
+		}
+		return true;
+		// return collection.equals(dictionary.collection);
 	}
 
 	@Override

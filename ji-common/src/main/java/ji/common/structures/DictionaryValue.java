@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class DictionaryValue {
 
@@ -35,6 +37,7 @@ public class DictionaryValue {
 	private Function<String, Object> fromStringToListCallback = stringMapping;
 	private Function<String, Object> fromStringToMapCallback = stringMapping;
 	private String dateTimePattern = null;
+	private ZoneId zoneId = ZoneId.systemDefault();
 	private String onlyKey = null;
 	
 	public DictionaryValue(Object value) {
@@ -51,13 +54,18 @@ public class DictionaryValue {
 		return this;
 	}
 
-	public DictionaryValue setDateTimeFormat(String dateTimePattern) {
+	public DictionaryValue withDateTimeFormat(String dateTimePattern) {
 		this.dateTimePattern = dateTimePattern;
 		return this;
 	}
 
-	public DictionaryValue setOnlyKey(String onlyKey) {
+	public DictionaryValue withOnlyKey(String onlyKey) {
 		this.onlyKey = onlyKey;
+		return this;
+	}
+	
+	public DictionaryValue withZoneId(ZoneId zoneId) {
+		this.zoneId = zoneId;
 		return this;
 	}
 	
@@ -234,12 +242,7 @@ public class DictionaryValue {
 		return getTimestamp(
 			LocalTime.class, 
 			time->LocalTime.from(time),
-			string->{
-				if (string.isEmpty()) {
-					return null;
-				}
-				return LocalTime.parse(string, pattern == null ? DateTimeFormatter.ISO_TIME : DateTimeFormatter.ofPattern(pattern));
-			}
+			pattern
 		);
 	}
 	
@@ -251,12 +254,7 @@ public class DictionaryValue {
 		return getTimestamp(
 			LocalDate.class, 
 			time->LocalDate.from(time),
-			string->{
-				if (string.isEmpty()) {
-					return null;
-				}
-				return LocalDate.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE : DateTimeFormatter.ofPattern(pattern));
-			}
+			pattern
 		);
 	}
 	
@@ -267,13 +265,8 @@ public class DictionaryValue {
 	public LocalDateTime getDateTime(String pattern) {
 		return getTimestamp(
 			LocalDateTime.class, 
-			time->LocalDateTime.from(time), 
-			(string)->{
-				if (string.isEmpty()) {
-					return null;
-				}
-				return LocalDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE_TIME : DateTimeFormatter.ofPattern(pattern));
-			}
+			time->LocalDateTime.from(time),
+			pattern
 		);
 	}
 	
@@ -285,57 +278,89 @@ public class DictionaryValue {
 		return getTimestamp(
 			ZonedDateTime.class, 
 			time->ZonedDateTime.from(time), 
-			(string)->{
-				if (string.isEmpty()) {
-					return null;
-				}
-				return ZonedDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_ZONED_DATE_TIME : DateTimeFormatter.ofPattern(pattern));
-			}
+			pattern
 		);
 	}
 	
-	private <T> T getTimestamp(Class<T> clazz, Function<TemporalAccessor, T> fromTime, Function<String, T> fromString) {
+	private <T> T getTimestamp(Class<T> clazz, Function<TemporalAccessor, T> fromTime, String pattern) {
 		return parseValue(
 			clazz,
 			(string)->{
 				if (string.isEmpty()) {
 					return null;
 				}
-				try {
-					return fromString.apply(string);
-				} catch (Exception e) {
-					return fromString.apply(string.replaceFirst(" ", "T"));
-				}
+				return getTimestampFromString(string, clazz, pattern);
 			},
 			(object)->{
 				if (Long.class.isInstance(object) || long.class.isInstance(object)) {
-					return fromTime.apply(Instant.ofEpochMilli(Long.class.cast(object)).atZone(ZoneId.systemDefault()));
+					long number = Long.class.cast(object);
+					if (number > 100000000000L) {
+						return fromTime.apply(Instant.ofEpochMilli(number).atZone(zoneId));
+					}
+					return fromTime.apply(Instant.ofEpochSecond(number).atZone(zoneId));
 				}
 				if (TemporalAccessor.class.isInstance(object)) {
-					return fromTime.apply(createZoneDateTime(object));
+					return fromTime.apply(createZoneDateTime(object, zoneId));
 				}
 				if (Date.class.isInstance(object)) {
-					return fromTime.apply(Date.class.cast(object).toInstant().atZone(ZoneId.systemDefault()));
+					return fromTime.apply(Date.class.cast(object).toInstant().atZone(zoneId));
 				}
-				return fromString.apply(object.toString());
+				return getTimestampFromString(object.toString(), clazz, pattern);
+				// return fromString.apply(object.toString());
 			}
 		);
 	}
 
-	private ZonedDateTime createZoneDateTime(Object object) {
+	private ZonedDateTime createZoneDateTime(Object object, ZoneId zoneId) {
 		if (LocalTime.class.isInstance(object)) {
-			return ZonedDateTime.of(LocalDate.of(1970, 1, 1), LocalTime.class.cast(object), ZoneId.systemDefault());
+			return ZonedDateTime.of(LocalDate.of(1970, 1, 1), LocalTime.class.cast(object), zoneId);
 		}
 		if (LocalDate.class.isInstance(object)) {
-			return ZonedDateTime.of(LocalDate.class.cast(object), LocalTime.of(0, 0), ZoneId.systemDefault());
+			return ZonedDateTime.of(LocalDate.class.cast(object), LocalTime.of(0, 0), zoneId);
 		}
 		if (LocalDateTime.class.isInstance(object)) {
-			return ZonedDateTime.of(LocalDateTime.class.cast(object), ZoneId.systemDefault());
+			return ZonedDateTime.of(LocalDateTime.class.cast(object), zoneId);
 		}
 		if (ZonedDateTime.class.isInstance(object)) {
 			return ZonedDateTime.class.cast(object);
 		}
 		return null;
+	}
+	
+	private <T> TemporalAccessor getTimestampFromString(String stringValue, Class<T> expected, String pattern) {
+		Map<Class<?>, Function<String, TemporalAccessor>> available = new HashMap<>();
+		available.put(LocalTime.class, string->{
+			return LocalTime.parse(string, pattern == null ? DateTimeFormatter.ISO_TIME : DateTimeFormatter.ofPattern(pattern));
+		});
+		available.put(LocalDate.class, string->{
+			return LocalDate.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE : DateTimeFormatter.ofPattern(pattern));
+		});
+		available.put(LocalDateTime.class, (string)->{
+			return LocalDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_DATE_TIME : DateTimeFormatter.ofPattern(pattern));
+		});
+		available.put(ZonedDateTime.class, (string)->{
+			return ZonedDateTime.parse(string, pattern == null ? DateTimeFormatter.ISO_ZONED_DATE_TIME : DateTimeFormatter.ofPattern(pattern));
+		});
+		RuntimeException result = null;
+		try {
+			return tryTimestamp(available.remove(expected), stringValue);
+		} catch (RuntimeException e) {
+			result = e;
+		}
+		for (Function<String, TemporalAccessor> func : available.values()) {
+			try {
+				return tryTimestamp(func, stringValue);
+			} catch (Exception e) {}
+		}
+		throw result;
+	}
+	
+	private <T> TemporalAccessor tryTimestamp(Function<String, TemporalAccessor> fromString, String string) {
+		try {
+			return fromString.apply(string);
+		} catch (Exception e) {
+			return fromString.apply(string.replaceFirst(" ", "T"));
+		}
 	}
 
 	/************/
@@ -348,6 +373,9 @@ public class DictionaryValue {
 	@SuppressWarnings("unchecked")
 	public <T> ListDictionary<T> getDictionaryList() {
 		return parseValue(ListDictionary.class, fromStringToListCallback, (value)->{
+			if (value.getClass().isArray()) {
+				return new ListDictionary<T>(Arrays.asList((T[])value));
+			}
 			if (value instanceof Collection<?>) {
 				return new ListDictionary<T>(Collection.class.cast(value));
 			}
@@ -406,10 +434,10 @@ public class DictionaryValue {
 				return SortedMap.class.cast(value).toList();
 			}
 			if (value instanceof Map<?, ?>) {
-				return Map.class.cast(value).values();
+				return Map.class.cast(value).values().stream().collect(Collectors.toList());
 			}
 			if (value instanceof MapDictionary<?, ?>) {
-				return MapDictionary.class.cast(value).values();
+				return MapDictionary.class.cast(value).values().stream().collect(Collectors.toList());
 			}
 			return value;
 		});

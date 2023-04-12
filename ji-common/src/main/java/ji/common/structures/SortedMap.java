@@ -97,5 +97,43 @@ public class SortedMap<K, V> implements Dictionary<K> {
 		});
 		return "[" + result.toString().substring(1) + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((order == null) ? 0 : order.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		SortedMap<?, ?> other = (SortedMap<?, ?>) obj;
+		if (data == null) {
+			if (other.data != null) {
+				return false;
+			}
+		} else if (!data.equals(other.data)) {
+			return false;
+		}
+		if (order == null) {
+			if (other.order != null) {
+				return false;
+			}
+		} else if (!order.equals(other.order)) {
+			return false;
+		}
+		return true;
+	}
 	
 }
