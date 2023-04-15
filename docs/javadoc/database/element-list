@@ -1,0 +1,15 @@
+ji.database
+ji.database.support
+ji.database.wrappers
+ji.migration
+ji.migration.migrations
+ji.migration.resources
+ji.querybuilder
+ji.querybuilder.builders
+ji.querybuilder.buildersparent
+ji.querybuilder.derby
+ji.querybuilder.enums
+ji.querybuilder.executors
+ji.querybuilder.mysql
+ji.querybuilder.postgresql
+ji.querybuilder.sqlserver

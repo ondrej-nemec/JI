@@ -17,3 +17,263 @@ dependencies {
 	implementation 'com.github.ondrej-nemec:JI:ji-common:Tag'
 }
 </code></pre>
+
+<div class="diff" from="v8.0">
+	<h2>Logging</h2>
+
+	<p>
+		JI use for logging <a href="https://logging.apache.org/log4j/2.x/">Log4j 2 API</a>.
+	</p>
+
+	<h2>Exceptions</h2>
+
+	<ul>
+		<li><a href="javadoc/common/ji/common/exceptions/HashException.html">HashException</a></li>
+		<li><a href="javadoc/common/ji/common/exceptions/LogicException.html">LogicException</a></li>
+		<li><a href="javadoc/common/ji/common/exceptions/NotImplementedYet.html">NotImplementedYet</a></li>
+	</ul>
+
+	<h2>Structures</h2>
+
+	<h3></h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+
+
+	<h2>Functions</h2>
+
+	<h3>FileExcension</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/FileExcension.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+
+<pre>
+	<code class="language-java">
+FileExtension ext = new FileExtension("some-name.txt");
+String name = ext.getName();
+String extension = ext.getExtension();
+</code>
+</pre>
+
+	<h3>FilesList</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/FilesList.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+
+<pre><code class="language-java">
+FilesList filesList = FilesList.get("/path/to/dir/name", true); // second parameter says 'recursive'
+List&lt;String&gt; files = filesList.getFiles();
+URL url = filesList.getURL();
+</code></pre>
+
+	<h3>InputStreamLoader</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/InputStreamLoader.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+<pre>
+	<code class="language-java">
+InputStream inputStream = InputStreamLoader.<i>createInputStream</i></fieldset>(this.getClass(), "path/to/file");
+	</code>
+</pre>
+
+	<h3>PropertiesLoader</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/PropertiesLoader.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+<pre>
+	<code class="language-java">
+Properties prop = PropertiesLoader.loadProperties("res/app.properties");
+// optionally with charset, default 'uft-8'
+Properties prop = PropertiesLoader.loadProperties("res/app.properties", "windows-1250");
+	</code>
+</pre>
+
+	<h3>Mapper</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/Mapper.html">Javadoc</a></p>
+
+	<h4>Serialize</h4>
+
+<strong>Entity</strong>
+<pre><code class="language-java">
+public class UserEntity { 
+	@MapperParameter({@MapperType("user_id")})
+	private int id; // this field will be saved as 'user_id'
+	
+	private String name; // this field will be saved as 'name'
+	@MapperIgnored
+	private int age; // this field will be ignored
+	@MapperParameter({@MapperType(value="is_marrige", ignoreOnNull=true)})
+	private Boolean marrige; // this field will be ignored if value is null
+}
+</code></pre>
+<strong>Call:</strong>
+<pre>
+	<code class="language-java">
+UserEntity user = ...; 
+Mapper.get().serialize(user); // result: {user_id=0, name=null}
+	</code>
+</pre>
+
+	<h4>Serialize with key</h4>
+
+<strong>Entity</strong>
+<pre>
+<code class="language-java">
+public class UserEntity {
+	@MapperParameter({@MapperType(value="user_id", key="KeyA"), @MapperType(value="userId", key="KeyB")})
+	private int id;
+	@MapperParameter({@MapperType(value="userName"), @MapperType(value="Name", key="KeyA")})
+	private String name;
+	@MapperIgnored({"KeyA"})
+	private int age; // this field will be ignored
+}
+</code>
+</pre>
+
+<strong>Call:</strong>
+<pre>
+	<code class="language-java">
+UserEntity user = ...; 
+Mapper.get().serialize(new MapperEndToEndTest(), "KeyA") // result: {user_id=0, Name=null}
+Mapper.get().serialize(new MapperEndToEndTest(), "KeyB") // result: {userName=null, userId=0, age=0}
+Mapper.get().serialize(new MapperEndToEndTest(), "KeyC") // result: {id=0, userName=null, age=0}
+Mapper.get().serialize(new MapperEndToEndTest()) // result: {id=0, userName=null, age=0}
+	</code>
+</pre>
+
+<p class="alert alert-warning">
+	<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+</p>
+
+	<h4>Parse</h4>
+
+<strong>Entity</strong>
+<pre>
+<code class="language-java">
+public class UserEntity { 
+	@MapperParameter({@MapperType("user_id")})
+	private int id; // this field will be loaded from 'user_id'
+
+	private String name; // this field will be loaded from 'name'
+}
+</code>
+</pre>
+<strong>Call:</strong>
+<pre>
+	<code class="language-java">
+Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+map.put("user_id", 42);
+map.put("name", "Name #42");
+Mapper.get().parse(UserEntity.class, map);
+	</code>
+</pre>
+
+	<h4>Parse with key</h4>
+ 
+<strong>Entity</strong>
+<pre>
+<code class="language-java">
+public class UserEntity {
+	@MapperParameter({@MapperType(value="user_id", key="KeyA"), @MapperType(value="userId", key="KeyB")})
+	private int id;
+	@MapperParameter({@MapperType(value="userName"), @MapperType(value="Name", key="KeyA")})
+	private String name;
+}
+</code>
+</pre>
+
+<strong>Call:</strong>
+<pre>
+	<code class="language-java">
+Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+map.put("user_id", 42);
+map.put("userId", 24);
+map.put("id", 1);
+map.put("name", "Name #42");
+map.put("Name", "Name #24"); 
+map.put("userName", "Name #1");
+Mapper.get().parse(UserEntity.class, "KeyA") // result: id=42, name="Name #24"
+Mapper.get().parse(UserEntity.class, "KeyB")// result: id=24, name="Name #1"
+Mapper.get().parse(UserEntity.class, "KeyC")// result:id=1, name="Name #1"
+Mapper.get().parse(UserEntity.class)// result: id=1, name="Name #1"
+	</code>
+</pre>
+
+<p class="alert alert-warning">
+	<strong>NOTE:</strong> If you use general rule (no key) and rule(s) with key, define the general rule as first. See annotations on <code>name</code> parameter.
+</p>
+
+	<h3>Env</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/Env.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+<pre>
+	<code class="language-java">
+Env env = new Env("conf/app.properties");
+// or alternativelly
+Properties prop = ...;
+Env env2 = new Env(prop);
+	</code>
+</pre>
+
+	<h3>Implode</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/Implode.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+<pre>
+	<code class="language-java">
+Implode.implode(", ", 1, 2, 3);  // returns "1, 2, 3"
+Implode.implode(i->i+"0", ", ", 1, 2, 3);  // returns "10, 20, 30"
+Implode.implode(", ", Arrays.asList(1, 2, 3));  // returns "1, 2, 3"
+Implode.implode(i->i+"0", ", ", Arrays.asList(1, 2, 3));  // returns "10, 20, 30"
+	</code>
+</pre>
+
+	<h3>DateTime</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/DateTime.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+	<pre><code class="language-java">
+String pattern = ...;
+TemporalAccessor dataTime = ...; // LocalDate, LocalTime, LocalDateTime, ZonedDateTime
+// from given date
+String dateTimeFormatted = DateTime.format(pattern, dateTime);
+// formatted string with using LocalDateTime.now()
+String now = DateTime.format(pattern);
+	</code></pre>
+
+	<h3>Hash</h3>
+
+	<p>See <a href="javadoc/common/ji/common/functions/Hash.html">Javadoc</a></p>
+
+	<strong>Usage:</strong>
+	<pre><code class="language-java">
+	// create
+	Hash hash = Hash.getSha516();
+	// or
+	Hash hash = Hash.getSha256();
+	// or
+	Hash hash = Hash.getMD5();
+
+	// hash something
+	String toHash = ...;
+	String customSalt = ...; // can be empty string
+	String hashed = hash.toHash(toHash, customSalt);
+
+	// compare
+	String hashed = ...;
+	String customSalt = ...;
+	String expected = ...;
+	boolean areSame = hash.compare(expected, hashed, customSalt);
+	</code></pre>
+</div>

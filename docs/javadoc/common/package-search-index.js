@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"ji.common"},{"l":"ji.common.annotations"},{"l":"ji.common.exceptions"},{"l":"ji.common.functions"},{"l":"ji.common.structures"}]

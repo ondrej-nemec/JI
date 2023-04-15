@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"ji.translator","l":"LanguageSettings"},{"p":"ji.translator","l":"Locale"},{"p":"ji.translator","l":"PropertiesTranslator"},{"p":"ji.translator","l":"Translator"},{"p":"ji.translator","l":"TransProfiler"}]
