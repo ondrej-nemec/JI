@@ -36,15 +36,6 @@ public enum OperationSystem {
 	}	
 	
 	public static Supported getActualOs() {
-		/*
-		switch(File.separator) {
-		case "\n":
-			return Supported.LINUX;
-		case "\r\n":
-		default:
-			return Supported.WINDOWS;
-		}
-		*/
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.indexOf("win") >= 0) {
 			return Supported.WINDOWS;

@@ -2,9 +2,23 @@ package ji.common.functions;
 
 import ji.common.structures.ThrowingFunction;
 
-// TODO improve and add to documentation
+/**
+ * Class simplify searching in stack trace
+ * 
+ * @author Ondřej Němec
+ *
+ */
 public class StackTrace {
 
+	/**
+	 * Search in stack trace of current thread
+	 * <p>
+	 * Iterate current stack trace. Apply given function on each element until function returns true.
+	 * In this case method returns name of class from the element.
+	 * 
+	 * @param function
+	 * @return String class name or null
+	 */
 	public static String classParent(ThrowingFunction<StackTraceElement, Boolean, Exception> function) {
 		String className = null;
 		try {

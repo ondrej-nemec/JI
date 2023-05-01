@@ -7,6 +7,13 @@ import java.util.Base64;
 
 import ji.common.exceptions.HashException;
 
+/**
+ * Class wrap java hashing mechanism. 
+ * 
+ * @author Ondřej Němec
+ *
+ */
+// TODO vzit z edy
 public class Hash {
 	
 	public static Hash getSha516() {

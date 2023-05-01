@@ -31,10 +31,9 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * method returns one DatabaseRow (or null) in given table by given column.
-	 * @param QueryBuilder builder
-	 * @param String table - source table
-	 * @param String idName - column name to search in
-	 * @param Object id - value to search for
+	 * @param table String - source table
+	 * @param idName String - column name to search in
+	 * @param id Object - value to search for
 	 * @param select - columns, can be empty
 	 * @return DatabaseRow or NULL
 	 * @throws SQLException
@@ -49,7 +48,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * returns all rows in table
-	 * @param builder
 	 * @param table - source table
 	 * @param select - columns, can be empty
 	 * @return List of DatabaseRow
@@ -62,7 +60,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	/**
 	 * returns all rows in table
 	 * @param <T>
-	 * @param builder
 	 * @param table - source table
 	 * @param create - parse DatabaseRow to T
 	 * @param select - columns, can be empty
@@ -81,7 +78,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * returns all items by specific column
-	 * @param builder
 	 * @param table - source table
 	 * @param idName - column name to search in
 	 * @param id - value to search for
@@ -96,7 +92,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	/**
 	 * returns all items by specific column
 	 * @param <T>
-	 * @param builder
 	 * @param table - source table
 	 * @param idName - column name to search in
 	 * @param id - value to search for
@@ -115,7 +110,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * returns all items by specific column
-	 * @param builder
 	 * @param table - source table
 	 * @param idName - column name to search in
 	 * @param ids - values to search for
@@ -130,7 +124,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	/**
 	 * returns all items by specific column
 	 * @param <T>
-	 * @param builder
 	 * @param table - source table
 	 * @param idName - column name to search in
 	 * @param ids - values to search for
@@ -149,7 +142,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * delete rows with speficied column
-	 * @param builder
 	 * @param table - source table
 	 * @param idName - column name to delete by
 	 * @param id - value to delete by
@@ -162,7 +154,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * update rows specified by column
-	 * @param builder
 	 * @param table - source table
 	 * @param idName - column name to update by
 	 * @param id - value to update by
@@ -181,7 +172,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	
 	/**
 	 * insert one new row 
-	 * @param builder
 	 * @param table - source table
 	 * @param data
 	 * @return id as DictionaryValue
@@ -198,7 +188,6 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	/**
 	 * update/create/delete rows in related table
 	 * @param <T>
-	 * @param builder
 	 * @param relationTable - table to changes
 	 * @param primaryKeyName - column name of unique column (PrimaryKey)
 	 * @param foreignKeyName - column name of column related to another table (Foreigh Key)

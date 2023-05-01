@@ -12,6 +12,13 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * Loads file names from directory. 
+ * Can be recursive or not. Is able to load names from directory in file system and from jar file.
+ * 
+ * @author Ondřej Němec
+ *
+ */
 public class FilesList {
 
 	private URL url;
@@ -20,8 +27,8 @@ public class FilesList {
 	/**
 	 * Create new FilesList
 	 * 
-	 * @param folder    - path to folder or jar
-	 * @param recursive if load files in sub dirs
+	 * @param folder String path to folder or jar
+	 * @param recursive boolean if load files in sub dirs
 	 * @return new FilesList
 	 * @throws Exception
 	 */
@@ -34,10 +41,23 @@ public class FilesList {
 	}
 
 	/***************/
+	
+	/**
+	 * Get names of files in directory
+	 * 
+	 * @return {@link List} of {@link String}
+	 */
 	public List<String> getFiles() {
 		return files;
 	}
 
+	/**
+	 * Resource directory {@link URL}
+	 * <p>
+	 * Is null if directory is out of classpath
+	 * 
+	 * @return {@link URL}
+	 */
 	public URL getURL() {
 		return url;
 	}

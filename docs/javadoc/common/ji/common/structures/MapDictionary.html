@@ -114,6 +114,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>K</code> - the type of key</dd>
+<dd><code>V</code> - the type of value</dd>
+</dl>
+<dl>
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="Dictionary.html" title="interface in ji.common.structures">Dictionary</a>&lt;K&gt;</code></dd>
 </dl>
@@ -121,6 +126,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">MapDictionary&lt;K,&#8203;V&gt;</span>
 extends java.lang.Object
 implements <a href="Dictionary.html" title="interface in ji.common.structures">Dictionary</a>&lt;K&gt;</pre>
+<div class="block">Class wrap <code>Map</code> with implementation of <a href="Dictionary.html" title="interface in ji.common.structures"><code>Dictionary</code></a></div>
 </li>
 </ul>
 </div>
@@ -177,12 +183,16 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsKey(K)">containsKey</a></span>&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <code>Map.containsKey(Object)</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>java.util.Set&lt;java.util.Map.Entry&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#entrySet()">entrySet</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns a <code>Set</code> view of the mappings contained in this map.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>boolean</code></td>
@@ -192,69 +202,95 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>&lt;E extends java.lang.Throwable&gt;<br>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#forEach(ji.common.structures.ThrowingBiConsumer)">forEach</a></span>&#8203;(<a href="ThrowingBiConsumer.html" title="interface in ji.common.structures">ThrowingBiConsumer</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>,&#8203;E&gt;&nbsp;action)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Iterate all items</div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#forEach2(java.util.function.BiConsumer)">forEach2</a></span>&#8203;(java.util.function.BiConsumer&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;action)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Iterate all items</div>
+</td>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue(K)">getValue</a></span>&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;name)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value by given identificator</div>
+</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>static &lt;K,&#8203;V&gt;<br><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;K,&#8203;V&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashMap()">hashMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance as wrapper for <code>HashMap</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>java.util.Set&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keySet()">keySet</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns all keys</div>
+</td>
 </tr>
 <tr class="rowColor" id="i9">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(java.lang.Class)">parse</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Parse to given class using <a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i10">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(java.lang.Class,java.lang.String)">parse</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
      java.lang.String&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Parse to given class using <a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i11">
 <td class="colFirst"><code>static <a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;java.lang.Object,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#properties()">properties</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance as wrapper for <code>Properties</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i12">
 <td class="colFirst"><code><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#put(K,V)">put</a></span>&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;key,
    <a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Put new item or override existing</div>
+</td>
 </tr>
 <tr class="rowColor" id="i13">
 <td class="colFirst"><code><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putAll(java.util.Map)">putAll</a></span>&#8203;(java.util.Map&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;values)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Put all items from given <code>Map</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i14">
 <td class="colFirst"><code><a href="MapDictionary.html" title="type parameter in MapDictionary">V</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(K)">remove</a></span>&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Remove item on given key</div>
+</td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns the number of key-value mappings in this map.</div>
+</td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>java.util.Map&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toMap()">toMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> to <code>Map</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i17">
 <td class="colFirst"><code>java.lang.String</code></td>
@@ -264,7 +300,9 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tr class="altColor" id="i18">
 <td class="colFirst"><code>java.util.Collection&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values()">values</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns all values</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -307,6 +345,10 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>MapDictionary</h4>
 <pre>public&nbsp;MapDictionary&#8203;(java.util.Map&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;map)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>map</code> - <code>Map</code> wrapped map</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -326,6 +368,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>hashMap</h4>
 <pre class="methodSignature">public static&nbsp;&lt;K,&#8203;V&gt;&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;K,&#8203;V&gt;&nbsp;hashMap()</pre>
+<div class="block">Create new instance as wrapper for <code>HashMap</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="properties()">
@@ -335,6 +382,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>properties</h4>
 <pre class="methodSignature">public static&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;java.lang.Object,&#8203;java.lang.Object&gt;&nbsp;properties()</pre>
+<div class="block">Create new instance as wrapper for <code>Properties</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="getValue(java.lang.Object)">
@@ -346,6 +398,8 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;getValue&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;name)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Dictionary.html#getValue(S)">Dictionary</a></code></span></div>
+<div class="block">Returns value by given identificator</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Dictionary.html#getValue(S)">getValue</a></code>&nbsp;in interface&nbsp;<code><a href="Dictionary.html" title="interface in ji.common.structures">Dictionary</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&gt;</code></dd>
@@ -363,6 +417,13 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>containsKey</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;containsKey&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;key)</pre>
+<div class="block">See <code>Map.containsKey(Object)</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - K identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true/false</dd>
+</dl>
 </li>
 </ul>
 <a id="put(java.lang.Object,java.lang.Object)">
@@ -375,6 +436,14 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <h4>put</h4>
 <pre class="methodSignature">public&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;put&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;key,
                                     <a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&nbsp;value)</pre>
+<div class="block">Put new item or override existing</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - K</dd>
+<dd><code>value</code> - V</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="putAll(java.util.Map)">
@@ -384,6 +453,13 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>putAll</h4>
 <pre class="methodSignature">public&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;putAll&#8203;(java.util.Map&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;values)</pre>
+<div class="block">Put all items from given <code>Map</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>values</code> - <code>Map</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="remove(java.lang.Object)">
@@ -395,6 +471,13 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>remove</h4>
 <pre class="methodSignature">public&nbsp;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&nbsp;remove&#8203;(<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&nbsp;key)</pre>
+<div class="block">Remove item on given key</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - K</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>V removed item or null if identifier is not linked to existing item</dd>
+</dl>
 </li>
 </ul>
 <a id="keySet()">
@@ -404,6 +487,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>keySet</h4>
 <pre class="methodSignature">public&nbsp;java.util.Set&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>&gt;&nbsp;keySet()</pre>
+<div class="block">Returns all keys</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Set</code> of keys</dd>
+</dl>
 </li>
 </ul>
 <a id="values()">
@@ -413,6 +501,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>values</h4>
 <pre class="methodSignature">public&nbsp;java.util.Collection&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;values()</pre>
+<div class="block">Returns all values</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Collection</code></dd>
+</dl>
 </li>
 </ul>
 <a id="size()">
@@ -422,6 +515,13 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>size</h4>
 <pre class="methodSignature">public&nbsp;int&nbsp;size()</pre>
+<div class="block">Returns the number of key-value mappings in this map.  If the
+ map contains more than <code>Integer.MAX_VALUE</code> elements, returns
+ <code>Integer.MAX_VALUE</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the number of key-value mappings in this map</dd>
+</dl>
 </li>
 </ul>
 <a id="toMap()">
@@ -431,6 +531,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>toMap</h4>
 <pre class="methodSignature">public&nbsp;java.util.Map&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;toMap()</pre>
+<div class="block">Convert <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> to <code>Map</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Map</code></dd>
+</dl>
 </li>
 </ul>
 <a id="forEach2(java.util.function.BiConsumer)">
@@ -440,6 +545,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>forEach2</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;forEach2&#8203;(java.util.function.BiConsumer&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&nbsp;action)</pre>
+<div class="block">Iterate all items</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>action</code> - <code>BiConsumer</code> applied on each item, parameters are identifier and item</dd>
+</dl>
 </li>
 </ul>
 <a id="forEach(ji.common.structures.ThrowingBiConsumer)">
@@ -450,8 +560,14 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <h4>forEach</h4>
 <pre class="methodSignature">public&nbsp;&lt;E extends java.lang.Throwable&gt;&nbsp;void&nbsp;forEach&#8203;(<a href="ThrowingBiConsumer.html" title="interface in ji.common.structures">ThrowingBiConsumer</a>&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>,&#8203;E&gt;&nbsp;action)
                                              throws E extends java.lang.Throwable</pre>
+<div class="block">Iterate all items</div>
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>E</code> - the type of expected <code>Exception</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>action</code> - <a href="ThrowingBiConsumer.html" title="interface in ji.common.structures"><code>ThrowingBiConsumer</code></a> applied on each item, parameters are identifier and item</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>E</code> - expected <code>Exception</code></dd>
 <dd><code>E extends java.lang.Throwable</code></dd>
 </dl>
 </li>
@@ -463,6 +579,22 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>entrySet</h4>
 <pre class="methodSignature">public&nbsp;java.util.Set&lt;java.util.Map.Entry&lt;<a href="MapDictionary.html" title="type parameter in MapDictionary">K</a>,&#8203;<a href="MapDictionary.html" title="type parameter in MapDictionary">V</a>&gt;&gt;&nbsp;entrySet()</pre>
+<div class="block">Returns a <code>Set</code> view of the mappings contained in this map.
+ The set is backed by the map, so changes to the map are
+ reflected in the set, and vice-versa.  If the map is modified
+ while an iteration over the set is in progress (except through
+ the iterator's own <code>remove</code> operation, or through the
+ <code>setValue</code> operation on a map entry returned by the
+ iterator) the results of the iteration are undefined.  The set
+ supports element removal, which removes the corresponding
+ mapping from the map, via the <code>Iterator.remove</code>,
+ <code>Set.remove</code>, <code>removeAll</code>, <code>retainAll</code> and
+ <code>clear</code> operations.  It does not support the
+ <code>add</code> or <code>addAll</code> operations.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a set view of the mappings contained in this map</dd>
+</dl>
 </li>
 </ul>
 <a id="toString()">
@@ -498,6 +630,15 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>parse</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;parse&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
+<div class="block">Parse to given class using <a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - expected ype</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - <code>Class</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>T</dd>
+</dl>
 </li>
 </ul>
 <a id="parse(java.lang.Class,java.lang.String)">
@@ -508,6 +649,16 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <h4>parse</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;parse&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                    java.lang.String&nbsp;key)</pre>
+<div class="block">Parse to given class using <a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - expected type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - <code>Class</code></dd>
+<dd><code>key</code> - <code>String</code> serialization key</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>T</dd>
+</dl>
 </li>
 </ul>
 <a id="clear()">

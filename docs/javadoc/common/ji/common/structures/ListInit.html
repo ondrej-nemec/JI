@@ -113,9 +113,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>S</code> - the type of elements</dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">ListInit&lt;S&gt;</span>
 extends java.lang.Object</pre>
+<div class="block">Class serves as <code>Collection</code> builder</div>
 </li>
 </ul>
 </div>
@@ -139,15 +144,22 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">ListInit</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create with empty <code>Collection</code></div>
+</td>
 </tr>
 <tr class="rowColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.Collection)">ListInit</a></span>&#8203;(java.util.Collection&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;&nbsp;list)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create with given <code>Collection</code></div>
+</td>
 </tr>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(S)">ListInit</a></span>&#8203;(<a href="ListInit.html" title="type parameter in ListInit">S</a>&nbsp;item)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new <code>Collection</code> with first item
+ Item determines collection generic type</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -175,22 +187,30 @@ extends java.lang.Object</pre>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code><a href="ListInit.html" title="class in ji.common.structures">ListInit</a>&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(S)">add</a></span>&#8203;(<a href="ListInit.html" title="type parameter in ListInit">S</a>&nbsp;item)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Add item to collection</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a>&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDictionaryList()">toDictionaryList</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert <code>Collection</code> to <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>java.util.List&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toList()">toList</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert <code>Collection</code> to <code>List</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>java.util.Set&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toSet()">toSet</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert <code>Collection</code> to <code>Set</code></div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -228,6 +248,12 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>ListInit</h4>
 <pre>public&nbsp;ListInit&#8203;(<a href="ListInit.html" title="type parameter in ListInit">S</a>&nbsp;item)</pre>
+<div class="block">Create new <code>Collection</code> with first item
+ Item determines collection generic type</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>item</code> - first collectio item</dd>
+</dl>
 </li>
 </ul>
 <a id="&lt;init&gt;()">
@@ -237,6 +263,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>ListInit</h4>
 <pre>public&nbsp;ListInit()</pre>
+<div class="block">Create with empty <code>Collection</code></div>
 </li>
 </ul>
 <a id="&lt;init&gt;(java.util.Collection)">
@@ -246,6 +273,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>ListInit</h4>
 <pre>public&nbsp;ListInit&#8203;(java.util.Collection&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;&nbsp;list)</pre>
+<div class="block">Create with given <code>Collection</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>list</code> - <code>Collection</code> initial collection</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -267,6 +299,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>add</h4>
 <pre class="methodSignature">public&nbsp;<a href="ListInit.html" title="class in ji.common.structures">ListInit</a>&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;&nbsp;add&#8203;(<a href="ListInit.html" title="type parameter in ListInit">S</a>&nbsp;item)</pre>
+<div class="block">Add item to collection</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>item</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="ListInit.html" title="class in ji.common.structures"><code>ListInit</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="toList()">
@@ -276,6 +315,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toList</h4>
 <pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;&nbsp;toList()</pre>
+<div class="block">Convert <code>Collection</code> to <code>List</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>List</code></dd>
+</dl>
 </li>
 </ul>
 <a id="toSet()">
@@ -285,6 +329,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toSet</h4>
 <pre class="methodSignature">public&nbsp;java.util.Set&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;&nbsp;toSet()</pre>
+<div class="block">Convert <code>Collection</code> to <code>Set</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Set</code></dd>
+</dl>
 </li>
 </ul>
 <a id="toDictionaryList()">
@@ -294,6 +343,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toDictionaryList</h4>
 <pre class="methodSignature">public&nbsp;<a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a>&lt;<a href="ListInit.html" title="type parameter in ListInit">S</a>&gt;&nbsp;toDictionaryList()</pre>
+<div class="block">Convert <code>Collection</code> to <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a></dd>
+</dl>
 </li>
 </ul>
 </li>

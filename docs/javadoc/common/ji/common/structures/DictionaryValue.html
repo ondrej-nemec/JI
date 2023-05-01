@@ -116,6 +116,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">DictionaryValue</span>
 extends java.lang.Object</pre>
+<div class="block">Class is wrapper for any object. The class is able to convert some common types to another
+  or parse from one type to another. For example can parse numbers or times from string</div>
 </li>
 </ul>
 </div>
@@ -139,7 +141,9 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.Object)">DictionaryValue</a></span>&#8203;(java.lang.Object&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance with given value</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -167,12 +171,16 @@ extends java.lang.Object</pre>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code><a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addListCallback(java.util.function.Function)">addListCallback</a></span>&#8203;(java.util.function.Function&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;fromStringToListCallback)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Override default method for parsing <code>List</code> from string</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addMapCallback(java.util.function.Function)">addMapCallback</a></span>&#8203;(java.util.function.Function&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;fromStringToMapCallback)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Override default method for parsing <code>Map</code> from string</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>boolean</code></td>
@@ -182,152 +190,212 @@ extends java.lang.Object</pre>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getArray()">getArray</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as array</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBoolean()">getBoolean</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Boolean</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>java.lang.Byte</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByte()">getByte</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Byte</code>.</div>
+</td>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>java.time.LocalDate</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDate()">getDate</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>LocalDate</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>java.time.LocalDate</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDate(java.lang.String)">getDate</a></span>&#8203;(java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>LocalDate</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>java.time.LocalDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTime()">getDateTime</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>LocalDateTime</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i9">
 <td class="colFirst"><code>java.time.LocalDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTime(java.lang.String)">getDateTime</a></span>&#8203;(java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>LocalDateTime</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i10">
 <td class="colFirst"><code>java.time.ZonedDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTimeZone()">getDateTimeZone</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>ZonedDateTime</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i11">
 <td class="colFirst"><code>java.time.ZonedDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTimeZone(java.lang.String)">getDateTimeZone</a></span>&#8203;(java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>ZonedDateTime</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i12">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDictionaryList()">getDictionaryList</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i13">
 <td class="colFirst"><code>&lt;T,&#8203;E&gt;<br><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;T,&#8203;E&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDictionaryMap()">getDictionaryMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i14">
 <td class="colFirst"><code>java.lang.Double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDouble()">getDouble</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Double</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>&lt;E extends java.lang.Enum&lt;E&gt;&gt;<br>E</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEnum(java.lang.Class)">getEnum</a></span>&#8203;(java.lang.Class&lt;E&gt;&nbsp;enumm)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Parse value to given <code>Enum</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>java.lang.Float</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFloat()">getFloat</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Float</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i17">
 <td class="colFirst"><code>java.lang.Character</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCharacter()">getCharacter</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Character</code>.</div>
+</td>
 </tr>
 <tr class="altColor" id="i18">
 <td class="colFirst"><code>java.lang.Integer</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInteger()">getInteger</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Integer</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i19">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.List&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getList()">getList</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>List</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i20">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getList(java.lang.String)">getList</a></span>&#8203;(java.lang.String&nbsp;delimiter)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value as <code>List</code> of strings.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i21">
 <td class="colFirst"><code>java.lang.Long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLong()">getLong</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Long</code>.</div>
+</td>
 </tr>
 <tr class="altColor" id="i22">
 <td class="colFirst"><code>&lt;K,&#8203;V&gt;<br>java.util.Map&lt;K,&#8203;V&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMap()">getMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Map</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i23">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.Set&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSet()">getSet</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Set</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i24">
 <td class="colFirst"><code>java.lang.Short</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getShort()">getShort</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>Short</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i25">
 <td class="colFirst"><code>&lt;T,&#8203;E&gt;<br><a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;T,&#8203;E&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSortedMap()">getSortedMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i26">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getString()">getString</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>String</code>.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i27">
 <td class="colFirst"><code>java.time.LocalTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTime()">getTime</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>LocalTime</code>.</div>
+</td>
 </tr>
 <tr class="altColor" id="i28">
 <td class="colFirst"><code>java.time.LocalTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTime(java.lang.String)">getTime</a></span>&#8203;(java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get value as <code>LocalTime</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i29">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue()">getValue</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns real not converted, not parsed value</div>
+</td>
 </tr>
 <tr class="altColor" id="i30">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue(java.lang.Class)">getValue</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value converted to given <code>Class</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i31">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#is(java.lang.Class)">is</a></span>&#8203;(java.lang.Class&lt;?&gt;&nbsp;clazz)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Check if value can be converted to given <code>Class</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i32">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isPresent()">isPresent</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Check if value is not null</div>
+</td>
 </tr>
 <tr class="rowColor" id="i33">
 <td class="colFirst"><code>java.lang.String</code></td>
@@ -337,17 +405,25 @@ extends java.lang.Object</pre>
 <tr class="altColor" id="i34">
 <td class="colFirst"><code><a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withDateTimeFormat(java.lang.String)">withDateTimeFormat</a></span>&#8203;(java.lang.String&nbsp;dateTimePattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Override default pattern for parsing <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>
+  and <code>ZonedDateTime</code> from string</div>
+</td>
 </tr>
 <tr class="rowColor" id="i35">
 <td class="colFirst"><code><a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withOnlyKey(java.lang.String)">withOnlyKey</a></span>&#8203;(java.lang.String&nbsp;onlyKey)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Set key for parsing object using <a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a>.</div>
+</td>
 </tr>
 <tr class="altColor" id="i36">
 <td class="colFirst"><code><a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withZoneId(java.time.ZoneId)">withZoneId</a></span>&#8203;(java.time.ZoneId&nbsp;zoneId)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Set ZoneId for parsing @link LocalDate}, <code>LocalTime</code>, <code>LocalDateTime</code>
+  and <code>ZonedDateTime</code>.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -383,6 +459,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>DictionaryValue</h4>
 <pre>public&nbsp;DictionaryValue&#8203;(java.lang.Object&nbsp;value)</pre>
+<div class="block">Create new instance with given value</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - </dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -402,6 +483,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>addListCallback</h4>
 <pre class="methodSignature">public&nbsp;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>&nbsp;addListCallback&#8203;(java.util.function.Function&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;fromStringToListCallback)</pre>
+<div class="block">Override default method for parsing <code>List</code> from string</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fromStringToListCallback</code> - <code>Function</code> with string argument and returns <code>List</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="addMapCallback(java.util.function.Function)">
@@ -411,6 +499,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>addMapCallback</h4>
 <pre class="methodSignature">public&nbsp;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>&nbsp;addMapCallback&#8203;(java.util.function.Function&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;fromStringToMapCallback)</pre>
+<div class="block">Override default method for parsing <code>Map</code> from string</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fromStringToMapCallback</code> - <code>Function</code> with string argument and returns <code>Map</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="withDateTimeFormat(java.lang.String)">
@@ -420,6 +515,14 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>withDateTimeFormat</h4>
 <pre class="methodSignature">public&nbsp;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>&nbsp;withDateTimeFormat&#8203;(java.lang.String&nbsp;dateTimePattern)</pre>
+<div class="block">Override default pattern for parsing <code>LocalDate</code>, <code>LocalTime</code>, <code>LocalDateTime</code>
+  and <code>ZonedDateTime</code> from string</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>dateTimePattern</code> - <code>String</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="withOnlyKey(java.lang.String)">
@@ -429,6 +532,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>withOnlyKey</h4>
 <pre class="methodSignature">public&nbsp;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>&nbsp;withOnlyKey&#8203;(java.lang.String&nbsp;onlyKey)</pre>
+<div class="block">Set key for parsing object using <a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a>. Default is null</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>onlyKey</code> - <code>String</code> key for parsing</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a> self</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../functions/Mapper.html" title="class in ji.common.functions"><code>Mapper</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="withZoneId(java.time.ZoneId)">
@@ -438,6 +550,14 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>withZoneId</h4>
 <pre class="methodSignature">public&nbsp;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>&nbsp;withZoneId&#8203;(java.time.ZoneId&nbsp;zoneId)</pre>
+<div class="block">Set ZoneId for parsing @link LocalDate}, <code>LocalTime</code>, <code>LocalDateTime</code>
+  and <code>ZonedDateTime</code>. Default is <code>ZoneId.systemDefault()</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>zoneId</code> - <code>ZoneId</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="getValue()">
@@ -447,6 +567,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;getValue()</pre>
+<div class="block">Returns real not converted, not parsed value</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Object</code> original value</dd>
+</dl>
 </li>
 </ul>
 <a id="isPresent()">
@@ -456,6 +581,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>isPresent</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;isPresent()</pre>
+<div class="block">Check if value is not null</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if value is not null</dd>
+</dl>
 </li>
 </ul>
 <a id="is(java.lang.Class)">
@@ -465,6 +595,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>is</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;is&#8203;(java.lang.Class&lt;?&gt;&nbsp;clazz)</pre>
+<div class="block">Check if value can be converted to given <code>Class</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - <code>Class</code> tested type</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if value can be converted to given <code>Class</code></dd>
+</dl>
 </li>
 </ul>
 <a id="getValue(java.lang.Class)">
@@ -474,6 +611,17 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;getValue&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
+<div class="block">Returns value converted to given <code>Class</code></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the returned type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - <code>Class</code> required type</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>T value converted to given type</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getBoolean()">
@@ -483,6 +631,17 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getBoolean</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Boolean&nbsp;getBoolean()</pre>
+<div class="block">Get value as <code>Boolean</code>.
+ <p>
+ <code>String</code> is true if is equals (CI): true/on/1
+ <p>
+ <code>Number</code> is true if value is great that 0</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Boolean</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getByte()">
@@ -492,6 +651,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getByte</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Byte&nbsp;getByte()</pre>
+<div class="block">Get value as <code>Byte</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Byte</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getShort()">
@@ -501,6 +667,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getShort</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Short&nbsp;getShort()</pre>
+<div class="block">Get value as <code>Short</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Short</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getInteger()">
@@ -510,6 +683,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getInteger</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Integer&nbsp;getInteger()</pre>
+<div class="block">Get value as <code>Integer</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Integer</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getLong()">
@@ -519,6 +699,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getLong</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Long&nbsp;getLong()</pre>
+<div class="block">Get value as <code>Long</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Long</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getFloat()">
@@ -528,6 +715,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getFloat</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Float&nbsp;getFloat()</pre>
+<div class="block">Get value as <code>Float</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Float</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDouble()">
@@ -537,6 +731,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDouble</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Double&nbsp;getDouble()</pre>
+<div class="block">Get value as <code>Double</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Double</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getCharacter()">
@@ -546,6 +747,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getCharacter</h4>
 <pre class="methodSignature">public&nbsp;java.lang.Character&nbsp;getCharacter()</pre>
+<div class="block">Get value as <code>Character</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Character</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getString()">
@@ -555,6 +763,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getString</h4>
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getString()</pre>
+<div class="block">Get value as <code>String</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>String</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getEnum(java.lang.Class)">
@@ -564,6 +779,16 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getEnum</h4>
 <pre class="methodSignature">public&nbsp;&lt;E extends java.lang.Enum&lt;E&gt;&gt;&nbsp;E&nbsp;getEnum&#8203;(java.lang.Class&lt;E&gt;&nbsp;enumm)</pre>
+<div class="block">Parse value to given <code>Enum</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Enum</code> or null if value is null or value is empty string or value is 'null'(CI string)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+<dd><code>java.lang.IllegalArgumentException</code> - if the specified enum type has
+         no constant with the specified name, or the specified
+         class object does not represent an enum type</dd>
+</dl>
 </li>
 </ul>
 <a id="getTime()">
@@ -573,6 +798,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getTime</h4>
 <pre class="methodSignature">public&nbsp;java.time.LocalTime&nbsp;getTime()</pre>
+<div class="block">Get value as <code>LocalTime</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalTime</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getTime(java.lang.String)">
@@ -582,6 +814,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getTime</h4>
 <pre class="methodSignature">public&nbsp;java.time.LocalTime&nbsp;getTime&#8203;(java.lang.String&nbsp;pattern)</pre>
+<div class="block">Get value as <code>LocalTime</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>pattern</code> - <code>String</code> pattern for parsing from string. Override default or <a href="#withDateTimeFormat(java.lang.String)"><code>withDateTimeFormat(java.lang.String)</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalTime</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDate()">
@@ -591,6 +832,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDate</h4>
 <pre class="methodSignature">public&nbsp;java.time.LocalDate&nbsp;getDate()</pre>
+<div class="block">Get value as <code>LocalDate</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDate</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDate(java.lang.String)">
@@ -600,6 +848,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDate</h4>
 <pre class="methodSignature">public&nbsp;java.time.LocalDate&nbsp;getDate&#8203;(java.lang.String&nbsp;pattern)</pre>
+<div class="block">Get value as <code>LocalDate</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>pattern</code> - <code>String</code> pattern for parsing from string. Override default or <a href="#withDateTimeFormat(java.lang.String)"><code>withDateTimeFormat(java.lang.String)</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDate</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTime()">
@@ -609,6 +866,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDateTime</h4>
 <pre class="methodSignature">public&nbsp;java.time.LocalDateTime&nbsp;getDateTime()</pre>
+<div class="block">Get value as <code>LocalDateTime</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDateTime</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTime(java.lang.String)">
@@ -618,6 +882,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDateTime</h4>
 <pre class="methodSignature">public&nbsp;java.time.LocalDateTime&nbsp;getDateTime&#8203;(java.lang.String&nbsp;pattern)</pre>
+<div class="block">Get value as <code>LocalDateTime</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>pattern</code> - <code>String</code> pattern for parsing from string. Override default or <a href="#withDateTimeFormat(java.lang.String)"><code>withDateTimeFormat(java.lang.String)</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDateTime</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTimeZone()">
@@ -627,6 +900,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDateTimeZone</h4>
 <pre class="methodSignature">public&nbsp;java.time.ZonedDateTime&nbsp;getDateTimeZone()</pre>
+<div class="block">Get value as <code>ZonedDateTime</code>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>ZonedDateTime</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTimeZone(java.lang.String)">
@@ -636,6 +916,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDateTimeZone</h4>
 <pre class="methodSignature">public&nbsp;java.time.ZonedDateTime&nbsp;getDateTimeZone&#8203;(java.lang.String&nbsp;pattern)</pre>
+<div class="block">Get value as <code>ZonedDateTime</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>pattern</code> - <code>String</code> pattern for parsing from string. Override default or <a href="#withDateTimeFormat(java.lang.String)"><code>withDateTimeFormat(java.lang.String)</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>ZonedDateTime</code> or null if value is null</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getList(java.lang.String)">
@@ -645,6 +934,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getList</h4>
 <pre class="methodSignature">public&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getList&#8203;(java.lang.String&nbsp;delimiter)</pre>
+<div class="block">Returns value as <code>List</code> of strings. If value is string, will be splited using given delimiter</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>delimiter</code> - <code>String</code> value for split the string value</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>List</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDictionaryList()">
@@ -654,6 +952,23 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDictionaryList</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a>&lt;T&gt;&nbsp;getDictionaryList()</pre>
+<div class="block">Get value as <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a>
+ <p>
+ <code>Collection</code> and array are converted
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> is converted using <a href="SortedMap.html#toList()"><code>SortedMap.toList()</code></a>
+ <p>
+ <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> and <code>Map</code> are converted using <code>Map.values()</code></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getDictionaryMap()">
@@ -663,6 +978,21 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getDictionaryMap</h4>
 <pre class="methodSignature">public&nbsp;&lt;T,&#8203;E&gt;&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;T,&#8203;E&gt;&nbsp;getDictionaryMap()</pre>
+<div class="block">Get value as <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a>
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> is converted using <a href="SortedMap.html#toMap()"><code>SortedMap.toMap()</code></a>
+ <p>
+ <code>Map</code> is converted</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getSortedMap()">
@@ -672,6 +1002,19 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getSortedMap</h4>
 <pre class="methodSignature">public&nbsp;&lt;T,&#8203;E&gt;&nbsp;<a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;T,&#8203;E&gt;&nbsp;getSortedMap()</pre>
+<div class="block">Get value as <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a>
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> and <code>Map</code> are converted</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getList()">
@@ -681,6 +1024,23 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getList</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getList()</pre>
+<div class="block">Get value as <code>List</code>
+ <p>
+ <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a>, array and other <code>Collection</code> are converted
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> is converted using <a href="SortedMap.html#toList()"><code>SortedMap.toList()</code></a>
+ <p>
+ <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> and <code>Map</code> are converted using <code>Map.values()</code></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>List</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getSet()">
@@ -690,6 +1050,23 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getSet</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;java.util.Set&lt;T&gt;&nbsp;getSet()</pre>
+<div class="block">Get value as <code>Set</code>
+ <p>
+ <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a>, array and other <code>Collection</code> are converted
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> is converted using <a href="SortedMap.html#toList()"><code>SortedMap.toList()</code></a> and converted from <code>List</code> to <code>Set</code>
+ <p>
+ <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> and <code>Map</code> are converted using <code>Map.keySet()</code></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Set</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getArray()">
@@ -699,6 +1076,23 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getArray</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T[]&nbsp;getArray()</pre>
+<div class="block">Get value as array
+ <p>
+ <a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a> and <code>Collection</code> are converted
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> is converted using <a href="SortedMap.html#toList()"><code>SortedMap.toList()</code></a>
+ <p>
+ <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> and <code>Map</code> are converted using <code>Map.values()</code></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>array</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="getMap()">
@@ -708,6 +1102,17 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getMap</h4>
 <pre class="methodSignature">public&nbsp;&lt;K,&#8203;V&gt;&nbsp;java.util.Map&lt;K,&#8203;V&gt;&nbsp;getMap()</pre>
+<div class="block">Get value as <code>Map</code>
+ <p>
+ <code>String</code> is parsed useing ji.json.JsonReader (if is present in project)
+ <p>
+ <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> and <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> are converted</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Map</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if all convert and parse mechanism fails</dd>
+</dl>
 </li>
 </ul>
 <a id="toString()">

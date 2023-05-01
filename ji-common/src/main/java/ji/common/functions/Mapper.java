@@ -5,6 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,15 +27,62 @@ import ji.common.structures.ListDictionary;
 import ji.common.structures.MapDictionary;
 import ji.common.structures.Tuple2;
 
+/**
+ * Class is able to convert data class (entity) to {@link Map} (serialize) and {@link Map} back to entity (parse).
+ * 
+ * @author Ondřej Němec
+ *
+ */
 public class Mapper {
 	
+	/**
+	 * Returns new instance of {@link Mapper}
+	 * 
+	 * @return {@link Mapper}
+	 */
 	public static Mapper get() {
 		return new Mapper();
 	}
+	
+	/**
+	 * Serialize data class to {@link Map}
+	 * 
+	 * During serialization JI come thru all fields of entity and uses then as key in new {@link Map}.
+	 * Values of fields become values. 
+	 * Serializations works recursivelly.
+	 * <p>
+	 * If you wish ignore field during serialization, just add {@link MapperIgnored} annotation.
+	 * <p>
+	 * The null field value will not be serialized if <code>ignoreOnNull</code> is set. 
+	 * <p>
+	 * If you do not wish use field name as key, you need to annotate this field with {@link MapperParameter}
+	 *  and as value to put {@link MapperType}.
+	 * 
+	 * @param value Object what will be serialized
+	 * @return {@link Map} serialized object
+	 */
 	public Map<String, Object> serialize(Object value) {
 		return serialize(value, null);
 	}
 	
+	/**
+	 * Serialize data class to {@link Map}
+	 * 
+	 * One entity can be serialized in more ways that are defined by string key.
+	 * <p>
+	 * {@link MapperIgnored} contains array of strings. If one of then is equals to given key, field will be ignored.
+	 * If the array is empty (default state), field will be always ignored. Otherwise will be used. 
+	 * <p>
+	 * {@link MapperParameter} can has more than one {@link MapperType}.
+	 * {@link MapperType} has <code>key</code> parameter that specified the 'way'.
+	 * Default is empty string and means 'use if no others options'.
+	 * 
+	 * For more details see {@link Mapper#serialize(Object)}
+	 * 
+	 * @param value Object what will be serialized
+	 * @param key String use case identifier
+	 * @return {@link Map} serialized object
+	 */
 	public Map<String, Object> serialize(Object value, String key) {
 		try {
 			Map<String, Object> json = new HashMap<>();
@@ -71,10 +122,48 @@ public class Mapper {
 		}
 	}
 	
+	/**
+	 * Parse {@link Map} to given data object
+	 * 
+	 * Parsing is reverse of serialize. From {@link Map} create entity (Or from list of map, result will be list of entity).
+	 * During serialization JI come thru all fields of entity and try finds for it value in {@link Map}.
+	 * As key is used field name. Parsing works recursively.
+	 * <p>
+	 * If you do not wish use field name as key, you need to annotate this field with {@link MapperParameter}
+	 *  and as value to put {@link MapperType}.
+	 * <p>
+	 * {@link LocalTime}, {@link LocalDate}, {@link LocalDateTime} and {@link ZonedDateTime}
+	 * is parsed from string using standart java formats. 
+	 * If datetime string is in different format, use <code>dateTimeFormat</code> attribute of {@link MapperType}.
+	 * 
+	 * @param <T> data object class
+	 * @param clazz {@link Class} final data object class
+	 * @param source {@link Map} or {@link Collection} source data to parse
+	 * @return new instance of given class
+	 * @throws Exception
+	 */
 	public <T> T parse(Class<T> clazz, Object source) throws Exception {
 		return read(clazz, source, null, null, null, (v)->{});
 	}
 	
+	/**
+	 * Parse {@link Map} to given data object
+	 * <p>
+	 * One entity can be parsed in more ways that are defined by string key.
+	 * This key is the second (optional) parameter to <code>parse</code> method.
+	 * {@link MapperParameter} can has more than one {@link MapperType}.
+	 * {@link MapperType} has <code>key</code> parameter that specified the 'way'.
+	 * Default is empty string and means 'use if no others options'.
+	 * <p> 
+	 * For more details see {@link Mapper#parse(Class, Object)}
+	 * 
+	 * @param <T> data object class
+	 * @param clazz {@link Class} final data object class
+	 * @param source {@link Map} or {@link Collection} source data to parse
+	 * @param key
+	 * @return new instance of given class
+	 * @throws Exception
+	 */
 	public <T> T parse(Class<T> clazz, Object source, String key) throws Exception {
 		return read(clazz, source, key, null, null, (v)->{});
 	}

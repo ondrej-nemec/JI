@@ -25,6 +25,15 @@ public class Text {
 			
 	/************ read from buffered reader ****************/
 	
+	/**
+	 * TODO
+	 * 
+	 * @param <T>
+	 * @param function
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public <T> T read(ThrowingFunction<BufferedReader, T, IOException> function, String path) throws IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 			return function.apply(br);
@@ -70,7 +79,7 @@ public class Text {
 	}
 
 	
-	/************ read from buffered reader ****************
+	/*
 	
 	public <T> T read(ThrowingBiFunction<BufferedReader, ReadText, T, IOException> function, String path) throws IOException {
 		ReadText rt = new ReadText();
@@ -123,8 +132,16 @@ public class Text {
 	}
 	
 	
-	/************** write to buffered writer ***************/
+	*/
 	
+	/**
+	 * TODO
+	 * 
+	 * @param consumer
+	 * @param path
+	 * @param append
+	 * @throws IOException
+	 */
 	public void write(ThrowingConsumer<BufferedWriter, IOException> consumer, String path, boolean append) throws IOException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, append))) {
 			consumer.accept(bw);
@@ -149,7 +166,7 @@ public class Text {
 		}
 	}
 	
-	/************** write to buffered writer ***************
+	/*
 	
 	public void write(ThrowingBiConsumer<BufferedWriter, WriteText, IOException> consumer, String path, boolean append) throws IOException {
 		WriteText wt = new WriteText();
@@ -179,6 +196,6 @@ public class Text {
 		}
 	}
 	
-	/**********/
+	*/
 	
 }

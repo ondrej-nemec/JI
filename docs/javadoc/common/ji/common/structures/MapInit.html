@@ -113,9 +113,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>K</code> - the type of key</dd>
+<dd><code>V</code> - the type of value</dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">MapInit&lt;K,&#8203;V&gt;</span>
 extends java.lang.Object</pre>
+<div class="block">Class serves as <code>Map</code> builder</div>
 </li>
 </ul>
 </div>
@@ -139,16 +145,22 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">MapInit</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance with empty <code>Map</code></div>
+</td>
 </tr>
 <tr class="rowColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.Map)">MapInit</a></span>&#8203;(java.util.Map&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;&nbsp;map)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance from given <code>Map</code></div>
+</td>
 </tr>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(K,V)">MapInit</a></span>&#8203;(<a href="MapInit.html" title="type parameter in MapInit">K</a>&nbsp;k,
        <a href="MapInit.html" title="type parameter in MapInit">V</a>&nbsp;v)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance with first item</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -177,32 +189,44 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code><a href="MapInit.html" title="class in ji.common.structures">MapInit</a>&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#append(K,V)">append</a></span>&#8203;(<a href="MapInit.html" title="type parameter in MapInit">K</a>&nbsp;key,
       <a href="MapInit.html" title="type parameter in MapInit">V</a>&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Add new pair to map</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>static <a href="MapInit.html" title="class in ji.common.structures">MapInit</a>&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#create()">create</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new <a href="MapInit.html" title="class in ji.common.structures"><code>MapInit</code></a> with <code>String</code> key and <code>Object</code> value</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDictionaryMap()">toDictionaryMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert to <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>java.util.Map&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toMap()">toMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convenrt to <code>Map</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>java.util.Properties</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toProperties()">toProperties</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert to <code>Properties</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code><a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toSortedMap()">toSortedMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert to <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a></div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -238,6 +262,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>MapInit</h4>
 <pre>public&nbsp;MapInit()</pre>
+<div class="block">Create new instance with empty <code>Map</code></div>
 </li>
 </ul>
 <a id="&lt;init&gt;(java.lang.Object,java.lang.Object)">
@@ -250,6 +275,12 @@ extends java.lang.Object</pre>
 <h4>MapInit</h4>
 <pre>public&nbsp;MapInit&#8203;(<a href="MapInit.html" title="type parameter in MapInit">K</a>&nbsp;k,
                <a href="MapInit.html" title="type parameter in MapInit">V</a>&nbsp;v)</pre>
+<div class="block">Create new instance with first item</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>k</code> - key</dd>
+<dd><code>v</code> - value</dd>
+</dl>
 </li>
 </ul>
 <a id="&lt;init&gt;(java.util.Map)">
@@ -259,6 +290,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>MapInit</h4>
 <pre>public&nbsp;MapInit&#8203;(java.util.Map&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;&nbsp;map)</pre>
+<div class="block">Create new instance from given <code>Map</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>map</code> - <code>Map</code></dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -278,6 +314,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>create</h4>
 <pre class="methodSignature">public static&nbsp;<a href="MapInit.html" title="class in ji.common.structures">MapInit</a>&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;create()</pre>
+<div class="block">Create new <a href="MapInit.html" title="class in ji.common.structures"><code>MapInit</code></a> with <code>String</code> key and <code>Object</code> value</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapInit.html" title="class in ji.common.structures"><code>MapInit</code></a> new instance</dd>
+</dl>
 </li>
 </ul>
 <a id="append(java.lang.Object,java.lang.Object)">
@@ -290,6 +331,14 @@ extends java.lang.Object</pre>
 <h4>append</h4>
 <pre class="methodSignature">public&nbsp;<a href="MapInit.html" title="class in ji.common.structures">MapInit</a>&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;&nbsp;append&#8203;(<a href="MapInit.html" title="type parameter in MapInit">K</a>&nbsp;key,
                                  <a href="MapInit.html" title="type parameter in MapInit">V</a>&nbsp;value)</pre>
+<div class="block">Add new pair to map</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - </dd>
+<dd><code>value</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapInit.html" title="class in ji.common.structures"><code>MapInit</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="toMap()">
@@ -299,6 +348,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toMap</h4>
 <pre class="methodSignature">public&nbsp;java.util.Map&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;&nbsp;toMap()</pre>
+<div class="block">Convenrt to <code>Map</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Map</code></dd>
+</dl>
 </li>
 </ul>
 <a id="toSortedMap()">
@@ -308,6 +362,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toSortedMap</h4>
 <pre class="methodSignature">public&nbsp;<a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;&nbsp;toSortedMap()</pre>
+<div class="block">Convert to <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="toProperties()">
@@ -317,6 +376,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toProperties</h4>
 <pre class="methodSignature">public&nbsp;java.util.Properties&nbsp;toProperties()</pre>
+<div class="block">Convert to <code>Properties</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Properties</code></dd>
+</dl>
 </li>
 </ul>
 <a id="toDictionaryMap()">
@@ -326,6 +390,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toDictionaryMap</h4>
 <pre class="methodSignature">public&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;<a href="MapInit.html" title="type parameter in MapInit">K</a>,&#8203;<a href="MapInit.html" title="type parameter in MapInit">V</a>&gt;&nbsp;toDictionaryMap()</pre>
+<div class="block">Convert to <a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a></dd>
+</dl>
 </li>
 </ul>
 </li>

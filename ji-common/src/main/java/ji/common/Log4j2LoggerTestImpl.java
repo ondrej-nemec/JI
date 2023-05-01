@@ -14,15 +14,35 @@ import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.util.MessageSupplier;
 import org.apache.logging.log4j.util.Supplier;
 
+/**
+ * Implementation of {@link org.apache.logging.log4j.Logger}
+ * This class is intended for tests and other purposes where classic {@link org.apache.logging.log4j.Logger} or mocking cannot be used.
+ * <p>
+ * Class log all messages to console and to file (if file name is specified)
+ * 
+ * @author Ondřej Němec
+ *
+ */
 public class Log4j2LoggerTestImpl implements Logger {
 	
 	private final String file;
 	private final String name;
 	
+	/**
+	 * Create instance without logging to file
+	 * 
+	 * @param name String name of the logger
+	 */
 	public Log4j2LoggerTestImpl(String name) {
 		this(name, null);
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param name String name of logger
+	 * @param file String path to logger file. File doesn't have to exists. Current date is added at the file name end (before extension).
+	 */
 	public Log4j2LoggerTestImpl(String name, String file) {
 		this.file = file == null ? null : file.replace(
 			".", 
@@ -30,7 +50,6 @@ public class Log4j2LoggerTestImpl implements Logger {
 		);
 		this.name = name;
 	}
-	
 	
 	@Override
 	public void debug(Object message) {

@@ -22,6 +22,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import ji.common.functions.Mapper;
+
+/**
+ * Class is wrapper for any object. The class is able to convert some common types to another
+ *  or parse from one type to another. For example can parse numbers or times from string
+ * 
+ * @author Ondřej Němec
+ *
+ */
 public class DictionaryValue {
 
 	private final Object value;
@@ -40,30 +49,69 @@ public class DictionaryValue {
 	private ZoneId zoneId = ZoneId.systemDefault();
 	private String onlyKey = null;
 	
+	/**
+	 * Create new instance with given value
+	 * 
+	 * @param value
+	 */
 	public DictionaryValue(Object value) {
 		this.value = value;
 	}
 	
+	/**
+	 * Override default method for parsing {@link List} from string
+	 * 
+	 * @param fromStringToListCallback {@link Function} with string argument and returns {@link List}
+	 * @return {@link DictionaryValue} self
+	 */
 	public DictionaryValue addListCallback(Function<String, Object> fromStringToListCallback) {
 		this.fromStringToListCallback = fromStringToListCallback;
 		return this;
 	}
 	
+	/**
+	 * Override default method for parsing {@link Map} from string
+	 * 
+	 * @param fromStringToMapCallback {@link Function} with string argument and returns {@link Map}
+	 * @return {@link DictionaryValue} self
+	 */
 	public DictionaryValue addMapCallback(Function<String, Object> fromStringToMapCallback) {
 		this.fromStringToMapCallback = fromStringToMapCallback;
 		return this;
 	}
 
+	/**
+	 * Override default pattern for parsing {@link LocalDate}, {@link LocalTime}, {@link LocalDateTime}
+	 *  and {@link ZonedDateTime} from string
+	 * 
+	 * @param dateTimePattern {@link String}
+	 * @return {@link DictionaryValue} self
+	 */
 	public DictionaryValue withDateTimeFormat(String dateTimePattern) {
 		this.dateTimePattern = dateTimePattern;
 		return this;
 	}
 
+	/**
+	 * Set key for parsing object using {@link Mapper}. Default is null
+	 * 
+	 * @param onlyKey {@link String} key for parsing
+	 * @return {@link DictionaryValue} self
+	 * 
+	 * @see Mapper
+	 */
 	public DictionaryValue withOnlyKey(String onlyKey) {
 		this.onlyKey = onlyKey;
 		return this;
 	}
 	
+	/**
+	 * Set ZoneId for parsing @link LocalDate}, {@link LocalTime}, {@link LocalDateTime}
+	 *  and {@link ZonedDateTime}. Default is <code>ZoneId.systemDefault()</code>
+	 * 
+	 * @param zoneId {@link ZoneId}
+	 * @return {@link DictionaryValue} self
+	 */
 	public DictionaryValue withZoneId(ZoneId zoneId) {
 		this.zoneId = zoneId;
 		return this;
@@ -71,14 +119,30 @@ public class DictionaryValue {
 	
 	/******/
 
+	/**
+	 * Returns real not converted, not parsed value
+	 * 
+	 * @return {@link Object} original value
+	 */
 	public Object getValue() {
 		return value;
 	}
 	
+	/**
+	 * Check if value is not null
+	 * 
+	 * @return true if value is not null
+	 */
 	public boolean isPresent() {
 		return value != null;
 	}
 	
+	/**
+	 * Check if value can be converted to given {@link Class}
+	 * 
+	 * @param clazz {@link Class} tested type
+	 * @return true if value can be converted to given {@link Class}
+	 */
 	public boolean is(Class<?> clazz) {
 		try {
 			return clazz.isInstance(getValue(clazz));
@@ -87,6 +151,14 @@ public class DictionaryValue {
 		}
 	}
 
+	/**
+	 * Returns value converted to given {@link Class}
+	 * 
+	 * @param <T> the returned type
+	 * @param clazz {@link Class} required type
+	 * @return T value converted to given type
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getValue(Class<T> clazz) {
 		if (value == null) {
@@ -148,6 +220,16 @@ public class DictionaryValue {
 	
 	/**************/
 	
+	/**
+	 * Get value as {@link Boolean}.
+	 * <p>
+	 * {@link String} is true if is equals (CI): true/on/1
+	 * <p>
+	 * {@link Number} is true if value is great that 0
+	 * 
+	 * @return {@link Boolean} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Boolean getBoolean() {
 		return parseValue(
 			Boolean.class,
@@ -160,7 +242,13 @@ public class DictionaryValue {
 			}
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Byte}.
+	 * 
+	 * @return {@link Byte} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Byte getByte() {
 		return parseValue(
 			Byte.class, 
@@ -168,7 +256,13 @@ public class DictionaryValue {
 			v->Number.class.cast(v).byteValue()
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Short}.
+	 * 
+	 * @return {@link Short} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Short getShort() {
 		return parseValue(
 			Short.class, 
@@ -176,7 +270,13 @@ public class DictionaryValue {
 			v->Number.class.cast(v).shortValue()
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Integer}.
+	 * 
+	 * @return {@link Integer} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Integer getInteger() {
 		return parseValue(
 			Integer.class, 
@@ -184,7 +284,13 @@ public class DictionaryValue {
 			v->Number.class.cast(v).intValue()
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Long}.
+	 * 
+	 * @return {@link Long} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Long getLong() {
 		return parseValue(
 			Long.class,
@@ -192,7 +298,13 @@ public class DictionaryValue {
 			v->Number.class.cast(v).longValue()
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Float}.
+	 * 
+	 * @return {@link Float} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Float getFloat() {
 		return parseValue(
 			Float.class, 
@@ -200,7 +312,13 @@ public class DictionaryValue {
 			v->Number.class.cast(v).floatValue()
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Double}.
+	 * 
+	 * @return {@link Double} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Double getDouble() {
 		return parseValue(
 			Double.class,
@@ -208,7 +326,13 @@ public class DictionaryValue {
 			v->Number.class.cast(v).doubleValue()
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link Character}.
+	 * 
+	 * @return {@link Character} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public Character getCharacter() {
 		return parseValue(
 			Character.class, 
@@ -216,11 +340,26 @@ public class DictionaryValue {
 			a->a.toString().charAt(0)
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link String}.
+	 * 
+	 * @return {@link String} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public String getString() {
 		return parseValue(String.class, a->a, a->a.toString());
 	}
-	
+
+	/**
+	 * Parse value to given {@link Enum}
+	 * 
+	 * @return {@link Enum} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+     * @throws IllegalArgumentException if the specified enum type has
+     *         no constant with the specified name, or the specified
+     *         class object does not represent an enum type
+	 */
 	public <E extends Enum<E>> E getEnum(Class<E> enumm) {
 		return parseValue(enumm,a->parsePrimitive(a, ()->E.valueOf(enumm, a)));
 	}
@@ -233,11 +372,24 @@ public class DictionaryValue {
 	}
 	
 	/*****************/
-	
+
+	/**
+	 * Get value as {@link LocalTime}.
+	 * 
+	 * @return {@link LocalTime} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public LocalTime getTime() {
 		return getTime(dateTimePattern); // dateTimePattern == null ? "HH:mm:ss" : 
 	}
-	
+
+	/**
+	 * Get value as {@link LocalTime}
+	 * 
+	 * @param pattern {@link String} pattern for parsing from string. Override default or {@link DictionaryValue#withDateTimeFormat}
+	 * @return {@link LocalTime} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public LocalTime getTime(String pattern) {
 		return getTimestamp(
 			LocalTime.class, 
@@ -245,11 +397,24 @@ public class DictionaryValue {
 			pattern
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link LocalDate}.
+	 * 
+	 * @return {@link LocalDate} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public LocalDate getDate() {
 		return getDate(dateTimePattern); // dateTimePattern == null ? "yyyy-MM-dd" : 
 	}
-	
+
+	/**
+	 * Get value as {@link LocalDate}
+	 * 
+	 * @param pattern {@link String} pattern for parsing from string. Override default or {@link DictionaryValue#withDateTimeFormat}
+	 * @return {@link LocalDate} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public LocalDate getDate(String pattern) {
 		return getTimestamp(
 			LocalDate.class, 
@@ -257,11 +422,24 @@ public class DictionaryValue {
 			pattern
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link LocalDateTime}.
+	 * 
+	 * @return {@link LocalDateTime} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public LocalDateTime getDateTime() {
 		return getDateTime(dateTimePattern); // dateTimePattern == null ? "yyyy-MM-dd'T'HH-mm-ss.SSS" : 
 	}
-	
+
+	/**
+	 * Get value as {@link LocalDateTime}
+	 * 
+	 * @param pattern {@link String} pattern for parsing from string. Override default or {@link DictionaryValue#withDateTimeFormat}
+	 * @return {@link LocalDateTime} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public LocalDateTime getDateTime(String pattern) {
 		return getTimestamp(
 			LocalDateTime.class, 
@@ -269,11 +447,24 @@ public class DictionaryValue {
 			pattern
 		);
 	}
-	
+
+	/**
+	 * Get value as {@link ZonedDateTime}.
+	 * 
+	 * @return {@link ZonedDateTime} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public ZonedDateTime getDateTimeZone() {
 		return getDateTimeZone(dateTimePattern); // dateTimePattern == null ? "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" : 
 	}
-	
+
+	/**
+	 * Get value as {@link ZonedDateTime}
+	 * 
+	 * @param pattern {@link String} pattern for parsing from string. Override default or {@link DictionaryValue#withDateTimeFormat}
+	 * @return {@link ZonedDateTime} or null if value is null
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	public ZonedDateTime getDateTimeZone(String pattern) {
 		return getTimestamp(
 			ZonedDateTime.class, 
@@ -365,11 +556,33 @@ public class DictionaryValue {
 
 	/************/
 
+	/**
+	 * Returns value as {@link List} of strings. If value is string, will be splited using given delimiter
+	 * 
+	 * @param delimiter {@link String} value for split the string value
+	 * @return {@link List}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public List<String> getList(String delimiter) {
 		return parseValue(List.class, a->Arrays.asList(a.split(delimiter)));
 	}
-
+	
+	/**
+	 * Get value as {@link ListDictionary}
+	 * <p>
+	 * {@link Collection} and array are converted
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link SortedMap} is converted using {@link SortedMap#toList()}
+	 * <p>
+	 * {@link MapDictionary} and {@link Map} are converted using {@link Map#values()}
+	 * 
+	 * @param <T> the type of item
+	 * @return {@link ListDictionary}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> ListDictionary<T> getDictionaryList() {
 		return parseValue(ListDictionary.class, fromStringToListCallback, (value)->{
@@ -392,6 +605,19 @@ public class DictionaryValue {
 		});
 	}
 
+	/**
+	 * Get value as {@link MapDictionary}
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link SortedMap} is converted using {@link SortedMap#toMap()}
+	 * <p>
+	 * {@link Map} is converted
+	 * 
+	 * @param <T> the type of item
+	 * @return {@link MapDictionary}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T, E> MapDictionary<T, E> getDictionaryMap() {
 		return parseValue(MapDictionary.class, fromStringToMapCallback, (value)->{
@@ -405,6 +631,17 @@ public class DictionaryValue {
 		});
 	}
 
+	/**
+	 * Get value as {@link SortedMap}
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link MapDictionary} and {@link Map} are converted
+	 * 
+	 * @param <T> the type of item
+	 * @return {@link SortedMap}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T, E> SortedMap<T, E> getSortedMap() {
 		return parseValue(SortedMap.class, fromStringToListCallback, (value)->{
@@ -417,7 +654,22 @@ public class DictionaryValue {
 			return value;
 		});
 	}
-	
+
+	/**
+	 * Get value as {@link List}
+	 * <p>
+	 * {@link ListDictionary}, array and other {@link Collection} are converted
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link SortedMap} is converted using {@link SortedMap#toList()}
+	 * <p>
+	 * {@link MapDictionary} and {@link Map} are converted using {@link Map#values()}
+	 * 
+	 * @param <T> the type of item
+	 * @return {@link List}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getList() {
 		return parseValue(List.class, fromStringToListCallback, (value)-> {
@@ -442,7 +694,21 @@ public class DictionaryValue {
 			return value;
 		});
 	}
-	
+	/**
+	 * Get value as {@link Set}
+	 * <p>
+	 * {@link ListDictionary}, array and other {@link Collection} are converted
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link SortedMap} is converted using {@link SortedMap#toList()} and converted from {@link List} to {@link Set}
+	 * <p>
+	 * {@link MapDictionary} and {@link Map} are converted using {@link Map#keySet()}
+	 * 
+	 * @param <T> the type of item
+	 * @return {@link Set}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> Set<T> getSet() {
 		return parseValue(Set.class, fromStringToListCallback, (value)-> {
@@ -461,7 +727,21 @@ public class DictionaryValue {
 			return value;
 		});
 	}
-
+	/**
+	 * Get value as array
+	 * <p>
+	 * {@link ListDictionary} and {@link Collection} are converted
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link SortedMap} is converted using {@link SortedMap#toList()}
+	 * <p>
+	 * {@link MapDictionary} and {@link Map} are converted using {@link Map#values()}
+	 * 
+	 * @param <T> the type of item
+	 * @return array
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T[] getArray() {
 		if (value == null) {
@@ -519,6 +799,16 @@ public class DictionaryValue {
 //		}
 //	}
 	
+	/**
+	 * Get value as {@link Map}
+	 * <p>
+	 * {@link String} is parsed useing ji.json.JsonReader (if is present in project)
+	 * <p>
+	 * {@link SortedMap} and {@link MapDictionary} are converted
+	 * 
+	 * @return {@link Map}
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
 	@SuppressWarnings("unchecked")
 	public <K, V> Map<K, V> getMap() {
 		return parseValue(Map.class, fromStringToMapCallback, (value)-> {

@@ -114,6 +114,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>K</code> - the type of key</dd>
+<dd><code>V</code> - the type of value</dd>
+</dl>
+<dl>
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="Dictionary.html" title="interface in ji.common.structures">Dictionary</a>&lt;K&gt;</code></dd>
 </dl>
@@ -121,6 +126,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">SortedMap&lt;K,&#8203;V&gt;</span>
 extends java.lang.Object
 implements <a href="Dictionary.html" title="interface in ji.common.structures">Dictionary</a>&lt;K&gt;</pre>
+<div class="block">Class represent structure where items are sorted like in <code>Collection</code> but are accesible using keys like in <code>Map</code></div>
 </li>
 </ul>
 </div>
@@ -144,7 +150,9 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">SortedMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new empty instance</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -173,7 +181,13 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <td class="colFirst"><code><a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#append(K,V)">append</a></span>&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key,
       <a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Add as last item
+ 
+ Difference between <a href="#put(K,V)"><code>put(Object, Object)</code></a> and <a href="#append(K,V)"><code>append(Object, Object)</code></a>
+ is that <a href="#put(K,V)"><code>put(Object, Object)</code></a> returns original value associated with <code>key</code>
+ and <a href="#append(K,V)"><code>append(Object, Object)</code></a> returns self</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
@@ -183,7 +197,9 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsKey(K)">containsKey</a></span>&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns <code>true</code> if this map contains a mapping for the specified key.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>boolean</code></td>
@@ -193,18 +209,24 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#forEach(java.util.function.BiConsumer)">forEach</a></span>&#8203;(java.util.function.BiConsumer&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;callback)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Iterate over all items</div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>&lt;E extends java.lang.Throwable&gt;<br>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#forEach(ji.common.structures.ThrowingBiConsumer,java.lang.Class)">forEach</a></span>&#8203;(<a href="ThrowingBiConsumer.html" title="interface in ji.common.structures">ThrowingBiConsumer</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>,&#8203;E&gt;&nbsp;callback,
        java.lang.Class&lt;E&gt;&nbsp;clazz)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Iterate over all items</div>
+</td>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code><a href="SortedMap.html" title="type parameter in SortedMap">V</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue(K)">getValue</a></span>&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value by given identificator</div>
+</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>int</code></td>
@@ -214,33 +236,50 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isEmpty()">isEmpty</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Check if is empty</div>
+</td>
 </tr>
 <tr class="rowColor" id="i9">
 <td class="colFirst"><code><a href="SortedMap.html" title="type parameter in SortedMap">V</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#put(K,V)">put</a></span>&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key,
    <a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Add as last item
+ 
+ Difference between <a href="#put(K,V)"><code>put(Object, Object)</code></a> and <a href="#append(K,V)"><code>append(Object, Object)</code></a>
+ is that <a href="#put(K,V)"><code>put(Object, Object)</code></a> returns original value associated with <code>key</code>
+ and <a href="#append(K,V)"><code>append(Object, Object)</code></a> returns self</div>
+</td>
 </tr>
 <tr class="altColor" id="i10">
 <td class="colFirst"><code><a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putAll(java.util.Map)">putAll</a></span>&#8203;(java.util.Map&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;source)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Put all source key-values pairs</div>
+</td>
 </tr>
 <tr class="rowColor" id="i11">
 <td class="colFirst"><code><a href="SortedMap.html" title="type parameter in SortedMap">V</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(K)">remove</a></span>&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Removes the mapping for a key if it is present
+ (optional operation).</div>
+</td>
 </tr>
 <tr class="altColor" id="i12">
 <td class="colFirst"><code>java.util.List&lt;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toList()">toList</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert to <code>List</code></div>
+</td>
 </tr>
 <tr class="rowColor" id="i13">
 <td class="colFirst"><code>java.util.Map&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toMap()">toMap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Convert to <code>Map</code></div>
+</td>
 </tr>
 <tr class="altColor" id="i14">
 <td class="colFirst"><code>java.lang.String</code></td>
@@ -288,6 +327,7 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>SortedMap</h4>
 <pre>public&nbsp;SortedMap()</pre>
+<div class="block">Create new empty instance</div>
 </li>
 </ul>
 </li>
@@ -307,6 +347,13 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>putAll</h4>
 <pre class="methodSignature">public&nbsp;<a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;putAll&#8203;(java.util.Map&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;source)</pre>
+<div class="block">Put all source key-values pairs</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>source</code> - <code>Map</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="put(java.lang.Object,java.lang.Object)">
@@ -319,6 +366,19 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <h4>put</h4>
 <pre class="methodSignature">public&nbsp;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;put&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key,
              <a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;value)</pre>
+<div class="block">Add as last item
+ 
+ Difference between <a href="#put(K,V)"><code>put(Object, Object)</code></a> and <a href="#append(K,V)"><code>append(Object, Object)</code></a>
+ is that <a href="#put(K,V)"><code>put(Object, Object)</code></a> returns original value associated with <code>key</code>
+ and <a href="#append(K,V)"><code>append(Object, Object)</code></a> returns self</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - </dd>
+<dd><code>value</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the previous value associated with <code>key</code>, or
+         <code>null</code> if there was no mapping for <code>key</code>.</dd>
+</dl>
 </li>
 </ul>
 <a id="isEmpty()">
@@ -328,6 +388,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>isEmpty</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;isEmpty()</pre>
+<div class="block">Check if is empty</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Boolean</code> true if is empty, false otherwise</dd>
+</dl>
 </li>
 </ul>
 <a id="append(java.lang.Object,java.lang.Object)">
@@ -340,6 +405,18 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <h4>append</h4>
 <pre class="methodSignature">public&nbsp;<a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;append&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key,
                                    <a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;value)</pre>
+<div class="block">Add as last item
+ 
+ Difference between <a href="#put(K,V)"><code>put(Object, Object)</code></a> and <a href="#append(K,V)"><code>append(Object, Object)</code></a>
+ is that <a href="#put(K,V)"><code>put(Object, Object)</code></a> returns original value associated with <code>key</code>
+ and <a href="#append(K,V)"><code>append(Object, Object)</code></a> returns self</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - </dd>
+<dd><code>value</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="getValue(java.lang.Object)">
@@ -351,6 +428,8 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature">public&nbsp;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;getValue&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Dictionary.html#getValue(S)">Dictionary</a></code></span></div>
+<div class="block">Returns value by given identificator</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Dictionary.html#getValue(S)">getValue</a></code>&nbsp;in interface&nbsp;<code><a href="Dictionary.html" title="interface in ji.common.structures">Dictionary</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&gt;</code></dd>
@@ -381,6 +460,21 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>containsKey</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;containsKey&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key)</pre>
+<div class="block">Returns <code>true</code> if this map contains a mapping for the specified key.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - key whose presence is to be tested</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if this map contains a mapping for the specified
+         key</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.ClassCastException</code> - if the key is of an inappropriate type for
+         this map
+ (<a href="../../../java.base/java/util/Collection.html#optional-restrictions">optional</a>)</dd>
+<dd><code>java.lang.NullPointerException</code> - if the specified key is null and this map
+         does not permit null keys
+ (<a href="../../../java.base/java/util/Collection.html#optional-restrictions">optional</a>)</dd>
+</dl>
 </li>
 </ul>
 <a id="remove(java.lang.Object)">
@@ -392,6 +486,33 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>remove</h4>
 <pre class="methodSignature">public&nbsp;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&nbsp;remove&#8203;(<a href="SortedMap.html" title="type parameter in SortedMap">K</a>&nbsp;key)</pre>
+<div class="block">Removes the mapping for a key if it is present
+ (optional operation).
+
+ <p>Returns the value to which <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> previously associated the key,
+ or <code>null</code> if the <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> contained no mapping for the key.
+
+ <p>If this <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> permits null values, then a return value of
+ <code>null</code> does not <i>necessarily</i> indicate that the <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a>
+ contained no mapping for the key; it's also possible that the <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a>
+ explicitly mapped the key to <code>null</code>.
+
+ <p>The <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> will not contain a mapping for the specified key once the
+ call returns.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - key whose mapping is to be removed from the <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the previous value associated with <code>key</code>, or
+         <code>null</code> if there was no mapping for <code>key</code>.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.UnsupportedOperationException</code> - if the <code>remove</code> operation
+         is not supported by this map</dd>
+<dd><code>java.lang.ClassCastException</code> - if the key is of an inappropriate type for
+         this map</dd>
+<dd><code>java.lang.NullPointerException</code> - if the specified key is null and this
+         <a href="SortedMap.html" title="class in ji.common.structures"><code>SortedMap</code></a> does not permit null keys</dd>
+</dl>
 </li>
 </ul>
 <a id="forEach(java.util.function.BiConsumer)">
@@ -401,6 +522,12 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>forEach</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;forEach&#8203;(java.util.function.BiConsumer&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;callback)</pre>
+<div class="block">Iterate over all items</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>callback</code> - <code>BiConsumer</code> action that will be applied on each item. First parameter
+ is <code>key</code> and the second is <code>value</code></dd>
+</dl>
 </li>
 </ul>
 <a id="forEach(ji.common.structures.ThrowingBiConsumer,java.lang.Class)">
@@ -412,8 +539,14 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <pre class="methodSignature">public&nbsp;&lt;E extends java.lang.Throwable&gt;&nbsp;void&nbsp;forEach&#8203;(<a href="ThrowingBiConsumer.html" title="interface in ji.common.structures">ThrowingBiConsumer</a>&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>,&#8203;E&gt;&nbsp;callback,
                                                     java.lang.Class&lt;E&gt;&nbsp;clazz)
                                              throws E extends java.lang.Throwable</pre>
+<div class="block">Iterate over all items</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>callback</code> - <a href="ThrowingBiConsumer.html" title="interface in ji.common.structures"><code>ThrowingBiConsumer</code></a> action that will be applied on each item. First parameter
+ is <code>key</code> and the second is <code>value</code></dd>
+<dd><code>clazz</code> - <code>Class</code> class of expected <code>Exception</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>E</code> - expected <code>Exception</code> specified by <code>clazz</code></dd>
 <dd><code>E extends java.lang.Throwable</code></dd>
 </dl>
 </li>
@@ -425,6 +558,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>toMap</h4>
 <pre class="methodSignature">public&nbsp;java.util.Map&lt;<a href="SortedMap.html" title="type parameter in SortedMap">K</a>,&#8203;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;toMap()</pre>
+<div class="block">Convert to <code>Map</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Map</code></dd>
+</dl>
 </li>
 </ul>
 <a id="toList()">
@@ -434,6 +572,11 @@ implements <a href="Dictionary.html" title="interface in ji.common.structures">D
 <li class="blockList">
 <h4>toList</h4>
 <pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="SortedMap.html" title="type parameter in SortedMap">V</a>&gt;&nbsp;toList()</pre>
+<div class="block">Convert to <code>List</code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>List</code> of values</dd>
+</dl>
 </li>
 </ul>
 <a id="toString()">

@@ -106,11 +106,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>S</code> - the type of identifier</dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="../functions/Env.html" title="class in ji.common.functions">Env</a></code>, <code><a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a></code>, <code><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a></code>, <code><a href="SortedMap.html" title="class in ji.common.structures">SortedMap</a></code></dd>
 </dl>
 <hr>
 <pre>public interface <span class="typeNameLabel">Dictionary&lt;S&gt;</span></pre>
+<div class="block">Interface represents structure holiding another object (items). Each item is accesible by identifier.
+ <p>
+ Each item can be converted or parsed using <a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a></div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -142,140 +153,190 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>default java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(S)">get</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value by given identificator</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>default java.lang.Boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBoolean(S)">getBoolean</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getBoolean()"><code>DictionaryValue.getBoolean()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>default java.lang.Byte</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByte(S)">getByte</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getByte()"><code>DictionaryValue.getByte()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>default java.time.LocalDate</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDate(S)">getDate</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDate()"><code>DictionaryValue.getDate()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>default java.time.LocalDate</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDate(S,java.lang.String)">getDate</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
        java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDate(java.lang.String)"><code>DictionaryValue.getDate(String)</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>default java.time.LocalDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTime(S)">getDateTime</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDateTime()"><code>DictionaryValue.getDateTime()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>default java.time.LocalDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTime(S,java.lang.String)">getDateTime</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
            java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDateTime(java.lang.String)"><code>DictionaryValue.getDateTime(String)</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>default java.time.ZonedDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTimeZone(S)">getDateTimeZone</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDateTimeZone()"><code>DictionaryValue.getDateTimeZone()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i9">
 <td class="colFirst"><code>default java.time.ZonedDateTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateTimeZone(S,java.lang.String)">getDateTimeZone</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDateTimeZone(java.lang.String)"><code>DictionaryValue.getDateTimeZone(String)</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i10">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;<a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDictionaryList(S)">getDictionaryList</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDictionaryList()"><code>DictionaryValue.getDictionaryList()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i11">
 <td class="colFirst"><code>default &lt;T,&#8203;E&gt;<br><a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;T,&#8203;E&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDictionaryMap(S)">getDictionaryMap</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDictionaryMap()"><code>DictionaryValue.getDictionaryMap()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i12">
 <td class="colFirst"><code>default <a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDictionaryValue(S)">getDictionaryValue</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value by given identificator</div>
+</td>
 </tr>
 <tr class="rowColor" id="i13">
 <td class="colFirst"><code>default java.lang.Double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDouble(S)">getDouble</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getDouble()"><code>DictionaryValue.getDouble()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i14">
 <td class="colFirst"><code>default &lt;E extends java.lang.Enum&lt;E&gt;&gt;<br>E</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEnum(S,java.lang.Class)">getEnum</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
        java.lang.Class&lt;E&gt;&nbsp;enumm)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getEnum(java.lang.Class)"><code>DictionaryValue.getEnum(Class)</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>default java.lang.Float</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFloat(S)">getFloat</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getFloat()"><code>DictionaryValue.getFloat()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>default java.lang.Character</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCharacter(S)">getCharacter</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getCharacter()"><code>DictionaryValue.getCharacter()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i17">
 <td class="colFirst"><code>default java.lang.Integer</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInteger(S)">getInteger</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getInteger()"><code>DictionaryValue.getInteger()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i18">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;java.util.List&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getList(S)">getList</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getList()"><code>DictionaryValue.getList()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i19">
 <td class="colFirst"><code>default java.util.List&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getList(S,java.lang.String)">getList</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
        java.lang.String&nbsp;delimiter)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getList(java.lang.String)"><code>DictionaryValue.getList(String)</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i20">
 <td class="colFirst"><code>default java.lang.Long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLong(S)">getLong</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getLong()"><code>DictionaryValue.getLong()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i21">
 <td class="colFirst"><code>default &lt;K,&#8203;V&gt;<br>java.util.Map&lt;K,&#8203;V&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMap(S)">getMap</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getMap()"><code>DictionaryValue.getMap()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i22">
 <td class="colFirst"><code>default java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getString(S)">getString</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getString()"><code>DictionaryValue.getString()</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i23">
 <td class="colFirst"><code>default java.time.LocalTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTime(S)">getTime</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getTime()"><code>DictionaryValue.getTime()</code></a></div>
+</td>
 </tr>
 <tr class="altColor" id="i24">
 <td class="colFirst"><code>default java.time.LocalTime</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTime(S,java.lang.String)">getTime</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
        java.lang.String&nbsp;pattern)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See <a href="DictionaryValue.html#getTime(java.lang.String)"><code>DictionaryValue.getTime(String)</code></a></div>
+</td>
 </tr>
 <tr class="rowColor" id="i25">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue(S)">getValue</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Returns value by given identificator</div>
+</td>
 </tr>
 <tr class="altColor" id="i26">
 <td class="colFirst"><code>default boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#is(S,java.lang.Class)">is</a></span>&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
   java.lang.Class&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
-<div class="block">Check if value on given key is or can be instance of given class</div>
+<div class="block">See <a href="DictionaryValue.html#is(java.lang.Class)"><code>DictionaryValue.is(Class)</code></a></div>
 </td>
 </tr>
 </tbody>
@@ -307,6 +368,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature">java.lang.Object&nbsp;getValue&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">Returns value by given identificator</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - </dd>
@@ -333,11 +395,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDictionaryValue</h4>
 <pre class="methodSignature">default&nbsp;<a href="DictionaryValue.html" title="class in ji.common.structures">DictionaryValue</a>&nbsp;getDictionaryValue&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">Returns value by given identificator</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - </dd>
+<dd><code>key</code> - S identifier</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>value as DictionaryValue</dd>
+<dd><a href="DictionaryValue.html" title="class in ji.common.structures"><code>DictionaryValue</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -350,11 +413,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Object&nbsp;get&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">Returns value by given identificator</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - </dd>
+<dd><code>key</code> - S identifier</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>value on given key in original type</dd>
+<dd>not converted value</dd>
 </dl>
 </li>
 </ul>
@@ -368,13 +432,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>is</h4>
 <pre class="methodSignature">default&nbsp;boolean&nbsp;is&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                    java.lang.Class&lt;?&gt;&nbsp;clazz)</pre>
-<div class="block">Check if value on given key is or can be instance of given class</div>
+<div class="block">See <a href="DictionaryValue.html#is(java.lang.Class)"><code>DictionaryValue.is(Class)</code></a></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - </dd>
+<dd><code>key</code> - S identifier</dd>
 <dd><code>clazz</code> - </dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if value can is/can be casted/can be parsed to clas</dd>
+<dd>true if identifier is contained and item can be converted to given <code>Class</code></dd>
 </dl>
 </li>
 </ul>
@@ -387,6 +451,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getBoolean</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Boolean&nbsp;getBoolean&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getBoolean()"><code>DictionaryValue.getBoolean()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Boolean</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getByte(java.lang.Object)">
@@ -398,6 +469,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getByte</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Byte&nbsp;getByte&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getByte()"><code>DictionaryValue.getByte()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Byte</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getInteger(java.lang.Object)">
@@ -409,6 +487,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getInteger</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Integer&nbsp;getInteger&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getInteger()"><code>DictionaryValue.getInteger()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Integer</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getLong(java.lang.Object)">
@@ -420,6 +505,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getLong</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Long&nbsp;getLong&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getLong()"><code>DictionaryValue.getLong()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Long</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getFloat(java.lang.Object)">
@@ -431,6 +523,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getFloat</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Float&nbsp;getFloat&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getFloat()"><code>DictionaryValue.getFloat()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Float</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDouble(java.lang.Object)">
@@ -442,6 +541,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDouble</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Double&nbsp;getDouble&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDouble()"><code>DictionaryValue.getDouble()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Double</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getCharacter(java.lang.Object)">
@@ -453,6 +559,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getCharacter</h4>
 <pre class="methodSignature">default&nbsp;java.lang.Character&nbsp;getCharacter&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getCharacter()"><code>DictionaryValue.getCharacter()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Character</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getString(java.lang.Object)">
@@ -464,6 +577,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getString</h4>
 <pre class="methodSignature">default&nbsp;java.lang.String&nbsp;getString&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getString()"><code>DictionaryValue.getString()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>String</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getTime(java.lang.Object)">
@@ -475,6 +595,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getTime</h4>
 <pre class="methodSignature">default&nbsp;java.time.LocalTime&nbsp;getTime&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getTime()"><code>DictionaryValue.getTime()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalTime</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getTime(java.lang.Object,java.lang.String)">
@@ -487,6 +614,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>getTime</h4>
 <pre class="methodSignature">default&nbsp;java.time.LocalTime&nbsp;getTime&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                                     java.lang.String&nbsp;pattern)</pre>
+<div class="block">See <a href="DictionaryValue.html#getTime(java.lang.String)"><code>DictionaryValue.getTime(String)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalTime</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDate(java.lang.Object)">
@@ -498,6 +632,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDate</h4>
 <pre class="methodSignature">default&nbsp;java.time.LocalDate&nbsp;getDate&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDate()"><code>DictionaryValue.getDate()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDate</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDate(java.lang.Object,java.lang.String)">
@@ -510,6 +651,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>getDate</h4>
 <pre class="methodSignature">default&nbsp;java.time.LocalDate&nbsp;getDate&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                                     java.lang.String&nbsp;pattern)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDate(java.lang.String)"><code>DictionaryValue.getDate(String)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDate</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTime(java.lang.Object)">
@@ -521,6 +669,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDateTime</h4>
 <pre class="methodSignature">default&nbsp;java.time.LocalDateTime&nbsp;getDateTime&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDateTime()"><code>DictionaryValue.getDateTime()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDateTime</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTime(java.lang.Object,java.lang.String)">
@@ -533,6 +688,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>getDateTime</h4>
 <pre class="methodSignature">default&nbsp;java.time.LocalDateTime&nbsp;getDateTime&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                                             java.lang.String&nbsp;pattern)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDateTime(java.lang.String)"><code>DictionaryValue.getDateTime(String)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>LocalDateTime</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTimeZone(java.lang.Object)">
@@ -544,6 +706,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDateTimeZone</h4>
 <pre class="methodSignature">default&nbsp;java.time.ZonedDateTime&nbsp;getDateTimeZone&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDateTimeZone()"><code>DictionaryValue.getDateTimeZone()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>ZonedDateTime</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDateTimeZone(java.lang.Object,java.lang.String)">
@@ -556,6 +725,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>getDateTimeZone</h4>
 <pre class="methodSignature">default&nbsp;java.time.ZonedDateTime&nbsp;getDateTimeZone&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                                                 java.lang.String&nbsp;pattern)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDateTimeZone(java.lang.String)"><code>DictionaryValue.getDateTimeZone(String)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>ZonedDateTime</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getEnum(java.lang.Object,java.lang.Class)">
@@ -568,6 +744,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>getEnum</h4>
 <pre class="methodSignature">default&nbsp;&lt;E extends java.lang.Enum&lt;E&gt;&gt;&nbsp;E&nbsp;getEnum&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                                                 java.lang.Class&lt;E&gt;&nbsp;enumm)</pre>
+<div class="block">See <a href="DictionaryValue.html#getEnum(java.lang.Class)"><code>DictionaryValue.getEnum(Class)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Enum</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getList(java.lang.Object,java.lang.String)">
@@ -580,6 +763,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>getList</h4>
 <pre class="methodSignature">default&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getList&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key,
                                                  java.lang.String&nbsp;delimiter)</pre>
+<div class="block">See <a href="DictionaryValue.html#getList(java.lang.String)"><code>DictionaryValue.getList(String)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>List</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDictionaryList(java.lang.Object)">
@@ -591,6 +781,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDictionaryList</h4>
 <pre class="methodSignature">default&nbsp;&lt;T&gt;&nbsp;<a href="ListDictionary.html" title="class in ji.common.structures">ListDictionary</a>&lt;T&gt;&nbsp;getDictionaryList&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDictionaryList()"><code>DictionaryValue.getDictionaryList()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="ListDictionary.html" title="class in ji.common.structures"><code>ListDictionary</code></a> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getDictionaryMap(java.lang.Object)">
@@ -602,6 +799,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getDictionaryMap</h4>
 <pre class="methodSignature">default&nbsp;&lt;T,&#8203;E&gt;&nbsp;<a href="MapDictionary.html" title="class in ji.common.structures">MapDictionary</a>&lt;T,&#8203;E&gt;&nbsp;getDictionaryMap&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getDictionaryMap()"><code>DictionaryValue.getDictionaryMap()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="MapDictionary.html" title="class in ji.common.structures"><code>MapDictionary</code></a> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getList(java.lang.Object)">
@@ -613,6 +817,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getList</h4>
 <pre class="methodSignature">default&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getList&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getList()"><code>DictionaryValue.getList()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>List</code> or null</dd>
+</dl>
 </li>
 </ul>
 <a id="getMap(java.lang.Object)">
@@ -624,6 +835,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>getMap</h4>
 <pre class="methodSignature">default&nbsp;&lt;K,&#8203;V&gt;&nbsp;java.util.Map&lt;K,&#8203;V&gt;&nbsp;getMap&#8203;(<a href="Dictionary.html" title="type parameter in Dictionary">S</a>&nbsp;key)</pre>
+<div class="block">See <a href="DictionaryValue.html#getMap()"><code>DictionaryValue.getMap()</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - S identifier</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>Map</code> or null</dd>
+</dl>
 </li>
 </ul>
 </li>

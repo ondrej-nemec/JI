@@ -21,10 +21,7 @@ public class Terminal {
 		return run(stdOut, stdErr, OperationSystem.PRE_FILE + fileName + OperationSystem.CLI_EXTENSION);
 	}
 	
-	/**
-	 * Asynchronious
-	 * @param command
-	 */
+	// Asynchronious
 	public void runFile(final String fileName) {
 		run(OperationSystem.PRE_FILE + fileName + OperationSystem.CLI_EXTENSION);
 	}
@@ -33,10 +30,7 @@ public class Terminal {
 		return run(stdOut, stdErr, OperationSystem.PRE_COMMAND + command);
 	}
 	
-	/**
-	 * Asynchronious
-	 * @param command
-	 */
+	// Asynchronious
 	public void runCommand(final String command) {
 		run(OperationSystem.PRE_COMMAND + command);
 	}

@@ -116,6 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">IntegerBuilder</span>
 extends java.lang.Object</pre>
+<div class="block">Class holds primite int</div>
 </li>
 </ul>
 </div>
@@ -139,11 +140,15 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">IntegerBuilder</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance with initial value zero</div>
+</td>
 </tr>
 <tr class="rowColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(int)">IntegerBuilder</a></span>&#8203;(int&nbsp;value)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Create new instance with given initial value</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -171,22 +176,30 @@ extends java.lang.Object</pre>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code><a href="IntegerBuilder.html" title="class in ji.common.structures">IntegerBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(int)">add</a></span>&#8203;(int&nbsp;plus)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Add given <code>plus</code> to current value</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInteger()">getInteger</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Get current value</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="IntegerBuilder.html" title="class in ji.common.structures">IntegerBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#change(java.util.function.Function)">change</a></span>&#8203;(java.util.function.Function&lt;java.lang.Integer,&#8203;java.lang.Integer&gt;&nbsp;change)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Change current value using given function</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code><a href="IntegerBuilder.html" title="class in ji.common.structures">IntegerBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(int)">remove</a></span>&#8203;(int&nbsp;minus)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Remove given <code>minus</code> from current value</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>java.lang.String</code></td>
@@ -227,6 +240,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>IntegerBuilder</h4>
 <pre>public&nbsp;IntegerBuilder()</pre>
+<div class="block">Create new instance with initial value zero</div>
 </li>
 </ul>
 <a id="&lt;init&gt;(int)">
@@ -236,6 +250,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>IntegerBuilder</h4>
 <pre>public&nbsp;IntegerBuilder&#8203;(int&nbsp;value)</pre>
+<div class="block">Create new instance with given initial value</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - int initial value</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -255,6 +274,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>add</h4>
 <pre class="methodSignature">public&nbsp;<a href="IntegerBuilder.html" title="class in ji.common.structures">IntegerBuilder</a>&nbsp;add&#8203;(int&nbsp;plus)</pre>
+<div class="block">Add given <code>plus</code> to current value</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>plus</code> - int</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="IntegerBuilder.html" title="class in ji.common.structures"><code>IntegerBuilder</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="remove(int)">
@@ -264,6 +290,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>remove</h4>
 <pre class="methodSignature">public&nbsp;<a href="IntegerBuilder.html" title="class in ji.common.structures">IntegerBuilder</a>&nbsp;remove&#8203;(int&nbsp;minus)</pre>
+<div class="block">Remove given <code>minus</code> from current value</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>minus</code> - int</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="IntegerBuilder.html" title="class in ji.common.structures"><code>IntegerBuilder</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="change(java.util.function.Function)">
@@ -273,6 +306,13 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>change</h4>
 <pre class="methodSignature">public&nbsp;<a href="IntegerBuilder.html" title="class in ji.common.structures">IntegerBuilder</a>&nbsp;change&#8203;(java.util.function.Function&lt;java.lang.Integer,&#8203;java.lang.Integer&gt;&nbsp;change)</pre>
+<div class="block">Change current value using given function</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>change</code> - <code>Function</code> how will be value changed. Current value is argument for this function</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><a href="IntegerBuilder.html" title="class in ji.common.structures"><code>IntegerBuilder</code></a> self</dd>
+</dl>
 </li>
 </ul>
 <a id="toString()">
@@ -295,6 +335,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getInteger</h4>
 <pre class="methodSignature">public&nbsp;int&nbsp;getInteger()</pre>
+<div class="block">Get current value</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>int current value</dd>
+</dl>
 </li>
 </ul>
 </li>

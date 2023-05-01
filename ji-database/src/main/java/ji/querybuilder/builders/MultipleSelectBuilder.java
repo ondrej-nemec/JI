@@ -24,7 +24,7 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 	}
 	
 	/**
-	 * A ∪ B   Set union: Combine two sets into one
+	 * A union B   Set union: Combine two sets into one
 	 * @param select
 	 * @return this
 	 */
@@ -34,7 +34,7 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 	}
 
 	/**
-	 * A ∩ B   Set intersection: The members that A and B have in common
+	 * A intersection B   Set intersection: The members that A and B have in common
 	 * @param select
 	 * @return this
 	 */
@@ -44,7 +44,7 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 	}
 
 	/**
-	 * A − B   Set difference: The members of A that are not in B
+	 * A difference B   Set difference: The members of A that are not in B
 	 * @param select
 	 * @return this
 	 */

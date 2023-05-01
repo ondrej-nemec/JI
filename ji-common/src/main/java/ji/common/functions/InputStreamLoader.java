@@ -5,13 +5,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Class provide usefull function for creating {@link InputStream} pointing to file
+ * 
+ * @author Ondřej Němec
+ *
+ */
 public class InputStreamLoader {
 
 	/**
-	 * Try to load file first from classpath and on failure try dir tree
-	 * @param clazz - some class for resource stream
-	 * @param path path to file **IMPORTANT** without '/' on path start
-	 * @return InputStream from classpath or dir tree
+	 * Create {@link InputStream} pointing to file.
+	 * 
+	 * File can be in compiled <code>jar</code>, resources or source directory of IDE or outside.
+	 * At first, method tries load file using <code>getResourceAsStream</code>, then {@link FileInputStream}.
+	 * <strong>Path to file has to be relative without first '/'.</strong>
+	 * 
+	 * @param clazz {@link Class} some class of your project for current class loader
+	 * @param path String relative path to file without first '/'
+	 * @return {@link InputStream} created stream
 	 * @throws IOException
 	 */
 	public static InputStream createInputStream(Class<?> clazz, final String path) throws IOException {
