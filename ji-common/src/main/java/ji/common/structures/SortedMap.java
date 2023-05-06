@@ -69,6 +69,10 @@ public class SortedMap<K, V> implements Dictionary<K> {
 		return order.isEmpty();
 	}
 	
+	public int size() {
+		return order.size();
+	}
+	
 	/**
 	 * Add as last item
 	 * 
@@ -169,6 +173,20 @@ public class SortedMap<K, V> implements Dictionary<K> {
 	public <E extends Throwable> void forEach(ThrowingBiConsumer<K, V, E> callback, Class<E> clazz) throws E {
         for (K key : order) {
              callback.accept(key, data.get(key));
+        }
+    }
+
+	/**
+	 * Iterate over all items
+	 * 
+	 * @param callback {@link ThrowingTriConsumer} action that will be applied on each item. The first parameter
+	 * is <code>index</code>, the second is <code>key</code> and the third is <code>value</code>
+	 * @throws E expected {@link Exception} specified by <code>clazz</code>
+	 */
+	public <E extends Throwable> void forEach(ThrowingTriConsumer<Integer, K, V, E> callback) throws E {
+        for (int i = 0; i < order.size(); i++) {
+             K key = order.get(i);
+             callback.accept(i, key, data.get(key));
         }
     }
 	
