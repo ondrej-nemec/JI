@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.apache.logging.log4j.Logger;
 
 import ji.common.Log4j2LoggerTestImpl;
+import ji.common.structures.MapDictionary;
 import ji.common.structures.MapInit;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.StatusCode;
@@ -171,10 +172,9 @@ public class ExchangeFactoryTest {
 			
 			assertEquals("/my/uri", request.getPlainUri());
 			assertEquals(
-				new MapInit<String, Object>()
-				.append("param", "val")
-				.append("another", "aaa")
-				.toDictionaryMap(),
+				MapDictionary.hashMap()
+				.put("param", "val")
+				.put("another", "aaa"),
 				request.getQueryParameters()
 			);
 			

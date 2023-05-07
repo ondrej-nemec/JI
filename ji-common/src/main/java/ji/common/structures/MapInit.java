@@ -97,8 +97,8 @@ public class MapInit<K, V> {
 	 * Convert to {@link MapDictionary}
 	 * 
 	 * @return {@link MapDictionary}
-	 */
-	public MapDictionary<K, V> toDictionaryMap() {
+	*/
+	/*public MapDictionary<K> toDictionaryMap() {
 		return new MapDictionary<>(map);
-	}
+	}*/
 }

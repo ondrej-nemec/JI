@@ -16,7 +16,7 @@ public class SQL {
 			Iterable<?> iterable = Iterable.class.cast(value);
 			return Implode.implode(item->escapeScalar(item), ",", iterable);
 		} else if (value instanceof ListDictionary) {
-			ListDictionary<?> iterable = ListDictionary.class.cast(value);
+			ListDictionary iterable = ListDictionary.class.cast(value);
 			return Implode.implode(item->escapeScalar(item), ",", iterable.toList());
 		} else if (value instanceof DictionaryValue) {
 			return escapeScalar(DictionaryValue.class.cast(value).getValue());

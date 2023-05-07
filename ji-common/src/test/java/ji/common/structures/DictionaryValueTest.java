@@ -288,7 +288,7 @@ public class DictionaryValueTest {
 				Set.class, new ListInit<>().add("a").add("b").toSet()
 			},
 			new Object[] {
-				"ListDictionary to Set", new ListDictionary<>(Arrays.asList("a", "b", "b")),
+				"ListDictionary to Set", new ListDictionary(Arrays.asList("a", "b", "b")),
 				Set.class, new ListInit<>().add("a").add("b").toSet()
 			},
 			// list
@@ -305,26 +305,26 @@ public class DictionaryValueTest {
 				List.class, new ListInit<>().add("a").add("b").toList()
 			},
 			new Object[] {
-				"ListDictionary to List", new ListDictionary<>(Arrays.asList("a", "b")),
+				"ListDictionary to List", new ListDictionary(Arrays.asList("a", "b")),
 				List.class, new ListInit<>().add("a").add("b").toList()
 			},
 			// array - on another place
 			// listDictionary
 			new Object[] {
-				"ListDictionary to ListDictionary", new ListDictionary<>(Arrays.asList("a", "b")),
-				ListDictionary.class, new ListDictionary<>(Arrays.asList("a", "b"))
+				"ListDictionary to ListDictionary", new ListDictionary(Arrays.asList("a", "b")),
+				ListDictionary.class, new ListDictionary(Arrays.asList("a", "b"))
 			},
 			new Object[] {
 				"List to ListDictionary", new ListInit<>().add("a").add("b").toList(),
-				ListDictionary.class, new ListDictionary<>(Arrays.asList("a", "b"))
+				ListDictionary.class, new ListDictionary(Arrays.asList("a", "b"))
 			},
 			new Object[] {
 				"Set to ListDictionary", new ListInit<String>().add("a").add("b").toSet(),
-				ListDictionary.class, new ListDictionary<String>(Arrays.asList("a", "b"))
+				ListDictionary.class, new ListDictionary(Arrays.asList("a", "b"))
 			},
 			new Object[] {
 				"Array to ListDictionary", new String[] {"a", "b"},
-				ListDictionary.class, new ListDictionary<>(Arrays.asList("a", "b"))
+				ListDictionary.class, new ListDictionary(Arrays.asList("a", "b"))
 			},
 			/** MAPS **/
 			// map
@@ -408,7 +408,7 @@ public class DictionaryValueTest {
 			},
 			new Object[] {
 				"ListDictionary to Array", 
-				new ListDictionary<>(Arrays.asList("a", "b")),
+				new ListDictionary(Arrays.asList("a", "b")),
 				new String[] {"a", "b"}
 			},
 		};

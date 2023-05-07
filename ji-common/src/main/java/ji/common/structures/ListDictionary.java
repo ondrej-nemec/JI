@@ -13,12 +13,10 @@ import java.util.function.Consumer;
  * Class wrap {@link Collection} with implementation of {@link Dictionary}
  * 
  * @author Ondřej Němec
- *
- * @param <S> the type of items
  */
-public class ListDictionary<S> implements Dictionary<Integer> {
+public class ListDictionary implements Dictionary<Integer> {
 	
-	private final Collection<S> collection;
+	private final Collection<Object> collection;
 	
 	/**
 	 * Create new instance as wrapper for {@link LinkedList}
@@ -26,8 +24,8 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @param <S> the type of items
 	 * @return {@link ListDictionary}
 	 */
-	public static <S> ListDictionary<S> linkedList() {
-		return new ListDictionary<>(new LinkedList<>());
+	public static ListDictionary linkedList() {
+		return new ListDictionary(new LinkedList<>());
 	}
 
 	/**
@@ -36,8 +34,8 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @param <S> the type of items
 	 * @return {@link ListDictionary}
 	 */
-	public static <S> ListDictionary<S> arrayList() {
-		return new ListDictionary<>(new ArrayList<>());
+	public static ListDictionary arrayList() {
+		return new ListDictionary(new ArrayList<>());
 	}
 
 	/**
@@ -46,15 +44,15 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @param <S> the type of items
 	 * @return {@link ListDictionary}
 	 */
-	public static <S> ListDictionary<S> hashSet() {
-		return new ListDictionary<>(new HashSet<>());
+	public static ListDictionary hashSet() {
+		return new ListDictionary(new HashSet<>());
 	}
 
 	/**
 	 * 
 	 * @param list {@link Collection} wrapped collection
 	 */
-	public ListDictionary(Collection<S> list) {
+	public ListDictionary(Collection<Object> list) {
 		this.collection = list;
 	}
 	
@@ -74,7 +72,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @return {@link ListDictionary} self
 	 */
 	@SuppressWarnings("unchecked")
-	public ListDictionary<S> add(Integer index, S value) {
+	public ListDictionary add(Integer index, Object value) {
 		if (collection instanceof List<?>) {
 			List.class.cast(collection).add(index, value);
 			return this;
@@ -88,7 +86,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @param values {@link Collection}
 	 * @return {@link ListDictionary} self
 	 */
-	public ListDictionary<S> addAll(Collection<S> values) {
+	public ListDictionary addAll(Collection<Object> values) {
 		collection.addAll(values);
 		return this;
 	}
@@ -99,7 +97,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @param value S
 	 * @return {@link ListDictionary} self
 	 */
-	public ListDictionary<S> add(S value) {
+	public ListDictionary add(Object value) {
 		collection.add(value);
 		return this;
 	}
@@ -131,7 +129,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @return {@link List}
 	 */
 	@SuppressWarnings("unchecked")
-	public List<S> toList() {
+	public List<Object> toList() {
 		if (collection instanceof List<?>) {
 			return List.class.cast(collection);
 		}
@@ -144,7 +142,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @return {@link Set}
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<S> toSet() {
+	public Set<Object> toSet() {
 		if (collection instanceof Set<?>) {
 			return Set.class.cast(collection);
 		}
@@ -156,7 +154,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * 
 	 * @param action {@link Consumer} applied on each item, the parameter is item
 	 */
-	public void forEach2(Consumer<S> action) {
+	public void forEach2(Consumer<Object> action) {
 		collection.forEach(action);
 	}
 	
@@ -168,7 +166,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 * @throws E expected {@link Exception}
 	 */
 	public <E extends Throwable> void forEach(ThrowingConsumer<DictionaryValue, E> action) throws E {
-		for (S s : collection) {
+		for (Object s : collection) {
 			action.accept(new DictionaryValue(s));
 		}
 	}
@@ -182,7 +180,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 	 */
 	public <E extends Throwable> void forEach(ThrowingBiConsumer<Integer, DictionaryValue, E> action) throws E {
 		int index = 0;
-		for (S s : collection) {
+		for (Object s : collection) {
 			action.accept(index++, new DictionaryValue(s));
 		}
 	}
@@ -197,7 +195,7 @@ public class ListDictionary<S> implements Dictionary<Integer> {
 		if ( ! (obj instanceof ListDictionary) ) {
 			return false;
 		}
-		ListDictionary<?> dictionary = (ListDictionary<?>)obj;
+		ListDictionary dictionary = (ListDictionary)obj;
 		if (collection.size() != dictionary.collection.size()) {
 			return false;
 		}

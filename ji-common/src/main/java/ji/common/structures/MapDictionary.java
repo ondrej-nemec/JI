@@ -16,18 +16,17 @@ import ji.common.functions.Mapper;
  * @author Ondřej Němec
  *
  * @param <K> the type of key
- * @param <V> the type of value
  */
-public class MapDictionary<K, V> implements Dictionary<K> {
+public class MapDictionary<K> implements Dictionary<K> {
 	
-	private final Map<K, V> map;
+	private final Map<K, Object> map;
 	
 	/**
 	 * Create new instance as wrapper for {@link HashMap}
 	 * 
 	 * @return {@link MapDictionary}
 	 */
-	public static <K, V> MapDictionary<K, V> hashMap() {
+	public static <K> MapDictionary<K> hashMap() {
 		return new MapDictionary<>(new HashMap<>());
 	}
 	/**
@@ -35,7 +34,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * 
 	 * @return {@link MapDictionary}
 	 */
-	public static MapDictionary<Object, Object> properties() {
+	public static MapDictionary<Object> properties() {
 		return new MapDictionary<>(new Properties());
 	}
 
@@ -43,7 +42,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * 
 	 * @param map {@link Map} wrapped map
 	 */
-	public MapDictionary(Map<K, V> map) {
+	public MapDictionary(Map<K, Object> map) {
 		this.map = map;
 	}
 	
@@ -66,10 +65,10 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * Put new item or override existing
 	 * 
 	 * @param key K
-	 * @param value V
+	 * @param value {@link Object}
 	 * @return {@link MapDictionary} self
 	 */
-	public MapDictionary<K, V> put(K key, V value) {
+	public MapDictionary<K> put(K key, Object value) {
 		map.put(key, value);
 		return this;
 	}
@@ -80,7 +79,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * @param values {@link Map}
 	 * @return {@link MapDictionary} self
 	 */
-	public MapDictionary<K, V> putAll(Map<K, V> values) {
+	public MapDictionary<K> putAll(Map<K, Object> values) {
 		map.putAll(values);
 		return this;
 	}
@@ -91,7 +90,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * @param key K
 	 * @return V removed item or null if identifier is not linked to existing item
 	 */
-	public V remove(K key) {
+	public Object remove(K key) {
 		return map.remove(key);
 	}
 	
@@ -109,7 +108,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * 
 	 * @return {@link Collection}
 	 */
-	public Collection<V> values() {
+	public Collection<Object> values() {
 		return map.values();
 	}
 	
@@ -129,7 +128,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * 
 	 * @return {@link Map}
 	 */
-	public Map<K, V> toMap() {
+	public Map<K, Object> toMap() {
 		return map;
 	}
 	
@@ -138,7 +137,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * 
 	 * @param action {@link BiConsumer} applied on each item, parameters are identifier and item
 	 */
-	public void forEach2(BiConsumer<K, V> action) {
+	public void forEach2(BiConsumer<K, Object> action) {
 		map.forEach(action);
 	}
 	
@@ -150,7 +149,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	 * @throws E expected {@link Exception}
 	 */
 	public <E extends Throwable> void forEach(ThrowingBiConsumer<K, DictionaryValue, E> action) throws E {
-		for (Entry<K, V> entry : map.entrySet()) {
+		for (Entry<K, Object> entry : map.entrySet()) {
 			action.accept(entry.getKey(), new DictionaryValue(entry.getValue()));
 		}
 	}
@@ -171,7 +170,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
      *
      * @return a set view of the mappings contained in this map
      */
-	public Set<Map.Entry<K, V>> entrySet() {
+	public Set<Map.Entry<K, Object>> entrySet() {
 		return map.entrySet();
 	}
 	
@@ -184,7 +183,7 @@ public class MapDictionary<K, V> implements Dictionary<K> {
 	public boolean equals(Object obj) {
 		if ( ! (obj instanceof MapDictionary) )
 			return false;
-		MapDictionary<?, ?> dictionary = (MapDictionary<?, ?>)obj;
+		MapDictionary<?> dictionary = (MapDictionary<?>)obj;
 		return map.equals(dictionary.map);
 	}
 

@@ -95,9 +95,9 @@ public class JsonWritter {
 			write(stream, (Map<String, Object>)value, name);
 		} else if (value instanceof SortedMap<?, ?>) {
 			write(stream, SortedMap.class.cast(value), name);
-		} else if (value instanceof MapDictionary<?, ?>) {
+		} else if (value instanceof MapDictionary<?>) {
 			write(stream, MapDictionary.class.cast(value).toMap(), name);
-		} else if (value instanceof ListDictionary<?>) {
+		} else if (value instanceof ListDictionary) {
 			write(stream, ListDictionary.class.cast(value).toList(), name);
 		} else if (value instanceof Jsonable) {
 			writeObject(stream, ((Jsonable)value).toJson(), name);

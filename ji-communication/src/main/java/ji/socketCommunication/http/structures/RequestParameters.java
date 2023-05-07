@@ -5,7 +5,7 @@ import java.util.Map;
 
 import ji.common.structures.MapDictionary;
 
-public class RequestParameters extends MapDictionary<String, Object> {
+public class RequestParameters extends MapDictionary<String> {
 	
 	public RequestParameters() {
 		super(new HashMap<>());

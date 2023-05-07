@@ -83,8 +83,8 @@ public class ListInit<S> {
 	 * 
 	 * @return {@link ListDictionary}
 	 */
-	public ListDictionary<S> toDictionaryList() {
-		return new ListDictionary<>(toList());
-	}
+	/*public ListDictionary toDictionaryList() {
+		return new ListDictionary(list);
+	}*/
 	
 }

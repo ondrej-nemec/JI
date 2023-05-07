@@ -10,7 +10,7 @@ public class Request extends Exchange {
 	private final String uri; // full uri with parameter
 	
 	private String plainUri;
-	private MapDictionary<String, Object> queryParams;
+	private MapDictionary<String> queryParams;
 	
 	public Request(HttpMethod method, String uri, String protocol) {
 		super();
@@ -35,11 +35,11 @@ public class Request extends Exchange {
 		return plainUri;
 	}
 	
-	public MapDictionary<String, Object> getQueryParameters() {
+	public MapDictionary<String> getQueryParameters() {
 		return queryParams;
 	}
 
-	public void setUriParams(String plainUri, MapDictionary<String, Object> queryParams) {
+	public void setUriParams(String plainUri, MapDictionary<String> queryParams) {
 		this.plainUri = plainUri;
 		this.queryParams = queryParams;
 	}

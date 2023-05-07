@@ -5,7 +5,7 @@ import java.util.Map;
 
 import ji.common.structures.MapDictionary;
 
-public class DatabaseRow extends MapDictionary<String, Object> {
+public class DatabaseRow extends MapDictionary<String> {
 
 	public DatabaseRow() {
 		super(new HashMap<>());

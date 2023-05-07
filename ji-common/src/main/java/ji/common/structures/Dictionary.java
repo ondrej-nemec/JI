@@ -246,7 +246,7 @@ public interface Dictionary<S> {
 	 * @param key S identifier
 	 * @return {@link ListDictionary} or null
 	 */
-	default <T> ListDictionary<T> getDictionaryList(S key) {
+	default ListDictionary getDictionaryList(S key) {
 		return getDictionaryValue(key).getDictionaryList();
 	}
 
@@ -256,7 +256,7 @@ public interface Dictionary<S> {
 	 * @param key S identifier
 	 * @return {@link MapDictionary} or null
 	 */
-	default <T, E> MapDictionary<T, E> getDictionaryMap(S key) {
+	default <T> MapDictionary<T> getDictionaryMap(S key) {
 		return getDictionaryValue(key).getDictionaryMap();
 	}
 

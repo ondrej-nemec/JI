@@ -176,7 +176,7 @@ public class Mapper {
 			return null;
 		} else if ( Map.class.isAssignableFrom(source.getClass()) && !Map.class.isAssignableFrom(clazz)) {
 			Field[] fields = clazz.getDeclaredFields();
-			MapDictionary<String, Object> values = parameterValue.getDictionaryMap();
+			MapDictionary<String> values = parameterValue.getDictionaryMap();
 			for (Field field : fields) {
 				field.setAccessible(true);
 				String parameterName = field.getName();

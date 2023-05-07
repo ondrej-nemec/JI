@@ -579,27 +579,26 @@ public class DictionaryValue {
 	 * <p>
 	 * {@link MapDictionary} and {@link Map} are converted using {@link Map#values()}
 	 * 
-	 * @param <T> the type of item
 	 * @return {@link ListDictionary}
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> ListDictionary<T> getDictionaryList() {
+	public ListDictionary getDictionaryList() {
 		return parseValue(ListDictionary.class, fromStringToListCallback, (value)->{
 			if (value.getClass().isArray()) {
-				return new ListDictionary<T>(Arrays.asList((T[])value));
+				return new ListDictionary(Arrays.asList((Object[])value));
 			}
 			if (value instanceof Collection<?>) {
-				return new ListDictionary<T>(Collection.class.cast(value));
+				return new ListDictionary(Collection.class.cast(value));
 			}
 			if (value instanceof SortedMap<?, ?>) {
-				return new ListDictionary<T>(SortedMap.class.cast(value).toList());
+				return new ListDictionary(SortedMap.class.cast(value).toList());
 			}
 			if (value instanceof Map<?, ?>) {
-				return new ListDictionary<T>(Map.class.cast(value).values());
+				return new ListDictionary(Map.class.cast(value).values());
 			}
-			if (value instanceof MapDictionary<?, ?>) {
-				return new ListDictionary<T>(MapDictionary.class.cast(value).values());
+			if (value instanceof MapDictionary<?>) {
+				return new ListDictionary(MapDictionary.class.cast(value).values());
 			}
 			return value;
 		});
@@ -619,13 +618,13 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	@SuppressWarnings("unchecked")
-	public <T, E> MapDictionary<T, E> getDictionaryMap() {
+	public <T, E> MapDictionary<T> getDictionaryMap() {
 		return parseValue(MapDictionary.class, fromStringToMapCallback, (value)->{
 			if (value instanceof Map<?, ?>) {
-				return new MapDictionary<T, E>(Map.class.cast(value));
+				return new MapDictionary<T>(Map.class.cast(value));
 			}
 			if (value instanceof SortedMap<?, ?>) {
-				return new MapDictionary<T, E>(SortedMap.class.cast(value).toMap());
+				return new MapDictionary<T>(SortedMap.class.cast(value).toMap());
 			}
 			return value;
 		});
@@ -648,7 +647,7 @@ public class DictionaryValue {
 			if (value instanceof Map<?, ?>) {
 				return new SortedMap<T, E>().putAll(Map.class.cast(value));
 			}
-			if (value instanceof MapDictionary<?, ?>) {
+			if (value instanceof MapDictionary<?>) {
 				return new SortedMap<T, E>().putAll(MapDictionary.class.cast(value).toMap());
 			}
 			return value;
@@ -676,7 +675,7 @@ public class DictionaryValue {
 			if (value.getClass().isArray()) {
 				return new ArrayList<>(Arrays.asList((T[])value));
 			}
-			if (value instanceof ListDictionary<?>) {
+			if (value instanceof ListDictionary) {
 				return ListDictionary.class.cast(value).toList();
 			}
 			if (value instanceof Set<?>) {
@@ -688,7 +687,7 @@ public class DictionaryValue {
 			if (value instanceof Map<?, ?>) {
 				return Map.class.cast(value).values().stream().collect(Collectors.toList());
 			}
-			if (value instanceof MapDictionary<?, ?>) {
+			if (value instanceof MapDictionary<?>) {
 				return MapDictionary.class.cast(value).values().stream().collect(Collectors.toList());
 			}
 			return value;
@@ -715,13 +714,13 @@ public class DictionaryValue {
 			if (value.getClass().isArray()) {
 				return new HashSet<>(Arrays.asList((T[])value));
 			}
-			if (value instanceof ListDictionary<?> || value instanceof List<?>) {
+			if (value instanceof ListDictionary || value instanceof List<?>) {
 				return new HashSet<>(getList());
 			}
 			if (value instanceof Map<?, ?>) {
 				return new HashSet<>(Map.class.cast(value).keySet());
 			}
-			if (value instanceof MapDictionary<?, ?>) {
+			if (value instanceof MapDictionary<?>) {
 				return new HashSet<>(MapDictionary.class.cast(value).keySet());
 			}
 			return value;
@@ -757,7 +756,7 @@ public class DictionaryValue {
 		if (val == null) {
 			return null;
 		}
-		if (val instanceof ListDictionary<?>) {
+		if (val instanceof ListDictionary) {
 			return (T[])getDictionaryList().toList().toArray();
 		}
 		if (val instanceof List<?>) {
@@ -769,7 +768,7 @@ public class DictionaryValue {
 		if (val instanceof Map<?, ?>) {
 			return (T[])getMap().values().toArray();
 		}
-		if (val instanceof MapDictionary<?, ?>) {
+		if (val instanceof MapDictionary<?>) {
 			return (T[])getDictionaryMap().values().toArray();
 		}
 		return (T[])val;
@@ -812,7 +811,7 @@ public class DictionaryValue {
 	@SuppressWarnings("unchecked")
 	public <K, V> Map<K, V> getMap() {
 		return parseValue(Map.class, fromStringToMapCallback, (value)-> {
-			if (value instanceof MapDictionary<?, ?>) {
+			if (value instanceof MapDictionary<?>) {
 				return MapDictionary.class.cast(value).toMap();
 			}
 			if (value instanceof SortedMap<?, ?>) {
