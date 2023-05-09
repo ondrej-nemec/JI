@@ -111,59 +111,6 @@ public class Log4j2LoggerTestImpl implements Logger {
 		print("TRACE", message, t);
 	}
 
-    private void print(String severity, Object message, Throwable t) {
-    	StackTraceElement trace = null;
-    	for (StackTraceElement el : Thread.currentThread().getStackTrace()) {
-    		if (!el.getClassName().equals(Thread.class.getName()) && !el.getClassName().equals(getClass().getName())) {
-    			trace = el;
-    			break;
-    		}
-    	}
-    	StringBuilder text = new StringBuilder(String.format(
-				"%s %s [%s]%s (%s:%s) %s",
-				LocalDateTime.now().toString().replace("T", " "),
-				severity,
-				Thread.currentThread().getName(),
-				name == null ? "" : " - " + name,
-				trace == null ? "" : trace.getFileName(),
-				trace == null ? "" : trace.getLineNumber(),
-				message.toString()
-		));
-    	if (t != null) {
-    		Throwable ext = t;
-    		while(ext != null) {
-    			text.append("\n\t");
-    			text.append(String.format("%s: %s", ext.getClass(), ext.getMessage()));
-    			for (StackTraceElement ste : ext.getStackTrace()) {
-        			text.append("\n\t");
-        			text.append(String.format(
-        				"at %s.%s (%s:%s)", 
-        				ste.getClassName(),
-        				ste.getMethodName(),
-        				ste.getFileName(),
-        				ste.getLineNumber()
-        			));
-        		}
-        		ext = ext.getCause();
-        		if (ext != null) {
-            		text.append("\n\tCaused:");
-        		}
-    		}
-    	}
-		System.out.println(text);
-		if (file != null) {
-			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-				bw.write(text.toString());
-				bw.write("\n");
-				bw.flush();
-			} catch (Exception e) {}
-		}
-	}
-	
-	private void print(String severity, Object message) {
-		print(severity, message.toString(), null);
-	}
-
 	@Override
 	public void catching(Level level, Throwable throwable) {
 		throw new NotImplementedException();
@@ -285,14 +232,12 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void debug(CharSequence message) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message);
 	}
 
 	@Override
 	public void debug(CharSequence message, Throwable throwable) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, throwable);
 	}
 
 	@Override
@@ -302,8 +247,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void debug(String message, Object... params) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, params);
 	}
 
 	@Override
@@ -395,70 +339,55 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void debug(String message, Object p0) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2) {
-		print(
-			"DEBUG",
-			message
-				.replaceFirst("\\{\\}", p0.toString())
-				.replaceFirst("\\{\\}", p1.toString())
-				.replaceFirst("\\{\\}", p2.toString())
-		);
+		print("DEBUG", message, null, p0, p1, p2);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3, Object p4) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3, p4);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3, p4, p5);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3, p4, p5, p6);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3, p4, p5, p6, p7);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 
 	@Override
 	public void debug(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8, Object p9) {
-		throw new NotImplementedException();
-		
+		print("DEBUG", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
 	}
 
 	@Override
@@ -600,8 +529,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void error(String message, Object... params) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, params);
 	}
 
 	@Override
@@ -693,65 +621,55 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void error(String message, Object p0) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3, Object p4) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3, p4);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3, p4, p5);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3, p4, p5, p6);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3, p4, p5, p6, p7);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 
 	@Override
 	public void error(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8, Object p9) {
-		throw new NotImplementedException();
-		
+		print("ERROR", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
 	}
 
 	@Override
@@ -891,8 +809,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void fatal(String message, Object... params) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, params);
 	}
 
 	@Override
@@ -984,65 +901,55 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void fatal(String message, Object p0) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3, Object p4) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3, p4);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3, p4, p5);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3, p4, p5, p6);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3, p4, p5, p6, p7);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 
 	@Override
 	public void fatal(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8, Object p9) {
-		throw new NotImplementedException();
-		
+		print("FATAL", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
 	}
 
 	@Override
@@ -1188,8 +1095,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void info(String message, Object... params) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, params);
 	}
 
 	@Override
@@ -1281,65 +1187,55 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void info(String message, Object p0) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3, Object p4) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3, p4);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3, p4, p5);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3, p4, p5, p6);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3, p4, p5, p6, p7);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 
 	@Override
 	public void info(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8, Object p9) {
-		throw new NotImplementedException();
-		
+		print("INFO", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
 	}
 
 	@Override
@@ -1858,8 +1754,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void trace(String message, Object... params) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, params);
 	}
 
 	@Override
@@ -1951,65 +1846,55 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void trace(String message, Object p0) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3, Object p4) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3, p4);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3, p4, p5);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3, p4, p5, p6);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3, p4, p5, p6, p7);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 
 	@Override
 	public void trace(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8, Object p9) {
-		throw new NotImplementedException();
-		
+		print("TRACE", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
 	}
 
 	@Override
@@ -2192,7 +2077,7 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void warn(String message, Object... params) {
-		throw new NotImplementedException();
+		print("WARN", message, null, params);
 	}
 
 	@Override
@@ -2271,54 +2156,112 @@ public class Log4j2LoggerTestImpl implements Logger {
 
 	@Override
 	public void warn(String message, Object p0) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0, p1);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0, p1, p2);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0, p1, p2, p3);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3, Object p4) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0, p1, p2, p3, p4);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) {
-		throw new NotImplementedException();	
+		print("WARN", message, null, p0, p1, p2, p3, p4, p5);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0, p1, p2, p3, p4, p5, p6);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7) {
-		throw new NotImplementedException();
+		print("WARN", message, null, p0, p1, p2, p3, p4, p5, p6, p7);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8) {
-		throw new NotImplementedException();		
+		print("WARN", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8);
 	}
 
 	@Override
 	public void warn(String message, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6,
 			Object p7, Object p8, Object p9) {
-		throw new NotImplementedException();		
+		print("WARN", message, null, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9);
+	}
+
+    private void print(String severity, Object message, Throwable t, Object ...params) {
+    	StackTraceElement trace = null;
+    	for (StackTraceElement el : Thread.currentThread().getStackTrace()) {
+    		if (!el.getClassName().equals(Thread.class.getName()) && !el.getClassName().equals(getClass().getName())) {
+    			trace = el;
+    			break;
+    		}
+    	}
+    	if (params != null && params.length > 0) {
+    		for (Object p : params) {
+    			message = message.toString().replaceFirst("\\{\\}", p == null ? "NULL" : p.toString());
+    		}
+    	}
+    	StringBuilder text = new StringBuilder(String.format(
+				"%s %s [%s]%s (%s:%s) %s",
+				LocalDateTime.now().toString().replace("T", " "),
+				severity,
+				Thread.currentThread().getName(),
+				name == null ? "" : " - " + name,
+				trace == null ? "" : trace.getFileName(),
+				trace == null ? "" : trace.getLineNumber(),
+				message.toString()
+		));
+    	if (t != null) {
+    		Throwable ext = t;
+    		while(ext != null) {
+    			text.append("\n\t");
+    			text.append(String.format("%s: %s", ext.getClass(), ext.getMessage()));
+    			for (StackTraceElement ste : ext.getStackTrace()) {
+        			text.append("\n\t");
+        			text.append(String.format(
+        				"at %s.%s (%s:%s)", 
+        				ste.getClassName(),
+        				ste.getMethodName(),
+        				ste.getFileName(),
+        				ste.getLineNumber()
+        			));
+        		}
+        		ext = ext.getCause();
+        		if (ext != null) {
+            		text.append("\n\tCaused:");
+        		}
+    		}
+    	}
+		System.out.println(text);
+		if (file != null) {
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+				bw.write(text.toString());
+				bw.write("\n");
+				bw.flush();
+			} catch (Exception e) {}
+		}
+	}
+	
+	private void print(String severity, Object message, Object ...params) {
+		print(severity, message.toString(), null, params);
 	}
 }
