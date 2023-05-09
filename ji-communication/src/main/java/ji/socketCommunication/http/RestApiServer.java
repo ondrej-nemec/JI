@@ -109,7 +109,7 @@ public class RestApiServer implements Servant {
 					resFactory.getProfiler().log(events);
 				}
 			} else {
-				logger.warn("Request on not existing hostname: " + host);
+				logger.warn("Request on not existing hostname: " + host + " , IP: " + clientIp);
 				factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
 			}
 		} else {
