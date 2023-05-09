@@ -98,7 +98,7 @@ public class MapInit<K, V> {
 	 * 
 	 * @return {@link MapDictionary}
 	*/
-	/*public MapDictionary<K> toDictionaryMap() {
-		return new MapDictionary<>(map);
-	}*/
+	public MapDictionary<K> toDictionaryMap() {
+		return new DictionaryValue(map).getDictionaryMap();
+	}
 }
