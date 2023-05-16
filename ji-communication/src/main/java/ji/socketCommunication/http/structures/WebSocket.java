@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.apache.commons.lang3.ArrayUtils;
 
 import ji.common.structures.Tuple2;
 
@@ -50,17 +51,11 @@ public class WebSocket {
 	}
 
 	public void send(String message) throws IOException {
-		send(message.getBytes());
+		send(message.getBytes(), false);
 	}
 
 	public void send(byte[] content) throws IOException {
-		if (closed == null || closed) {
-			throw new IOException("Connection is closed or not opened yet.");
-		}
-		for (ByteArrayOutputStream byteOs : parse(0x0, content)) {
-			os.write(byteOs.toByteArray());
-		}
-		os.flush();
+		send(content, true);
 	}
 	
 	public boolean isRunning() {
@@ -85,6 +80,7 @@ public class WebSocket {
 		closed = false;
 	    while(code != 8 && !closed) {
 	    	if (code == 9) { // ping
+	    		System.err.println("---- PING ----");
 	    		// TODO send pong
 	    	}
 	    	ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -130,47 +126,33 @@ public class WebSocket {
      *   - 1011 [B] to 1111 [F] -> reserved for further control frames
      */
 	// https://stackoverflow.com/questions/45015525/c-sharp-websocket-create-masked-frame/67247742#67247742
-	private List<ByteArrayOutputStream> parse(int code, byte[] content) throws IOException {
-		ByteArrayInputStream is = new ByteArrayInputStream(content);
-		int off = 0;
-		List<ByteArrayOutputStream> result = new LinkedList<>();
-		while (is.available() > 0) {
-			int len = Math.min(127, is.available());
-			byte[] payload = new byte[len];
-			is.read(payload, off, len);
-			off += len;
-			
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			result.add(output);
-			 // in our case the first byte will be 10000001 (129 dec = 81 hex).
-		    // the length is going to be (masked)1 << 7 (OR) 0 + payload length.
-		    byte[] header = new byte[] { (byte)0x81, (byte)(code + len) };
-		    output.write(header);
-		    output.write(payload);
-		    /* 
-		    byte[] maskKey = new byte[4];
-		    if(masked) {
-		        // but if needed, let's create it properly.
-		        Random rd = new Random();
-		        rd.NextBytes(maskKey);
-		    }
-		    // this is going to be the whole frame to send.
-		    byte[] frame = new byte[header.length + 0 + payload.length];
-		    // add the header.
-		    Array.Copy(header, frame, header.Length);
-		    // add the mask if necessary.
-		    if(maskKey.length > 0) {
-		        Array.Copy(maskKey, 0, frame, header.Length, maskKey.Length);
-		        // let's encode the payload using the mask.
-		        for(int i = 0; i < payload.Length; i++) {
-		            payload[i] = (byte)(payload[i] ^ maskKey[i % maskKey.length]);
-		        }
-		    }
-		    // add the payload.
-		    Array.Copy(payload, 0, frame, header.Length + (masked ? maskKey.Length : 0), payload.Length);
-		    */
+	private void send(byte[] content, boolean binary) throws IOException {
+		if (closed == null || closed) {
+			throw new IOException("Connection is closed or not opened yet.");
 		}
-		return result;
+		// TODO roznodne potrebuje dodelat podle:
+		// https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers
+		int maxFrameSize = 125;
+		for (int i = 0; i < content.length; i+=maxFrameSize) {
+			int len = Math.min(maxFrameSize, content.length - i);
+			boolean last = len < maxFrameSize;
+			boolean first = i == 0;
+			byte fByte = 0x0;
+			if (last) { // (last && first) || 
+				fByte += 0x80; // 1000 XXXX
+			}
+			if (first) { // (last && first) || 
+				if (binary) {
+					fByte += 0x2; // XXXX 0002
+				} else {
+					fByte += 0x1; // XXXX 0001
+				}
+			}
+			byte sByte = (byte)(0x0 + len); // 0x0 i mask - not masked
+			os.write(new byte[] {fByte, sByte});
+		    os.write(content, i, len);
+			os.flush();
+		}
 	}
 	
 	// https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers
@@ -219,6 +201,7 @@ public class WebSocket {
             maskingKey = new byte[4];
             buf.get(maskingKey,0,4);
         }
+        // TODO not masked? disconnect
         // TODO: add masked + maskingkey validation here
         // Payload itself
         byte[] payload = new byte[payloadLength];
