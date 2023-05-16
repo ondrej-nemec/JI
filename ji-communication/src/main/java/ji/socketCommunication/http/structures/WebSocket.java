@@ -50,10 +50,14 @@ public class WebSocket {
 	}
 
 	public void send(String message) throws IOException {
+		send(message.getBytes());
+	}
+
+	public void send(byte[] content) throws IOException {
 		if (closed == null || closed) {
 			throw new IOException("Connection is closed or not opened yet.");
 		}
-		for (ByteArrayOutputStream byteOs : parse(0x0, message)) {
+		for (ByteArrayOutputStream byteOs : parse(0x0, content)) {
 			os.write(byteOs.toByteArray());
 		}
 		os.flush();
@@ -126,8 +130,8 @@ public class WebSocket {
      *   - 1011 [B] to 1111 [F] -> reserved for further control frames
      */
 	// https://stackoverflow.com/questions/45015525/c-sharp-websocket-create-masked-frame/67247742#67247742
-	private List<ByteArrayOutputStream> parse(int code, String text) throws IOException {
-		ByteArrayInputStream is = new ByteArrayInputStream(text.getBytes());
+	private List<ByteArrayOutputStream> parse(int code, byte[] content) throws IOException {
+		ByteArrayInputStream is = new ByteArrayInputStream(content);
 		int off = 0;
 		List<ByteArrayOutputStream> result = new LinkedList<>();
 		while (is.available() > 0) {
