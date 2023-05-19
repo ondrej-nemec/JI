@@ -166,12 +166,16 @@ socket.getInetAddress();
 			"Access-Control-Allow-Origin: *"
 		),
 		websocket, // websocket getted in RestApiServerResponseFactory::accept
-		(message)->{
+		(isBinary, message)->{
 			// on message received
 			// ...
 		},
 		(ioException)->{
 			// on exception occur
+			// ...
+		},
+		(closeMessage)->{
+			// on close, called if closed from both client and server
 			// ...
 		}
 	);
@@ -188,8 +192,8 @@ socket.getInetAddress();
 	<ul>
 		<li><code>send</code>: send given String</li>
 		<li><code>close</code>: close websocket</li>
-		<li><code>isRunning</code>: if websocket is running</li>
-		<li><code>isClosed</code>: if websocket is closed</li>
+		<li><code>isRunning</code>: if websocket is running, otherwise is closed or not start yet</li>
+		<li><code>isClosed</code>: if websocket is closed, otherwise is running or not start yet</li>
 		<li><code>getOrigin</code>: returns content of 'Origin' header</li>
 	</ul>
 
@@ -211,6 +215,10 @@ socket.getInetAddress();
 				},
 				(ex)->{
 					// on exception occur
+					// ...
+				},
+				(closeMessage)->{
+					// on close, called if closed from both client and server
 					// ...
 				}
 			);
