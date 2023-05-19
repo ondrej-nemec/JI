@@ -6,13 +6,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.Logger;
 
 import ji.common.Log4j2LoggerTestImpl;
+import ji.common.structures.IntegerBuilder;
 import ji.socketCommunication.Server;
+import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.profiler.HttpServerProfiler;
 import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
 import ji.socketCommunication.http.structures.Request;
@@ -21,7 +25,7 @@ import ji.socketCommunication.http.structures.UploadedFile;
 import ji.socketCommunication.http.structures.WebSocket;
 
 public class RestApiServerEndToEndTest {
-	private static final ExecutorService pool = Executors.newSingleThreadExecutor();
+	private static final ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
 
 	public static void main(String[] args) {
 		try {
@@ -37,19 +41,18 @@ public class RestApiServerEndToEndTest {
 			};*/
 			
 			RestApiServer restApi = new RestApiServer(10 * 1000 * 1000, logger);
-			 restApi.addApplication(apiResponse(logger), "localhost", "example.com");
-			Server server = restApi.createWebServer(80, 5, 120000, Optional.empty(), "UTF-8");
-			/*Server server = Server.createWebServer(
-				80,
-				5,
-				120000,
-				apiResponse(),
-				Optional.empty(),
-				10 * 1000 * 1000, // 10 MB
-				//Optional.empty(),
-				"UTF-8",
-				logger
-			);*/
+			restApi.addApplication(apiResponse(logger), "localhost", "example.com");
+			/*
+			Optional<SslCredentials> ssl = Optional.empty();
+			int port = 80;
+			/*/
+			SslCredentials cred = new SslCredentials();
+			cred.setCertificateStore("certificates/cert.p12", "betasecret", "PKCS12");
+			Optional<SslCredentials> ssl = Optional.of(cred);
+			int port = 443;
+			//*/
+			Server server = restApi.createWebServer(port, 5, 120000, ssl, "UTF-8");
+			
 			server.start();
 			for (int i = 0; i < 30; i++) {
 	            Thread.sleep(i * 10000);
@@ -99,30 +102,44 @@ public class RestApiServerEndToEndTest {
 						return paramsResponse;
 					case "/ws":
 						if (websocket.isPresent()) {
-							pool.execute(()->{
-								System.err.println("Task start");
-								int i = 0;
-								while(i < 100 && !websocket.get().isClosed()) {
-									try {
-										Thread.sleep(5000);
-										if (websocket.get().isRunning()) {
-											websocket.get().send("Message #" + i++);
-											System.err.println("Message sent");
-										}
-									} catch (Exception e1) {
-										e1.printStackTrace();
-									}
+							IntegerBuilder i = new IntegerBuilder();
+							ScheduledFuture<?> task = pool.scheduleWithFixedDelay(()->{
+								//System.err.println("Task start");
+								if (Thread.currentThread().isInterrupted()) {
+									System.err.println("Task interrupted");
+									return;
 								}
-								System.err.println("Task finished");
-							});
+								if (websocket.get().isClosed()) {
+									System.err.println("Websocket closed");
+									return;
+								}
+								if (i.getInteger() > 20) {
+									websocket.get().close();
+									System.err.println("Task closed");
+									return;
+								}
+								if (!websocket.get().isRunning()) {
+									System.err.println("Not start yet");
+									return;
+								}
+								try {
+									websocket.get().send("Message #" + i.getInteger());
+									System.err.println("Message sent");
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								i.add(1);
+							}, 0, 5, TimeUnit.SECONDS);
 							Response wbRes = new Response(StatusCode.SWITCHING_PROTOCOL, request.getProtocol());
 							websocket.get().accept(
-								(message)->{
+								(isBinary, message)->{
+									String text = new String(message.toByteArray());
 									try {
-										if (message.equals("end")) {
+										if (text.equals("end")) {
 											websocket.get().close();
 										} else {
-											websocket.get().send("Response: " + message);
+											websocket.get().send("Response: " + (isBinary ? " BINARY " : "") + text);
 										}
 									} catch (IOException e1) {
 										e1.printStackTrace();
@@ -130,6 +147,9 @@ public class RestApiServerEndToEndTest {
 								},
 								(e)->{
 									e.printStackTrace();
+								}, (m)->{
+									System.err.println("On close");
+									task.cancel(true);
 								}
 							);
 							return wbRes;

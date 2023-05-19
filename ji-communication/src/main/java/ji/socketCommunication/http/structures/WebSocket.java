@@ -1,35 +1,33 @@
 package ji.socketCommunication.http.structures;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.apache.commons.lang3.ArrayUtils;
 
 import ji.common.structures.Tuple2;
+import ji.socketCommunication.http.streams.OutputStreamWrapper;
 
 // https://tools.ietf.org/html/rfc6455#section-5.5.1
 // https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#format
 // https://stackoverflow.com/questions/18368130/how-to-parse-and-validate-a-websocket-frame-in-java
 public class WebSocket {
 
-	private final OutputStream os;
+	private final OutputStreamWrapper os;
 	private final InputStream is;
 	private Boolean closed;
 	
-	private Consumer<String> onMessage;
+	private BiConsumer<Boolean, ByteArrayOutputStream> onMessage;
 	private Consumer<IOException> onError;
+	private Consumer<String> onClose;
 	
 	private final String key;
 	private final String origin;
 	
-	public WebSocket(OutputStream os, InputStream is, Exchange exchange) {
+	public WebSocket(OutputStreamWrapper os, InputStream is, Exchange exchange) {
 		this.os = os;
 		this.is = is;
 		this.closed = null;
@@ -58,48 +56,99 @@ public class WebSocket {
 		send(content, true);
 	}
 	
+	/**
+	 * Indicate if message receiving process is running
+	 * 
+	 * @return <code>true</code> if websocket can receive message, <code>false</code> if is stopped
+	 *  or not start yet
+	 */
 	public boolean isRunning() {
 		return closed != null && !closed;
 	}
 	
+	/**
+	 * Indicate if websocket is finished
+	 * 
+	 * @return <code>true</code> if websocket was closed, <code>false</code> if reading process is running
+	 *  or not start yet
+	 */
 	public boolean isClosed() {
 		return closed != null && closed;
 	}
 	
+	/**
+	 * Indicate if user accept the websocket
+	 * <p>
+	 * Internal
+	 * 
+	 * @return <code>true</code> if user set <code>onMessage</code>
+	 */
 	public boolean isAccepted() {
 		return onMessage != null || onError != null;
 	}
 	
-	public void accept(Consumer<String> onMessage, Consumer<IOException> onError) {
+	public void accept(BiConsumer<Boolean, ByteArrayOutputStream> onMessage, Consumer<IOException> onError, Consumer<String> onClose) {
 		this.onError = onError;
 		this.onMessage = onMessage;
+		this.onClose = onClose;
 	}
 	
 	public void waitOnMessages() {
-		int code = 0;
 		closed = false;
-	    while(code != 8 && !closed) {
-	    	if (code == 9) { // ping
-	    		System.err.println("---- PING ----");
-	    		// TODO send pong
-	    	}
-	    	ByteArrayOutputStream b = new ByteArrayOutputStream();
+		ByteArrayOutputStream message = new ByteArrayOutputStream();
+		Boolean isBinary = null;
+	    while(!closed) { // code != 8 && 
 	    	try {
-				while(is.available() > 0) {
-					int i = is.read();
-					b.write(i);
-				}
-		   		if (b.toByteArray().length > 0) {
-		   			Tuple2<String, Integer> r = parse(b.toByteArray());
-		   			code = r._2();
-		   			onMessage.accept(r._1());
+	    		ByteArrayOutputStream b = new ByteArrayOutputStream();
+	    		// first read one byte, then get available
+	    		int i = is.read(); // block until some data available
+	    		while (i > -1 && is.available() > 0) {
+	    			b.write(i);
+	    			i = is.read();
+	    		}
+    			b.write(i);
+	    		if (i == -1) {
+	    			closed = true;
+	    		}
+		   		if (b.size() > 0) {
+		   			Tuple2<Boolean, Integer> r = parse(b.toByteArray(), message);
+		   			switch (r._2()) {
+			   			case 0:
+			   				// ignore
+			   				break;
+			   			case 1:
+			   				isBinary = false;
+			   				break;
+			   			case 2:
+			   				isBinary= true;
+			   				break;
+			   			case 8:
+			   				closed = true;
+			   				isBinary = null;
+			   				break;
+			   			case 9:
+			   				send(message.toByteArray(), null);
+			   				message = new ByteArrayOutputStream();
+			   				isBinary = null;
+				    		break;
+				    	// other are ignored
+					}
+		   			
+		   			if (r._1() && isBinary != null) {
+		   				onMessage.accept(isBinary, message);
+		   				message = new ByteArrayOutputStream();
+		   				isBinary = null;
+		   			}
+		   			
 		   		}
 			} catch (IOException e) {
-				onError.accept(e);
+				if (!closed) {
+					onError.accept(e);
+				}
 			}
 	    }
 	    closed = true;
-	    // TODO closing ??
+		onClose.accept(new String(message.toByteArray()));
 	}
 	
     /* this is how and header should be made:
@@ -126,12 +175,14 @@ public class WebSocket {
      *   - 1011 [B] to 1111 [F] -> reserved for further control frames
      */
 	// https://stackoverflow.com/questions/45015525/c-sharp-websocket-create-masked-frame/67247742#67247742
-	private void send(byte[] content, boolean binary) throws IOException {
+	private void send(byte[] content, Boolean binary) throws IOException {
+		if (os.isClosed()) {
+			closed = true;
+			throw new IOException("Connection is closed or not opened yet.");
+		}
 		if (closed == null || closed) {
 			throw new IOException("Connection is closed or not opened yet.");
 		}
-		// TODO roznodne potrebuje dodelat podle:
-		// https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers
 		int maxFrameSize = 125;
 		for (int i = 0; i < content.length; i+=maxFrameSize) {
 			int len = Math.min(maxFrameSize, content.length - i);
@@ -142,7 +193,9 @@ public class WebSocket {
 				fByte += 0x80; // 1000 XXXX
 			}
 			if (first) { // (last && first) || 
-				if (binary) {
+				if (binary == null) { // PONG
+					fByte += 0x0A; // XXX 0010
+				} else if (binary) {
 					fByte += 0x2; // XXXX 0002
 				} else {
 					fByte += 0x1; // XXXX 0001
@@ -157,15 +210,16 @@ public class WebSocket {
 	
 	// https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers
 	// https://stackoverflow.com/questions/18368130/how-to-parse-and-validate-a-websocket-frame-in-java
-	protected Tuple2<String, Integer> parse(byte raw[]) {
+	protected Tuple2<Boolean, Integer> parse(byte raw[], ByteArrayOutputStream output) throws IOException {
         // easier to do this via ByteBuffer
         ByteBuffer buf = ByteBuffer.wrap(raw);
 
         // Fin + RSV + OpCode byte
         byte b = buf.get();
-        /*
         boolean fin = ((b & 0x80) != 0);
-      //  System.err.println("FIN: " + fin);
+   //     System.err.println("FIN: " + fin);
+        /*
+        // RSV 1-3 are ignored, they are for extensions
         boolean rsv1 = ((b & 0x40) != 0);
         boolean rsv2 = ((b & 0x20) != 0);
         boolean rsv3 = ((b & 0x10) != 0);
@@ -175,17 +229,18 @@ public class WebSocket {
         // 1 - text
         // 2 - binary
         // 8 - end
-        // TODO: add control frame fin validation here
-        // TODO: add frame RSV validation here
         // Masked + Payload Length
         b = buf.get();
         boolean masked = ((b & 0x80) != 0);
+        if (!masked) {
+        	System.err.println("TODO fail: not masked");
+        }
         int payloadLength = (byte)(0x7F & b);
         int byteCount = 0;
-        if (payloadLength == 0x7F) {
+        if (payloadLength == 0x7F) { // 127
             // 8 byte extended payload length
             byteCount = 8;
-        } else if (payloadLength == 0x7E) {
+        } else if (payloadLength == 0x7E) { // 126
             // 2 bytes extended payload length
             byteCount = 2;
         }
@@ -201,7 +256,6 @@ public class WebSocket {
             maskingKey = new byte[4];
             buf.get(maskingKey,0,4);
         }
-        // TODO not masked? disconnect
         // TODO: add masked + maskingkey validation here
         // Payload itself
         byte[] payload = new byte[payloadLength];
@@ -213,7 +267,8 @@ public class WebSocket {
                 payload[i] ^= maskingKey[i % 4];
             }
         }
-        return new Tuple2<>(new String(payload), (int)opcode);
+        output.write(payload);
+        return new Tuple2<>(fin, (int)opcode);
     }
 	
 }

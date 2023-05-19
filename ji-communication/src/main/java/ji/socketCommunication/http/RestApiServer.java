@@ -14,6 +14,7 @@ import ji.socketCommunication.Server;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.parsers.ExchangeFactory;
 import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
+import ji.socketCommunication.http.streams.OutputStreamWrapper;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 import ji.socketCommunication.http.structures.WebSocket;
@@ -38,7 +39,7 @@ public class RestApiServer implements Servant {
 	@Override
 	public void serve(Socket socket, String charset) throws IOException {
 		try (BufferedInputStream is = new BufferedInputStream(socket.getInputStream());
-           	 BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());) {
+				OutputStreamWrapper os = new OutputStreamWrapper(new BufferedOutputStream(socket.getOutputStream()));) {
 			serve(is, os, socket.getInetAddress().toString());
        } catch (Exception e) {
     	   logger.fatal("Uncaught exception", e);
@@ -73,7 +74,7 @@ public class RestApiServer implements Servant {
     	);
     }
 	
-	protected void serve(BufferedInputStream is, BufferedOutputStream os, String clientIp) throws IOException {
+	protected void serve(BufferedInputStream is, OutputStreamWrapper os, String clientIp) throws IOException {
 		//profile(HttpServerProfilerEvent.REQUEST_ACCEPT);
 		Map<HttpServerProfilerEvent, Long> events = new HashMap<>();
 		events.put(HttpServerProfilerEvent.REQUEST_ACCEPT, System.currentTimeMillis());
