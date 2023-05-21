@@ -19,7 +19,7 @@ public abstract class Exchange {
 	private RequestParameters parameters = new RequestParameters();
 	private byte[] body;
 	private WebSocket websocket;
-		
+
 	public abstract String getFirstLine();
 	
 	/**** headers section *****/
