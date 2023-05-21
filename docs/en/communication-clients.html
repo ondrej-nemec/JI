@@ -9,7 +9,7 @@
 		JI provide <code>Client</code> interface with one method: <code>createSocket(String ip, int port, Optional&lt;SslCredentials&gt;): Socket</code> (for SSL see <a href="?file=communication-ssl.html">here</a>. This method has default implementation and provides connection to given IP.
 	</p>
 
-	<h2>RestApiClient</h2>
+	<h2>WebClient</h2>
 
 	<p>
 		For making HTTP requests.
@@ -18,7 +18,7 @@
 	<strong>Construct</strong>
 
 	<pre><code class="language-java">
-	RestApiClient client = new RestApiClient(
+	WebClient client = new WebClient(
 		"", // server URL or IP WITHOUT protocol [HTTP(S)]
 		80, // port
 		"HTTP/1.1", // protocol
@@ -31,7 +31,7 @@
 	// protocol is HTTP/1.1
 	// maximal response body is null
 	// port is 80 (if ssl is empty) or 443
-	RestApiClient client = new RestApiClient(
+	WebClient client = new WebClient(
 		"", // server URL or IP WITHOUT protocol [HTTP(S)]
 		Optional.empty(), // SSL
 		"UTF-8", // charset
@@ -42,7 +42,7 @@
 	<h3>Send request</h3>
 
 	<p>
-		<code>RestApiClient</code> provides general method <code>send(Request request): Response</code>.
+		<code>WebClient</code> provides general method <code>send(Request request): Response</code>.
 	</p>
 
 	<p>

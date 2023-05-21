@@ -42,7 +42,7 @@ public class FirstLine {
 	}
 	
 	private <T> T create(InputStream bis, Function<String[], T> create) throws IOException {
-		String first = stream.readLine(bis, true);
+		String first = stream.readLine(bis/*, true*/);
 	//	System.err.println(Thread.currentThread().getName() + " First: " + first);
 		if (first == null) {
 			throw new ParsingException("Wrong request - empty first line.");

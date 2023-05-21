@@ -101,7 +101,7 @@ public class WebSocket {
 	    	try {
 	    		ByteArrayOutputStream b = new ByteArrayOutputStream();
 	    		// first read one byte, then get available
-	    		int i = is.read(); // block until some data available
+	    		int i = is.read(); // block until some data available or timeout
 	    		while (i > -1 && is.available() > 0) {
 	    			b.write(i);
 	    			i = is.read();

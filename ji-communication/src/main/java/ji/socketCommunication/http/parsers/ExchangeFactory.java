@@ -98,7 +98,7 @@ public class ExchangeFactory {
 			/*} else if (type != null && type.toString().toLowerCase().startsWith("application/json")) {
 				exchange.setBodyUrlencoded(new DictionaryValue(new JsonReader().read(new String(data.toByteArray()))));*/
 			} else {
-				exchange.setBody(stream.readData(length, bis, 0, (a)->false, false, false));
+				exchange.setBody(stream.readData(length, bis, 0, (a)->false, false/*, false*/));
 			}
 			return exchange;
 		} catch (ParsingException e) {

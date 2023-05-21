@@ -89,7 +89,7 @@ public class Form {
 		Boolean useRN = null;
 
 		while(readed < contentLength) {
-			byte[] readedData = stream.readData(contentLength, bis, readed, actual->actual == '\n', false, false);
+			byte[] readedData = stream.readData(contentLength, bis, readed, actual->actual == '\n', false/*, false*/);
 			readed += readedData.length;
 			String requestLine = new String(readedData);
 			if (useRN == null) {

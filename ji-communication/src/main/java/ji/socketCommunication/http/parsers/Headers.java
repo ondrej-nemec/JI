@@ -31,7 +31,7 @@ public class Headers {
 	
 	public List<String> read(Exchange exchange, InputStream bis) throws IOException {
 		List<String> errors = new LinkedList<>();
-		String line = stream.readLine(bis, false);
+		String line = stream.readLine(bis/*, false*/);
         while (line != null && !line.isEmpty()) {
     		String[] property = line.split(": ", 2);
         	if (property.length == 2 && ! property[0].isEmpty()) {
@@ -41,7 +41,7 @@ public class Headers {
         	} else {
         		errors.add("Invalid header line " + line);
         	}
-        	line = stream.readLine(bis, false);
+        	line = stream.readLine(bis/*, false*/);
         }
         return errors;
 	}

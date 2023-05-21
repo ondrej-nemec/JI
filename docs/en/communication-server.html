@@ -48,10 +48,10 @@ socket.getInetAddress();
 
 <div class="diff" from="v8.0">
 	<p>
-		Special case of server is HTTP server. The HTTP server can be created using <code>RestApiServer</code> class. Class constructor requires maximal allowed request size (default null, means no limit) and <code>Logger</code> (see JI Common).
+		Special case of server is HTTP server. The HTTP server can be created using <code>WebServer</code> class. Class constructor requires maximal allowed request size (default null, means no limit) and <code>Logger</code> (see JI Common).
 	</p>
 	<p>
-		<code>RestApiServer</code> holds <code>ResponseFactory</code>. The <code>ResponseFactory</code> serve to given host(s) - switched by <code>Host</code> header. <code>ResponseFactory</code> add using <code>addApplication</code> (can be called moretimes, can be called after server start, TODO remove each alias separately).
+		<code>WebServer</code> holds <code>ResponseFactory</code>. The <code>ResponseFactory</code> serve to given host(s) - switched by <code>Host</code> header. <code>ResponseFactory</code> add using <code>addApplication</code> (can be called moretimes, can be called after server start, TODO remove each alias separately).
 	</p>
 	<p>
 		Finally get server <code>createWebServer</code>. The method requires: port number, count of allowed connection (thread pool), read timeout, <code>ResponseFactory</code>, <code>Optional</code> of <code>SslCredentials</code> (see <a href="?file=communication-ssl.html">here</a>), , charset (fe. <code>utf-8</code>).
@@ -60,15 +60,15 @@ socket.getInetAddress();
 	<strong>Example</strong>
 
 	<pre><code class="language-java">
-	RestApiServer restApi = new RestApiServer(
+	WebServer container = new WebServer(
 		null, // max request size
 		logger
 	);
 
-	restApi.addApplication(responseFactory, hostname);
-	restApi.addApplication(responseFactory, hostname, alias);
+	container.addApplication(responseFactory, hostname);
+	container.addApplication(responseFactory, hostname, alias);
 
-	Server server = restApi.createWebServer(
+	Server server = container.createWebServer(
 		80, // port
 		150, // thread pool
 		120000, // read connection timeout

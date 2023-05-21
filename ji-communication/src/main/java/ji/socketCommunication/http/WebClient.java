@@ -14,7 +14,7 @@ import ji.socketCommunication.http.parsers.ExchangeFactory;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 
-public class RestApiClient implements Client {
+public class WebClient implements Client {
 	
 	private final String serverUrl;
 	private final int port;
@@ -28,11 +28,11 @@ public class RestApiClient implements Client {
 	private final Optional<SslCredentials> ssl;
 	private final ExchangeFactory factory;
 	
-	public RestApiClient(String serverUrl, Optional<SslCredentials> ssl, Logger logger) {
+	public WebClient(String serverUrl, Optional<SslCredentials> ssl, Logger logger) {
 		this(serverUrl, ssl.isPresent() ? 443 : 80, "HTTP/1.1", ssl, 60000, null, logger);
 	}
 	
-	public RestApiClient(
+	public WebClient(
 			String serverUrl, int port, String protocol,
 			Optional<SslCredentials> ssl, 
 			int timeOut, Integer maxResponseBodySize,

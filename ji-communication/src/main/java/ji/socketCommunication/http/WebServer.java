@@ -19,7 +19,7 @@ import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 import ji.socketCommunication.http.structures.WebSocket;
 
-public class RestApiServer implements Servant {
+public class WebServer implements Servant {
 	
 	// public static HttpServerProfiler PROFILER = null;
 		
@@ -28,7 +28,7 @@ public class RestApiServer implements Servant {
 	
 	private final ExchangeFactory factory;
 	
-	public RestApiServer(
+	public WebServer(
 			Integer maxRequestBodySize,
 			Logger logger) {
 		this.logger = logger;
@@ -42,11 +42,11 @@ public class RestApiServer implements Servant {
 				OutputStreamWrapper os = new OutputStreamWrapper(new BufferedOutputStream(socket.getOutputStream()));) {
 			serve(is, os, socket.getInetAddress().toString());
        } catch (Exception e) {
-    	   logger.fatal("Uncaught exception", e);
+    	   logger.fatal("Uncaught exception. Client: " + socket.getInetAddress().toString(), e);
        }
 	}
     
-    public RestApiServer addApplication(ResponseFactory servant, String hostname, String... aliases) {
+    public WebServer addApplication(ResponseFactory servant, String hostname, String... aliases) {
     	applications.put(hostname, servant);
     	for (String alias : aliases) {
     		applications.put(alias, servant);
