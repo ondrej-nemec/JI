@@ -44,7 +44,7 @@ public class Urlencode {
 	/**************/
 	
 	public RequestParameters decode(InputStream is, Integer lenght) throws UnsupportedEncodingException, IOException {
-		byte[] readed = reader.readData(lenght, is, 0, (ac)->false, false/*, false*/);
+		byte[] readed = reader.readData(lenght, is, 0, (ac)->false, false);
 		if (readed.length > 0) {
 			return decode(new String(readed));
 		}
