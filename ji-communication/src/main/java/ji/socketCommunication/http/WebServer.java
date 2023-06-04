@@ -14,6 +14,7 @@ import ji.socketCommunication.Server;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.parsers.ExchangeFactory;
 import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
+import ji.socketCommunication.http.streams.InputStreamWrapper;
 import ji.socketCommunication.http.streams.OutputStreamWrapper;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
@@ -38,7 +39,7 @@ public class WebServer implements Servant {
 	
 	@Override
 	public void serve(Socket socket, String charset) throws IOException {
-		try (BufferedInputStream is = new BufferedInputStream(socket.getInputStream());
+		try (InputStreamWrapper is = new InputStreamWrapper(new BufferedInputStream(socket.getInputStream()));
 				OutputStreamWrapper os = new OutputStreamWrapper(new BufferedOutputStream(socket.getOutputStream()));) {
 			serve(is, os, socket.getInetAddress().toString());
        } catch (Exception e) {
@@ -74,7 +75,7 @@ public class WebServer implements Servant {
     	);
     }
 	
-	protected void serve(BufferedInputStream is, OutputStreamWrapper os, String clientIp) throws IOException {
+	protected void serve(InputStreamWrapper is, OutputStreamWrapper os, String clientIp) throws IOException {
 		//profile(HttpServerProfilerEvent.REQUEST_ACCEPT);
 		Map<HttpServerProfilerEvent, Long> events = new HashMap<>();
 		events.put(HttpServerProfilerEvent.REQUEST_ACCEPT, System.currentTimeMillis());

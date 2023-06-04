@@ -22,10 +22,10 @@ public class StreamReader {
 		os.write(b);
 	}
 	
-	public String readLine(InputStream bis/*, boolean forceRead*/) throws IOException {
+	public String readLine(InputStream bis) throws IOException {
 		byte[] data = readData(null, bis, 0, (actual)->{
 			return actual == '\n';
-		}, true/*, forceRead*/);
+		}, true);
 		if (data.length == 0) {
 			return null;
 		}
@@ -33,12 +33,11 @@ public class StreamReader {
 	}
 
 	public byte[] readData(Integer length, InputStream bis, 
-			int readedBytes, Function<Integer, Boolean> close, boolean ignoreNewLine/*, boolean forceRead*/) throws IOException {
+			int readedBytes, Function<Integer, Boolean> close, boolean ignoreNewLine) throws IOException {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		if (length == null) {
 			int value = bis.read(); // block until some data available or timeout
-			boolean running = true;
-    		while (value > -1 && running) {
+			while (value > -1) {
     			if (maxBodySize != null && bytes.size() + readedBytes > maxBodySize) {
 	        		throw new IOException("Maximal body size overflow. Max size (b) " + maxBodySize);
 	        	}
@@ -47,11 +46,8 @@ public class StreamReader {
 	        	}
 	            if (bis.available() == 0 || close.apply(value)) {
 	               return bytes.toByteArray();
-	            }
-	            if (bis.available() > 0) {
-	            	value = bis.read();
 	            } else {
-	            	running = false;
+	            	value = bis.read();
 	            }
     		}
 			/*

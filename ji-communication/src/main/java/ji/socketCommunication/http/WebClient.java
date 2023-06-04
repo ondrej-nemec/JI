@@ -11,6 +11,7 @@ import ji.common.structures.ThrowingConsumer;
 import ji.socketCommunication.Client;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.parsers.ExchangeFactory;
+import ji.socketCommunication.http.streams.InputStreamWrapper;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 
@@ -79,7 +80,7 @@ public class WebClient implements Client {
 	/**************/
 	
 	protected Response send(Socket con, Request request) throws IOException {
-		try (BufferedInputStream is = new BufferedInputStream(con.getInputStream());
+		try (InputStreamWrapper is = new InputStreamWrapper(new BufferedInputStream(con.getInputStream()));
 			BufferedOutputStream os = new BufferedOutputStream(con.getOutputStream());) {
 			factory.write(request, os);
 			Response response = factory.readResponse(is);
