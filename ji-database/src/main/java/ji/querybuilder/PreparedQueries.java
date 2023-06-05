@@ -117,7 +117,7 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	 * @return List of DatabaseRow
 	 * @throws SQLException
 	 */
-	default List<DatabaseRow> getAllIn(String table, String idName, Collection<Object> ids, String... select) throws SQLException {
+	default List<DatabaseRow> getAllIn(String table, String idName, Collection<?> ids, String... select) throws SQLException {
 		return getAllIn(table, idName, ids, r->r, select);
 	}
 	
@@ -132,7 +132,7 @@ public interface PreparedQueries extends QueryBuilderFactory {
 	 * @return List of T
 	 * @throws SQLException
 	 */
-	default <T> List<T> getAllIn(String table, String idName, Collection<Object> ids, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
+	default <T> List<T> getAllIn(String table, String idName, Collection<?> ids, ThrowingFunction<DatabaseRow, T, SQLException> create, String... select) throws SQLException {
 		return select(_createSelect(select)).from(table)
 				.where(idName + " in (:id)").addParameter(":id", ids)
 				.fetchAll(create);
