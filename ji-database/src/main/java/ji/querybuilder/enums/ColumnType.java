@@ -10,7 +10,8 @@ public class ColumnType {
 		DATETIME,
 		DATE,
 		TIME,
-		CHAR
+		CHAR,
+		FLOAT
 	}
 
 	public static ColumnType bool() {
@@ -19,6 +20,14 @@ public class ColumnType {
 	
 	public static ColumnType integer() {
 		return new ColumnType(Type.INT);
+	}
+	
+	public static ColumnType floatType() {
+		return new ColumnType(Type.FLOAT);
+	}
+	
+	public static ColumnType doubleType() {
+		return new ColumnType(Type.FLOAT);
 	}
 
 	public static ColumnType charType(int size) {
