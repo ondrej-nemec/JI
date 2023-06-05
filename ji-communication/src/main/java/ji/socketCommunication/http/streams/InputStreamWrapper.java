@@ -7,6 +7,7 @@ import java.io.InputStream;
 public class InputStreamWrapper extends FilterInputStream {
 	
 	private boolean isClosed = false;
+	private boolean isReaded = false;
 
 	public InputStreamWrapper(InputStream is) {
 		super(is);
@@ -14,10 +15,19 @@ public class InputStreamWrapper extends FilterInputStream {
 	
 	@Override
 	public int read() throws IOException {
+		isReaded = true;
 		if (isClosed) {
 			return -1;
 		}
 		return super.read();
+	}
+	
+	@Override
+	public int available() throws IOException {
+		if (!isReaded) {
+			return 1;
+		}
+		return super.available();
 	}
 	
 	public boolean isClosed() {

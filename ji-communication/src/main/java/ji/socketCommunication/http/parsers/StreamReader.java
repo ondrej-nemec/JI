@@ -36,6 +36,7 @@ public class StreamReader {
 			int readedBytes, Function<Integer, Boolean> close, boolean ignoreNewLine) throws IOException {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		if (length == null) {
+			/*
 			int value = bis.read(); // block until some data available or timeout
 			while (value > -1) {
     			if (maxBodySize != null && bytes.size() + readedBytes > maxBodySize) {
@@ -50,8 +51,8 @@ public class StreamReader {
 	            	value = bis.read();
 	            }
     		}
-			/*
-			if (bis.available() > 0 || forceRead) { // always 0 before read start
+			/*/
+			if (bis.available() > 0) { // always 0 before read start
 		        int value;
 		        while((value = bis.read()) != -1) {
 		        	if (maxBodySize != null && bytes.size() + readedBytes > maxBodySize) {
@@ -65,7 +66,7 @@ public class StreamReader {
 		            }
 		        }
 		    }
-			*/
+			//*/
 		} else {
 			int readed = readedBytes;
 			while (readed < length) {
