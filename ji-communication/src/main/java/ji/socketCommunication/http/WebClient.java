@@ -12,6 +12,7 @@ import ji.socketCommunication.Client;
 import ji.socketCommunication.SslCredentials;
 import ji.socketCommunication.http.parsers.ExchangeFactory;
 import ji.socketCommunication.http.streams.InputStreamWrapper;
+import ji.socketCommunication.http.structures.Protocol;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 
@@ -19,7 +20,7 @@ public class WebClient implements Client {
 	
 	private final String serverUrl;
 	private final int port;
-	private final String protocol;
+	private final Protocol protocol;
 	
 	private final int timeOut;
 	private final Logger logger;
@@ -30,11 +31,11 @@ public class WebClient implements Client {
 	private final ExchangeFactory factory;
 	
 	public WebClient(String serverUrl, Optional<SslCredentials> ssl, Logger logger) {
-		this(serverUrl, ssl.isPresent() ? 443 : 80, "HTTP/1.1", ssl, 60000, null, logger);
+		this(serverUrl, ssl.isPresent() ? 443 : 80, Protocol.HTTP_1_1, ssl, 60000, null, logger);
 	}
 	
 	public WebClient(
-			String serverUrl, int port, String protocol,
+			String serverUrl, int port, Protocol protocol,
 			Optional<SslCredentials> ssl, 
 			int timeOut, Integer maxResponseBodySize,
 			Logger logger) {

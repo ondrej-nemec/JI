@@ -13,6 +13,7 @@ import ji.common.structures.MapInit;
 import ji.common.structures.Tuple2;
 import ji.socketCommunication.Server;
 import ji.socketCommunication.SslCredentials;
+import ji.socketCommunication.http.structures.Protocol;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 
@@ -28,7 +29,7 @@ public class RestApiendToEndTest {
 		Map<String, Tuple2<Request, Response>> data = getData();
 		
 		try {
-			WebClient client = new WebClient("localhost", port, "HTTP/1.1", ssl, 60000, maxBodySize, logger);
+			WebClient client = new WebClient("localhost", port, Protocol.HTTP_1_1, ssl, 60000, maxBodySize, logger);
 			
 			/*Server server = Server.createWebServer(
 				port, 1, 60000, ssl, maxBodySize, charset, logger
@@ -121,14 +122,14 @@ public class RestApiendToEndTest {
 		}
 		
 		*/
-		String protocol = "HTTP1/1";
+		// String protocol = "HTTP1/1";
 		String uri = "/example/uri";
 		return new MapInit<String, Tuple2<Request, Response>>()
-			.append("/plain", getPlain(uri, protocol))
+			.append("/plain", getPlain(uri, Protocol.HTTP_1_1))
 		.toMap();
 	}
 	
-	private static Tuple2<Request, Response> getPlain(String uri, String protocol) {
+	private static Tuple2<Request, Response> getPlain(String uri, Protocol protocol) {
 		Request request = new Request(HttpMethod.POST, uri, protocol);
 		request.setUriParams(uri, MapDictionary.hashMap());
 		request.setBody(new byte[] {});

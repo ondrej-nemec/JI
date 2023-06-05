@@ -8,6 +8,7 @@ import java.util.function.Function;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.StatusCode;
 import ji.socketCommunication.http.structures.Exchange;
+import ji.socketCommunication.http.structures.Protocol;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 
@@ -28,7 +29,7 @@ public class FirstLine {
 	public Response createResponse(InputStream bis) throws IOException {
 		return create(bis, (methods)->new Response(
 			StatusCode.valueOf(methods[2].toUpperCase().replace(" ", "_").replace("-", "_")),
-			methods[0]
+			Protocol.valueOf(methods[0])
 		));
 	}
 
@@ -37,7 +38,7 @@ public class FirstLine {
 		return create(bis, (methods)->new Request(
 			HttpMethod.valueOf(methods[0].toUpperCase()), 
 			methods[1], 
-			methods[2]
+			Protocol.valueOf(methods[2])
 		));
 	}
 	

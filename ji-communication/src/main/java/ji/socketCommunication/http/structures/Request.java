@@ -6,13 +6,13 @@ import ji.socketCommunication.http.HttpMethod;
 public class Request extends Exchange {
 	
 	private final HttpMethod method;
-	private final String protocol;
+	private final Protocol protocol;
 	private final String uri; // full uri with parameter
 	
 	private String plainUri;
 	private MapDictionary<String> queryParams;
 	
-	public Request(HttpMethod method, String uri, String protocol) {
+	public Request(HttpMethod method, String uri, Protocol protocol) {
 		super();
 		this.method = method;
 		this.protocol = protocol;
@@ -23,7 +23,7 @@ public class Request extends Exchange {
 		return method;
 	}
 
-	public String getProtocol() {
+	public Protocol getProtocol() {
 		return protocol;
 	}
 

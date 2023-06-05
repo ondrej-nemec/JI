@@ -16,6 +16,7 @@ import ji.socketCommunication.http.parsers.ExchangeFactory;
 import ji.socketCommunication.http.profiler.HttpServerProfilerEvent;
 import ji.socketCommunication.http.streams.InputStreamWrapper;
 import ji.socketCommunication.http.streams.OutputStreamWrapper;
+import ji.socketCommunication.http.structures.Protocol;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 import ji.socketCommunication.http.structures.WebSocket;
@@ -84,8 +85,11 @@ public class WebServer implements Servant {
 		// profile(HttpServerProfilerEvent.REQUEST_PARSED);
 		events.put(HttpServerProfilerEvent.REQUEST_PARSED, System.currentTimeMillis());
 		if (request == null) {
-			logger.error("Unparsed request");
-			factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
+			Response response = new Response(StatusCode.OK, Protocol.HTTP_1_1);
+			response.setBody(Protocol.getAll().getBytes());
+			factory.write(response, os);
+			/*logger.error("Unparsed request");
+			factory.write(new Response(StatusCode.BAD_REQUEST, Protocol.HTTP_1_1), os);*/
 			return;
 		}
 		//profile(HttpServerProfilerEvent.RESPONSE_CREATED);
@@ -112,11 +116,11 @@ public class WebServer implements Servant {
 				}
 			} else {
 				logger.warn("Request on not existing hostname: " + host + " , IP: " + clientIp);
-				factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
+				factory.write(new Response(StatusCode.BAD_REQUEST, request.getProtocol()), os);
 			}
 		} else {
 			logger.warn("Request Host header not specified");
-			factory.write(new Response(StatusCode.BAD_REQUEST, "HTTP/1.1"), os); // TODO protocol via request
+			factory.write(new Response(StatusCode.BAD_REQUEST, request.getProtocol()), os);
 			return;
 		}
 		/*Response response = createResponce.accept(request, clientIp, websocket);

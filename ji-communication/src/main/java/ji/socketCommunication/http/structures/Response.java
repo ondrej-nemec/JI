@@ -4,16 +4,16 @@ import ji.socketCommunication.http.StatusCode;
 
 public class Response extends Exchange {
 
-	private final String protocol;
+	private final Protocol protocol;
 	private final StatusCode code;
 	
-	public Response(StatusCode code, String protocol) {
+	public Response(StatusCode code, Protocol protocol) {
 		super();
 		this.protocol = protocol;
 		this.code = code;
 	}
 
-	public String getProtocol() {
+	public Protocol getProtocol() {
 		return protocol;
 	}
 

@@ -28,6 +28,7 @@ import ji.common.structures.MapInit;
 import ji.socketCommunication.http.HttpMethod;
 import ji.socketCommunication.http.StatusCode;
 import ji.socketCommunication.http.structures.Exchange;
+import ji.socketCommunication.http.structures.Protocol;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.RequestParameters;
 import ji.socketCommunication.http.structures.Response;
@@ -89,7 +90,7 @@ public class ExchangeFactoryTest {
 		// String expected = Text.get().read(b->ReadText.get().asString(b), getClass().getResource("/parser/requests/" + filename));
 		ByteArrayOutputStream expected = readFile("/parser/requests/" + filename);
 		try (BufferedOutputStreamMock bos = new BufferedOutputStreamMock()) {
-			Request request = new Request(HttpMethod.POST, "/some/url", "HTTP/1.1");
+			Request request = new Request(HttpMethod.POST, "/some/url", Protocol.HTTP_1_1);
 			request.setHeaders(headers);
 			
 			//request.setBody(body, type);
@@ -112,7 +113,7 @@ public class ExchangeFactoryTest {
 		ExchangeFactory parser = createParser();
 		ByteArrayOutputStream expected = readFile("/parser/responses/" + filename);
 		try (BufferedOutputStreamMock bos = new BufferedOutputStreamMock()) {
-			Response response = new Response(StatusCode.OK, "HTTP/1.1");
+			Response response = new Response(StatusCode.OK, Protocol.HTTP_1_1);
 			response.setHeaders(headers);
 			
 			setBody.apply(response);
