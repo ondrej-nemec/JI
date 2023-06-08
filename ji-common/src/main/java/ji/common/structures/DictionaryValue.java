@@ -175,6 +175,8 @@ public class DictionaryValue {
 			return value;
 		} else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
 			return getBoolean();
+		} else if (clazz.isAssignableFrom(Number.class)) {
+            return getNumber();
 		} else if (clazz.isAssignableFrom(Byte.class) || clazz.isAssignableFrom(byte.class)) {
 			return getByte();
 		} else if (clazz.isAssignableFrom(Short.class) || clazz.isAssignableFrom(short.class)) {
@@ -326,6 +328,24 @@ public class DictionaryValue {
 			v->Number.class.cast(v).doubleValue()
 		);
 	}
+	/**
+	 * Get value as {@link Number}.
+	 * 
+	 * @return {@link Number} or null if value is null or value is empty string or value is 'null'(CI string)
+	 * @throws ClassCastException if all convert and parse mechanism fails
+	 */
+	public Number getNumber() {
+        return parseValue(
+             Number.class,
+             a->{
+                 if (a.contains(".")) {
+                      return parsePrimitive(a, ()->Double.parseDouble(a));
+                 }
+                 return parsePrimitive(a, ()->Long.parseLong(a));
+             },
+             v->Number.class.cast(v)
+        );
+    }
 
 	/**
 	 * Get value as {@link Character}.
