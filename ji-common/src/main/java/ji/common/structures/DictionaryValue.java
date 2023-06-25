@@ -252,11 +252,12 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Byte getByte() {
-		return parseValue(
+		return getNumber().byteValue();
+		/*return parseValue(
 			Byte.class, 
 			a->parsePrimitive(a, ()->Byte.parseByte(a)),
 			v->Number.class.cast(v).byteValue()
-		);
+		);*/
 	}
 
 	/**
@@ -266,11 +267,12 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Short getShort() {
-		return parseValue(
+		return getNumber().shortValue();
+		/*return parseValue(
 			Short.class, 
 			a->parsePrimitive(a, ()->Short.parseShort(a)),
 			v->Number.class.cast(v).shortValue()
-		);
+		);*/
 	}
 
 	/**
@@ -280,11 +282,12 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Integer getInteger() {
-		return parseValue(
+		return getNumber().intValue();
+		/*return parseValue(
 			Integer.class, 
 			a->parsePrimitive(a, ()->Integer.parseInt(a)), 
 			v->Number.class.cast(v).intValue()
-		);
+		);*/
 	}
 
 	/**
@@ -294,11 +297,12 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Long getLong() {
-		return parseValue(
+		return getNumber().longValue();
+		/*return parseValue(
 			Long.class,
 			a->parsePrimitive(a, ()->Long.parseLong(a)), 
 			v->Number.class.cast(v).longValue()
-		);
+		);*/
 	}
 
 	/**
@@ -308,11 +312,12 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Float getFloat() {
-		return parseValue(
+		return getNumber().floatValue();
+		/*return parseValue(
 			Float.class, 
 			a->parsePrimitive(a, ()->Float.parseFloat(a)), 
 			v->Number.class.cast(v).floatValue()
-		);
+		);*/
 	}
 
 	/**
@@ -322,11 +327,12 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Double getDouble() {
-		return parseValue(
+		return getNumber().doubleValue();
+		/*return parseValue(
 			Double.class,
 			a->parsePrimitive(a, ()->Double.parseDouble(a)),
 			v->Number.class.cast(v).doubleValue()
-		);
+		);*/
 	}
 	/**
 	 * Get value as {@link Number}.
