@@ -71,7 +71,7 @@ public class FilesList {
 			this.url = getClass().getResource("/" + folder);
 			return rsrc(folder, recursive);
 		// jar - in separated jar - gradle build
-		} else if (url.toString().startsWith("jar:")) {
+		} else if (url.toString().startsWith("jar:") || url.toString().startsWith("jrt:")) {
 			this.url = getClass().getResource("/" + folder);
 			return jar(folder, recursive);
 		} else if (url.toString().startsWith("file:")) {
