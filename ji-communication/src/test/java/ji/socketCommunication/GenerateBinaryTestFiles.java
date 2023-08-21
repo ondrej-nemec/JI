@@ -28,9 +28,9 @@ public class GenerateBinaryTestFiles {
 			filename,
 			firstLine,
 			l->Arrays.asList(
-				"Some-header: my header value",
-				"Content-Length: " + l,
-				"Content-Type: multipart/form-data; boundary=item-separator"
+				"content-length: " + l,
+				"content-type: multipart/form-data; boundary=item-separator",
+				"some-header: my header value"
 			), 
 			(os)->{
 				os.write("--item-separator\r\n".getBytes());
@@ -53,9 +53,9 @@ public class GenerateBinaryTestFiles {
 			filename,
 			firstLine,
 			l->Arrays.asList(
-				"Some-header: my header value",
-				"Content-Length: " + l,
-				"Content-Type: image/x-icon"
+				"content-length: " + l,
+				"content-type: image/x-icon",
+				"some-header: my header value"
 			), 
 			(os)->writeBinaryFile(os)
 		);

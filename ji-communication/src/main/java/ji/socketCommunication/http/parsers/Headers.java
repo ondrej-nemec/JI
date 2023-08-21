@@ -22,10 +22,10 @@ public class Headers {
 			for (Object headerValue : header.getValue()) {
 			//	bos.write('\n'); // end of previous header or first line
 				bos.write(String.format("%s: %s", header.getKey(), headerValue).getBytes());
-				bos.write('\n'); // end of header line
+				bos.write(stream.getNewLine()); // end of header line
 			}
         }
-		bos.write('\n'); // separator
+		bos.write(stream.getNewLine()); // separator
 		bos.flush();
 	}
 	

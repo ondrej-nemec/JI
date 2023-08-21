@@ -28,7 +28,7 @@ public class Form {
 			payload.writeItem((n, v)->{
 				try {
 					byte[] bytes = String.format("--%s", boundary).getBytes();
-					byte newLine = '\n';
+					byte[] newLine = stream.getNewLine();
 
 					stream.write(bytes, bos);
 					stream.write(newLine, bos);
@@ -74,7 +74,7 @@ public class Form {
 	/******************************/
 
 	public RequestParameters read(String type, int contentLength, InputStream bis) throws IOException {
-		String boundary = "--" + type.replace("multipart/form-data;", "").trim().replace("boundary=", "").trim();
+		String boundary = "--" + type.toLowerCase().replace("multipart/form-data;", "").trim().replace("boundary=", "").trim();
 
 		int readed = 0;
 		RequestParameters data = new RequestParameters();
@@ -121,7 +121,7 @@ public class Form {
 				isValue = false;
 				fileContent = null;
 				elementValue = null;
-			} else if (requestLine.startsWith("Content-Disposition: form-data; name=") && !isValue) {
+			} else if (requestLine.toLowerCase().startsWith("content-disposition: form-data; name=") && !isValue) {
 				Matcher m = Pattern.compile(" name=\\\"(([^\\\"])+)\\\"(; (filename=\\\"(([^\\\"])+)\\\")?)?")
 						.matcher(requestLine);
 				m.find();
@@ -130,8 +130,8 @@ public class Form {
 				if (filename != null && (filename.contains("..") || filename.contains("/") || filename.contains("\\"))) {
 					throw new IOException("Filename is probably corrupted " + filename);
 				}
-			} else if (requestLine.startsWith("Content-Type: ") && !isValue) {
-				contentType = requestLine.replace("Content-Type: ", "");
+			} else if (requestLine.toLowerCase().startsWith("content-type: ") && !isValue) {
+				contentType = requestLine.substring("Content-Type: ".length());
 				//if (allowedFileTypes.isPresent() && !allowedFileTypes.get().contains(contentType)) {
 				//	throw new IOException("Uploading file content type is not allowed " + contentType);
 				//}

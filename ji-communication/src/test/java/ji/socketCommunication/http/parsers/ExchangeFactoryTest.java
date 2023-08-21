@@ -98,11 +98,12 @@ public class ExchangeFactoryTest {
 			
 			parser.write(request, bos);
 
-			// temporary fix
-		//	assertEquals(new String(expected.toByteArray()), new String(bos.get().toByteArray()));
-			
-			assertTrue(Arrays.equals(expected.toByteArray(), bos.get().toByteArray()));
-			// assertEquals(expected, bos.get());
+			try {
+				assertTrue(Arrays.equals(expected.toByteArray(), bos.get().toByteArray()));
+			} catch (Error e) {
+				assertEquals(new String(expected.toByteArray()), new String(bos.get().toByteArray()));
+				throw e;
+			}
 		}
 	}
 
@@ -138,7 +139,7 @@ public class ExchangeFactoryTest {
 			Request request= parser.readRequest(bis);
 			assertEquals(HttpMethod.POST, request.getMethod());
 			assertEquals("/some/url", request.getUri());
-			assertEquals("HTTP/1.1", request.getProtocol());
+			assertEquals(Protocol.HTTP_1_1, request.getProtocol());
 			
 			assertEquals(headers, request.getHeaders());
 			assertBody(setBody.apply(null), request);
@@ -154,7 +155,7 @@ public class ExchangeFactoryTest {
 				BufferedInputStream bis = new BufferedInputStream(is)) {
 			Response response = parser.readResponse(bis);
 			assertEquals(StatusCode.OK, response.getCode());
-			assertEquals("HTTP/1.1", response.getProtocol());
+			assertEquals(Protocol.HTTP_1_1, response.getProtocol());
 			
 			assertEquals(headers, response.getHeaders());
 
@@ -169,7 +170,7 @@ public class ExchangeFactoryTest {
 			Request request= parser.readRequest(bis);
 			assertEquals(HttpMethod.PUT, request.getMethod());
 			assertEquals("/my/uri?param=val&another=aaa", request.getUri());
-			assertEquals("HTTP/1.1", request.getProtocol());
+			assertEquals(Protocol.HTTP_1_1, request.getProtocol());
 			
 			assertEquals("/my/uri", request.getPlainUri());
 			assertEquals(
@@ -186,7 +187,9 @@ public class ExchangeFactoryTest {
 	
 	public Object[] getData() {
 		ByteArrayOutputStream binaryData = new ByteArrayOutputStream();
-		for (int b : new int[] {137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 
+		for (int b : new int[] {
+				137, 80, 78, 71, 13, 10, 26, 10,
+				0, 0, 0, 13, 73, 72, 68, 
 				82, 0, 0, 0, 32, 0, 0, 0, 32, 8, 2, 0, 0, 0, 252, 
 				24, 237, 163, 0, 0, 0, 1, 115, 82, 71, 66, 0, 174, 206, 28, 
 				233, 0, 0, 0, 4, 103, 65, 77, 65, 0, 0, 177, 143, 11, 252, 
@@ -215,9 +218,9 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-empty.txt",
 				new MapInit<String, Object>()
-				.append("Content-Length", Arrays.asList("0"))
-				.append("Content-Type", Arrays.asList("application/x-www-form-urlencoded"))
-				.append("Some-header", Arrays.asList("my header value"))
+				.append("content-length", Arrays.asList("0"))
+				.append("content-type", Arrays.asList("application/x-www-form-urlencoded"))
+				.append("some-header", Arrays.asList("my header value"))
 				.toMap(),
 				createFunction((ex)->{
 					if (ex != null) {
@@ -229,9 +232,9 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-plain-text.txt",
 				new MapInit<String, Object>()
-				.append("Some-header", Arrays.asList("my header value"))
-				.append("Content-Type", Arrays.asList("plain/text"))
-				.append("Content-Length", Arrays.asList("59"))
+				.append("some-header", Arrays.asList("my header value"))
+				.append("content-type", Arrays.asList("plain/text"))
+				.append("content-length", Arrays.asList("59"))
 				.toMap(),
 				createFunction((ex)->{
 					String res = "Some UTF-8 text: ěščř Сайн уу 你好 أأهلاً";
@@ -245,9 +248,9 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-urlencode.txt",
 				new MapInit<String, Object>()
-				.append("Some-header", Arrays.asList("my header value"))
-				.append("Content-Type", Arrays.asList("application/x-www-form-urlencoded"))
-				.append("Content-Length", Arrays.asList("273"))
+				.append("some-header", Arrays.asList("my header value"))
+				.append("content-type", Arrays.asList("application/x-www-form-urlencoded"))
+				.append("content-length", Arrays.asList("273"))
 				.toMap(),
 				createFunction((ex)->{
 					RequestParameters data = (RequestParameters) new RequestParameters()
@@ -296,9 +299,9 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-binary.txt",
 				new MapInit<String, Object>()
-				.append("Some-header", Arrays.asList("my header value"))
-				.append("Content-Type", Arrays.asList("image/x-icon"))
-				.append("Content-Length", Arrays.asList("317"))
+				.append("some-header", Arrays.asList("my header value"))
+				.append("content-type", Arrays.asList("image/x-icon"))
+				.append("content-length", Arrays.asList("317"))
 				.toMap(),
 				createFunction((ex)->{
 					byte[] res = binaryData.toByteArray();
@@ -312,9 +315,9 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-multipart-no-file.txt",
 				new MapInit<String, Object>()
-				.append("Content-Type", Arrays.asList("multipart/form-data; boundary=item-separator"))
-				.append("Content-Length", Arrays.asList("789"))
-				.append("Some-header", Arrays.asList("my header value"))
+				.append("some-header", Arrays.asList("my header value"))
+				.append("content-type", Arrays.asList("multipart/form-data; boundary=item-separator"))
+				.append("content-length", Arrays.asList("789"))
 				.toMap(),
 				createFunction((ex)->{
 					RequestParameters res = (RequestParameters) new RequestParameters()
@@ -362,9 +365,9 @@ public class ExchangeFactoryTest {
 			new Object[] {
 				"body-multipart-with-file.txt",
 				new MapInit<String, Object>()
-				.append("Some-header", Arrays.asList("my header value"))
-				.append("Content-Type", Arrays.asList("multipart/form-data; boundary=item-separator"))
-				.append("Content-Length", Arrays.asList("526"))
+				.append("some-header", Arrays.asList("my header value"))
+				.append("content-type", Arrays.asList("multipart/form-data; boundary=item-separator"))
+				.append("content-length", Arrays.asList("526"))
 				.toMap(),
 				createFunction((ex)->{
 					RequestParameters res = (RequestParameters) new RequestParameters()
@@ -382,7 +385,7 @@ public class ExchangeFactoryTest {
 			/*new Object[] {
 				"websocket.txt",
 				new MapInit<String, Object>()
-				.append("Some-header", Arrays.asList("my header value"))
+				.append("some-header", Arrays.asList("my header value"))
 				.toMap(),
 				"TODO"
 			}*/

@@ -13,6 +13,10 @@ public class StreamReader {
 	public StreamReader(Integer maxBodySize) {
 		this.maxBodySize = maxBodySize;
 	}
+	
+	public byte[] getNewLine() {
+		return "\r\n".getBytes();
+	}
 
 	public void write(byte[] bytes, OutputStream os) throws IOException {
 		os.write(bytes);

@@ -22,7 +22,7 @@ public class FirstLine {
 	
 	public void write(Exchange exchange, OutputStream bos) throws IOException {
 		bos.write(exchange.getFirstLine().getBytes());
-		bos.write('\n'); // end of first line
+		bos.write(stream.getNewLine()); // end of first line
 	}
 
 	// response: HTTP/1.1 200 OK
