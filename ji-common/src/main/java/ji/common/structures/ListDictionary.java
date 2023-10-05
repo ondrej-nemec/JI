@@ -148,6 +148,15 @@ public class ListDictionary implements Dictionary<Integer> {
 		}
 		return new HashSet<>(collection);
 	}
+
+	/**
+	 * Convert wrapped {@link Collection} to array
+	 * 
+	 * @return array
+	 */
+	public Object[] toArray() {
+		return collection.toArray();
+	}
 	
 	/**
 	 * Iterate over all items. The ginve action is applied on each item.

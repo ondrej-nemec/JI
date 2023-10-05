@@ -783,7 +783,7 @@ public class DictionaryValue {
 			return null;
 		}
 		if (val instanceof ListDictionary) {
-			return (T[])getDictionaryList().toList().toArray();
+			return (T[])getDictionaryList().toArray();
 		}
 		if (val instanceof List<?>) {
 			return (T[])getList().toArray();
