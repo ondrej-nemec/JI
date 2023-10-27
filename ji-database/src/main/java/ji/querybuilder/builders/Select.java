@@ -15,6 +15,10 @@ public interface Select<C> extends Builder {
 		return from(String.format("(%s) %s", builder.createSql(), alias));
 	}
 	
+	default C from(MultipleSelectBuilder builder, String alias) {
+		return from(String.format("(%s) %s", builder.createSql(), alias));
+    }
+	
 	C join(String table, Join join, String on);
 	
 	default C join(String table, String alias, Join join, String on) {
