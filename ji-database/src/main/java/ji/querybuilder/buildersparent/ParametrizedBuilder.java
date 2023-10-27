@@ -18,7 +18,7 @@ public interface ParametrizedBuilder<B> extends Builder {
 		params.putAll(parameters);
 		String query = getSql();
 		for (String name : params.keySet()) {
-			query = query.replaceAll(name, params.get(name));
+			query = query.replace(name, params.get(name));
 		}
 		return query;
 	}
