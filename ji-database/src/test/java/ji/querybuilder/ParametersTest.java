@@ -21,7 +21,7 @@ public class ParametersTest {
 		ParametrizedBuilder<String> p = new ParametrizedBuilder<String>() {
 			@Override public String getSql() { return null; }
 			@Override public Map<String, String> getParameters() { return null; }
-			@Override public String addNotEscapedParameter(String name, String value) { return value; }
+			@Override public String _addNotEscapedParameter(String name, String value) { return value; }
 		};
 		assertEquals(expected, p.addParameter("parameter", value));
 	}

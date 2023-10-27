@@ -31,7 +31,7 @@ public class MySqlDeleteBuilder extends QueryBuilderParent implements DeleteBuil
 	}
 
 	@Override
-	public DeleteBuilder addNotEscapedParameter(String name, String value) {
+	public DeleteBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

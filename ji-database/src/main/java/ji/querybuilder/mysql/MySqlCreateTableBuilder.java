@@ -74,7 +74,7 @@ public class MySqlCreateTableBuilder extends QueryBuilderParent implements Creat
 	}
 
 	@Override
-	public CreateTableBuilder addNotEscapedParameter(String name, String value) {
+	public CreateTableBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

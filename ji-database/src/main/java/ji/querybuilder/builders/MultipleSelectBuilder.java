@@ -67,7 +67,7 @@ public class MultipleSelectBuilder extends QueryBuilderParent implements SelectE
 	}
 
 	@Override
-	public MultipleSelectBuilder addNotEscapedParameter(String name, String value) {
+	public MultipleSelectBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

@@ -13,7 +13,7 @@ public class ExecuteBuilder extends QueryBuilderParent implements SingleExecute<
 	}
 
 	@Override
-	public ExecuteBuilder addNotEscapedParameter(String name, String value) {
+	public ExecuteBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

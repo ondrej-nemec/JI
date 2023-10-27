@@ -51,7 +51,7 @@ public class RestApiServerEndToEndTest {
 			Optional<SslCredentials> ssl = Optional.of(cred);
 			int port = 443;
 			//*/
-			Server server = restApi.createWebServer(port, 5, 120000, ssl, "UTF-8");
+			Server server = restApi.createWebServer(port, 5, 60000, ssl, "UTF-8");
 			
 			server.start();
 			for (int i = 0; i < 30; i++) {

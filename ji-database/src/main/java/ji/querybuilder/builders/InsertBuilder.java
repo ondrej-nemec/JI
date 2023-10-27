@@ -5,10 +5,10 @@ import ji.querybuilder.executors.InsertExecute;
 
 public interface InsertBuilder extends InsertExecute<InsertBuilder> {
 	
-	InsertBuilder addNotEscapedValue(String columnName, String value);
+	InsertBuilder _addNotEscapedValue(String columnName, String value);
 	
 	default InsertBuilder addValue(String columnName, Object value) {
-		return addNotEscapedValue(columnName, SQL.escape(value));
+		return _addNotEscapedValue(columnName, SQL.escape(value));
 	}
 
 }

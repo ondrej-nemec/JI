@@ -31,7 +31,7 @@ public class PostgreSqlDeleteBuilder extends QueryBuilderParent implements Delet
 	}
 
 	@Override
-	public DeleteBuilder addNotEscapedParameter(String name, String value) {
+	public DeleteBuilder _addNotEscapedParameter(String name, String value) {
 		params.put(name, value);
 		return this;
 	}

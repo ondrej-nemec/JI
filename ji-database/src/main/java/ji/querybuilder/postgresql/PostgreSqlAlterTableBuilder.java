@@ -101,7 +101,7 @@ public class PostgreSqlAlterTableBuilder extends QueryBuilderParent implements A
 	}
 
 	@Override
-	public AlterTableBuilder addNotEscapedParameter(String name, String value) {
+	public AlterTableBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

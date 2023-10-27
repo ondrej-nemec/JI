@@ -21,7 +21,7 @@ public class DerbyCreateViewBuilder extends SelectWrapper<CreateViewBuilder> imp
 	}
 
 	@Override
-	public CreateViewBuilder addNotEscapedParameter(String name, String value) {
+	public CreateViewBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

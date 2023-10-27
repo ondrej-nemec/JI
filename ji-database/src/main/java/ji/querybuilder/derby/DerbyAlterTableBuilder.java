@@ -103,7 +103,7 @@ public class DerbyAlterTableBuilder extends MultyBuilderParent implements AlterT
 	}
 
 	@Override
-	public AlterTableBuilder addNotEscapedParameter(String name, String value) {
+	public AlterTableBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

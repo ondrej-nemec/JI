@@ -23,10 +23,10 @@ public interface ParametrizedBuilder<B> extends Builder {
 		return query;
 	}
 
-	B addNotEscapedParameter(String name, String value);
+	B _addNotEscapedParameter(String name, String value);
 	
 	default B addParameter(String name, Object value) {
-		return addNotEscapedParameter(name, SQL.escape(value));
+		return _addNotEscapedParameter(name, SQL.escape(value));
 	}
 	
 }

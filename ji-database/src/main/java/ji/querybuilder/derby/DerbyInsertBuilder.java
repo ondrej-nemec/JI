@@ -13,7 +13,7 @@ public class DerbyInsertBuilder extends QueryBuilderParent implements InsertBuil
 	}
 
 	@Override
-	public InsertBuilder addNotEscapedValue(String columnName, String value) {
+	public InsertBuilder _addNotEscapedValue(String columnName, String value) {
 		params.put(columnName, value);
 		return this;
 	}

@@ -31,7 +31,7 @@ public class SelectExecuteTest {
 	public void testParseValueWorksWithDateTime(Date datetime, String datetimeString, TemporalAccessor expected) throws SQLException {
 		SelectExecute<Void> exec = new SelectExecute<Void>() {
 			@Override public Connection getConnection() { return null; }
-			@Override public Void addNotEscapedParameter(String name, String value) { return null; }
+			@Override public Void _addNotEscapedParameter(String name, String value) { return null; }
 			@Override public String getSql() { return null; }
 			@Override public Map<String, String> getParameters() { return null; }
 		};

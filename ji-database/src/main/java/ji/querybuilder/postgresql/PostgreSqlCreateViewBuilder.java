@@ -23,7 +23,7 @@ public class PostgreSqlCreateViewBuilder extends PostgresSqlSelectWrapper<Create
 	}
 
 	@Override
-	public CreateViewBuilder addNotEscapedParameter(String name, String value) {
+	public CreateViewBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

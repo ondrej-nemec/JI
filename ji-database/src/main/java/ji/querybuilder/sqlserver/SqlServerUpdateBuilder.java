@@ -44,7 +44,7 @@ public class SqlServerUpdateBuilder extends QueryBuilderParent implements Update
 	}
 
 	@Override
-	public UpdateBuilder addNotEscapedParameter(String name, String value) {
+	public UpdateBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

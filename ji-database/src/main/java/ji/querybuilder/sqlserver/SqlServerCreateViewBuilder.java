@@ -16,7 +16,7 @@ public class SqlServerCreateViewBuilder extends SqlServerSelectWrapper<CreateVie
 	}
 
 	@Override
-	public CreateViewBuilder addNotEscapedParameter(String name, String value) {
+	public CreateViewBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

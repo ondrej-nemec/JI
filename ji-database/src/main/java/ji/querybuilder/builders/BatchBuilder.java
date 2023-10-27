@@ -25,7 +25,7 @@ public class BatchBuilder extends QueryBuilderParent implements BatchExecute<Bat
 	}
 
 	@Override
-	public BatchBuilder addNotEscapedParameter(String name, String value) {
+	public BatchBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

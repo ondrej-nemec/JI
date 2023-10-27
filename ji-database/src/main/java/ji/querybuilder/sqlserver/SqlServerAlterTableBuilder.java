@@ -90,7 +90,7 @@ public class SqlServerAlterTableBuilder extends MultyBuilderParent implements Al
 	}
 
 	@Override
-	public AlterTableBuilder addNotEscapedParameter(String name, String value) {
+	public AlterTableBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}

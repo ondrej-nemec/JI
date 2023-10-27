@@ -12,7 +12,7 @@ public class SqlServerSelectBuilder extends SqlServerSelectWrapper<SelectBuilder
 	}
 
 	@Override
-	public SelectBuilder addNotEscapedParameter(String name, String value) {
+	public SelectBuilder _addNotEscapedParameter(String name, String value) {
 		_addNotEscaped(name, value);
 		return this;
 	}
