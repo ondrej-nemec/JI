@@ -50,6 +50,7 @@ public enum StatusCode {
 	EXPECTATION_FAILED(417, "Expectation Failed"),
 	I_AM_A_TEAPORT(418, "I'm a teapot"),
 	MISDIRECTED_REQUEST(421, "Misdirected Request"),
+	UNPROCESSABLE_CONTENT(422, "Unprocessable Content"),
 	UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"), //  (WebDAV)
 	LOCKED(423, "Locked"), //  (WebDAV)
 	FAILED_DEPENDENCY(424, "Failed Dependency (WebDAV)"),
