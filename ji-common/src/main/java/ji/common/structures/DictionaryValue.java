@@ -191,6 +191,8 @@ public class DictionaryValue {
 			return getDouble();
 		} else if (clazz.isAssignableFrom(Character.class) || clazz.isAssignableFrom(char.class)) {
 			return getCharacter();
+		} else if (clazz.isAssignableFrom(String.class)) {
+			return value.toString();
 		} else if (clazz.isAssignableFrom(Map.class)) {
 			return getMap();
 		} else if (clazz.isAssignableFrom(List.class)) {
