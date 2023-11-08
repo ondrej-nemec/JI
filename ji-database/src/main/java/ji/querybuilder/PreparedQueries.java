@@ -213,7 +213,7 @@ public interface PreparedQueries extends QueryBuilderFactory {
 		);
 	}
 	
-	default <T> void saveRelation(List<T> data, Function<T, Object> createId,
+	default <T> void saveRelation(Collection<T> data, Function<T, Object> createId,
 			ThrowingSupplier<List<T>, SQLException> select,
 			ThrowingConsumer<T, SQLException> delete,
 			ThrowingBiConsumer<T, T, SQLException> update,
