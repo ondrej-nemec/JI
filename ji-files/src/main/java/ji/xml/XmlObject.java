@@ -1,22 +1,22 @@
 package ji.xml;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+
+import ji.common.structures.MapDictionary;
 
 public class XmlObject {
 
 	private final String name;
 	
 	private final StringBuilder value;
-	private final Map<String, String> attributes;
+	private final MapDictionary<String> attributes;
 	private final List<XmlObject> references;
 
 	public XmlObject(String name) {
 		this.name = name;
-		this.attributes = new HashMap<>();
+		this.attributes = MapDictionary.hashMap();
 		this.references = new ArrayList<>();
 		this.value = new StringBuilder();
 	}
@@ -32,7 +32,7 @@ public class XmlObject {
 		return Optional.of(value.toString());
 	}
 	
-	public Map<String, String> getAttributes() {
+	public MapDictionary<String> getAttributes() {
 		return attributes;
 	}
 	
