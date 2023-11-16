@@ -1,9 +1,9 @@
 package ji.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
+import ji.common.structures.DictionaryValue;
 import ji.common.structures.MapDictionary;
 
 public class XmlObject {
@@ -12,12 +12,12 @@ public class XmlObject {
 	
 	private final StringBuilder value;
 	private final MapDictionary<String> attributes;
-	private final List<XmlObject> references;
+	private final Map<String, XmlObject> references;
 
 	public XmlObject(String name) {
 		this.name = name;
 		this.attributes = MapDictionary.hashMap();
-		this.references = new ArrayList<>();
+		this.references = new HashMap<>();
 		this.value = new StringBuilder();
 	}
 	
@@ -25,18 +25,22 @@ public class XmlObject {
 		return name;
 	}
 	
-	public Optional<String> getValue() {
+	public DictionaryValue getValue() {
 		if (value.toString().isEmpty()) {
-			return Optional.empty();
+			return new DictionaryValue(null);
 		}
-		return Optional.of(value.toString());
+		return new DictionaryValue(value.toString());
 	}
 	
 	public MapDictionary<String> getAttributes() {
 		return attributes;
 	}
 	
-	public List<XmlObject> getReferences() {
+	public XmlObject getReference(String name) {
+		return references.get(name);
+	}
+	
+	public Map<String, XmlObject> getReferences() {
 		return references;
 	}
 	
@@ -51,7 +55,7 @@ public class XmlObject {
 	}
 	
 	public XmlObject addReference(XmlObject reference) {
-		this.references.add(reference);
+		this.references.put(reference.getName(), reference);
 		return this;
 	}
 	
