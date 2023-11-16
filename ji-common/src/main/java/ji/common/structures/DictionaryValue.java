@@ -254,7 +254,11 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Byte getByte() {
-		return getNumber().byteValue();
+		Number num = getNumber();
+		if (num == null) {
+			return null;
+		}
+		return num.byteValue();
 		/*return parseValue(
 			Byte.class, 
 			a->parsePrimitive(a, ()->Byte.parseByte(a)),
@@ -269,7 +273,11 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Short getShort() {
-		return getNumber().shortValue();
+		Number num = getNumber();
+		if (num == null) {
+			return null;
+		}
+		return num.shortValue();
 		/*return parseValue(
 			Short.class, 
 			a->parsePrimitive(a, ()->Short.parseShort(a)),
@@ -284,7 +292,11 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Integer getInteger() {
-		return getNumber().intValue();
+		Number num = getNumber();
+		if (num == null) {
+			return null;
+		}
+		return num.intValue();
 		/*return parseValue(
 			Integer.class, 
 			a->parsePrimitive(a, ()->Integer.parseInt(a)), 
@@ -299,7 +311,11 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Long getLong() {
-		return getNumber().longValue();
+		Number num = getNumber();
+		if (num == null) {
+			return null;
+		}
+		return num.longValue();
 		/*return parseValue(
 			Long.class,
 			a->parsePrimitive(a, ()->Long.parseLong(a)), 
@@ -314,7 +330,11 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Float getFloat() {
-		return getNumber().floatValue();
+		Number num = getNumber();
+		if (num == null) {
+			return null;
+		}
+		return num.floatValue();
 		/*return parseValue(
 			Float.class, 
 			a->parsePrimitive(a, ()->Float.parseFloat(a)), 
@@ -329,7 +349,11 @@ public class DictionaryValue {
 	 * @throws ClassCastException if all convert and parse mechanism fails
 	 */
 	public Double getDouble() {
-		return getNumber().doubleValue();
+		Number num = getNumber();
+		if (num == null) {
+			return null;
+		}
+		return num.doubleValue();
 		/*return parseValue(
 			Double.class,
 			a->parsePrimitive(a, ()->Double.parseDouble(a)),
