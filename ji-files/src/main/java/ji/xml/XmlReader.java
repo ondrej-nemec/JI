@@ -1,6 +1,9 @@
 package ji.xml;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +12,19 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import ji.common.exceptions.LogicException;
+
 public class XmlReader {
+
+	public XmlObject read(String xml) throws XMLStreamException {
+		ByteArrayInputStream is = new ByteArrayInputStream(xml.getBytes());
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+			return read(br);
+		} catch (IOException e) {
+			// ignore - no reason for it
+			throw new LogicException("Unexpected IOException with String " + e.getMessage());
+		}
+	}
 
 	public XmlObject read(BufferedReader br) throws XMLStreamException {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
