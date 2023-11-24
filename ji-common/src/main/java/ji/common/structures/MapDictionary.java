@@ -123,6 +123,10 @@ public class MapDictionary<K> implements Dictionary<K> {
 		return map.size();
 	}
 	
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+	
 	/**
 	 * Convert {@link MapDictionary} to {@link Map}
 	 * 
