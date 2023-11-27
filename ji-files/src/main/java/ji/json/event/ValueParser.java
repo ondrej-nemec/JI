@@ -27,6 +27,6 @@ public class ValueParser {
 		if (value.contains(".")) {
 			return new Value<>(Double.parseDouble(value), ValueType.DOUBLE);
 		}
-		return new Value<>(Integer.parseInt(value), ValueType.INTEGER);
+		return new Value<>(Long.parseLong(value), ValueType.INTEGER);
 	}
 }
