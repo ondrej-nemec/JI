@@ -27,6 +27,10 @@ public class ValueParser {
 		if (value.contains(".")) {
 			return new Value<>(Double.parseDouble(value), ValueType.DOUBLE);
 		}
-		return new Value<>(Long.parseLong(value), ValueType.INTEGER);
+		try {
+			return new Value<>(Integer.parseInt(value), ValueType.INTEGER);
+		} catch (NumberFormatException e) {
+			return new Value<>(Long.parseLong(value), ValueType.INTEGER);
+		}
 	}
 }
