@@ -11,6 +11,10 @@ public class RequestParameters extends MapDictionary<String> {
 		super(new HashMap<>());
 	}
 	
+	public RequestParameters(Map<String, Object> map) {
+		super(map);
+	}
+	
 	public UploadedFile getUploadedFile(String key) {
 		return UploadedFile.class.cast(getValue(key));
 	}
