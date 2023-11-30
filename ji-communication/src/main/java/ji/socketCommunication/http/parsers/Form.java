@@ -74,7 +74,8 @@ public class Form {
 	/******************************/
 
 	public RequestParameters read(String type, int contentLength, InputStream bis) throws IOException {
-		String boundary = "--" + type.toLowerCase().replace("multipart/form-data;", "").trim().replace("boundary=", "").trim();
+		String boundary = "--" + type.trim().substring("multipart/form-data;".length()).trim().substring("boundary=".length()).trim();
+		// String boundary = "--" + type.toLowerCase().replace("multipart/form-data;", "").trim().replace("boundary=", "").trim();
 
 		int readed = 0;
 		RequestParameters data = new RequestParameters();
