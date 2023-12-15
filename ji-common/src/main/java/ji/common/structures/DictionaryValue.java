@@ -417,10 +417,18 @@ public class DictionaryValue {
 	}
 	
 	private <T> T parsePrimitive(String s, Supplier<T> supplier) {
-		if (s == null || s.equals("") || s.equalsIgnoreCase("null")) {
+		if (s == null) {
 			return null;
 		}
-		return supplier.get();
+		switch (s.toLowerCase()) {
+			case "":
+			case "nan":
+			case "null":
+			case "undefined":
+				return null;
+			default:
+				return supplier.get();
+		}
 	}
 	
 	/*****************/
