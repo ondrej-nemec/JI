@@ -20,20 +20,20 @@ public class SSL {
 	
 	public static SSLContext getSSLContext(SslCredentials credentians) throws Exception {
 		SSLContext sc = SSLContext.getInstance("TLS");
-	    sc.init(
-	    	getCertificateManager(credentians),
-	    	getTrustManager(credentians), 
-	    	getRandom()
-	    );
+		sc.init(
+			getCertificateManager(credentians),
+			getTrustManager(credentians), 
+			getRandom()
+		);
 		return sc;
 	}
 	
-    public static SecureRandom getRandom() throws NoSuchAlgorithmException {
-        if (System.getProperty("os.name").toLowerCase().contains("linux")) {
-             return SecureRandom.getInstance("NativePRNGNonBlocking");
-        }
-        return SecureRandom.getInstanceStrong();
-    }
+	public static SecureRandom getRandom() throws NoSuchAlgorithmException {
+		if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+			 return SecureRandom.getInstance("NativePRNGNonBlocking");
+		}
+		return SecureRandom.getInstanceStrong();
+	}
 	
 	public static TrustManager[] getTrustManager(SslCredentials credentians) throws Exception {
 		if (credentians.useTrustedClients()) {
@@ -43,12 +43,12 @@ public class SSL {
 				credentians.getClientTrustedType()
 			);
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-	        tmf.init(trustStore);
-	        return tmf.getTrustManagers();
+			tmf.init(trustStore);
+			return tmf.getTrustManagers();
 		}
 		if (credentians.trustAll()) {
 			return new TrustManager[]{
-			    new X509TrustManager() {
+				new X509TrustManager() {
 					@Override public X509Certificate[] getAcceptedIssuers() { return null; }
 					@Override public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 					@Override public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
@@ -66,18 +66,18 @@ public class SSL {
 				credentians.getCertificateType()
 			);
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-	        kmf.init(keyStore, credentians.getCertificateStorePassword().toCharArray());
-	        return kmf.getKeyManagers();
+			kmf.init(keyStore, credentians.getCertificateStorePassword().toCharArray());
+			return kmf.getKeyManagers();
 		}
 		return new KeyManager[]{};
 	}
 	
 	private static KeyStore loadStore(String storePath, String password, String type) throws Exception {
 		KeyStore store = KeyStore.getInstance(type); // KeyStore.getDefaultType()
-        InputStream storeIS = InputStreamLoader.createInputStream(SSL.class, storePath);
-        store.load(storeIS, password.toCharArray());
-        storeIS.close();
-        return store;
+		InputStream storeIS = InputStreamLoader.createInputStream(SSL.class, storePath);
+		store.load(storeIS, password.toCharArray());
+		storeIS.close();
+		return store;
 	}
 	
 }
