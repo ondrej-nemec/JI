@@ -44,4 +44,24 @@ public class Row {
 		return idValue;
 	}
 	
+	public Row clone() {
+		Row row = new Row(idName, idValue);
+		row.columns.putAll(columns);
+		return row;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		if (isInsert()) {
+			string.append("INSERT:");
+		} else {
+			string.append(String.format("UPDATE %s[%s]:", idName, idValue));
+		}
+		string.append(" ");
+		string.append(columns.toString());
+		string.append(" (" + super.toString() + ")");
+		return string.toString();
+	}
+	
 }
