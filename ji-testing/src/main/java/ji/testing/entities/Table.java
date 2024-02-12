@@ -29,6 +29,24 @@ public class Table {
 
 	public List<Row> getRows() {
 		return rows;
-	}	
+	}
+	
+	public Table clone() {
+		List<Row> rows = new LinkedList<>();
+		this.rows.forEach((row)->rows.add(row.clone()));
+		return new Table(name, rows);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder(
+			String.format("Table: %s - %s rows (%s)", name,	
+			rows.size(), super.toString())
+		);
+		rows.forEach((r)->{
+			string.append("\n\t" + r);
+		});
+		return string.toString();
+	}
 	
 }
