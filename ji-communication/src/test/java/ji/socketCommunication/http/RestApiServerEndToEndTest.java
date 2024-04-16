@@ -113,7 +113,7 @@ public class RestApiServerEndToEndTest {
 									System.err.println("Websocket closed");
 									return;
 								}
-								if (i.getInteger() > 20) {
+								if (i.get() > 20) {
 									websocket.get().close();
 									System.err.println("Task closed");
 									return;
@@ -123,7 +123,7 @@ public class RestApiServerEndToEndTest {
 									return;
 								}
 								try {
-									websocket.get().send("Message #" + i.getInteger());
+									websocket.get().send("Message #" + i.get());
 									System.err.println("Message sent");
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block

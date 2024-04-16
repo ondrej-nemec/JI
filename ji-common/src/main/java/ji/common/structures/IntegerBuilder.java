@@ -71,8 +71,24 @@ public class IntegerBuilder {
 	 * 
 	 * @return int current value
 	 */
-	public int getInteger() {
+	public int get() {
 		return value;
+	}
+	
+	public int getIncrease() {
+		return value++;
+	}
+	
+	public int increaseGet() {
+		return ++value;
+	}
+	
+	public int getDecrease() {
+		return value--;
+	}
+	
+	public int decreaseGet() {
+		return --value;
 	}
 	
 }
