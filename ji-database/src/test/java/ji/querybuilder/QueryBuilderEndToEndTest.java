@@ -34,7 +34,6 @@ import ji.common.functions.Terminal;
 import ji.common.structures.ThrowingBiConsumer;
 import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
-import ji.files.text.basic.ReadText;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.derby.DerbyQueryBuilder;
 import ji.querybuilder.enums.ColumnSetting;
@@ -282,7 +281,7 @@ public class QueryBuilderEndToEndTest {
 	
 	private void loadDb(Connection connection, String file) throws IOException, SQLException {
 		String sql = Text.get().read((br)->{
-			return ReadText.get().asString(br);
+			return br.asString();
 		}, getClass().getResourceAsStream("/querybuilder/" + type + "/" + file + ".sql"));
 		Statement stat = connection.createStatement();
 		String[] batches = sql.split(";");

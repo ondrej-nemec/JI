@@ -25,7 +25,7 @@ public class ReadTextTest {
 			.thenReturn("Java")
 			.thenReturn("1")
 			.thenReturn(null);
-		ReadText.get().perLine(br, (line)->{
+		new ReadText(br).perLine((line)->{
 			if (line.length() == 4) {
 				builder.append(line);
 			}
@@ -42,7 +42,7 @@ public class ReadTextTest {
 			.thenReturn(null);
 		assertEquals(
 			"This is text of success reading of file.\nFile has two rows;",
-			ReadText.get().asString(br)
+			new ReadText(br).asString()
 		);
 	}
 	
@@ -56,7 +56,7 @@ public class ReadTextTest {
 			.thenReturn(null);
 		assertEquals(
 			Arrays.asList("First line", "Second line", "Third line"),
-			ReadText.get().asList(br)
+			new ReadText(br).asList()
 		);
 	}
 	
@@ -74,7 +74,7 @@ public class ReadTextTest {
 				Arrays.asList("second", "mess"),
 				Arrays.asList("grid", "here")
 			),
-			ReadText.get().asTable(br, "-")
+			new ReadText(br).asTable("-")
 		);
 	}
 }

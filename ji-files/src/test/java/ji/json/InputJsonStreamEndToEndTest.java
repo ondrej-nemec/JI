@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.stream.IntStream;
 
 import ji.files.text.Text;
-import ji.files.text.basic.ReadText;
 import ji.json.event.Event;
 import ji.json.providers.InputStringProvider;
 
@@ -20,7 +19,7 @@ public class InputJsonStreamEndToEndTest {
 	}
 	
 	public void parse(InputStream is) throws IOException, JsonStreamException {
-		String json = Text.get().read((br)->{return ReadText.get().asString(br);}, is);
+		String json = Text.get().read((br)->br.asString(), is);
 		try (InputJsonStream stream = new InputJsonStream(new InputStringProvider(json));) {
 			Event e = stream.next();
 			while(e.hasNext()) {

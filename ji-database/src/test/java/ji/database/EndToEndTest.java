@@ -17,7 +17,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.apache.logging.log4j.Logger;
 import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
-import ji.files.text.basic.ReadText;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.enums.Join;
 import ji.querybuilder.mysql.MySqlFunctions;
@@ -101,7 +100,7 @@ public class EndToEndTest {
 		for (String file : files) {
 			String migration = "/migrations/" + config.type + "/" + file + ".sql";
 			String sql = Text.get().read((br)->{
-				return ReadText.get().asString(br);
+				return br.asString();
 			}, getClass().getResourceAsStream(migration));
 			database.applyQuery((conn)->{
 				Statement stat = conn.createStatement();

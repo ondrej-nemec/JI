@@ -15,7 +15,7 @@ public class WriteTextTest {
 	public void testWriteStringWorks() throws IOException {
 		String string = "This is test data\nNew line\tafter tab";
 		BufferedWriter bw = mock(BufferedWriter.class);
-		WriteText.get().write(bw, string);
+		new WriteText(bw).write(string);
 		
 		verify(bw, times(1)).write(string);
 		verify(bw, times(1)).newLine();
@@ -27,7 +27,7 @@ public class WriteTextTest {
 	public void testWriteLinesWorks() throws IOException {
 		List<String> list = Arrays.asList("First line","Second line","Third line");
 		BufferedWriter bw = mock(BufferedWriter.class);
-		WriteText.get().write(bw, list);
+		new WriteText(bw).write(list);
 		
 		for(String line : list){
 			verify(bw).write(line);
@@ -45,7 +45,7 @@ public class WriteTextTest {
 			Arrays.asList("c-a", "c-b", "c-c")
 		);
 		BufferedWriter bw = mock(BufferedWriter.class);
-		WriteText.get().write(bw, table, ";");
+		new WriteText(bw).write(table, ";");
 		
 		for(List<String> line : table){
 			verify(bw).write(line.get(0) + ";" + line.get(1) + ";" + line.get(2));

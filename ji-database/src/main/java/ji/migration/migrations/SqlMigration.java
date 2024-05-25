@@ -5,7 +5,6 @@ import java.sql.Statement;
 
 import ji.common.functions.InputStreamLoader;
 import ji.files.text.Text;
-import ji.files.text.basic.ReadText;
 import ji.querybuilder.QueryBuilder;
 
 public class SqlMigration implements SingleMigration {
@@ -36,9 +35,7 @@ public class SqlMigration implements SingleMigration {
 	}
 
 	private String loadContent(String file, boolean isRevert) throws IOException {
-		String sql = text.read((br)->{
-			return ReadText.get().asString(br);
-		}, InputStreamLoader.createInputStream(getClass(), file));
+		String sql = text.read((br)->br.asString(), InputStreamLoader.createInputStream(getClass(), file));
 		
 		String[] mig = sql.split("--- REVERT ---");
 		if (isRevert && mig.length > 1) {

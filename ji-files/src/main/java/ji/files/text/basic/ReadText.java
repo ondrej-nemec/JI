@@ -9,11 +9,17 @@ import java.util.function.Consumer;
 
 public class ReadText {
 	
-	public static ReadText get() {
-		return new ReadText();
+	private final BufferedReader br;
+	
+	public ReadText(BufferedReader br) {
+		this.br = br;
 	}
 
-	public void perLine(BufferedReader br, Consumer<String> consumer) throws IOException {
+	public BufferedReader getBufferedReader() {
+		return br;
+	}
+	
+	public void perLine(Consumer<String> consumer) throws IOException {
 		String line = br.readLine();
 		while (line != null) {
 			consumer.accept(line);
@@ -21,7 +27,7 @@ public class ReadText {
 		}
 	}
 	
-	public String asString(BufferedReader br) throws IOException {
+	public String asString() throws IOException {
 		StringBuilder result = new StringBuilder();
 		String line = br.readLine();
 		if(line != null){
@@ -36,7 +42,7 @@ public class ReadText {
 		return result.toString();
 	}
 	
-	public List<String> asList(BufferedReader br) throws IOException {
+	public List<String> asList() throws IOException {
 		List<String> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line!=null){
@@ -46,7 +52,7 @@ public class ReadText {
 		return result;
 	}
 	
-	public Collection<List<String>> asTable(BufferedReader br, final String delimeter) throws IOException {
+	public Collection<List<String>> asTable(final String delimeter) throws IOException {
 		List<List<String>> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line != null){

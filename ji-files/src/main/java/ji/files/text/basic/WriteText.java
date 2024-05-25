@@ -8,17 +8,23 @@ import ji.common.functions.Implode;
 
 public class WriteText {
 	
-	public static WriteText get() {
-		return new WriteText();
+	private final BufferedWriter bw;
+	
+	public WriteText(BufferedWriter bw) {
+		this.bw = bw;
 	}
 	
-	public void write(BufferedWriter bw, final String string) throws IOException {
+	public BufferedWriter getBufferedWriter() {
+		return bw;
+	}
+	
+	public void write(final String string) throws IOException {
 		bw.write(string);
 		bw.newLine();
 		bw.flush();
 	}
 	
-	public void write(BufferedWriter bw, final List<String> list) throws IOException {
+	public void write(final List<String> list) throws IOException {
 		for (String line : list) {
 			bw.write(line);
 			bw.newLine();
@@ -26,7 +32,7 @@ public class WriteText {
 		bw.flush();
 	}
 	
-	public void write(BufferedWriter bw, final List<List<String>> table, final String delimeter) throws IOException {
+	public void write(final List<List<String>> table, final String delimeter) throws IOException {
 		for(List<String> line : table) {
 			bw.write(Implode.implode(delimeter, line));			
 			bw.newLine();
