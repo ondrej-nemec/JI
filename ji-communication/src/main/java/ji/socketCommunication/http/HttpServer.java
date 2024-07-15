@@ -21,7 +21,7 @@ import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 import ji.socketCommunication.http.structures.WebSocket;
 
-public class WebServer implements Servant {
+public class HttpServer implements Servant {
 	
 	// public static HttpServerProfiler PROFILER = null;
 		
@@ -30,7 +30,7 @@ public class WebServer implements Servant {
 	
 	private final ExchangeFactory factory;
 	
-	public WebServer(
+	public HttpServer(
 			Integer maxRequestBodySize,
 			Logger logger) {
 		this.logger = logger;
@@ -48,7 +48,7 @@ public class WebServer implements Servant {
        }
 	}
     
-    public WebServer addApplication(ResponseFactory servant, String hostname, String... aliases) {
+    public HttpServer addApplication(ResponseFactory servant, String hostname, String... aliases) {
     	applications.put(hostname, servant);
     	for (String alias : aliases) {
     		applications.put(alias, servant);

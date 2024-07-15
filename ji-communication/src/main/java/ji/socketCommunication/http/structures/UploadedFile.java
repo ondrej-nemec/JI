@@ -68,7 +68,7 @@ public class UploadedFile {
 	
 	@Override
 	public String toString() {
-		return String.format("File[name: %s, contentType: %s, size: %sb]", fileName, contentType, content.length);
+		return String.format("File[name: %s, contentType: %s, bom: %s, size: %sb]", fileName, contentType, bom, content.length);
 	}
 
 	@Override

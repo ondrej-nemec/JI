@@ -16,7 +16,7 @@ import ji.socketCommunication.http.structures.Protocol;
 import ji.socketCommunication.http.structures.Request;
 import ji.socketCommunication.http.structures.Response;
 
-public class WebClient implements Client {
+public class HttpClient implements Client {
 	
 	private final String serverUrl;
 	private final int port;
@@ -30,11 +30,11 @@ public class WebClient implements Client {
 	private final Optional<SslCredentials> ssl;
 	private final ExchangeFactory factory;
 	
-	public WebClient(String serverUrl, Optional<SslCredentials> ssl, Logger logger) {
+	public HttpClient(String serverUrl, Optional<SslCredentials> ssl, Logger logger) {
 		this(serverUrl, ssl.isPresent() ? 443 : 80, Protocol.HTTP_1_1, ssl, 60000, null, logger);
 	}
 	
-	public WebClient(
+	public HttpClient(
 			String serverUrl, int port, Protocol protocol,
 			Optional<SslCredentials> ssl, 
 			int timeOut, Integer maxResponseBodySize,

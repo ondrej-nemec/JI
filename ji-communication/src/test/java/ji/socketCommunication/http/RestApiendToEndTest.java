@@ -29,13 +29,13 @@ public class RestApiendToEndTest {
 		Map<String, Tuple2<Request, Response>> data = getData();
 		
 		try {
-			WebClient client = new WebClient("localhost", port, Protocol.HTTP_1_1, ssl, 60000, maxBodySize, logger);
+			HttpClient client = new HttpClient("localhost", port, Protocol.HTTP_1_1, ssl, 60000, maxBodySize, logger);
 			
 			/*Server server = Server.createWebServer(
 				port, 1, 60000, ssl, maxBodySize, charset, logger
 			);*/
 			
-			WebServer restApi = new WebServer(maxBodySize, logger);
+			HttpServer restApi = new HttpServer(maxBodySize, logger);
 			//*/
 			restApi.addApplication((req, ipAddress, websocket)->{
 				Tuple2<Request, Response> res = data.get(req.getPlainUri());

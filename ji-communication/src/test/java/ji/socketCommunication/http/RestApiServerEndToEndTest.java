@@ -40,7 +40,7 @@ public class RestApiServerEndToEndTest {
 				}
 			};*/
 			
-			WebServer restApi = new WebServer(10 * 1000 * 1000, logger);
+			HttpServer restApi = new HttpServer(10 * 1000 * 1000, logger);
 			restApi.addApplication(apiResponse(logger), "localhost", "example.com");
 			/*
 			Optional<SslCredentials> ssl = Optional.empty();
