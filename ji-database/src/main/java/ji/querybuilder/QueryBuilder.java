@@ -2,126 +2,157 @@ package ji.querybuilder;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.function.Function;
 
+import ji.querybuilder.builder_impl.AlterTableBuilderImpl;
+import ji.querybuilder.builder_impl.AlterViewBuilderImpl;
+import ji.querybuilder.builder_impl.BatchBuilderImpl;
+import ji.querybuilder.builder_impl.CreateIndexBuilderImpl;
+import ji.querybuilder.builder_impl.CreateTableBuilderImpl;
+import ji.querybuilder.builder_impl.CreateViewBuilderImpl;
+import ji.querybuilder.builder_impl.DeleteBuilderImpl;
+import ji.querybuilder.builder_impl.DeleteIndexBuilderImpl;
+import ji.querybuilder.builder_impl.DeleteTableBuilderImpl;
+import ji.querybuilder.builder_impl.DeleteViewBuilderImpl;
+import ji.querybuilder.builder_impl.InsertBuilderImpl;
+import ji.querybuilder.builder_impl.MultipleSelectBuilderImpl;
+import ji.querybuilder.builder_impl.SelectBuilderImpl;
+import ji.querybuilder.builder_impl.UpdateBuilderImpl;
 import ji.querybuilder.builders.AlterTableBuilder;
+import ji.querybuilder.builders.AlterViewBuilder;
 import ji.querybuilder.builders.BatchBuilder;
+import ji.querybuilder.builders.CreateIndexBuilder;
 import ji.querybuilder.builders.CreateTableBuilder;
 import ji.querybuilder.builders.CreateViewBuilder;
 import ji.querybuilder.builders.DeleteBuilder;
-import ji.querybuilder.builders.ExecuteBuilder;
-import ji.querybuilder.builders.Functions;
+import ji.querybuilder.builders.DeleteIndexBuilder;
+import ji.querybuilder.builders.DeleteViewBuilder;
+import ji.querybuilder.builders.DeleteTableBuilder;
 import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.MultipleSelectBuilder;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
 
-public class QueryBuilder implements QueryBuilderFactory, PreparedQueries {
+public class QueryBuilder implements QueryBuilderFactory {
 
-	private final QueryBuilderFactory factory;
+	private final DbInstance instance;
+	private final Connection connection;
 	
-	public QueryBuilder(QueryBuilderFactory factory) {
-		this.factory = factory;
+	public QueryBuilder(DbInstance instance, Connection connection) {
+		this.instance = instance;
+		this.connection = connection;
 	}
 
+	@Override
 	public Connection getConnection() {
-		return factory.getConnection();
+		return connection;
 	}
 	
 	/**
 	 * Begin transaction
 	 * @throws SQLException
 	 */
+	@Override
 	public void begin() throws SQLException {
-		factory.getConnection().setAutoCommit(false);
+		connection.setAutoCommit(false);
 	}
 
 	/**
 	 * Commit transaction
 	 * @throws SQLException
 	 */
+	@Override
 	public void commit() throws SQLException {
-		factory.getConnection().commit();
+		connection.commit();
 	}
 	
 	/**
 	 * Rollback transaction
 	 * @throws SQLException
 	 */
+	@Override
 	public void rollback() throws SQLException {
-		factory.getConnection().rollback();
-	}
-	
-	public BatchBuilder batch() {
-		return new BatchBuilder(factory.getConnection());
-	}
-	
-	public MultipleSelectBuilder multiSelect(SelectBuilder builder) {
-		return new MultipleSelectBuilder(factory.getConnection(), builder);
+		connection.rollback();
 	}
 
 	@Override
 	public Functions getSqlFunctions() {
-		return factory.getSqlFunctions();
+		return instance;
+	}
+	
+	@Override
+	public BatchBuilder batch() {
+		return new BatchBuilderImpl(connection, instance);
+	}
+	
+	@Override
+	public MultipleSelectBuilder multiSelect(SelectBuilder builder) {
+		return new MultipleSelectBuilderImpl(connection, instance, builder);
 	}
 
 	@Override
 	public DeleteBuilder delete(String table) {
-		return factory.delete(table);
+		return new DeleteBuilderImpl(connection, instance, table);
 	}
 
 	@Override
 	public InsertBuilder insert(String table) {
-		return factory.insert(table);
+		return new InsertBuilderImpl(connection, instance, table);
 	}
 
 	@Override
 	public UpdateBuilder update(String table) {
-		return factory.update(table);
+		return new UpdateBuilderImpl(connection, instance, table);
+	}
+
+	@Override
+	public SelectBuilder select(Function<Functions, String> select) {
+		return select(select.apply(instance));
 	}
 
 	@Override
 	public SelectBuilder select(String... select) {
-		return factory.select(select);
+		return new SelectBuilderImpl(connection, instance, select);
 	}
 
 	@Override
-	public ExecuteBuilder deleteTable(String table) {
-		return factory.deleteTable(table);
+	public DeleteTableBuilder deleteTable(String table) {
+		return new DeleteTableBuilderImpl(connection, instance, table);
 	}
 
 	@Override
 	public CreateTableBuilder createTable(String name) {
-		return factory.createTable(name);
+		return new CreateTableBuilderImpl(connection, instance, name);
 	}
 
 	@Override
 	public AlterTableBuilder alterTable(String name) {
-		return factory.alterTable(name);
+		return new AlterTableBuilderImpl(connection, instance, name);
 	}
 
 	@Override
-	public ExecuteBuilder deleteView(String table) {
-		return factory.deleteView(table);
+	public DeleteViewBuilder deleteView(String table) {
+		return new DeleteViewBuilderImpl(connection, instance, table);
 	}
 
 	@Override
 	public CreateViewBuilder createView(String name) {
-		return factory.createView(name);
+		return new CreateViewBuilderImpl(connection, instance, name);
 	}
 
 	@Override
-	public CreateViewBuilder alterView(String name) {
-		return factory.alterView(name);
+	public AlterViewBuilder alterView(String name) {
+		return new AlterViewBuilderImpl(connection, instance, name);
 	}
 
 	@Override
-	public ExecuteBuilder createIndex(String name, String table, String... colums) {
-		return factory.createIndex(name, table, colums);
+	public CreateIndexBuilder createIndex(String name, String table, String... columns) {
+		return new CreateIndexBuilderImpl(connection, instance, name, table, columns);
 	}
 
 	@Override
-	public ExecuteBuilder deleteIndex(String name, String table) {
-		return factory.deleteIndex(name, table);
+	public DeleteIndexBuilder deleteIndex(String name, String table) {
+		return new DeleteIndexBuilderImpl(connection, instance, name, table);
 	}
-	
+
 }

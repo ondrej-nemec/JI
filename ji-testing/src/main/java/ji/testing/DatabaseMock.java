@@ -9,7 +9,7 @@ import ji.database.Database;
 import ji.database.DatabaseConfig;
 import ji.database.support.ConnectionFunction;
 import ji.database.support.DoubleConsumer;
-import ji.querybuilder.QueryBuilder;
+import ji.querybuilder.QueryBuilderFactory;
 import ji.querybuilder.builders.BatchBuilder;
 import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
@@ -52,7 +52,7 @@ public class DatabaseMock extends Database {
 		});
 	}
 	
-	private Builder applyRow(QueryBuilder builder, BatchBuilder batch, String table, Row row) {
+	private Builder applyRow(QueryBuilderFactory builder, BatchBuilder batch, String table, Row row) {
 		if (row.isInsert()) {
 			InsertBuilder insert = builder.insert(table);
 			row.getColumns().forEach((key, value)->{

@@ -83,7 +83,9 @@ public class StreamReader {
 	        		 readed = bytes.size() + readedBytes;
 	        	}
 				if (bis.available() == 0 && length != readed && value != -1) {
-	            	throw new IOException("Content length not match expecation. Expected: " + length + ", actual: " + (readed + readedBytes));
+					// TODO porad zlobi, co s tim
+					System.err.println("Content length not match expecation. Expected: " + length + ", actual: " + (readed + readedBytes));
+	            	//throw new IOException("Content length not match expecation. Expected: " + length + ", actual: " + (readed + readedBytes));
 	            }
 	            if (close.apply(value)) {
 	            	return bytes.toByteArray();

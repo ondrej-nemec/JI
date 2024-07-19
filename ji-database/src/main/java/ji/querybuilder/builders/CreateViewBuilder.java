@@ -1,9 +1,12 @@
 package ji.querybuilder.builders;
 
-import ji.querybuilder.executors.MultipleExecute;
+import java.sql.SQLException;
 
-public interface CreateViewBuilder extends MultipleExecute<CreateViewBuilder>, Select<CreateViewBuilder> {
-	
-	CreateViewBuilder select(String... params);
+import ji.querybuilder.Builder;
+import ji.querybuilder.builders.share.PlainSelect;
+
+public interface CreateViewBuilder extends Builder, PlainSelect<CreateViewBuilder> {
+
+	int execute() throws SQLException;
 
 }

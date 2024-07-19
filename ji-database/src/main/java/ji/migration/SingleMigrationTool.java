@@ -69,7 +69,7 @@ public class SingleMigrationTool {
 			logger.warn("Migration reverted: " + id);
 			builder.delete(migrationTable)
 				.where("id = :id").addParameter(":id", id)
-				.andWhere("module = :module").addParameter(":module", module)
+				.where("module = :module").addParameter(":module", module)
 				.execute();
 		} else {
 			builder

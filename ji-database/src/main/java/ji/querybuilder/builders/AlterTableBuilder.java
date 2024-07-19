@@ -1,19 +1,25 @@
 package ji.querybuilder.builders;
 
+import java.sql.SQLException;
+
+import ji.querybuilder.Builder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.OnAction;
-import ji.querybuilder.executors.MultipleExecute;
 
-public interface AlterTableBuilder extends MultipleExecute<AlterTableBuilder> {
+public interface AlterTableBuilder extends Builder {
 
-	AlterTableBuilder addColumn(String name, ColumnType type, ColumnSetting... settings);
+	default AlterTableBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
+		return addColumn(name, type, null, settings);
+	}
 
 	AlterTableBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings);
 	
-	AlterTableBuilder addForeingKey(String column, String referedTable, String referedColumn);
+	default AlterTableBuilder addForeignKey(String column, String referedTable, String referedColumn) {
+		return addForeignKey(column, referedTable, referedColumn, null, null);
+	}
 	
-	AlterTableBuilder addForeingKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate);
+	AlterTableBuilder addForeignKey(String column, String referedTable, String referedColumn, OnAction onDelete, OnAction onUpdate);
 		
 	AlterTableBuilder deleteColumn(String name);
 	
@@ -22,5 +28,7 @@ public interface AlterTableBuilder extends MultipleExecute<AlterTableBuilder> {
 	AlterTableBuilder modifyColumnType(String name, ColumnType type);
 	
 	AlterTableBuilder renameColumn(String originName, String newName, ColumnType type);
+	
+	void execute() throws SQLException;
 
 }
