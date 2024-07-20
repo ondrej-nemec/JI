@@ -13,15 +13,16 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import org.apache.logging.log4j.Logger;
+
+import ji.querybuilder.DbInstance;
 import ji.querybuilder.QueryBuilder;
-import ji.querybuilder.mysql.MySqlQueryBuilder;
 
 public class MultiModulesMigrationTest {
 	
 	@Test
 	public void testMigrateWithDirs() throws Exception {
 		Connection c = createCon();
-		QueryBuilder queryBuilder = new QueryBuilder(new MySqlQueryBuilder(c));
+		QueryBuilder queryBuilder = new QueryBuilder(mock(DbInstance.class), c);
 		MigrationTool tool = new MigrationTool(
 			Arrays.asList("test/migA", "test/migB"), 
 			queryBuilder,
@@ -33,7 +34,7 @@ public class MultiModulesMigrationTest {
 	@Test
 	public void testMigrateWithClassPath() throws Exception {
 		Connection c = createCon();
-		QueryBuilder queryBuilder = new QueryBuilder(new MySqlQueryBuilder(c));
+		QueryBuilder queryBuilder = new QueryBuilder(mock(DbInstance.class), c);
 		MigrationTool tool = new MigrationTool(
 			Arrays.asList("migrationsA", "migrationsB"), 
 			queryBuilder,

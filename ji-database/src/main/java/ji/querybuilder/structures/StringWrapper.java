@@ -1,13 +1,11 @@
 package ji.querybuilder.structures;
 
-import ji.querybuilder.Builder;
-
 public class StringWrapper implements SubSelect {
 
-	private final String string;
+	//private final String string;
 	
 	public StringWrapper(String string) {
-		this.string = string;
+	//	this.string = string;
 	}
 
 	/*@Override

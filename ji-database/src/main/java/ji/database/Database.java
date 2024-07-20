@@ -152,7 +152,7 @@ public class Database {
 	}
 	
 	private QueryBuilder getQueryBuilder(Connection connection) {
-		return new QueryBuilder(instance.getQueryBuilderFactory(connection));
+		return new QueryBuilder(instance.getBuilderInstance(), connection);
 	}
 	
 	/********* Migration ****************/

@@ -19,7 +19,8 @@ import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.enums.Join;
-import ji.querybuilder.mysql.MySqlFunctions;
+import ji.querybuilder.enums.Where;
+import ji.querybuilder.instances.MySqlQueryBuilder;
 
 //@RunWith(Parameterized.class)
 public class EndToEndTest {
@@ -133,15 +134,15 @@ public class EndToEndTest {
 			});
 		} finally {
 			if (!isExternalServer) {
-    			database.stopServer();
-    		}
+				database.stopServer();
+			}
 		}
 	}
 	
 	//@Test
 	public void testQueryBuilderInstance() throws SQLException {
 		database.applyBuilder((builder) -> {
-			assertTrue(builder.getSqlFunctions() instanceof MySqlFunctions);
+			assertTrue(builder.getSqlFunctions() instanceof MySqlQueryBuilder);
 			return null;
 		});
 	}	
@@ -150,15 +151,15 @@ public class EndToEndTest {
 	public void testExecuteUpdate() throws SQLException {
 		database.applyBuilder((builder) -> {
 			int code = builder.update("update_table")
-				   .set("name=%set")
-				   .where("id > %id")
-				   .andWhere("name=%whereName")
-				   .orWhere("name=%orName")
-				   .addParameter("%set", "setted name")
-				   .addParameter("%id", 1)
-				   .addParameter("%whereName", "set it")
-				   .addParameter("%orName", "this too")
-				   .execute();
+					.set("name=%set")
+					.where("id > %id")
+					.where("name=%whereName")
+					.where("name=%orName", Where.OR)
+					.addParameter("%set", "setted name")
+					.addParameter("%id", 1)
+					.addParameter("%whereName", "set it")
+					.addParameter("%orName", "this too")
+					.execute();
 			assertEquals(code, 2);
 			return null;
 		});
@@ -192,13 +193,13 @@ public class EndToEndTest {
 		
 		database.applyBuilder((builder) -> {
 			int code = builder.delete("delete_table")
-			   .where("id > %id")
-			   .andWhere("name=%whereName")
-			   .orWhere("name=%orWhere")
-			   .addParameter("%id", 1)
-			   .addParameter("%whereName", "delete this")
-			   .addParameter("%orWhere", "this too")
-			   .execute();
+				.where("id > %id")
+				.where("name=%whereName")
+				.where("name=%orWhere", Where.OR)
+				.addParameter("%id", 1)
+				.addParameter("%whereName", "delete this")
+				.addParameter("%orWhere", "this too")
+				.execute();
 			assertEquals(code, 2);
 			return null;
 		});
@@ -229,7 +230,7 @@ public class EndToEndTest {
 			Object code = builder.insert("insert_table")
 				.addValue("id", "1")
 				.addValue("name", "column_name")
-			    .execute();
+				 .execute();
 			assertEquals(code, 1);
 			return null;
 		});
@@ -253,40 +254,40 @@ public class EndToEndTest {
 	public void testExecuteSelect() throws SQLException {
 		database.applyBuilder((builder) -> {
 			SelectBuilder res = builder.select("a.id a_id, b.id b_id, a.name a_name, b.name b_name")
-			   .from("select_table a")
-			   .join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
-			   .where("a.id > %id")
-			   .andWhere("a.name = %a_name")
-			   .orWhere("b.name = %b_name")
-			   .groupBy("a.id")
-			   .having("a.id < %a_id")
-			   .orderBy("a.id ASC")
-			   .limit(2, 0)
-			   .addParameter("%id", 1)
-			   .addParameter("%a_name", "name_a")
-			   .addParameter("%b_name", "name_b")
-			   .addParameter("%a_id", 6);
-		
-    		String expectedSingle = "2";
-    		DatabaseRow expectedRow = new DatabaseRow();
-    		expectedRow.addValue("a_id", "2");
-    		expectedRow.addValue("b_id", "3");
-    		expectedRow.addValue("a_name", "name 2");
-    		expectedRow.addValue("b_name", "name_b");
-    		
-    
-    		DatabaseRow expectedRow2 = new DatabaseRow();
-    		expectedRow2.addValue("a_id", "4");
-    		expectedRow2.addValue("b_id", "5");
-    		expectedRow2.addValue("a_name", "name_a");
-    		expectedRow2.addValue("b_name", "name 5");
-    		
-    		assertEquals(expectedSingle, res.fetchSingle());
-    		assertEquals(expectedRow, res.fetchRow());
-    		assertEquals(
-    				Arrays.asList(expectedRow, expectedRow2),
-    				res.fetchAll()
-    		);
+				.from("select_table a")
+				.join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
+				.where("a.id > %id")
+				.where("a.name = %a_name")
+				.where("b.name = %b_name", Where.OR)
+				.groupBy("a.id")
+				.having("a.id < %a_id")
+				.orderBy("a.id ASC")
+				.limit(2, 0)
+				.addParameter("%id", 1)
+				.addParameter("%a_name", "name_a")
+				.addParameter("%b_name", "name_b")
+				.addParameter("%a_id", 6);
+
+			String expectedSingle = "2";
+			DatabaseRow expectedRow = new DatabaseRow();
+			expectedRow.addValue("a_id", "2");
+			expectedRow.addValue("b_id", "3");
+			expectedRow.addValue("a_name", "name 2");
+			expectedRow.addValue("b_name", "name_b");
+
+
+			DatabaseRow expectedRow2 = new DatabaseRow();
+			expectedRow2.addValue("a_id", "4");
+			expectedRow2.addValue("b_id", "5");
+			expectedRow2.addValue("a_name", "name_a");
+			expectedRow2.addValue("b_name", "name 5");
+			
+			assertEquals(expectedSingle, res.fetchSingle());
+			assertEquals(expectedRow, res.fetchRow());
+			assertEquals(
+					Arrays.asList(expectedRow, expectedRow2),
+					res.fetchAll()
+			);
 			return null;
 		});		
 	}

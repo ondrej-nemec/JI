@@ -1,4 +1,4 @@
-package ji.querybuilder.builders.share;
+package ji.querybuilder.builders.parents;
 
 import java.sql.SQLException;
 import java.util.List;

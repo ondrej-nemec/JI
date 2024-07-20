@@ -3,7 +3,7 @@ package ji.querybuilder.builders;
 import java.sql.SQLException;
 
 import ji.querybuilder.Builder;
-import ji.querybuilder.builders.share.PlainSelect;
+import ji.querybuilder.builders.parents.PlainSelect;
 
 public interface AlterViewBuilder extends Builder, PlainSelect<AlterViewBuilder> {
 	

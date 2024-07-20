@@ -9,8 +9,8 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
 import ji.common.exceptions.NotImplementedYet;
-import ji.querybuilder.QueryBuilderFactory;
-import ji.querybuilder.postgresql.PostgreSqlQueryBuilder;
+import ji.querybuilder.DbInstance;
+import ji.querybuilder.instances.PostgreSqlQueryBuilder;
 
 public class PosgreSql implements DatabaseInstance {
 	
@@ -68,8 +68,8 @@ public class PosgreSql implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
-		return new PostgreSqlQueryBuilder(connection);
+	public DbInstance getBuilderInstance() {
+		return new PostgreSqlQueryBuilder();
 	}
 
 }

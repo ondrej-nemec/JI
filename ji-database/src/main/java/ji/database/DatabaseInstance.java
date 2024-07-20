@@ -1,9 +1,8 @@
 package ji.database;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
-import ji.querybuilder.QueryBuilderFactory;
+import ji.querybuilder.DbInstance;
 
 public interface DatabaseInstance {
 	
@@ -13,6 +12,6 @@ public interface DatabaseInstance {
 	
 	void createDb() throws SQLException;
 	
-	QueryBuilderFactory getQueryBuilderFactory(Connection connection);
+	DbInstance getBuilderInstance();
 
 }

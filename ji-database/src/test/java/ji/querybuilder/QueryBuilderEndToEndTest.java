@@ -35,14 +35,15 @@ import ji.common.structures.ThrowingBiConsumer;
 import ji.database.support.DatabaseRow;
 import ji.files.text.Text;
 import ji.querybuilder.builders.SelectBuilder;
-import ji.querybuilder.derby.DerbyQueryBuilder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.Join;
 import ji.querybuilder.enums.OnAction;
-import ji.querybuilder.mysql.MySqlQueryBuilder;
-import ji.querybuilder.postgresql.PostgreSqlQueryBuilder;
-import ji.querybuilder.sqlserver.SqlServerQueryBuilder;
+import ji.querybuilder.enums.Where;
+import ji.querybuilder.instances.DerbyQueryBuilder;
+import ji.querybuilder.instances.MySqlQueryBuilder;
+import ji.querybuilder.instances.PostgreSqlQueryBuilder;
+import ji.querybuilder.instances.SqlServerQueryBuilder;
 
 @RunWith(Parameterized.class)
 public class QueryBuilderEndToEndTest {
@@ -60,12 +61,12 @@ public class QueryBuilderEndToEndTest {
 	private final String type;
 	
 	public QueryBuilderEndToEndTest(
-			Function<Connection, QueryBuilderFactory> createBuilder,
+			DbInstance instance,
 			Supplier<Connection> createConnection,
 			Consumer<Void> startDbAndCreateSchema,
 			Consumer<Void> stopDb,
 			String type) {
-		this.createBuilder = (c)->new QueryBuilder(createBuilder.apply(c));
+		this.createBuilder = (c)->new QueryBuilder(instance, c);
 		this.createConnection = createConnection;
 		this.startDbAndCreateSchema = startDbAndCreateSchema;
 		this.stopDb = stopDb;
@@ -86,7 +87,7 @@ public class QueryBuilderEndToEndTest {
 		List<Object[]> result = new LinkedList<>();
 		//*
 		result.add(createParams(
-				(conn) -> {return new MySqlQueryBuilder(conn);},
+				new MySqlQueryBuilder(),
 				() -> {
 					try {
 						return DriverManager.getConnection("jdbc:mysql://localhost/" + DB_NAME, props);
@@ -116,7 +117,7 @@ public class QueryBuilderEndToEndTest {
 		//*
 	  	String derbyPath = "C:\\software\\DerbyDB\\bin";
 		result.add(createParams(
-				(conn) -> {return new DerbyQueryBuilder(conn);},
+				new DerbyQueryBuilder(),
 				() -> {
 					try {
 						return DriverManager.getConnection("jdbc:derby:" +derbyPath + "/" + DB_NAME, props);
@@ -141,7 +142,7 @@ public class QueryBuilderEndToEndTest {
 		//*/
 		//*
 		result.add(createParams(
-				(conn) -> {return new PostgreSqlQueryBuilder(conn);},
+				new PostgreSqlQueryBuilder(),
 				() -> {
 					try {
 						props.setProperty("user", "postgres");
@@ -173,7 +174,7 @@ public class QueryBuilderEndToEndTest {
 		//*/
 		//*
 		result.add(createParams(
-                (conn) -> {return new SqlServerQueryBuilder(conn);},
+                new SqlServerQueryBuilder(),
                 () -> {
                     try {
                         return DriverManager.getConnection("jdbc:sqlserver://localhost;Database=" + DB_NAME + ";integratedSecurity=true", props);
@@ -209,12 +210,12 @@ public class QueryBuilderEndToEndTest {
 	
 	
 	private static Object[] createParams(
-			Function<Connection, QueryBuilderFactory> createBuilder,
+			DbInstance instance,
 			Supplier<Connection> createConnection,
 			Consumer<Void> startDbAndCreateSchema,
 			Consumer<Void> stopDb,
 			String type) {
-		return new Object[] {createBuilder, createConnection, startDbAndCreateSchema, stopDb, type};
+		return new Object[] {instance, createConnection, startDbAndCreateSchema, stopDb, type};
 	}
 	
 	/***************************************/
@@ -303,8 +304,8 @@ public class QueryBuilderEndToEndTest {
 			builder.update("update_table")
     			.set("name=%set")
     			.where("id > %id")
-    			.andWhere("name=%whereName")
-    			.orWhere("name=%orName")
+    			.where("name=%whereName")
+    			.where("name=%orName", Where.OR)
     			.addParameter("%set", "setted name")
     			.addParameter("%id", 1)
     			.addParameter("%whereName", "set it")
@@ -338,8 +339,8 @@ public class QueryBuilderEndToEndTest {
 			int code = builder
 				.delete("delete_table")
 				.where("id > %id")
-				.andWhere("name=%whereName")
-				.orWhere("name=%orWhere")
+				.where("name=%whereName")
+				.where("name=%orWhere", Where.OR)
 				.addParameter("%id", 1)
 				.addParameter("%whereName", "delete this")
 				.addParameter("%orWhere", "this too")
@@ -393,8 +394,8 @@ public class QueryBuilderEndToEndTest {
 					.from("select_table a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
 					.where("a.id > %id")
-					.andWhere("a.name = %a_name")
-					.orWhere("b.name = %b_name")
+					.where("a.name = %a_name")
+					.where("b.name = %b_name", Where.OR)
 					.orderBy("a.id ASC")
 					.limit(2, 0)
 					.addParameter("%id", 1)
@@ -429,8 +430,8 @@ public class QueryBuilderEndToEndTest {
 					.from("select_table a")
 					.join("joined_table b", Join.INNER_JOIN, "a.id = b.a_id")
 					.where("a.id > %id")
-					.andWhere("a.name = %a_name")
-					.orWhere("b.name = %b_name")
+					.where("a.name = %a_name")
+					.where("b.name = %b_name", Where.OR)
 					.groupBy("a.id, b.id, a.name, b.name")
 					.having("a.id < %a_id")
 					.orderBy("a.id ASC, b.id ASC")
@@ -508,7 +509,7 @@ public class QueryBuilderEndToEndTest {
 				.addColumn("c1", ColumnType.bool(), true, ColumnSetting.NOT_NULL)
 				.addColumn("c2", ColumnType.integer())
 				.addColumn("c3", ColumnType.string(10), ColumnSetting.UNIQUE)
-				.addForeingKey("c2", "SecondTable", "second_id", OnAction.NO_ACTION, OnAction.NO_ACTION)
+				.addForeignKey("c2", "SecondTable", "second_id", OnAction.NO_ACTION, OnAction.NO_ACTION)
 				.execute();
 			
 			conn.createStatement().executeQuery("select c1, c2, c3 from create_table");
@@ -533,7 +534,7 @@ public class QueryBuilderEndToEndTest {
     			fail("Column number exists");
     		} catch (SQLException ignored) {}
         		
-    		builder.alterTable("alter_table").addForeingKey("fKey", "table_fk", "id").execute();
+    		builder.alterTable("alter_table").addForeignKey("fKey", "table_fk", "id").execute();
     		
     		builder.alterTable("alter_table").deleteForeingKey("fKey").execute();
 		}, Arrays.asList("alter_table", "table_fk"));
@@ -546,7 +547,7 @@ public class QueryBuilderEndToEndTest {
 			(conn, builder)->{
     			builder
     				.createView("test_view")
-    				.select("a.id a_id", "b.id b_id, a.name")
+    				.select("a.id a_id, b.id b_id, a.name")
     				.from("table1 a")
     				.join("table2 b", Join.INNER_JOIN, "a.id = b.id")
     				.where("a.id != :id1")
@@ -577,7 +578,7 @@ public class QueryBuilderEndToEndTest {
 	public void testAlterView() throws Exception {
 		test("alterView", (conn, builder)->{
 		    builder.alterView("test_view")
-    			.select("a.id a_id", "b.id b_id, a.name")
+    			.select("a.id a_id, b.id b_id, a.name")
     			.from("table1 a")
     			.join("table2 b", Join.INNER_JOIN, "a.id = b.id")
     			.where("a.id != :id1")

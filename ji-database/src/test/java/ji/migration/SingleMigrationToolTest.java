@@ -34,8 +34,9 @@ public class SingleMigrationToolTest {
 		when(insert.addValue(any(), any())).thenReturn(insert);
 		
 		DeleteBuilder delete = mock(DeleteBuilder.class);
-		when(delete.where(any())).thenReturn(delete);
-		when(delete.andWhere(any())).thenReturn(delete);
+		when(delete.where(any(String.class)))
+			.thenReturn(delete)
+			.thenReturn(delete);
 		when(delete.addParameter(any(), any())).thenReturn(delete);
 		
 		QueryBuilder builder = mock(QueryBuilder.class);
@@ -52,8 +53,7 @@ public class SingleMigrationToolTest {
     		verify(insert, times(4)).addValue(any(), any());
     		verify(insert, times(1)).execute();
 		} else {
-    		verify(delete, times(1)).where(any());
-    		verify(delete, times(1)).andWhere(any());
+    		verify(delete, times(2)).where(any(String.class));
     		verify(delete, times(2)).addParameter(any(), any());
     		verify(delete, times(1)).execute();
 		}

@@ -1,4 +1,4 @@
-package ji.querybuilder.builders.share;
+package ji.querybuilder.builders.parents;
 
 public interface Parametrized<P> {
 

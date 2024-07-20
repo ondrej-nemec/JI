@@ -5,9 +5,9 @@ import java.util.function.Function;
 
 import ji.querybuilder.Builder;
 import ji.querybuilder.Functions;
-import ji.querybuilder.builders.share.Joins;
-import ji.querybuilder.builders.share.Parametrized;
-import ji.querybuilder.builders.share.Wheres;
+import ji.querybuilder.builders.parents.Joins;
+import ji.querybuilder.builders.parents.Parametrized;
+import ji.querybuilder.builders.parents.Wheres;
 import ji.querybuilder.structures.SubSelect;
 
 public interface UpdateBuilder extends Builder, Joins<UpdateBuilder>, Wheres<UpdateBuilder>, Parametrized<UpdateBuilder> {

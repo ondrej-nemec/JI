@@ -73,7 +73,7 @@ public class DatabaseGeneralQueryTesting {
 									+ " like :" + filter + "LikeValue"
 									+ " OR " + filter + " = :" + filter + "Value";
 						}
-						select.andWhere(where)
+						select.where(where)
 						.addParameter(":" + filter + "LikeValue", value + "%")
 						.addParameter(":" + filter + "Value", value);
 					});

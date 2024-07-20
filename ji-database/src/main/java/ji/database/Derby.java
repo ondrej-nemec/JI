@@ -7,8 +7,8 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
 import ji.common.functions.Terminal;
-import ji.querybuilder.QueryBuilderFactory;
-import ji.querybuilder.derby.DerbyQueryBuilder;
+import ji.querybuilder.DbInstance;
+import ji.querybuilder.instances.DerbyQueryBuilder;
 
 public class Derby implements DatabaseInstance {
 
@@ -62,8 +62,8 @@ public class Derby implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
-		return new DerbyQueryBuilder(connection);
+	public DbInstance getBuilderInstance() {
+		return new DerbyQueryBuilder();
 	}
 
 }

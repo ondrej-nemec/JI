@@ -1,14 +1,13 @@
 package ji.database;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
 import ji.common.exceptions.NotImplementedYet;
-import ji.querybuilder.QueryBuilderFactory;
-import ji.querybuilder.mysql.MySqlQueryBuilder;
+import ji.querybuilder.DbInstance;
+import ji.querybuilder.instances.MySqlQueryBuilder;
 
 public class MySql implements DatabaseInstance {
 	
@@ -62,8 +61,8 @@ public class MySql implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
-		return new MySqlQueryBuilder(connection);
+	public DbInstance getBuilderInstance() {
+		return new MySqlQueryBuilder();
 	}
 
 }

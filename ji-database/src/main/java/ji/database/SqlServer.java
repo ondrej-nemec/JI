@@ -1,14 +1,13 @@
 package ji.database;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.logging.log4j.Logger;
 import ji.common.exceptions.NotImplementedYet;
-import ji.querybuilder.QueryBuilderFactory;
-import ji.querybuilder.sqlserver.SqlServerQueryBuilder;
+import ji.querybuilder.DbInstance;
+import ji.querybuilder.instances.SqlServerQueryBuilder;
 
 public class SqlServer implements DatabaseInstance {
 	
@@ -65,8 +64,8 @@ public class SqlServer implements DatabaseInstance {
 	}
 
 	@Override
-	public QueryBuilderFactory getQueryBuilderFactory(Connection connection) {
-		return new SqlServerQueryBuilder(connection);
+	public DbInstance getBuilderInstance() {
+		return new SqlServerQueryBuilder();
 	}
 
 }
