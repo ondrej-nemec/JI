@@ -9,6 +9,7 @@ import java.util.function.Function;
 import ji.common.structures.Tuple2;
 import ji.querybuilder.Builder;
 import ji.querybuilder.DbInstance;
+import ji.querybuilder.Escape;
 import ji.querybuilder.Functions;
 import ji.querybuilder.enums.Join;
 import ji.querybuilder.enums.Where;

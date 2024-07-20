@@ -12,7 +12,7 @@ import java.util.function.Function;
 import ji.database.wrappers.StatementWrapper;
 import ji.querybuilder.Builder;
 import ji.querybuilder.DbInstance;
-import ji.querybuilder.builder_impl.share.Escape;
+import ji.querybuilder.Escape;
 import ji.querybuilder.builder_impl.share.ParametrizedSql;
 import ji.querybuilder.builders.BatchBuilder;
 

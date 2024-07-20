@@ -13,7 +13,7 @@ import java.util.Map;
 import ji.common.structures.DictionaryValue;
 import ji.common.structures.Tuple2;
 import ji.querybuilder.DbInstance;
-import ji.querybuilder.builder_impl.share.Escape;
+import ji.querybuilder.Escape;
 import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.parents.PlainSelect;
 import ji.querybuilder.structures.SubSelect;

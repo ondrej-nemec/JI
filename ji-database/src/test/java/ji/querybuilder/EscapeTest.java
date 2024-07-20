@@ -8,7 +8,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ji.querybuilder.builder_impl.share.Escape;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

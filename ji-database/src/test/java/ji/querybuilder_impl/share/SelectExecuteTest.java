@@ -1,4 +1,4 @@
-package ji.querybuilder.executors;
+package ji.querybuilder_impl.share;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;

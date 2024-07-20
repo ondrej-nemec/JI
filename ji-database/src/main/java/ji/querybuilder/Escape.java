@@ -1,4 +1,4 @@
-package ji.querybuilder.builder_impl.share;
+package ji.querybuilder;
 
 import java.time.temporal.Temporal;
 
