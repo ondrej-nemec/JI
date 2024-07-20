@@ -45,6 +45,8 @@ public interface QueryBuilderFactory {
 
 	UpdateBuilder update(String table);
 
+	UpdateBuilder update(String table, String alias);
+
 	SelectBuilder select(Function<Functions, String> select);
 
 	SelectBuilder select(String... select);

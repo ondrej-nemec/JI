@@ -3,7 +3,6 @@ package ji.querybuilder.executors;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -15,11 +14,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
-import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ji.querybuilder.builder_impl.share.SelectExecute;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -29,12 +28,7 @@ public class SelectExecuteTest {
 	@Test
 	@Parameters(method="dataParseValueWorksWithDateTime")
 	public void testParseValueWorksWithDateTime(Date datetime, String datetimeString, TemporalAccessor expected) throws SQLException {
-		SelectExecute<Void> exec = new SelectExecute<Void>() {
-			@Override public Connection getConnection() { return null; }
-			@Override public Void _addNotEscapedParameter(String name, String value) { return null; }
-			@Override public String getSql() { return null; }
-			@Override public Map<String, String> getParameters() { return null; }
-		};
+		SelectExecute exec = new SelectExecute() {};
 		ResultSet rs = mock(ResultSet.class);
 		when(rs.getObject(anyInt())).thenReturn(datetime);
 		when(rs.getString(anyInt())).thenReturn(datetimeString);

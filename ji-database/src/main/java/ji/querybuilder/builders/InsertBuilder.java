@@ -1,20 +1,17 @@
 package ji.querybuilder.builders;
 
 import java.sql.SQLException;
-import java.util.function.Function;
 
 import ji.common.structures.DictionaryValue;
 import ji.querybuilder.Builder;
-import ji.querybuilder.Functions;
 import ji.querybuilder.builders.share.PlainSelect;
+import ji.querybuilder.structures.SubSelect;
 
 public interface InsertBuilder extends Builder {
 	
-	default InsertBuilder addValue(String columnName, Object value) {
-		return addValue(columnName, f->value);
-	}
+	InsertBuilder with(String name, SubSelect select);
 	
-	InsertBuilder addValue(String columnName, Function<Functions, Object> value);
+	InsertBuilder addValue(String columnName, Object value);
 	
 	InsertBuilder fromSelect(PlainSelect<?> select);
 	

@@ -47,8 +47,7 @@ public interface SelectExecute {
 		return row;
 	}
 	
-	/** INTERNAL 
-	 * @throws SQLException */
+	/** INTERNAL */
 	default Object _parseValue(ResultSet rs, int index) throws SQLException {
 		Object value = rs.getObject(index);
 		if (value instanceof Date) {

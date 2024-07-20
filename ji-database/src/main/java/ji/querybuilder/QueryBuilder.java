@@ -102,7 +102,12 @@ public class QueryBuilder implements QueryBuilderFactory {
 
 	@Override
 	public UpdateBuilder update(String table) {
-		return new UpdateBuilderImpl(connection, instance, table);
+		return update(table, null);
+	}
+
+	@Override
+	public UpdateBuilder update(String table, String alias) {
+		return new UpdateBuilderImpl(connection, instance, table, alias);
 	}
 
 	@Override

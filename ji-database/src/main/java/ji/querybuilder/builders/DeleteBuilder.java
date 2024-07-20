@@ -1,27 +1,15 @@
 package ji.querybuilder.builders;
 
 import java.sql.SQLException;
-import java.util.function.Function;
 
 import ji.querybuilder.Builder;
-import ji.querybuilder.Functions;
-import ji.querybuilder.enums.Where;
+import ji.querybuilder.builders.share.Joins;
+import ji.querybuilder.builders.share.Wheres;
+import ji.querybuilder.structures.SubSelect;
 
-public interface DeleteBuilder extends Builder {
+public interface DeleteBuilder extends Builder, Joins<DeleteBuilder>, Wheres<DeleteBuilder> {
 
-	default DeleteBuilder where(String where) {
-		return where(n->where);
-	}
-
-	default DeleteBuilder where(String where, Where join) {
-		return where(f->where, join);
-	}
-	
-	default DeleteBuilder where(Function<Functions, String> where) {
-		return where(where, Where.AND);
-	}
-	
-	DeleteBuilder where(Function<Functions, String> where, Where join);
+	DeleteBuilder with(String name, SubSelect select);
 	
 	DeleteBuilder addParameter(String name, Object value);
 	
