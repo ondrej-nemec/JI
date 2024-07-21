@@ -26,6 +26,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 	private final String table;
 	private final Map<String, String> values;
 	private PlainSelect<?> select;
+	private List<String> columns;
 	
 	private final List<Tuple2<String, SubSelect>> withs;
 	
@@ -52,6 +53,10 @@ public class InsertBuilderImpl implements InsertBuilder {
 	public PlainSelect<?> getSelect() {
 		return select;
 	}
+	
+	public List<String> getColumns() {
+		return columns;
+	}
 
 	@Override
 	public InsertBuilder with(String name, SubSelect select) {
@@ -74,10 +79,11 @@ public class InsertBuilderImpl implements InsertBuilder {
 	}
 
 	@Override
-	public InsertBuilder fromSelect(PlainSelect<?> select) {
+	public InsertBuilder fromSelect(List<String> columns, PlainSelect<?> select) {
 		if (!this.values.isEmpty()) {
 			throw new RuntimeException("Cannot use fromSelect if value is set");
 		}
+		this.columns = columns;
 		this.select = select;
 		return this;
 	}

@@ -9,11 +9,11 @@ import ji.database.Database;
 import ji.database.DatabaseConfig;
 import ji.database.support.ConnectionFunction;
 import ji.database.support.DoubleConsumer;
+import ji.querybuilder.Builder;
 import ji.querybuilder.QueryBuilderFactory;
 import ji.querybuilder.builders.BatchBuilder;
 import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
-import ji.querybuilder.buildersparent.Builder;
 import ji.testing.entities.Row;
 import ji.testing.entities.Table;
 
@@ -85,6 +85,5 @@ public class DatabaseMock extends Database {
 	@Override
 	protected void finalize() throws Throwable {
 		pool.close();
-		super.finalize();
 	}
 }
