@@ -18,6 +18,7 @@ import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.MultipleSelectBuilder;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
+import ji.querybuilder.builders.WithBuilder;
 
 public interface QueryBuilderFactory {
 
@@ -66,5 +67,9 @@ public interface QueryBuilderFactory {
 	CreateIndexBuilder createIndex(String name, String table, String... columns);
 
 	DeleteIndexBuilder deleteIndex(String name, String table);
+	
+	WithBuilder with(String alias, SelectBuilder builder);
+	
+	WithBuilder with(String alias, MultipleSelectBuilder builder);
 
 }

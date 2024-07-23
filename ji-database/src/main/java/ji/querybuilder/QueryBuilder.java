@@ -32,6 +32,7 @@ import ji.querybuilder.builders.InsertBuilder;
 import ji.querybuilder.builders.MultipleSelectBuilder;
 import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
+import ji.querybuilder.builders.WithBuilder;
 
 public class QueryBuilder implements QueryBuilderFactory {
 
@@ -158,6 +159,16 @@ public class QueryBuilder implements QueryBuilderFactory {
 	@Override
 	public DeleteIndexBuilder deleteIndex(String name, String table) {
 		return new DeleteIndexBuilderImpl(connection, instance, name, table);
+	}
+
+	@Override
+	public WithBuilder with(String alias, SelectBuilder builder) {
+		return new WithBuilder(instance, connection, alias, builder);
+	}
+
+	@Override
+	public WithBuilder with(String alias, MultipleSelectBuilder builder) {
+		return new WithBuilder(instance, connection, alias, builder);
 	}
 
 }

@@ -35,6 +35,12 @@ public class UpdateBuilderImpl implements UpdateBuilder, SingleExecute, Parametr
 	private final List<Tuple2<String, SubSelect>> withs;
 	
 	public UpdateBuilderImpl(Connection connection, DbInstance instance, String table, String alias) {
+		this(connection, instance, table, alias, new LinkedList<>());
+	}
+	
+	public UpdateBuilderImpl(
+		Connection connection, DbInstance instance, String table, String alias,
+		List<Tuple2<String, SubSelect>> withs) {
 		this.connection = connection;
 		this.instance = instance;
 		this.table = table;
@@ -43,7 +49,7 @@ public class UpdateBuilderImpl implements UpdateBuilder, SingleExecute, Parametr
 		this.sets = new LinkedList<>();
 		this.wheres = new LinkedList<>();
 		this.joins = new LinkedList<>();
-		this.withs = new LinkedList<>();
+		this.withs = withs;
 	}
 	
 	public List<Tuple2<String, SubSelect>> getWiths() {
@@ -95,12 +101,6 @@ public class UpdateBuilderImpl implements UpdateBuilder, SingleExecute, Parametr
 	@Override
 	public UpdateBuilder set(Function<Functions, String> update) {
 		this.sets.add(update.apply(instance));
-		return this;
-	}
-
-	@Override
-	public UpdateBuilder with(String name, SubSelect select) {
-		this.withs.add(new Tuple2<>(name, select));
 		return this;
 	}
 

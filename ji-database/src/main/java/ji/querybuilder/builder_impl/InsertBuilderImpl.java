@@ -30,12 +30,19 @@ public class InsertBuilderImpl implements InsertBuilder {
 	
 	private final List<Tuple2<String, SubSelect>> withs;
 	
+
 	public InsertBuilderImpl(Connection connection, DbInstance instance, String table) {
+		this(connection, instance, table, new LinkedList<>());
+	}
+	
+	public InsertBuilderImpl(
+			Connection connection, DbInstance instance, String table,
+			List<Tuple2<String, SubSelect>> withs) {
 		this.connection = connection;
 		this.instance = instance;
 		this.table = table;
 		this.values = new HashMap<>();
-		this.withs = new LinkedList<>();
+		this.withs = withs;
 	}
 	
 	public List<Tuple2<String, SubSelect>> getWiths() {
@@ -56,12 +63,6 @@ public class InsertBuilderImpl implements InsertBuilder {
 	
 	public List<String> getColumns() {
 		return columns;
-	}
-
-	@Override
-	public InsertBuilder with(String name, SubSelect select) {
-		this.withs.add(new Tuple2<>(name, select));
-		return this;
 	}
 
 	@Override

@@ -33,13 +33,19 @@ public class DeleteBuilderImpl implements DeleteBuilder, SingleExecute, Parametr
 	private final List<Tuple2<String, SubSelect>> withs;
 
 	public DeleteBuilderImpl(Connection connection, DbInstance instance, String table) {
+		this(connection, instance, table, new LinkedList<>());
+	}
+	
+	public DeleteBuilderImpl(
+			Connection connection, DbInstance instance, String table,
+			List<Tuple2<String, SubSelect>> withs) {
 		this.connection = connection;
 		this.instance = instance;
 		this.table = table;
 		this.parameters = new HashMap<>();
 		this.wheres = new LinkedList<>();
 		this.joins = new LinkedList<>();
-		this.withs = new LinkedList<>();
+		this.withs = withs;
 	}
 	
 	public List<Tuple2<String, SubSelect>> getWiths() {
@@ -83,12 +89,6 @@ public class DeleteBuilderImpl implements DeleteBuilder, SingleExecute, Parametr
 	@Override
 	public DeleteBuilder _join(SubSelect builder, String alias, Join join, Function<Functions, String> on) {
 		this.joins.add(new Joining(builder, alias, join, on.apply(instance)));
-		return this;
-	}
-
-	@Override
-	public DeleteBuilder with(String name, SubSelect select) {
-		this.withs.add(new Tuple2<>(name, select));
 		return this;
 	}
 

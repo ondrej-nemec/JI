@@ -1,7 +1,6 @@
 package ji.querybuilder.instances;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 import java.sql.Connection;
@@ -324,8 +323,9 @@ public abstract class AbstractInstanceTest {
 			},
 			new Object[] {
 				f(
-					b->b.insert("SomeTable")
+					b->b
 					.with("cte", b.select("'A' as A"))
+					.insert("SomeTable")
 					.fromSelect(Arrays.asList("Col1", "Col2"), b.select("'B'"))
 				),
 				getQueryInsertFromSelect()
@@ -338,32 +338,272 @@ public abstract class AbstractInstanceTest {
 	protected abstract String getQueryInsertFromSelect();
 
 	@Test
-	public void testQueryUpdate() {
-		fail("TODO");
+	@Parameters(method="dataQueryUpdate")
+	public void testQueryUpdate(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
+		test(alter, getSql, createSql);
 	}
+	
+	public Object[] dataQueryUpdate() {
+		return new Object[] {
+			new Object[] {
+				f(
+					b->b.update("SomeTable")
+					.set("Column1 = :value").addParameter(":value", 123)
+					.set(f->"Column2 = " + f.avg("Column3"))
+					.where("1=2")
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+				),
+				getQueryUpdateBasic(false),
+				getQueryUpdateBasic(true)
+			},
+			new Object[] {
+				f(
+					b->b.update("SomeTable", "a")
+					.set("Column1 = :value").addParameter(":value", 123)
+					.set(f->"Column2 = " + f.avg("Column3"))
+					
+					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
+					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					
+					.where("1=2")
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+				),
+				getQueryUpdateJoins(false),
+				getQueryUpdateJoins(true)
+			},
+			new Object[] {
+				f(
+					b->b
+					.with("withName", b.select("1=1"))
+					.update("SomeTable")
+					.set("Column1 = :value").addParameter(":value", 123)
+					.set(f->"Column2 = " + f.avg("Column3"))
+					.where("1=2")
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+				),
+				getQueryUpdateWith(false),
+				getQueryUpdateWith(true)
+			}
+		};
+	}
+	
+	protected abstract String getQueryUpdateBasic(boolean create);
+
+	protected abstract String getQueryUpdateJoins(boolean create);
+	
+	protected abstract String getQueryUpdateWith(boolean create);
 
 	@Test
-	public void testQueryDelete() {
-		fail("TODO");
+	@Parameters(method="dataQueryDelete")
+	public void testQueryDelete(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
+		test(alter, getSql, createSql);
+	}
+	
+	public Object[] dataQueryDelete() {
+		return new Object[] {
+			new Object[] {
+				f(
+					b->b.delete("SomeTable")
+					.where("1= :id").addParameter(":id", 123)
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+				),
+				getQueryDeleteBasic(false),
+				getQueryDeleteBasic(true)
+			},
+			new Object[] {
+				f(
+					b->b.delete("SomeTable")
+					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
+					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					
+					.where("1=2")
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+				),
+				getQueryDeleteJoins(false),
+				getQueryDeleteJoins(true)
+			},
+			new Object[] {
+				f(
+					b->b
+					.with("withName", b.select("1=1"))
+					.delete("SomeTable")
+					.where("1=2")
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+				),
+				getQueryDeleteWith(false),
+				getQueryDeleteWith(true)
+			}
+		};
 	}
 
+	protected abstract Object getQueryDeleteBasic(boolean create);
+
+	protected abstract Object getQueryDeleteJoins(boolean create);
+
+	protected abstract Object getQueryDeleteWith(boolean create);
+
 	@Test
-	public void testQuerySelect() {
-		fail("TODO");
+	@Parameters(method="dataQuerySelect")
+	public void testQuerySelect(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
+		test(alter, getSql, createSql);
 	}
+	
+	public Object[] dataQuerySelect() {
+		return new Object[] {
+			new Object[] {
+				f(b->b
+					.select("A")
+					.from("SomeTable")
+				),
+				getQuerySelect_fromString(false),
+				getQuerySelect_fromString(true)
+			},
+			new Object[] {
+				f(b->b
+					.select("A")
+					.from("SomeTable", "a")
+				),
+				getQuerySelect_fromStringAlias(false),
+				getQuerySelect_fromStringAlias(true)
+			},
+			new Object[] {
+				f(b->b
+					.select("A")
+					.from(
+						b.select("1 AS A"),
+						"a"
+					)
+				),
+				getQuerySelect_fromSelect(false),
+				getQuerySelect_fromSelect(true)
+			},
+			new Object[] {
+				f(b->b
+					.select("A")
+					.from(
+						b.multiSelect(b.select("1 AS A"))
+						.union(b.select("2 AS A")),
+						"a"
+					)
+				),
+				getQuerySelect_fromMultiSelect(false),
+				getQuerySelect_fromMultiSelect(true)
+			},
+			new Object[] {
+				f(b->b
+					.with("b", b.select("2=2"))
+					.select("A")
+					.from(
+						b.multiSelect(b.select("1 AS A"))
+						.union(b.select("2 AS A")),
+						"a"
+					)
+				),
+				getQuerySelect_with(false),
+				getQuerySelect_with(true)
+			},
+			new Object[] {
+				f(b->b
+					.select("A")
+					.select(f->f.count("B") + " as B")
+					
+					.from("SomeTable")
+					
+					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
+					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					
+					.where("1=2")
+					.where("2=3", Where.OR)
+					.where(f->f.lower("x") + " = y")
+					.where(f->f.upper("z") + " = u", Where.AND)
+					
+					.having(":a = :b")
+					.having(f->f.sum(":x") + " = 5")
+					
+					.groupBy("Column")
+					.groupBy("NextColumn")
+					
+					.orderBy("Column1")
+					.orderBy(f->f.avg("Column2"))
+					.limit(10, 15)
+					.addParameter(":x", "XXXX")
+					.addParameter(":a", "AAAA")
+					.addParameter(":b", "BBBBB")
+				),
+				getQuerySelect(false),
+				getQuerySelect(true)
+			}
+		};
+	}
+
+	protected abstract Object getQuerySelect_fromString(boolean create);
+
+	protected abstract Object getQuerySelect_fromStringAlias(boolean create);
+
+	protected abstract Object getQuerySelect_fromSelect(boolean create);
+	
+	protected abstract Object getQuerySelect_with(boolean create);
+
+	protected abstract Object getQuerySelect_fromMultiSelect(boolean create);
+
+	protected abstract Object getQuerySelect(boolean create);
 
 	@Test
 	public void testQueryMultipleSelect() {
-		fail("TODO");
+		test(f(
+			b->b
+			.multiSelect(b.select("1=1"))
+			.union(b.select("1=1"))
+			.intersect(b.select("1=1"))
+			.unionAll(b.select("1=1"))
+			.except(b.select("1=1"))
+			.orderBy("ColA, :id")
+			.orderBy(f->f.count("ColB"))
+			.addParameter(":id", 321)
+		), getQueryMultipleSelect(false), getQueryMultipleSelect(true));
 	}
 	
+	protected abstract String getQueryMultipleSelect(boolean create);
+
 	/********* OTHER **************/
 
 	@Test
 	public void testBatch() {
-		fail("TODO");
+		test(f(
+			b->b
+			.batch()
+			.addBatch(b.select("1=1"))
+			.addBatch(b.select("a=:id"))
+			.addParameter(":id", 123)
+		), getBatch(false), getBatch(true));
 	}
 	
+	protected abstract String getBatch(boolean create);
+
 	/*********************/
 	
 	private void test(Function<QueryBuilder, Builder> create, String expected) {

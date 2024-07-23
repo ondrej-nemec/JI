@@ -25,10 +25,16 @@ public class SelectBuilderImpl extends SelectImpl<SelectBuilderImpl> implements 
 	private final List<Tuple2<String, SubSelect>> withs;
 	
 	public SelectBuilderImpl(Connection connection, DbInstance instance, String[] select) {
+		this(connection, instance, select, new LinkedList<>());
+	}
+	
+	public SelectBuilderImpl(
+			Connection connection, DbInstance instance, String[] select,
+			List<Tuple2<String, SubSelect>> withs) {
 		super(instance);
 		this.connection = connection;
 		this.instance = instance;
-		this.withs = new LinkedList<>();
+		this.withs = withs;
 		for (String s : select) {
 			select(s);
 		}
@@ -41,12 +47,6 @@ public class SelectBuilderImpl extends SelectImpl<SelectBuilderImpl> implements 
 	@Override
 	public String getSql() {
 		return instance.createSql(this);
-	}
-	
-	@Override
-	public SelectBuilder with(String name, SubSelect select) {
-		this.withs.add(new Tuple2<>(name, select));
-		return this;
 	}
 	
 	@Override

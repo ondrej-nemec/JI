@@ -8,6 +8,4 @@ import ji.querybuilder.structures.SubSelect;
 
 public interface SelectBuilder extends Builder, SubSelect, PlainSelect<SelectBuilder>, Fetch {
 
-	SelectBuilder with(String name, SubSelect select);
-	
 }
