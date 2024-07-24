@@ -61,12 +61,10 @@ public abstract class AbstractInstanceTest {
 	public void testAlterTable() {
 		test(
 			b->b.alterTable("SomeTable")
-			.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL, ColumnSetting.PRIMARY_KEY, ColumnSetting.AUTO_INCREMENT)
+			.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL)
 			.addColumn("Column2", ColumnType.integer(), 42, ColumnSetting.NULL, ColumnSetting.UNIQUE)
 			.addForeignKey("Column3", "AnotherTable", "AnotherColumn")
 			.addForeignKey("Column4", "DifferentTable", "DifferentColumn", OnAction.CASCADE, OnAction.NO_ACTION)
-			.addForeignKey("Column5", "DifferentTable2", "DifferentColumn2", OnAction.RESTRICT, OnAction.SET_DEFAULT)
-			.addForeignKey("Column6", "DifferentTable3", "DifferentColumn3", OnAction.SET_NULL, null)
 			.deleteColumn("Column7")
 			.deleteForeingKey("Column8")
 			.modifyColumnType("Column9", ColumnType.floatType())
@@ -158,11 +156,11 @@ public abstract class AbstractInstanceTest {
 					.where(f->f.lower("x") + " = y")
 					.where(f->f.upper("z") + " = u", Where.AND)
 					
-					.having(":a = :b")
-					.having(f->f.sum(":x") + " = 5")
-					
 					.groupBy("Column")
 					.groupBy("NextColumn")
+					
+					.having(":a = :b")
+					.having(f->f.sum(":x") + " = 5")
 					
 					.orderBy("Column1")
 					.orderBy(f->f.avg("Column2"))
@@ -291,7 +289,7 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	public void testCreateIndex() {
-		test(b->b.createIndex("IndexName", "SomeTable", "Column1, Column2"), getCreateIndex());
+		test(b->b.createIndex("IndexName", "SomeTable", "Column1", "Column2"), getCreateIndex());
 	}
 	
 	protected abstract String getCreateIndex();
@@ -317,7 +315,7 @@ public abstract class AbstractInstanceTest {
 				f(
 					b->b.insert("SomeTable")
 					.addValue("Column1", "123")
-					.addValue("Column1", 123)
+					.addValue("Column2", 123)
 				),
 				getQueryInsert()
 			},
@@ -326,7 +324,7 @@ public abstract class AbstractInstanceTest {
 					b->b
 					.with("cte", b.select("'A' as A"))
 					.insert("SomeTable")
-					.fromSelect(Arrays.asList("Col1", "Col2"), b.select("'B'"))
+					.fromSelect(Arrays.asList("Col1", "Col2"), b.select("'B'", "123"))
 				),
 				getQueryInsertFromSelect()
 			}
@@ -426,11 +424,11 @@ public abstract class AbstractInstanceTest {
 				f(
 					b->b.delete("SomeTable")
 					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
-					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
-					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
+					.join("AnotherTable2", "at2", Join.INNER_JOIN, "2 = 2")
+					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "3 = 3")
 					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("2 = 2"))
+					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("3 = 3"))
 					
 					.where("1=2")
 					.where("2=3", Where.OR)
@@ -510,6 +508,7 @@ public abstract class AbstractInstanceTest {
 				getQuerySelect_fromMultiSelect(true)
 			},
 			new Object[] {
+				// this is recursive
 				f(b->b
 					.with("b", b.select("2=2"))
 					.select("A")

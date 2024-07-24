@@ -9,6 +9,8 @@ import ji.querybuilder.builders.parents.PlainSelect;
 
 public interface InsertBuilder extends Builder {
 	
+	// TODO insert more values
+	
 	InsertBuilder addValue(String columnName, Object value);
 	
 	InsertBuilder fromSelect(List<String> columns, PlainSelect<?> select);
