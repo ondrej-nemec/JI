@@ -30,7 +30,7 @@ public class MySqlQueryBuilder implements DbInstance {
 	}
 
 	@Override
-	public String groupConcat(String param) {
+	public String groupConcat(String param, String delimeter) {
 		// TODO Auto-generated method stub
 		return null;
 	}

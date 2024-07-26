@@ -17,79 +17,102 @@ import ji.querybuilder.builder_impl.UpdateBuilderImpl;
 import ji.querybuilder.enums.ColumnType;
 
 public class PostgreSqlQueryBuilder implements DbInstance {
+	
+	protected String toString(ColumnType type) {
+		return type.getType().toString(); // TODO
+	}
 
 	@Override
 	public String concat(String param, String... params) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder builder = new StringBuilder("CONCAT(");
+		builder.append(param);
+		for (String p : params) {
+			builder.append(", ");
+			builder.append(p);
+		}
+		builder.append(")");
+		return builder.toString();
 	}
 
 	@Override
 	public String cast(String param, ColumnType type) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("CAST(%s AS %s)", param, toString(type));
 	}
 
 	@Override
-	public String groupConcat(String param) {
-		// TODO Auto-generated method stub
-		return null;
+	public String groupConcat(String param, String delimeter) {
+		return String.format("STRING_AGG(%s, '%s')", param, delimeter);
 	}
 	
 	@Override
 	public String max(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("MAX(%s)", param);
 	}
 	
 	@Override
 	public String min(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("MIN(%s)", param);
 	}
 	
 	@Override
 	public String avg(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("AVG(%s)", param);
 	}
 	
 	@Override
 	public String sum(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("SUM(%s)", param);
 	}
 	
 	@Override
 	public String count(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("COUNT(%s)", param);
 	}
 	
 	@Override
 	public String lower(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("LOWER(%s)", param);
 	}
 	
 	@Override
 	public String upper(String param) {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("UPPER(%s)", param);
 	}
 	
 	/*************/
 
 	@Override
 	public String createSql(DeleteIndexBuilderImpl deleteIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		return "DROP INDEX " + deleteIndex.getIndexName();
 	}
 
 	@Override
 	public String createSql(CreateIndexBuilderImpl createIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("CREATE INDEX ");
+		sql.append(createIndex.getIndexName());
+		sql.append(" ON ");
+		sql.append(createIndex.getTable());
+		sql.append("(");
+		String[] columns = createIndex.getColumns();
+		for (int i = 0; i < columns.length; i++) {
+			if (i > 0) {
+				sql.append(", ");
+			}
+			sql.append(columns[i]);
+		}
+		sql.append(")");
+		return sql.toString();
+	}
+
+	@Override
+	public String createSql(DeleteTableBuilderImpl deleteTable) {
+		return "DROP TABLE " + deleteTable.getTable();
+	}
+
+	@Override
+	public String createSql(DeleteViewBuilderImpl deleteView) {
+		return "DROP VIEW " + deleteView.getView();
 	}
 
 	@Override
@@ -135,12 +158,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	}
 
 	@Override
-	public String createSql(DeleteViewBuilderImpl deleteView) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String createSql(CreateTableBuilderImpl createTable) {
 		// TODO Auto-generated method stub
 		return null;
@@ -148,12 +165,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 
 	@Override
 	public String createSql(AlterTableBuilderImpl alterTable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String createSql(DeleteTableBuilderImpl deleteTable) {
 		// TODO Auto-generated method stub
 		return null;
 	}

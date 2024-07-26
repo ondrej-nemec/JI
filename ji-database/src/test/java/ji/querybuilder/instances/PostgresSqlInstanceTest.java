@@ -208,7 +208,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	}
 
 	@Override
-	protected Object getQueryDeleteBasic(boolean create) {
+	protected String getQueryDeleteBasic(boolean create) {
 		return "DELETE FROM SomeTable"
 			+ " WHERE (1= "
 			+ (create ? ":id" : "123")
@@ -216,7 +216,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	}
 
 	@Override
-	protected Object getQueryDeleteJoins(boolean create) {
+	protected String getQueryDeleteJoins(boolean create) {
 		return "DELETE FROM SomeTable"
 			+ " USING AnotherTable, AnotherTable2, ("
 				+ " SELECT A as B"
@@ -228,7 +228,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	}
 
 	@Override
-	protected Object getQueryDeleteWith(boolean create) {
+	protected String getQueryDeleteWith(boolean create) {
 		return "WITH withName AS ("
 				+ "SELECT 1=1"
 			+ ")"
@@ -237,43 +237,137 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	}
 
 	@Override
-	protected Object getQuerySelect_fromString(boolean create) {
-		return "TODO";
+	protected String getQuerySelect_fromString(boolean create) {
+		return "SELECT A FROM SomeTable";
 	}
 
 	@Override
-	protected Object getQuerySelect_fromStringAlias(boolean create) {
-		return "TODO";
+	protected String getQuerySelect_fromStringAlias(boolean create) {
+		return "SELECT A FROM SomeTable a";
 	}
 
 	@Override
-	protected Object getQuerySelect_fromSelect(boolean create) {
-		return "TODO";
+	protected String getQuerySelect_fromSelect(boolean create) {
+		return "SELECT A FROM (SELECt 1 AS A) a";
 	}
 
 	@Override
-	protected Object getQuerySelect_with(boolean create) {
-		return "TODO";
+	protected String getQuerySelect_with(boolean create) {
+		return "WITH b AS ("
+				+ "SELECT 2=2"
+			+ ")"
+			+ "SELECT A FROM SomeTable";
+	}
+	
+	@Override
+	protected String getQuerySelect_withRecursive(boolean create) {
+		return "WITH recursive b AS ("
+			+ "SELECT 2=2"
+			+ "UNION"
+			+ "SELECT 2 AS A FROM b"
+		+ ")"
+		+ "SELECT A FROM SomeTable";
 	}
 
 	@Override
-	protected Object getQuerySelect_fromMultiSelect(boolean create) {
-		return "TODO";
+	protected String getQuerySelect_fromMultiSelect(boolean create) {
+		return "SELECT A FROM (SELECT 1 AS A UNION 2 AS A) a";
 	}
 
 	@Override
-	protected Object getQuerySelect(boolean create) {
-		return "TODO";
+	protected String getQuerySelect(boolean create) {
+		return "SELECT A, COUNT(B) as B"
+			+ " FROM SomeTable"
+			+ " JOIN AnotherTable ON 1 = 1"
+			+ " JOIN AnotherTabl2 AS at2 ON 1 = 1"
+			+ " JOIN ("
+				+ "SELECT A as C"
+			+ ") subSelect ON 1 = 1"
+			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
+			+ " JOIN AnotherTable4 ON MAX(1 = 1)"
+			+ " JOIN ("
+				+ "SELECT A as C"
+			+ ") subSelect2 ON MAX(1 = 1)"
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)"
+			+ " GROUP BY Column, NextColumn"
+			+ (
+				create
+					? " HAVING 'AAAA' = 'BBBBB', SUM('XXXX') = 5"
+					: " HAVING :a = :b, SUM(:x) = 5"
+			)
+			+ " ORDER BY Column1, AVG(Column2)"
+			+ " LIMIT 10 OFFSET 15";
 	}
 
 	@Override
 	protected String getQueryMultipleSelect(boolean create) {
-		return "TODO";
+		return "SELECT 1=1"
+			+ " UNION"
+			+ " SELECT 1=1"
+			+ " INTERSECT"
+			+ " SELECT 1=1"
+			+ " UNION ALL"
+			+ " SELECT 1=1"
+			+ " EXCEPT"
+			+ " SELECT 1=1"
+			+ " ORDER BY ColA, " + (create ? "321" : ":id") + "COUNT(ColB)";
 	}
 
 	@Override
 	protected String getBatch(boolean create) {
-		return "TODO";
+		return "SELECT 1=1; SELECT a=" + (create ? "123" : ":id");
+	}
+
+	/***********************/
+	
+	@Override
+	protected String getFunctions_concat() {
+		return "CONCAT(a, b, c)";
+	}
+
+	@Override
+	protected String getFunctions_groupConcat() {
+		return "STRING_AGG(a, ';')";
+	}
+
+	@Override
+	protected String getFunctions_cast() {
+		return "CAST(a AS FLOAT)";
+	}
+
+	@Override
+	protected String getFunctions_max() {
+		return "MAX(a)";
+	}
+
+	@Override
+	protected String getFunctions_min() {
+		return "MIN(a)";
+	}
+
+	@Override
+	protected String getFunctions_avg() {
+		return "AVG(a)";
+	}
+
+	@Override
+	protected String getFunctions_sum() {
+		return "SUM(a)";
+	}
+
+	@Override
+	protected String getFunctions_count() {
+		return "COUNT(a)";
+	}
+
+	@Override
+	protected String getFunctions_lower() {
+		return "LOWER(a)";
+	}
+
+	@Override
+	protected String getFunctions_upper() {
+		return "UPPER(a)";
 	}
 	
 }

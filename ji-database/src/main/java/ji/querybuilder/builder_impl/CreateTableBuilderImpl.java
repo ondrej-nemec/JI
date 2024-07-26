@@ -56,7 +56,7 @@ public class CreateTableBuilderImpl implements CreateTableBuilder, SingleExecute
 	@Override
 	public CreateTableBuilder addColumn(String name, ColumnType type, Object defaultValue, ColumnSetting... settings) {
 		this.columns.add(new Column(name, type, defaultValue, settings));
-		return null;
+		return this;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class CreateTableBuilderImpl implements CreateTableBuilder, SingleExecute
 	@Override
 	public CreateTableBuilder setPrimaryKey(String... columns) {
 		this.primaryKey = columns;
-		return null;
+		return this;
 	}
 
 	@Override

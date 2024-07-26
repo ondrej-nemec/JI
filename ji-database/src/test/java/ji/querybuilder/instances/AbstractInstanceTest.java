@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import ji.querybuilder.Builder;
 import ji.querybuilder.DbInstance;
+import ji.querybuilder.Functions;
 import ji.querybuilder.QueryBuilder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
@@ -30,14 +31,69 @@ public abstract class AbstractInstanceTest {
 		this.instance = instance;
 	}
 	
-	/*@Test
-	public void tesFunctions(Function<Functions, String> create, String expected) {
-		System.out.println("Working " + getClass())// TODO
-	}*/
-	
 	// TODO test enumns to string 
 	
+	@Test
+	@Parameters(method="dataFunctions")
+	public void testFunctions(Function<Functions, String> create, String expected) {
+		assertEquals(expected, create.apply(instance));
+	}
 	
+	public Object[] dataFunctions() {
+		return new Object[] {
+			new Object[] {
+				ff(f->f.concat("a", "b", "c")), getFunctions_concat()
+			},
+			new Object[] {
+				ff(f->f.groupConcat("a", ";")), getFunctions_groupConcat()
+			},
+			new Object[] {
+				ff(f->f.cast("a", ColumnType.floatType())), getFunctions_cast()
+			},
+			new Object[] {
+				ff(f->f.max("a")), getFunctions_max()
+			},
+			new Object[] {
+				ff(f->f.min("a")), getFunctions_min()
+			},
+			new Object[] {
+				ff(f->f.avg("a")), getFunctions_avg()
+			},
+			new Object[] {
+				ff(f->f.sum("a")), getFunctions_sum()
+			},
+			new Object[] {
+				ff(f->f.count("a")), getFunctions_count()
+			},
+			new Object[] {
+				ff(f->f.lower("a")), getFunctions_lower()
+			},
+			new Object[] {
+				ff(f->f.upper("a")), getFunctions_upper()
+			}
+		};
+	}
+	
+	protected abstract String getFunctions_concat();
+
+	protected abstract String getFunctions_groupConcat();
+
+	protected abstract String getFunctions_cast();
+
+	protected abstract String getFunctions_max();
+
+	protected abstract String getFunctions_min();
+
+	protected abstract String getFunctions_avg();
+
+	protected abstract String getFunctions_sum();
+
+	protected abstract String getFunctions_count();
+
+	protected abstract String getFunctions_lower();
+
+	protected abstract String getFunctions_upper();
+
 	/********* TABLE **************/
 	
 	@Test
@@ -454,11 +510,11 @@ public abstract class AbstractInstanceTest {
 		};
 	}
 
-	protected abstract Object getQueryDeleteBasic(boolean create);
+	protected abstract String getQueryDeleteBasic(boolean create);
 
-	protected abstract Object getQueryDeleteJoins(boolean create);
+	protected abstract String getQueryDeleteJoins(boolean create);
 
-	protected abstract Object getQueryDeleteWith(boolean create);
+	protected abstract String getQueryDeleteWith(boolean create);
 
 	@Test
 	@Parameters(method="dataQuerySelect")
@@ -508,18 +564,27 @@ public abstract class AbstractInstanceTest {
 				getQuerySelect_fromMultiSelect(true)
 			},
 			new Object[] {
-				// this is recursive
 				f(b->b
 					.with("b", b.select("2=2"))
 					.select("A")
-					.from(
-						b.multiSelect(b.select("1 AS A"))
-						.union(b.select("2 AS A")),
-						"a"
-					)
+					.from("SomeTable")
 				),
 				getQuerySelect_with(false),
 				getQuerySelect_with(true)
+			},
+			new Object[] {
+				// this is recursive
+				f(b->b
+					.with(
+						"b",
+						b.multiSelect(b.select("1 AS A"))
+						.union(b.select("2 AS A").from("b"))
+					)
+					.select("A")
+					.from("SomeTable")
+				),
+				getQuerySelect_withRecursive(false),
+				getQuerySelect_withRecursive(true)
 			},
 			new Object[] {
 				f(b->b
@@ -559,17 +624,19 @@ public abstract class AbstractInstanceTest {
 		};
 	}
 
-	protected abstract Object getQuerySelect_fromString(boolean create);
+	protected abstract String getQuerySelect_fromString(boolean create);
 
-	protected abstract Object getQuerySelect_fromStringAlias(boolean create);
+	protected abstract String getQuerySelect_fromStringAlias(boolean create);
 
-	protected abstract Object getQuerySelect_fromSelect(boolean create);
+	protected abstract String getQuerySelect_fromSelect(boolean create);
 	
-	protected abstract Object getQuerySelect_with(boolean create);
+	protected abstract String getQuerySelect_with(boolean create);
+	
+	protected abstract String getQuerySelect_withRecursive(boolean create);
 
-	protected abstract Object getQuerySelect_fromMultiSelect(boolean create);
+	protected abstract String getQuerySelect_fromMultiSelect(boolean create);
 
-	protected abstract Object getQuerySelect(boolean create);
+	protected abstract String getQuerySelect(boolean create);
 
 	@Test
 	public void testQueryMultipleSelect() {
@@ -617,6 +684,10 @@ public abstract class AbstractInstanceTest {
 	}
 
 	private Function<QueryBuilder, Builder> f(Function<QueryBuilder, Builder> f) {
+		return f;
+	}
+
+	private  Function<Functions, String> ff(Function<Functions, String> f) {
 		return f;
 	}
 	

@@ -30,7 +30,7 @@ public class SqlServerQueryBuilder implements DbInstance {
 	}
 
 	@Override
-	public String groupConcat(String param) {
+	public String groupConcat(String param, String delimeter) {
 		// TODO Auto-generated method stub
 		return null;
 	}
