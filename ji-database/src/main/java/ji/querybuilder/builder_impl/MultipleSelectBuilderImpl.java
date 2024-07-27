@@ -38,15 +38,23 @@ public class MultipleSelectBuilderImpl implements MultipleSelectBuilder, Paramet
 		this.selects = new LinkedList<>();
 		this.orderBy = new LinkedList<>();
 	}
+	
+	public List<Tuple2<SelectBuilder, SelectJoin>> getSelects() {
+		return selects;
+	}
+	
+	public List<String> getOrderBy() {
+		return orderBy;
+	}
 
 	@Override
 	public String getSql() {
-		return instance.createSql(this);
+		return instance.createSql(this, false);
 	}
 
 	@Override
 	public String createSql() {
-		return parse(getSql(), parameters);
+		return parse(instance.createSql(this, true), parameters);
 	}
 
 	@Override

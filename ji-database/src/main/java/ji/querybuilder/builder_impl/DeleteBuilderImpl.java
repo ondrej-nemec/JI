@@ -66,12 +66,12 @@ public class DeleteBuilderImpl implements DeleteBuilder, SingleExecute, Parametr
 
 	@Override
 	public String getSql() {
-		return instance.createSql(this);
+		return instance.createSql(this, false);
 	}
 
 	@Override
 	public String createSql() {
-		return parse(getSql(), parameters);
+		return parse(instance.createSql(this, true), parameters);
 	}
 
 	@Override

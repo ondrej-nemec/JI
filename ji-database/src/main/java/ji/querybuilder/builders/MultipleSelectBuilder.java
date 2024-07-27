@@ -16,4 +16,9 @@ public interface MultipleSelectBuilder extends Builder, SubSelect, Fetch, Parame
 	
 	MultipleSelectBuilder except(SelectBuilder select);
 
+	@Override
+	default String createSql() {
+		return Builder.super.createSql();
+	}
+	
 }

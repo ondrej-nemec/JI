@@ -20,19 +20,19 @@ public interface DbInstance extends Functions {
 
 	String createSql(CreateIndexBuilderImpl createIndex);
 
-	String createSql(InsertBuilderImpl insert);
+	String createSql(InsertBuilderImpl insert, boolean create);
 
-	String createSql(UpdateBuilderImpl updateBuilder);
+	String createSql(UpdateBuilderImpl updateBuilder, boolean create);
 
-	String createSql(DeleteBuilderImpl delete);
+	String createSql(DeleteBuilderImpl delete, boolean create);
 
-	String createSql(SelectBuilderImpl select);
+	String createSql(SelectBuilderImpl select, boolean create);
 
-	String createSql(MultipleSelectBuilderImpl multipleSelect);
+	String createSql(MultipleSelectBuilderImpl multipleSelect, boolean create);
 
-	String createSql(CreateViewBuilderImpl createView);
+	String createSql(CreateViewBuilderImpl createView, boolean create);
 
-	String createSql(AlterViewBuilderImpl alterView);
+	String createSql(AlterViewBuilderImpl alterView, boolean create);
 
 	String createSql(DeleteViewBuilderImpl deleteView);
 

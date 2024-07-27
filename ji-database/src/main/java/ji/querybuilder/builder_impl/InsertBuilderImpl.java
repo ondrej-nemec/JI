@@ -15,7 +15,6 @@ import ji.common.structures.Tuple2;
 import ji.querybuilder.DbInstance;
 import ji.querybuilder.Escape;
 import ji.querybuilder.builders.InsertBuilder;
-import ji.querybuilder.builders.parents.PlainSelect;
 import ji.querybuilder.structures.SubSelect;
 
 public class InsertBuilderImpl implements InsertBuilder {
@@ -25,7 +24,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 	private final DbInstance instance;
 	private final String table;
 	private final Map<String, String> values;
-	private PlainSelect<?> select;
+	private SubSelect select;
 	private List<String> columns;
 	
 	private final List<Tuple2<String, SubSelect>> withs;
@@ -57,7 +56,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 		return values;
 	}
 	
-	public PlainSelect<?> getSelect() {
+	public SubSelect getSelect() {
 		return select;
 	}
 	
@@ -67,7 +66,12 @@ public class InsertBuilderImpl implements InsertBuilder {
 
 	@Override
 	public String getSql() {
-		return instance.createSql(this);
+		return instance.createSql(this, false);
+	}
+	
+	@Override
+	public String createSql() {
+		return instance.createSql(this, true);
 	}
 
 	@Override
@@ -80,7 +84,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 	}
 
 	@Override
-	public InsertBuilder fromSelect(List<String> columns, PlainSelect<?> select) {
+	public InsertBuilder fromSelect(List<String> columns, SubSelect select) {
 		if (!this.values.isEmpty()) {
 			throw new RuntimeException("Cannot use fromSelect if value is set");
 		}

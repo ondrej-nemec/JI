@@ -5,7 +5,7 @@ import java.util.List;
 
 import ji.common.structures.DictionaryValue;
 import ji.querybuilder.Builder;
-import ji.querybuilder.builders.parents.PlainSelect;
+import ji.querybuilder.structures.SubSelect;
 
 public interface InsertBuilder extends Builder {
 	
@@ -13,7 +13,7 @@ public interface InsertBuilder extends Builder {
 	
 	InsertBuilder addValue(String columnName, Object value);
 	
-	InsertBuilder fromSelect(List<String> columns, PlainSelect<?> select);
+	InsertBuilder fromSelect(List<String> columns, SubSelect select);
 	
 	DictionaryValue execute() throws SQLException;
 

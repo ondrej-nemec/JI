@@ -30,7 +30,12 @@ public class AlterViewBuilderImpl extends SelectImpl<AlterViewBuilderImpl> imple
 	
 	@Override
 	public String getSql() {
-		return instance.createSql(this);
+		return instance.createSql(this, false);
+	}
+	
+	@Override
+	public String createSql() {
+		return instance.createSql(this, true);
 	}
 	
 	@Override

@@ -92,43 +92,43 @@ public class SqlServerQueryBuilder implements DbInstance {
 	}
 
 	@Override
-	public String createSql(InsertBuilderImpl insert) {
+	public String createSql(InsertBuilderImpl insert, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String createSql(UpdateBuilderImpl updateBuilder) {
+	public String createSql(UpdateBuilderImpl updateBuilder, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String createSql(DeleteBuilderImpl delete) {
+	public String createSql(DeleteBuilderImpl delete, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String createSql(SelectBuilderImpl select) {
+	public String createSql(SelectBuilderImpl select, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String createSql(MultipleSelectBuilderImpl multipleSelect) {
+	public String createSql(MultipleSelectBuilderImpl multipleSelect, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String createSql(CreateViewBuilderImpl createView) {
+	public String createSql(CreateViewBuilderImpl createView, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String createSql(AlterViewBuilderImpl alterView) {
+	public String createSql(AlterViewBuilderImpl alterView, boolean create) {
 		// TODO Auto-generated method stub
 		return null;
 	}

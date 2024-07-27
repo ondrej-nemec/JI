@@ -2,13 +2,13 @@ package ji.querybuilder.structures;
 
 public class StringWrapper implements SubSelect {
 
-	//private final String string;
+	private final String string;
 	
 	public StringWrapper(String string) {
-	//	this.string = string;
+		this.string = string;
 	}
 
-	/*@Override
+	@Override
 	public String getSql() {
 		return string;
 	}
@@ -16,5 +16,11 @@ public class StringWrapper implements SubSelect {
 	@Override
 	public String createSql() {
 		return string;
-	}*/
+	}
+	
+	@Override
+	public boolean wrap() {
+		return false;
+	}
+	
 }

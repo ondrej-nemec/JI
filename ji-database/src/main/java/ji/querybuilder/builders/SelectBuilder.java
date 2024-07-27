@@ -8,4 +8,9 @@ import ji.querybuilder.structures.SubSelect;
 
 public interface SelectBuilder extends Builder, SubSelect, PlainSelect<SelectBuilder>, Fetch {
 
+	@Override
+	default String createSql() {
+		return Builder.super.createSql();
+	}
+
 }

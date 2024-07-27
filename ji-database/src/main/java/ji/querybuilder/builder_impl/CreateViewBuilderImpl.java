@@ -27,12 +27,17 @@ public class CreateViewBuilderImpl extends SelectImpl<CreateViewBuilderImpl> imp
 	public String getView() {
 		return view;
 	}
-	
+
 	@Override
 	public String getSql() {
-		return instance.createSql(this);
+		return instance.createSql(this, false);
 	}
-	
+
+	@Override
+	public String createSql() {
+		return instance.createSql(this, true);
+	}
+
 	@Override
 	protected CreateViewBuilderImpl getThis() {
 		return this;

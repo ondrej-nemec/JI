@@ -46,7 +46,12 @@ public class SelectBuilderImpl extends SelectImpl<SelectBuilderImpl> implements 
 
 	@Override
 	public String getSql() {
-		return instance.createSql(this);
+		return instance.createSql(this, false);
+	}
+
+	@Override
+	public String createSql() {
+		return parse(instance.createSql(this, true), getParameters());
 	}
 	
 	@Override

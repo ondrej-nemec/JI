@@ -176,7 +176,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	protected String getQueryUpdateBasic(boolean create) {
 		return "UPDATE SomeTable"
 			+ " SET Column1 = " + (create ? "123" : ":value") + ", Column2 = AVG(Column3)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)";
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
@@ -184,16 +184,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "UPDATE SomeTable AS a"
 			+ " SET Column1 = " + (create ? "123" : ":value") + ", Column2 = AVG(Column3)"
 			+ " FROM AnotherTable"
-			+ " JOIN AnotherTabl2 AS at2 ON 1 = 1"
+			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect ON 1 = 1"
+			+ ") AS subSelect ON 1 = 1"
 			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
 			+ " JOIN AnotherTable4 ON MAX(1 = 1)"
 			+ " JOIN ("
 				+ "SELECT A as C"
 			+ ") subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1 = 1) AND (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)";
+			+ " WHERE (1 = 1) AND (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ "UPDATE SomeTable"
 			+ " SET Column1 = " + (create ? "123" : ":value")
 			+ ", Column2 = AVG(Column3)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)";
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
@@ -243,12 +243,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getQuerySelect_fromStringAlias(boolean create) {
-		return "SELECT A FROM SomeTable a";
+		return "SELECT A FROM SomeTable AS a";
 	}
 
 	@Override
 	protected String getQuerySelect_fromSelect(boolean create) {
-		return "SELECT A FROM (SELECt 1 AS A) a";
+		return "SELECT A FROM (SELECT 1 AS A) AS a";
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getQuerySelect_fromMultiSelect(boolean create) {
-		return "SELECT A FROM (SELECT 1 AS A UNION 2 AS A) a";
+		return "SELECT A FROM (SELECT 1 AS A UNION SELECT 2 AS A) AS a";
 	}
 
 	@Override

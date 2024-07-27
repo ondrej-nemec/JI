@@ -10,7 +10,7 @@ public interface Functions {
 	 */
 	String concat(String param, String ...params);
 	
-	String groupConcat(String param);
+	String groupConcat(String param, String delimeter);
 	
 	/**
 	 * Param(s) must be column name or escaped value - you can use parameters

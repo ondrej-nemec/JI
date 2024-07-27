@@ -12,7 +12,7 @@ public interface Wheres<P> {
 ;	}
 	
 	default P where(String where, Where join) {
-		return where(n->where, Where.AND)
+		return where(n->where, join)
 ;	}
 	
 	default P where(Function<Functions, String> where) {

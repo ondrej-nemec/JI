@@ -13,6 +13,7 @@ public class DeleteIndexBuilderImpl implements DeleteIndexBuilder, SingleExecute
 	private final Connection connection;
 	private final DbInstance instance;
 	private final String name;
+	@Deprecated
 	private final String table;
 
 	public DeleteIndexBuilderImpl(Connection connection, DbInstance instance, String name, String table) {
