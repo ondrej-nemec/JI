@@ -1,6 +1,8 @@
 package ji.querybuilder.instances;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ji.common.functions.Implode;
@@ -21,10 +23,14 @@ import ji.querybuilder.builder_impl.MultipleSelectBuilderImpl;
 import ji.querybuilder.builder_impl.SelectBuilderImpl;
 import ji.querybuilder.builder_impl.UpdateBuilderImpl;
 import ji.querybuilder.builder_impl.share.SelectImpl;
+import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.Join;
+import ji.querybuilder.enums.OnAction;
 import ji.querybuilder.enums.SelectJoin;
 import ji.querybuilder.enums.Where;
+import ji.querybuilder.structures.Column;
+import ji.querybuilder.structures.ForeignKey;
 import ji.querybuilder.structures.Joining;
 import ji.querybuilder.structures.SubSelect;
 
@@ -270,11 +276,28 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 
 	@Override
 	public String createSql(CreateTableBuilderImpl createTable) {
+		
+		//StringBuilder aux = new StringBuilder();
+		//List<String> rows = new LinkedList<>();
+		
 		StringBuilder sql = new StringBuilder();
+		
+		StringBuilder appendix = new StringBuilder();
+		
 		sql.append("CREATE TABLE ");
 		sql.append(createTable.getTable());
 		sql.append(" (");
-		// TODO Auto-generated method stub
+		
+		iterateList(
+			sql, createTable.getColumns(),
+			i->"", i->", ", c->getColumn(c, x->appendix.append(", " + x))
+		);
+		
+		sql.append(appendix.toString());
+		if (createTable.getPrimaryKey() != null) {
+			sql.append(String.format(", PRIMARY KEY (%s)", Implode.implode(", ", createTable.getPrimaryKey())));
+		}
+		createAddForeignKey(createTable.getForeignKeys(), s->sql.append(s), ", ");
 		
 		sql.append(")");
 		return sql.toString();
@@ -282,8 +305,38 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 
 	@Override
 	public String createSql(AlterTableBuilderImpl alterTable) {
+		List<String> rows = new LinkedList<>();
+		List<String> constains = new LinkedList<>();
+		iterateList(
+			sql->rows.add(sql), alterTable.getAddColumns(),
+			i->"", i->"", c->"ADD " + getColumn(c, x->constains.add(x))
+		);
+		rows.addAll(constains);
+		createAddForeignKey(alterTable.getAddForeignKeys(), sql->rows.add(sql), "ADD ");
+		
+		iterateList(
+			sql->rows.add(sql), alterTable.getDeleteForeignKeys(),
+			i->"", i->"", fk->"DROP CONSTRAINT " + fk.getColumn()
+		);
+		iterateList(
+			sql->rows.add(sql), alterTable.getDeleteColumns(),
+			i->"", i->"", c->"DROP COLUMN " + c.getName()
+		);
+		
+		iterateList(
+			sql->rows.add(sql), alterTable.getModifyColumns(),
+			i->"", i->"", c->String.format("ALTER COLUMN %s TYPE %s", c.getName(), toString(c.getType()))
+		);
+		iterateList(
+			sql->rows.add(sql), alterTable.getRenameColumns(),
+			i->"", i->"", c->String.format("RENAME COLUMN %s TO %s", c.getOldName(), c.getNewName())
+		);
+		
+		
 		StringBuilder sql = new StringBuilder();
-		// TODO Auto-generated method stub
+		sql.append("ALTER TABLE ");
+		sql.append(alterTable.getTable());
+		iterateList(sql, rows, i->" ", i->", ", i->i);
 		return sql.toString();
 	}
 	
@@ -298,6 +351,30 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 				return String.format("CHAR(%s)", type.getSize());
 			case DATETIME: return "TIMESTAMP";
 			default: return type.getType().toString();
+		}
+	}
+
+	// TODO test
+	protected String toString(ColumnSetting settings) {
+		switch (settings) {
+			case AUTO_INCREMENT: return "SERIAL";
+			case UNIQUE: return "UNIQUE";
+			case NOT_NULL: return "NOT NULL";
+			case NULL: return "NULL";
+			// never happends: case PRIMARY_KEY: return "";
+			default: return "";
+		}
+	}
+
+	// TODO test
+	protected String toString(OnAction action) {
+		switch (action) {
+			case RESTRICT: return "RESTRICT";
+			case CASCADE: return "CASCADE";
+			case SET_NULL: return "SET NULL";
+			case NO_ACTION: return "NO ACTION";
+			case SET_DEFAULT: return "SET DEFAULT";
+			default: throw new RuntimeException("Not implemented action: " + action);
 		}
 	}
 
@@ -323,9 +400,24 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	/****************************/
 	
 	private <T> void iterateList(
-			StringBuilder sql, List<T> list,
+			Consumer<String> add, List<T> list,
 			Function<T, String> onFirst, Function<T, String> onOthers, Function<T, String> otherwise) {
 		ObjectBuilder<Boolean> first = new ObjectBuilder<>(true);
+		list.forEach(item->{
+			if (first.get()) {
+				first.set(false);
+				add.accept(onFirst.apply(item) + otherwise.apply(item));
+			} else {
+				add.accept(onOthers.apply(item) + otherwise.apply(item));
+			}
+		});
+	}
+	
+	private <T> void iterateList(
+			StringBuilder sql, List<T> list,
+			Function<T, String> onFirst, Function<T, String> onOthers, Function<T, String> otherwise) {
+		iterateList(s->sql.append(s), list, onFirst, onOthers, otherwise);
+		/*ObjectBuilder<Boolean> first = new ObjectBuilder<>(true);
 		list.forEach(item->{
 			if (first.get()) {
 				first.set(false);
@@ -334,7 +426,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 				sql.append(onOthers.apply(item));
 			}
 			sql.append(otherwise.apply(item));
-		});
+		});*/
 	}
 	
 	private String getWithAlias(String table, String alias) {
@@ -344,6 +436,42 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 			result.append(" AS " + alias);
 		}
 		return result.toString();
+	}
+	
+	private String getColumn(Column column, Consumer<String> onConstaint) {
+		StringBuilder result = new StringBuilder();
+		result.append(column.getName());
+		if (!column.getSettings().contains(ColumnSetting.AUTO_INCREMENT)) {
+			result.append(" ");
+			result.append(toString(column.getType()));
+		}
+		if (column.getValue() != null) {
+			result.append(" DEFAULT ");
+			result.append(column.getValue());
+		}
+		for (ColumnSetting settings : column.getSettings()) {
+			if (settings == ColumnSetting.PRIMARY_KEY) {
+				onConstaint.accept(String.format("PRIMARY KEY (%s)", column.getName()));
+			} else {
+				result.append(" ");
+				result.append(toString(settings));
+			}
+			
+		}
+		return result.toString();
+	}
+	
+	private void createAddForeignKey(List<ForeignKey> keys, Consumer<String> add, String prefix) {
+		iterateList(
+			add, keys,
+			i->"", i->"", i->"" + String.format(
+				prefix + "CONSTRAINT FK_%s FOREIGN KEY (%s) REFERENCES %s(%s)%s%s",
+				i.getColumn(), i.getColumn(),
+				i.getReferedTable(), i.getReferedColumn(),
+				i.getOnDelete() == null ? "" : " ON DELETE " + toString(i.getOnDelete()),
+				i.getOnUpdate() == null ? "" : " ON UPDATE " + toString(i.getOnUpdate())
+			)
+		);
 	}
 	
 	private void createPlainSelect(SelectImpl<?> builder, StringBuilder sql, boolean create) {

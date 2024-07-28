@@ -100,8 +100,8 @@ public abstract class AbstractInstanceTest {
 	public void testCreateTable() {
 		test(
 			b->b.createTable("SomeTable")
-			.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL, ColumnSetting.PRIMARY_KEY, ColumnSetting.AUTO_INCREMENT)
-			.addColumn("Column2", ColumnType.integer(), 42, ColumnSetting.NULL, ColumnSetting.UNIQUE)
+			.addColumn("Column1", ColumnType.integer(), ColumnSetting.PRIMARY_KEY, ColumnSetting.AUTO_INCREMENT, ColumnSetting.NOT_NULL)
+			.addColumn("Column2", ColumnType.integer(), 42, ColumnSetting.UNIQUE, ColumnSetting.NULL)
 			.addForeignKey("Column3", "AnotherTable", "AnotherColumn")
 			.addForeignKey("Column4", "DifferentTable", "DifferentColumn", OnAction.CASCADE, OnAction.NO_ACTION)
 			.addForeignKey("Column5", "DifferentTable2", "DifferentColumn2", OnAction.RESTRICT, OnAction.SET_DEFAULT)
@@ -118,11 +118,11 @@ public abstract class AbstractInstanceTest {
 		test(
 			b->b.alterTable("SomeTable")
 			.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL)
-			.addColumn("Column2", ColumnType.integer(), 42, ColumnSetting.NULL, ColumnSetting.UNIQUE)
+			.addColumn("Column2", ColumnType.integer(), 42, ColumnSetting.UNIQUE, ColumnSetting.NULL)
 			.addForeignKey("Column3", "AnotherTable", "AnotherColumn")
 			.addForeignKey("Column4", "DifferentTable", "DifferentColumn", OnAction.CASCADE, OnAction.NO_ACTION)
 			.deleteColumn("Column7")
-			.deleteForeingKey("Column8")
+			.deleteForeingKey("FK_Column8")
 			.modifyColumnType("Column9", ColumnType.floatType())
 			.renameColumn("Column10", "Column11", ColumnType.integer()),
 			getAlterTable()

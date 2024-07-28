@@ -10,13 +10,14 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	protected String getCreateTable() {
 		return 
 			"CREATE TABLE SomeTable ("
-				+ " Column1 SERIAL NOT NULL,"
+				+ "Column1 SERIAL NOT NULL,"
 				+ " Column2 INT DEFAULT 42 UNIQUE NULL,"
+				+ " PRIMARY KEY (Column1),"
+				+ " PRIMARY KEY (Column7, Column8),"
 				+ " CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
-				+ " CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn),"
-				+ " CONSTRAINT FK_Column5 FOREIGN KEY (Column5) REFERENCES DifferentTable2(DifferentColumn2),"
-				+ " CONSTRAINT FK_Column6 FOREIGN KEY (Column6) REFERENCES DifferentTable3(DifferentColumn3),"
-				+ " PRIMARY KEY (Column7, Column8)"
+				+ " CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn) ON DELETE CASCADE ON UPDATE NO ACTION,"
+				+ " CONSTRAINT FK_Column5 FOREIGN KEY (Column5) REFERENCES DifferentTable2(DifferentColumn2) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
+				+ " CONSTRAINT FK_Column6 FOREIGN KEY (Column6) REFERENCES DifferentTable3(DifferentColumn3) ON DELETE SET NULL"
 			+ ")";
 	}
 
@@ -24,12 +25,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	protected String getAlterTable() {
 		return "ALTER TABLE SomeTable"
 			+ " ADD Column1 INT NOT NULL,"
-			+ " ADD Column2 INT DEFAULT 42 NULL UNIQUE,"
+			+ " ADD Column2 INT DEFAULT 42 UNIQUE NULL,"
 			+ " ADD CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
 			+ " ADD CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn)"
 				+ " ON DELETE CASCADE ON UPDATE NO ACTION,"
-			+ " DROP COLUMN Column7,"
 			+ " DROP CONSTRAINT FK_Column8,"
+			+ " DROP COLUMN Column7,"
 			+ " ALTER COLUMN Column9 TYPE FLOAT,"
 			+ " RENAME COLUMN Column10 TO Column11";
 	}
