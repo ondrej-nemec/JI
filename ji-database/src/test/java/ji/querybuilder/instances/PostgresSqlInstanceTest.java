@@ -1,5 +1,10 @@
 package ji.querybuilder.instances;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
 public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	public PostgresSqlInstanceTest() {
@@ -369,6 +374,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	@Override
 	protected String getFunctions_upper() {
 		return "UPPER(a)";
+	}
+
+	@Override
+	protected Connection getConnection() throws SQLException {
+		Properties props = new Properties();
+		props.setProperty("user", "postgres");
+		props.setProperty("password", ""); // TODO
+		props.setProperty("serverTimezone", "Europe/Prague");
+		props.setProperty("allowMultiQueries", "true");
+		return DriverManager.getConnection("jdbc:postgresql://localhost/query_builder", props);
 	}
 	
 }

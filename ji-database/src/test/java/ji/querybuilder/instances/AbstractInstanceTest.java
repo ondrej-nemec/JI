@@ -1,19 +1,26 @@
 package ji.querybuilder.instances;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.function.Function;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ji.common.structures.ThrowingConsumer;
 import ji.querybuilder.Builder;
 import ji.querybuilder.DbInstance;
 import ji.querybuilder.Functions;
 import ji.querybuilder.QueryBuilder;
+import ji.querybuilder.builders.AlterViewBuilder;
+import ji.querybuilder.builders.CreateViewBuilder;
+import ji.querybuilder.builders.DeleteBuilder;
+import ji.querybuilder.builders.InsertBuilder;
+import ji.querybuilder.builders.SelectBuilder;
+import ji.querybuilder.builders.UpdateBuilder;
 import ji.querybuilder.enums.ColumnSetting;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.Join;
@@ -31,7 +38,9 @@ public abstract class AbstractInstanceTest {
 		this.instance = instance;
 	}
 	
-	// TODO test enumns to string 
+	// TODO improve tests - more for real db
+		// functions will be part of selects - with real db
+		// all enums will be tested during queries
 	
 	@Test
 	@Parameters(method="dataFunctions")
@@ -97,7 +106,7 @@ public abstract class AbstractInstanceTest {
 	/********* TABLE **************/
 	
 	@Test
-	public void testCreateTable() {
+	public void testCreateTable() throws Exception {
 		test(
 			b->b.createTable("SomeTable")
 			.addColumn("Column1", ColumnType.integer(), ColumnSetting.PRIMARY_KEY, ColumnSetting.AUTO_INCREMENT, ColumnSetting.NOT_NULL)
@@ -107,14 +116,15 @@ public abstract class AbstractInstanceTest {
 			.addForeignKey("Column5", "DifferentTable2", "DifferentColumn2", OnAction.RESTRICT, OnAction.SET_DEFAULT)
 			.addForeignKey("Column6", "DifferentTable3", "DifferentColumn3", OnAction.SET_NULL, null)
 			.setPrimaryKey("Column7", "Column8"),
-			getCreateTable()
+			getCreateTable(),
+			b->b.execute() // VERIFY ?
 		);
 	}
 
 	protected abstract String getCreateTable();
 	
 	@Test
-	public void testAlterTable() {
+	public void testAlterTable() throws Exception {
 		test(
 			b->b.alterTable("SomeTable")
 			.addColumn("Column1", ColumnType.integer(), ColumnSetting.NOT_NULL)
@@ -125,15 +135,20 @@ public abstract class AbstractInstanceTest {
 			.deleteForeingKey("FK_Column8")
 			.modifyColumnType("Column9", ColumnType.floatType())
 			.renameColumn("Column10", "Column11", ColumnType.integer()),
-			getAlterTable()
+			getAlterTable(),
+			b->b.execute() // VERIFY ?
 		);
 	}
 	
 	protected abstract String getAlterTable();
 
 	@Test
-	public void testDeleteTable() {
-		test(b->b.deleteTable("SomeTable"), getDeleteTable());
+	public void testDeleteTable() throws Exception {
+		test(
+			b->b.deleteTable("SomeTable"),
+			getDeleteTable(),
+			b->b.execute() // VERIFY ?
+		);
 	}
 	
 	protected abstract String getDeleteTable();
@@ -142,8 +157,10 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	@Parameters(method="dataCreateView")
-	public void testCreateView(Function<QueryBuilder, Builder> create, String getSql, String createSql) {
-		test(create, getSql, createSql);
+	public void testCreateView(
+			Function<QueryBuilder, CreateViewBuilder> create, String getSql, String createSql
+		) throws Exception {
+		test(create, getSql, createSql, b->b.execute()); // VERIFY ?
 	}
 	
 	public Object[] dataCreateView() {
@@ -239,8 +256,10 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	@Parameters(method="dataAlterView")
-	public void testAlterView(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
-		test(alter, getSql, createSql);
+	public void testAlterView(
+			Function<QueryBuilder, AlterViewBuilder> alter, String getSql, String createSql
+		) throws Exception {
+		test(alter, getSql, createSql, b->b.execute()); // VERIFY ?
 	}
 	
 	public Object[] dataAlterView() {
@@ -335,8 +354,8 @@ public abstract class AbstractInstanceTest {
 	protected abstract String getAlterView(boolean create);
 
 	@Test
-	public void testDeleteView() {
-		test(b->b.deleteView("SomeView"), getDeleteView());
+	public void testDeleteView() throws Exception {
+		test(b->b.deleteView("SomeView"), getDeleteView(), b->b.execute()); // VERIFY ?
 	}
 	
 	protected abstract String getDeleteView();
@@ -344,15 +363,15 @@ public abstract class AbstractInstanceTest {
 	/********* INDEX **************/
 
 	@Test
-	public void testCreateIndex() {
-		test(b->b.createIndex("IndexName", "SomeTable", "Column1", "Column2"), getCreateIndex());
+	public void testCreateIndex() throws Exception {
+		test(b->b.createIndex("IndexName", "SomeTable", "Column1", "Column2"), getCreateIndex(), b->b.execute()); // VERIFY ?
 	}
 	
 	protected abstract String getCreateIndex();
 
 	@Test
-	public void testDeleteIndex() {
-		test(b->b.deleteIndex("IndexName", "SomeTable"), getDeleteIndex());
+	public void testDeleteIndex() throws Exception {
+		test(b->b.deleteIndex("IndexName", "SomeTable"), getDeleteIndex(), b->b.execute()); // VERIFY ?
 	}
 	
 	protected abstract String getDeleteIndex();
@@ -361,8 +380,8 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	@Parameters(method="dataQueryInsert")
-	public void testQueryInsert(Function<QueryBuilder, Builder> alter, String getSql) {
-		test(alter, getSql);
+	public void testQueryInsert(Function<QueryBuilder, InsertBuilder> alter, String getSql) throws Exception {
+		test(alter, getSql, b->b.execute()); // VERIFY ?
 	}
 	
 	public Object[] dataQueryInsert() {
@@ -393,8 +412,8 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	@Parameters(method="dataQueryUpdate")
-	public void testQueryUpdate(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
-		test(alter, getSql, createSql);
+	public void testQueryUpdate(Function<QueryBuilder, UpdateBuilder> alter, String getSql, String createSql) throws Exception {
+		test(alter, getSql, createSql, b->b.execute()); // VERIFY ?
 	}
 	
 	public Object[] dataQueryUpdate() {
@@ -459,8 +478,8 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	@Parameters(method="dataQueryDelete")
-	public void testQueryDelete(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
-		test(alter, getSql, createSql);
+	public void testQueryDelete(Function<QueryBuilder, DeleteBuilder> alter, String getSql, String createSql) throws Exception {
+		test(alter, getSql, createSql, b->b.execute()); // VERIFY ?
 	}
 	
 	public Object[] dataQueryDelete() {
@@ -518,8 +537,8 @@ public abstract class AbstractInstanceTest {
 
 	@Test
 	@Parameters(method="dataQuerySelect")
-	public void testQuerySelect(Function<QueryBuilder, Builder> alter, String getSql, String createSql) {
-		test(alter, getSql, createSql);
+	public void testQuerySelect(Function<QueryBuilder, SelectBuilder> alter, String getSql, String createSql) throws Exception {
+		test(alter, getSql, createSql, b->b.fetchAll()); // VERIFY?
 	}
 	
 	public Object[] dataQuerySelect() {
@@ -639,7 +658,7 @@ public abstract class AbstractInstanceTest {
 	protected abstract String getQuerySelect(boolean create);
 
 	@Test
-	public void testQueryMultipleSelect() {
+	public void testQueryMultipleSelect() throws Exception{
 		test(f(
 			b->b
 			.multiSelect(b.select("1=1"))
@@ -650,7 +669,7 @@ public abstract class AbstractInstanceTest {
 			.orderBy("ColA, :id")
 			.orderBy(f->f.count("ColB"))
 			.addParameter(":id", 321)
-		), getQueryMultipleSelect(false), getQueryMultipleSelect(true));
+		), getQueryMultipleSelect(false), getQueryMultipleSelect(true), b->b.fetchAll()); // VERIFY?
 	}
 	
 	protected abstract String getQueryMultipleSelect(boolean create);
@@ -658,32 +677,44 @@ public abstract class AbstractInstanceTest {
 	/********* OTHER **************/
 
 	@Test
-	public void testBatch() {
+	public void testBatch() throws Exception {
 		test(f(
 			b->b
 			.batch()
 			.addBatch(b.select("1=1"))
 			.addBatch(b.select("a=:id"))
 			.addParameter(":id", 123)
-		), getBatch(false), getBatch(true));
+		), getBatch(false), getBatch(true), b->b.execute()); // VERIFY ?
 	}
 	
 	protected abstract String getBatch(boolean create);
 
 	/*********************/
 	
-	private void test(Function<QueryBuilder, Builder> create, String expected) {
-		test(create, expected, expected);
+	private <B extends Builder> void test(
+			Function<QueryBuilder, B> create, String expected, ThrowingConsumer<B, Exception> execute
+		) throws Exception {
+		test(create, expected, expected, execute);
 	}
 	
-	private void test(Function<QueryBuilder, Builder> create, String expectedGet, String expectedCreate) {
-		QueryBuilder queryBuilder = new QueryBuilder(instance, mock(Connection.class));
-		Builder actual = create.apply(queryBuilder);
-		assertEquals(expectedGet, actual.getSql());
-		assertEquals(expectedCreate, actual.createSql());
+	private <B extends Builder> void test(
+			Function<QueryBuilder, B> create,
+			String expectedGet, String expectedCreate,
+			ThrowingConsumer<B, Exception> execute
+		) throws Exception {
+		try (Connection connection = getConnection()) {
+			QueryBuilder queryBuilder = new QueryBuilder(instance, connection);
+			B actual = create.apply(queryBuilder);
+			assertEquals(expectedGet, actual.getSql());
+			assertEquals(expectedCreate, actual.createSql());
+			
+			execute.accept(actual);
+		}
 	}
+	
+	protected abstract Connection getConnection() throws SQLException;
 
-	private Function<QueryBuilder, Builder> f(Function<QueryBuilder, Builder> f) {
+	private <B extends Builder> Function<QueryBuilder, B> f(Function<QueryBuilder, B> f) {
 		return f;
 	}
 
