@@ -42,8 +42,11 @@ public class BatchBuilderImpl implements BatchBuilder, ParametrizedSql {
 	private String prepate(Function<Builder, String> createSql) {
 		StringBuilder query = new StringBuilder();
 		batches.forEach((batch)->{
+			if (!query.isEmpty()) {
+				query.append(" ");
+			}
 			query.append(createSql.apply(batch));
-			query.append("; ");
+			query.append(";");
 		});
 		return query.toString();
 	}

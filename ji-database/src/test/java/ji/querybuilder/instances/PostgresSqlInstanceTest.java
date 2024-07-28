@@ -46,12 +46,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getCreateView_fromStringAlias(boolean create) {
-		return "CREATE VIEW SomeView AS SELECT A FROM SomeTable a";
+		return "CREATE VIEW SomeView AS SELECT A FROM SomeTable AS a";
 	}
 
 	@Override
 	protected String getCreateView_fromSelect(boolean create) {
-		return "CREATE VIEW SomeView AS SELECT A FROM (SELECT 1 AS A) a";
+		return "CREATE VIEW SomeView AS SELECT A FROM (SELECT 1 AS A) AS a";
 	}
 
 	@Override
@@ -59,10 +59,10 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "CREATE VIEW SomeView AS"
 			+ " SELECT A"
 			+ " FROM ("
-				+ " SELECT 1 AS A"
+				+ "SELECT 1 AS A"
 				+ " UNION"
-				+ " SELECTZ 2 AS A"
-			+ ") a";
+				+ " SELECT 2 AS A"
+			+ ") AS a";
 	}
 
 	@Override
@@ -71,16 +71,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " SELECT A, COUNT(B) as B"
 			+ " FROM SomeTable"
 			+ " JOIN AnotherTable ON 1 = 1"
-			+ " JOIN AnotherTabl2 AS at2 ON 1 = 1"
+			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect ON 1 = 1"
+			+ ") AS subSelect ON 1 = 1"
 			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 ON MAX(1 = 1)"
+			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)"
+			+ ") AS subSelect2 ON MAX(1 = 1)"
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)"
 			+ " GROUP BY Column, NextColumn"
 			+ (
 				create
@@ -98,12 +98,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getAlterView_fromStringAlias(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM SomeTable a";
+		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM SomeTable AS a";
 	}
 
 	@Override
 	protected String getAlterView_fromSelect(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM (SELECT 1 AS A) a";
+		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM (SELECT 1 AS A) AS a";
 	}
 
 	@Override
@@ -111,10 +111,10 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "DROP VIEW SomeView; CREATE VIEW SomeView AS"
 			+ " SELECT A"
 			+ " FROM ("
-				+ " SELECT 1 AS A"
+				+ "SELECT 1 AS A"
 				+ " UNION"
-				+ " SELECTZ 2 AS A"
-			+ ") a";
+				+ " SELECT 2 AS A"
+			+ ") AS a";
 	}
 
 	@Override
@@ -123,16 +123,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " SELECT A, COUNT(B) as B"
 			+ " FROM SomeTable"
 			+ " JOIN AnotherTable ON 1 = 1"
-			+ " JOIN AnotherTabl2 AS at2 ON 1 = 1"
+			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect ON 1 = 1"
+			+ ") AS subSelect ON 1 = 1"
 			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 ON MAX(1 = 1)"
+			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)"
+			+ ") AS subSelect2 ON MAX(1 = 1)"
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)"
 			+ " GROUP BY Column, NextColumn"
 			+ (
 				create
@@ -189,16 +189,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 				+ "SELECT A as C"
 			+ ") AS subSelect ON 1 = 1"
 			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 ON MAX(1 = 1)"
+			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1 = 1) AND (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+			+ ") AS subSelect2 ON MAX(1 = 1)"
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
 	protected String getQueryUpdateWith(boolean create) {
-		return "WITH withName ("
+		return "WITH withName AS ("
 				+ "SELECT 1=1"
 			+ ")"
 			+ "UPDATE SomeTable"
@@ -211,20 +211,20 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	protected String getQueryDeleteBasic(boolean create) {
 		return "DELETE FROM SomeTable"
 			+ " WHERE (1= "
-			+ (create ? ":id" : "123")
-			+ ") OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)";
+			+ (create ? "123" : ":id")
+			+ ") OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
 	protected String getQueryDeleteJoins(boolean create) {
 		return "DELETE FROM SomeTable"
-			+ " USING AnotherTable, AnotherTable2, ("
-				+ " SELECT A as B"
-			+ ") AS subSelect, AnotherTable3, AnotherTable4, ("
+			+ " USING AnotherTable, AnotherTable2 AS at2, ("
+				+ "SELECT A as B"
+			+ ") AS subSelect, AnotherTable3, AnotherTable4 AS at4, ("
 				+ "SELECT A as C"
-			+ ") subSelect2"
+			+ ") AS subSelect2"
 			+ " WHERE 1 = 1 AND 2 = 2 AND 3 = 3 AND MAX(1 = 1) AND MAX(2 = 2) AND MAX(3 = 3)"
-			+ " AND (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)";
+			+ " AND (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
@@ -232,8 +232,8 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "WITH withName AS ("
 				+ "SELECT 1=1"
 			+ ")"
-			+ " DELETE FROM SomeTable"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)";
+			+ "DELETE FROM SomeTable"
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
 	}
 
 	@Override
@@ -262,9 +262,9 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	@Override
 	protected String getQuerySelect_withRecursive(boolean create) {
 		return "WITH recursive b AS ("
-			+ "SELECT 2=2"
-			+ "UNION"
-			+ "SELECT 2 AS A FROM b"
+			+ "SELECT 1 AS A"
+			+ " UNION"
+			+ " SELECT 2 AS A FROM b"
 		+ ")"
 		+ "SELECT A FROM SomeTable";
 	}
@@ -279,16 +279,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "SELECT A, COUNT(B) as B"
 			+ " FROM SomeTable"
 			+ " JOIN AnotherTable ON 1 = 1"
-			+ " JOIN AnotherTabl2 AS at2 ON 1 = 1"
+			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect ON 1 = 1"
+			+ ") AS subSelect ON 1 = 1"
 			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 ON MAX(1 = 1)"
+			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
 			+ " JOIN ("
 				+ "SELECT A as C"
-			+ ") subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (LOWER(z) = u)"
+			+ ") AS subSelect2 ON MAX(1 = 1)"
+			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)"
 			+ " GROUP BY Column, NextColumn"
 			+ (
 				create
@@ -310,12 +310,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " SELECT 1=1"
 			+ " EXCEPT"
 			+ " SELECT 1=1"
-			+ " ORDER BY ColA, " + (create ? "321" : ":id") + "COUNT(ColB)";
+			+ " ORDER BY ColA, " + (create ? "321" : ":id") + ", COUNT(ColB)";
 	}
 
 	@Override
 	protected String getBatch(boolean create) {
-		return "SELECT 1=1; SELECT a=" + (create ? "123" : ":id");
+		return "SELECT 1=1; SELECT a=" + (create ? "123" : ":id") + ";";
 	}
 
 	/***********************/

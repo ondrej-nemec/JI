@@ -37,6 +37,8 @@ public class MultipleSelectBuilderImpl implements MultipleSelectBuilder, Paramet
 		this.parameters = new HashMap<>();
 		this.selects = new LinkedList<>();
 		this.orderBy = new LinkedList<>();
+		
+		selects.add(new Tuple2<>(builder, null));
 	}
 	
 	public List<Tuple2<SelectBuilder, SelectJoin>> getSelects() {

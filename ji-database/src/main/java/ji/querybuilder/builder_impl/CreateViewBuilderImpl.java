@@ -35,7 +35,7 @@ public class CreateViewBuilderImpl extends SelectImpl<CreateViewBuilderImpl> imp
 
 	@Override
 	public String createSql() {
-		return instance.createSql(this, true);
+		return parse(instance.createSql(this, true), getParameters());
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import ji.querybuilder.builder_impl.UpdateBuilderImpl;
 import ji.querybuilder.builder_impl.share.SelectImpl;
 import ji.querybuilder.enums.ColumnType;
 import ji.querybuilder.enums.Join;
+import ji.querybuilder.enums.SelectJoin;
 import ji.querybuilder.enums.Where;
 import ji.querybuilder.structures.Joining;
 import ji.querybuilder.structures.SubSelect;
@@ -126,24 +127,32 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	public String createSql(InsertBuilderImpl insert, boolean create) {
 		StringBuilder sql = new StringBuilder();
 		createWith(insert.getWiths(), sql, create);
-		sql.append("INSERT INTO " + insert.getTable());
+		sql.append("INSERT INTO " + insert.getTable() + " ");
 		if (insert.getValues().isEmpty()) {
 			// insert from select
 			sql.append("(");
 			sql.append(Implode.implode(", ", insert.getColumns()));
-			sql.append(")");
+			sql.append(") ");
+			sql.append(create ? insert.getSelect().createSql() : insert.getSelect().getSql());
 		} else {
 			StringBuilder columns = new StringBuilder();
 			StringBuilder values = new StringBuilder();
-			insert.getValues().forEach((column, value)->{
+			insert.getValues().forEach((val)->{
 				if (!columns.toString().isEmpty()) {
 					columns.append(", ");
 					values.append(", ");
+				} else {
+					columns.append("(");
+					values.append("(");
 				}
-				columns.append(column);
-				values.append(value);
+				columns.append(val._1());
+				values.append(val._2());
 			});
+			columns.append(")");
+			values.append(")");
+			
 			sql.append(columns);
+			sql.append(" VALUES ");
 			sql.append(values);
 		}
 		return sql.toString();
@@ -199,7 +208,10 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 				wheres.append(" AND");
 			}
 			joins.append(getWithAlias(
-				create ? join.getBuilder().createSql() : join.getBuilder().getSql(),
+				String.format(
+					join.getBuilder().wrap() ? "(%s)" : "%s",
+					create ? join.getBuilder().createSql() : join.getBuilder().getSql()
+				),
 				join.getAlias()
 			));
 			wheres.append(" " + join.getOn());
@@ -230,11 +242,11 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		StringBuilder sql = new StringBuilder();
 		iterateList(
 			sql, multipleSelect.getSelects(),
-			i->"", i->" " + i._2().toString() + " ",  i->create ? i._1().createSql() : i._1().getSql()
+			i->"", i->" " + toString(i._2()) + " ",  i->create ? i._1().createSql() : i._1().getSql()
 		);
 		iterateList(
 			sql, multipleSelect.getOrderBy(),
-			i->" ORDER BY  ", i->", ", i->i
+			i->" ORDER BY ", i->", ", i->i
 		);
 		return sql.toString();
 	}
@@ -300,6 +312,14 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		}
 	}
 
+	// TODO test
+	protected String toString(SelectJoin join) {
+		switch(join) {
+			case UNION_ALL: return "UNION ALL";
+			default: return join.toString();
+		}
+	}
+
 	/****************************/
 	
 	private <T> void iterateList(
@@ -347,15 +367,15 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		createWhere(builder.getWheres(), sql, create);
 		iterateList(
 			sql, builder.getGroupBy(),
-			i->" GROUP BY  ", i->", ", i->i
+			i->" GROUP BY ", i->", ", i->i
 		);
 		iterateList(
 			sql, builder.getHaving(),
-			i->" HAVING  ", i->", ", i->i
+			i->" HAVING ", i->", ", i->i
 		);
 		iterateList(
 			sql, builder.getOrderBy(),
-			i->" ORDER BY  ", i->", ", i->i
+			i->" ORDER BY ", i->", ", i->i
 		);
 		if (builder.getLimit() != null) {
 			sql.append(" LIMIT " + builder.getLimit());
@@ -367,10 +387,11 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	
 	private void createWith(List<Tuple2<String, SubSelect>> withs, StringBuilder sql, boolean create) {
 		withs.forEach((with)->{
+			String subquery = create ? with._2().createSql() : with._2().getSql();
+			boolean isRecursive = subquery.contains(" " + with._1() + " ") || subquery.endsWith(" " + with._1());
 			sql.append(String.format(
-				"WITH %s AS (%s)",
-				with._1(),
-				create ? with._2().createSql() : with._2().getSql()
+				"WITH" + (isRecursive ? " recursive" : "") + " %s AS (%s)",
+				with._1(), subquery
 			));
 		});
 	}

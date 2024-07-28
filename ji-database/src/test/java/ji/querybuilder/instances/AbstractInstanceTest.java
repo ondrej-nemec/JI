@@ -204,7 +204,7 @@ public abstract class AbstractInstanceTest {
 					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
 					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
 					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("1 = 1"))
 					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
 					
 					.where("1=2")
@@ -301,7 +301,7 @@ public abstract class AbstractInstanceTest {
 					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
 					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
 					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("1 = 1"))
 					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
 					
 					.where("1=2")
@@ -422,7 +422,7 @@ public abstract class AbstractInstanceTest {
 					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
 					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
 					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("1 = 1"))
 					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
 					
 					.where("1=2")
@@ -481,9 +481,9 @@ public abstract class AbstractInstanceTest {
 					b->b.delete("SomeTable")
 					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
 					.join("AnotherTable2", "at2", Join.INNER_JOIN, "2 = 2")
-					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "3 = 3")
+					.join(b.select("A as B"), "subSelect", Join.INNER_JOIN, "3 = 3")
 					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("2 = 2"))
+					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("2 = 2"))
 					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("3 = 3"))
 					
 					.where("1=2")
@@ -597,7 +597,7 @@ public abstract class AbstractInstanceTest {
 					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
 					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
 					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at2", Join.INNER_JOIN, f->f.max("1 = 1"))
+					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("1 = 1"))
 					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
 					
 					.where("1=2")

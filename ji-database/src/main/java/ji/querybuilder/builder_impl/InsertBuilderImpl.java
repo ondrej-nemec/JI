@@ -5,10 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import ji.common.structures.DictionaryValue;
 import ji.common.structures.Tuple2;
@@ -23,7 +21,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 	private final Connection connection;
 	private final DbInstance instance;
 	private final String table;
-	private final Map<String, String> values;
+	private final List<Tuple2<String, String>> values;
 	private SubSelect select;
 	private List<String> columns;
 	
@@ -40,7 +38,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 		this.connection = connection;
 		this.instance = instance;
 		this.table = table;
-		this.values = new HashMap<>();
+		this.values = new LinkedList<>();
 		this.withs = withs;
 	}
 	
@@ -52,7 +50,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 		return table;
 	}
 	
-	public Map<String, String> getValues() {
+	public List<Tuple2<String, String>> getValues() {
 		return values;
 	}
 	
@@ -79,7 +77,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 		if (this.select != null) {
 			throw new RuntimeException("Cannot use addValue if fromSelect is used");
 		}
-		this.values.put(columnName, Escape.escape(value));
+		this.values.add(new Tuple2<>(columnName, Escape.escape(value)));
 		return this;
 	}
 
