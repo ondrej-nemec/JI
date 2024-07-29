@@ -13,46 +13,50 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getCreateTable() {
-		return 
-			"CREATE TABLE SomeTable ("
-				+ "Column1 SERIAL NOT NULL,"
-				+ " Column2 INT DEFAULT 42 UNIQUE NULL,"
-				+ " PRIMARY KEY (Column1),"
-				+ " PRIMARY KEY (Column7, Column8),"
-				+ " CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
-				+ " CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn) ON DELETE CASCADE ON UPDATE NO ACTION,"
-				+ " CONSTRAINT FK_Column5 FOREIGN KEY (Column5) REFERENCES DifferentTable2(DifferentColumn2) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
-				+ " CONSTRAINT FK_Column6 FOREIGN KEY (Column6) REFERENCES DifferentTable3(DifferentColumn3) ON DELETE SET NULL"
-			+ ")";
+		return "CREATE TABLE create_table ("
+			+ "Primary_column SERIAL NOT NULL,"
+			+ " Unique_column INT UNIQUE,"
+			+ " Nullable_column INT DEFAULT 42 NULL,"
+			+ " Bool_column BOOLEAN,"
+			+ " Float_column FLOAT,"
+			+ " Double_column FLOAT,"
+			+ " Char_column CHAR(1),"
+			+ " Text_column TEXT,"
+			+ " String_column VARCHAR(10),"
+			+ " DateTime_column TIMESTAMP,"
+			+ " FK_column_1 INT,"
+			+ " FK_column_2 INT,"
+			+ " FK_column_3 INT,"
+			+ " FK_column_3 INT,"
+			+ " PRIMARY KEY (Primary_column),"
+			+ " CONSTRAINT FK_FK_column_1 FOREIGN KEY (FK_column_1) REFERENCES table_for_index(id),"
+			+ " CONSTRAINT FK_FK_column_2 FOREIGN KEY (FK_column_2) REFERENCES table_for_index(id) ON DELETE CASCADE ON UPDATE NO ACTION,"
+			+ " CONSTRAINT FK_FK_column_3 FOREIGN KEY (FK_column_3) REFERENCES table_for_index(id) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
+			+ " CONSTRAINT FK_FK_column_4 FOREIGN KEY (FK_column_4) REFERENCES table_for_index(id) ON DELETE SET NULL"
+		+ ")";
 	}
 
 	@Override
 	protected String getCreateTableWithPrimary() {
-		return 
-			"CREATE TABLE SomeTable ("
-				+ "Column1 SERIAL NOT NULL,"
-				+ " Column2 INT DEFAULT 42 UNIQUE NULL,"
-				+ " PRIMARY KEY (Column1),"
-				+ " PRIMARY KEY (Column7, Column8),"
-				+ " CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
-				+ " CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn) ON DELETE CASCADE ON UPDATE NO ACTION,"
-				+ " CONSTRAINT FK_Column5 FOREIGN KEY (Column5) REFERENCES DifferentTable2(DifferentColumn2) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
-				+ " CONSTRAINT FK_Column6 FOREIGN KEY (Column6) REFERENCES DifferentTable3(DifferentColumn3) ON DELETE SET NULL"
-			+ ")";
+		return "CREATE TABLE create_table ("
+			+ "Primary_column_1 INT,"
+			+ " Primary_column_2 INT,"
+			+ " Primary_column_3 INT,"
+			+ " PRIMARY KEY (Primary_column_1, Primary_column_2, Primary_column_3),"
+			+ " CONSTRAINT FK_Primary_column_3 FOREIGN KEY (Primary_column_3) REFERENCES table_for_index(id)"
+		+ ")";
 	}
 
 	@Override
 	protected String getAlterTable() {
 		return "ALTER TABLE table_to_alter"
-			+ " ADD Column1 INT NOT NULL,"
-			+ " ADD Column2 INT DEFAULT 42 UNIQUE NULL,"
-			+ " ADD CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
-			+ " ADD CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn)"
-				+ " ON DELETE CASCADE ON UPDATE NO ACTION,"
-			+ " DROP CONSTRAINT FK_Column8,"
-			+ " DROP COLUMN Column7,"
-			+ " ALTER COLUMN Column9 TYPE FLOAT,"
-			+ " RENAME COLUMN Column10 TO Column11";
+			+ " ADD Add_column_1 INT NOT NULL,"
+			+ " ADD Add_column_2 INT DEFAULT 42 UNIQUE NULL,"
+			+ " ADD CONSTRAINT FK_Add_column_1 FOREIGN KEY (Add_column_1) REFERENCES table_for_index(id),"
+			+ " ADD CONSTRAINT FK_Add_column_2 FOREIGN KEY (Add_column_2) REFERENCES table_for_index(id) ON DELETE CASCADE ON UPDATE NO ACTION,"
+			+ " DROP CONSTRAINT FK_to_delete, DROP COLUMN id,"
+			+ " ALTER COLUMN Column_to_modify_type TYPE FLOAT,"
+			+ " RENAME COLUMN Column_to_rename TO Renamed_column";
 	}
 
 	@Override
@@ -62,17 +66,17 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getCreateView_fromString(boolean create) {
-		return "CREATE VIEW SomeView AS SELECT A FROM SomeTable";
+		return "CREATE VIEW some_view AS SELECT 1 as A";
 	}
 
 	@Override
 	protected String getCreateView_fromSelect(boolean create) {
-		return "CREATE VIEW SomeView AS SELECT A FROM (SELECT 1 AS A) AS a";
+		return "CREATE VIEW some_view AS SELECT A FROM (SELECT 1 AS A) AS a";
 	}
 
 	@Override
 	protected String getCreateView_fromMultiSelect(boolean create) {
-		return "CREATE VIEW SomeView AS"
+		return "CREATE VIEW some_view AS"
 			+ " SELECT A"
 			+ " FROM ("
 				+ "SELECT 1 AS A"
@@ -83,27 +87,25 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getCreateView(boolean create) {
-		return "CREATE VIEW SomeView AS"
-			+ " SELECT A, COUNT(B) as B"
-			+ " FROM SomeTable"
-			+ " JOIN AnotherTable ON 1 = 1"
-			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect ON 1 = 1"
-			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)"
-			+ " GROUP BY Column, NextColumn"
+		return "CREATE VIEW some_view AS"
+			+ " SELECT t1.id, t1.name, MAX(t1.id) as max_id"
+			+ " FROM table_1 AS t1"
+			
+			+ " JOIN table_2 ON t1.id = table_2.id"
+			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
+			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
+			
+			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
+			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
+			+ " WHERE (t1.id = 1) OR (t.id != 1) AND (t1.id = t2.id) OR (t1.id = t5.id)"
+			+ " GROUP BY t1.id, t1.name"
 			+ (
 				create
-					? " HAVING 'AAAA' = 'BBBBB', SUM('XXXX') = 5"
-					: " HAVING :a = :b, SUM(:x) = 5"
+					? " HAVING 'AAAA' != 'BBBB', MAX(t1.id) < 10"
+					: " HAVING :a != :b, MAX(t1.id) < :max_id"
 			)
-			+ " ORDER BY Column1, AVG(Column2)"
+			+ " ORDER BY t1.id, MAX(t1.id)"
 			+ " LIMIT 10 OFFSET 15";
 	}
 
@@ -136,26 +138,25 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	@Override
 	protected String getAlterView(boolean create) {
 		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS"
-			+ " SELECT A, COUNT(B) as B"
-			+ " FROM SomeTable"
-			+ " JOIN AnotherTable ON 1 = 1"
-			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect ON 1 = 1"
-			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)"
-			+ " GROUP BY Column, NextColumn"
+			+ " SELECT t1.id, t1.name, MAX(t1.id) as max_id"
+			+ " FROM table_1 AS t1"
+			
+			+ " JOIN table_2 ON t1.id = table_2.id"
+			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
+			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
+			
+			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
+			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
+			
+			+ " WHERE (t1.id = 1) OR (t.id != 1) AND (t1.id = t2.id) OR (t1.id = t5.id)"
+			+ " GROUP BY t1.id, t1.name"
 			+ (
 				create
-					? " HAVING 'AAAA' = 'BBBBB', SUM('XXXX') = 5"
-					: " HAVING :a = :b, SUM(:x) = 5"
+					? " HAVING 'AAAA' != 'BBBB', MAX(t1.id) < 10"
+					: " HAVING :a != :b, MAX(t1.id) < :max_id"
 			)
-			+ " ORDER BY Column1, AVG(Column2)"
+			+ " ORDER BY t1.id, MAX(t1.id)"
 			+ " LIMIT 10 OFFSET 15";
 	}
 
@@ -176,90 +177,75 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getQueryInsert() {
-		return "INSERT INTO SomeTable (Column1, Column2) VALUES ('123', 123)";
+		return "INSERT INTO table_1 (id, name, typ) VALUES (123, 'Item 123', 'X')";
 	}
 
 	@Override
 	protected String getQueryInsertFromSelect(boolean create) {
-		return "WITH cte AS ("
-				+ "SELECT 'A' as A"
-			+ ")"
-			+ "INSERT INTO SomeTable (Col1, Col2)"
-			+ " SELECT 'B', 123";
+		return "WITH cte AS (SELECT id, name FROM table_2 WHERE (id = 2))"
+			+ "INSERT INTO table_1 (id, name, type)"
+			+ " SELECT id, name, " + (create ? "'X'" : ":type") + " FROM cte";
 	}
 
 	@Override
 	protected String getQueryUpdateBasic(boolean create) {
-		return "UPDATE SomeTable"
-			+ " SET Column1 = " + (create ? "123" : ":value") + ", Column2 = AVG(Column3)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+		String id = create ? "1" : ":id";
+		return "UPDATE table_1"
+			+ " SET name = " + (create ? "123" : ":value") + ", typ = UPPER('x')"
+			+ " WHERE (id = " + id + ") OR (id = " + id + ") AND (id = " + id + ") OR (id = " + id + ")";
 	}
 
 	@Override
 	protected String getQueryUpdateJoins(boolean create) {
-		return "UPDATE SomeTable AS a"
-			+ " SET Column1 = " + (create ? "123" : ":value") + ", Column2 = AVG(Column3)"
-			+ " FROM AnotherTable"
-			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect ON 1 = 1"
-			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+		return "UPDATE table_1 AS t1"
+			+ " SET name = " + (create ? "123" : ":value") + ", typ = UPPER('x')"
+			+ " FROM table_2"
+			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
+			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
+			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
+			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
+			+ " WHERE (st7.id = 1)";
 	}
 
 	@Override
 	protected String getQueryUpdateWith(boolean create) {
-		return "WITH withName AS ("
-				+ "SELECT 1=1"
-			+ ")"
-			+ "UPDATE SomeTable"
-			+ " SET Column1 = " + (create ? "123" : ":value")
-			+ ", Column2 = AVG(Column3)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+		return "WITH cte AS (SELECT 1 as id)"
+			+ "UPDATE table_1"
+			+ " SET name = " + (create ? "123" : ":value") + ", typ = UPPER('x')"
+			+ " FROM cte";
 	}
 
 	@Override
 	protected String getQueryDeleteBasic(boolean create) {
-		return "DELETE FROM SomeTable"
-			+ " WHERE (1= "
-			+ (create ? "123" : ":id")
-			+ ") OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+		String id = create ? "1" : ":id";
+		return "DELETE FROM table_1"
+			+ " WHERE (id = " + id + ") OR (id = " + id + ") AND (id = " + id + ") OR (id = " + id + ")";
 	}
 
 	@Override
 	protected String getQueryDeleteJoins(boolean create) {
-		return "DELETE FROM SomeTable"
-			+ " USING AnotherTable, AnotherTable2 AS at2, ("
-				+ "SELECT A as B"
-			+ ") AS subSelect, AnotherTable3, AnotherTable4 AS at4, ("
-				+ "SELECT A as C"
-			+ ") AS subSelect2"
-			+ " WHERE 1 = 1 AND 2 = 2 AND 3 = 3 AND MAX(1 = 1) AND MAX(2 = 2) AND MAX(3 = 3)"
-			+ " AND (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+		return "DELETE FROM table_1 AS t1"
+			+ " USING table_2, table_3 AS t3, (SELECT * FROM table_4) AS st4, table_5, table_6 AS t6, (SELECT * FROM table_7) AS st7"
+			+ " WHERE (t1.id = table_2.id) AND (t1.id = t3.id) AND (t3.id = st4.id)"
+			+ " AND (t5.id = table_5.id) AND (t1.id = t6.id) AND (t1.id = st7.id)"
+			+ " AND (st7.id = 1)";
 	}
 
 	@Override
 	protected String getQueryDeleteWith(boolean create) {
-		return "WITH withName AS ("
-				+ "SELECT 1=1"
-			+ ")"
-			+ "DELETE FROM SomeTable"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)";
+		return "WITH cte AS (SELECT 1 as id)"
+			+ "DELETE FROM table_1 AS t1 USING cte WHERE (cte.id = t1.id)";
 	}
 
 	@Override
 	protected String getQuerySelect_fromString(boolean create) {
-		return "SELECT A FROM SomeTable";
+		return "SELECT id, name, typ FROM table_1";
 	}
 
 	@Override
 	protected String getQuerySelect_fromStringAlias(boolean create) {
-		return "SELECT A FROM SomeTable AS a";
+		return "SELECT id, name, typ FROM table_1 AS a";
 	}
 
 	@Override
@@ -269,20 +255,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getQuerySelect_with(boolean create) {
-		return "WITH b AS ("
-				+ "SELECT 2=2"
-			+ ")"
-			+ "SELECT A FROM SomeTable";
+		return "WITH cte AS (SELECT 42 as a)SELECT a FROM cte";
 	}
 	
 	@Override
 	protected String getQuerySelect_withRecursive(boolean create) {
-		return "WITH recursive b AS ("
-			+ "SELECT 1 AS A"
-			+ " UNION"
-			+ " SELECT 2 AS A FROM b"
-		+ ")"
-		+ "SELECT A FROM SomeTable";
+		return "WITH recursive cte AS (SELECT 1 AS A UNION SELECT 2 AS A FROM cte)SELECT A FROM cte";
 	}
 
 	@Override
@@ -292,26 +270,24 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getQuerySelect(boolean create) {
-		return "SELECT A, COUNT(B) as B"
-			+ " FROM SomeTable"
-			+ " JOIN AnotherTable ON 1 = 1"
-			+ " JOIN AnotherTable2 AS at2 ON 1 = 1"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect ON 1 = 1"
-			+ " JOIN AnotherTable3 ON MAX(1 = 1)"
-			+ " JOIN AnotherTable4 AS at4 ON MAX(1 = 1)"
-			+ " JOIN ("
-				+ "SELECT A as C"
-			+ ") AS subSelect2 ON MAX(1 = 1)"
-			+ " WHERE (1=2) OR (2=3) AND (LOWER(x) = y) AND (UPPER(z) = u)"
-			+ " GROUP BY Column, NextColumn"
+		return "SELECT t1.id, t1.name, MAX(t1.id) as max_id"
+			+ " FROM table_1 AS t1"
+			
+			+ " JOIN table_2 ON t1.id = table_2.id"
+			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
+			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
+			
+			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
+			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
+			+ " WHERE (t1.id = 1) OR (t.id != 1) AND (t1.id = t2.id) OR (t1.id = t5.id)"
+			+ " GROUP BY t1.id, t1.name"
 			+ (
 				create
-					? " HAVING 'AAAA' = 'BBBBB', SUM('XXXX') = 5"
-					: " HAVING :a = :b, SUM(:x) = 5"
+					? " HAVING 'AAAA' != 'BBBB', MAX(t1.id) < 10"
+					: " HAVING :a != :b, MAX(t1.id) < :max_id"
 			)
-			+ " ORDER BY Column1, AVG(Column2)"
+			+ " ORDER BY t1.id, MAX(t1.id)"
 			+ " LIMIT 10 OFFSET 15";
 	}
 

@@ -21,6 +21,7 @@ public class InsertBuilderImpl implements InsertBuilder {
 	private final Connection connection;
 	private final DbInstance instance;
 	private final String table;
+	private final String alias;
 	private final List<Tuple2<String, String>> values;
 	private SubSelect select;
 	private List<String> columns;
@@ -28,22 +29,27 @@ public class InsertBuilderImpl implements InsertBuilder {
 	private final List<Tuple2<String, SubSelect>> withs;
 	
 
-	public InsertBuilderImpl(Connection connection, DbInstance instance, String table) {
-		this(connection, instance, table, new LinkedList<>());
+	public InsertBuilderImpl(Connection connection, DbInstance instance, String table, String alias) {
+		this(connection, instance, table, alias, new LinkedList<>());
 	}
 	
 	public InsertBuilderImpl(
-			Connection connection, DbInstance instance, String table,
+			Connection connection, DbInstance instance, String table, String alias,
 			List<Tuple2<String, SubSelect>> withs) {
 		this.connection = connection;
 		this.instance = instance;
 		this.table = table;
+		this.alias = alias;
 		this.values = new LinkedList<>();
 		this.withs = withs;
 	}
 	
 	public List<Tuple2<String, SubSelect>> getWiths() {
 		return withs;
+	}
+	
+	public String getAlias() {
+		return alias;
 	}
 	
 	public String getTable() {

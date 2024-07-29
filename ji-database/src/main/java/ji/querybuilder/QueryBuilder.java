@@ -90,15 +90,25 @@ public class QueryBuilder implements QueryBuilderFactory {
 	public MultipleSelectBuilder multiSelect(SelectBuilder builder) {
 		return new MultipleSelectBuilderImpl(connection, instance, builder);
 	}
-
+	
 	@Override
 	public DeleteBuilder delete(String table) {
-		return new DeleteBuilderImpl(connection, instance, table);
+		return delete(table, null);
+	}
+
+	@Override
+	public DeleteBuilder delete(String table, String alias) {
+		return new DeleteBuilderImpl(connection, instance, table, alias);
 	}
 
 	@Override
 	public InsertBuilder insert(String table) {
-		return new InsertBuilderImpl(connection, instance, table);
+		return insert(table, null);
+	}
+	
+	@Override
+	public InsertBuilder insert(String table, String alias) {
+		return new InsertBuilderImpl(connection, instance, table, alias);
 	}
 
 	@Override

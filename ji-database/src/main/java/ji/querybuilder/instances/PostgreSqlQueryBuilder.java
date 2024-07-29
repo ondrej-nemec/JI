@@ -133,7 +133,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	public String createSql(InsertBuilderImpl insert, boolean create) {
 		StringBuilder sql = new StringBuilder();
 		createWith(insert.getWiths(), sql, create);
-		sql.append("INSERT INTO " + insert.getTable() + " ");
+		sql.append("INSERT INTO " + getWithAlias(insert.getTable(), insert.getAlias()) + " ");
 		if (insert.getValues().isEmpty()) {
 			// insert from select
 			sql.append("(");
@@ -201,7 +201,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	public String createSql(DeleteBuilderImpl delete, boolean create) {
 		StringBuilder sql = new StringBuilder();
 		createWith(delete.getWiths(), sql, create);
-		sql.append("DELETE FROM " + delete.getTable());
+		sql.append("DELETE FROM " + getWithAlias(delete.getTable(), delete.getAlias()));
 		
 		StringBuilder joins = new StringBuilder();
 		StringBuilder wheres = new StringBuilder();
@@ -220,7 +220,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 				),
 				join.getAlias()
 			));
-			wheres.append(" " + join.getOn());
+			wheres.append(" (" + join.getOn() + ")");
 		});
 		delete.getWheres().forEach((where)->{
 			if (wheres.isEmpty()) {

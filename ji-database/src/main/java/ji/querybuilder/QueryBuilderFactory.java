@@ -42,7 +42,11 @@ public interface QueryBuilderFactory {
 
 	DeleteBuilder delete(String table);
 
+	DeleteBuilder delete(String table, String alias);
+
 	InsertBuilder insert(String table);
+
+	InsertBuilder insert(String table, String alias);
 
 	UpdateBuilder update(String table);
 

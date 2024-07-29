@@ -37,6 +37,7 @@ import junitparams.Parameters;
 public abstract class AbstractInstanceTest {
 	
 	private final static Terminal TERMINAL = new Terminal(mock(Logger.class));
+	private static boolean USE_REAL_DB = true;
 	
 	private final DbInstance instance;
 	
@@ -46,12 +47,15 @@ public abstract class AbstractInstanceTest {
 	
 	@BeforeClass
 	public static void beforeClass() {
-		TERMINAL.runCommand(out->System.out.println(out), err->System.err.println(err), "docker-compose up -d");
+		int i = TERMINAL.runCommand(out->System.out.println(out), err->System.err.println(err), "docker-compose up -d");
+		USE_REAL_DB = i == 0;
 	}
 	
 	@AfterClass
 	public static void afterClass() {
-		TERMINAL.runCommand(out->System.out.println(out), err->System.err.println(err), "docker-compose stop");
+		if (USE_REAL_DB) {
+			TERMINAL.runCommand(out->System.out.println(out), err->System.err.println(err), "docker-compose stop");
+		}
 	}
 	
 	// TODO improve tests - more for real db
@@ -466,34 +470,32 @@ public abstract class AbstractInstanceTest {
 		return new Object[] {
 			new Object[] {
 				f(
-					b->b.update("SomeTable")
-					.set("Column1 = :value").addParameter(":value", 123)
-					.set(f->"Column2 = " + f.avg("Column3"))
-					.where("1=2")
-					.where("2=3", Where.OR)
-					.where(f->f.lower("x") + " = y")
-					.where(f->f.upper("z") + " = u", Where.AND)
+					b->b.update("table_1")
+					.set("name = :value").addParameter(":value", 123)
+					.set(f->"typ = " + f.upper("'x'"))
+					.where("id = :id")
+					.where("id = :id", Where.OR)
+					.where(f->"id = :id")
+					.where(f->"id = :id", Where.OR)
+					.addParameter(":id", 1)
 				),
 				getQueryUpdateBasic(false),
 				getQueryUpdateBasic(true)
 			},
 			new Object[] {
 				f(
-					b->b.update("SomeTable", "a")
-					.set("Column1 = :value").addParameter(":value", 123)
-					.set(f->"Column2 = " + f.avg("Column3"))
+					b->b.update("table_1", "t1")
+					.set("name = :value").addParameter(":value", 123)
+					.set(f->"typ = " + f.upper("'x'"))
+
+					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
+					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
+					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
+					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
+					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
+					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
 					
-					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
-					.join("AnotherTable2", "at2", Join.INNER_JOIN, "1 = 1")
-					.join(b.select("A as C"), "subSelect", Join.INNER_JOIN, "1 = 1")
-					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("1 = 1"))
-					
-					.where("1=2")
-					.where("2=3", Where.OR)
-					.where(f->f.lower("x") + " = y")
-					.where(f->f.upper("z") + " = u", Where.AND)
+					.where("st7.id = 1")
 				),
 				getQueryUpdateJoins(false),
 				getQueryUpdateJoins(true)
@@ -501,14 +503,11 @@ public abstract class AbstractInstanceTest {
 			new Object[] {
 				f(
 					b->b
-					.with("withName", b.select("1=1"))
-					.update("SomeTable")
-					.set("Column1 = :value").addParameter(":value", 123)
-					.set(f->"Column2 = " + f.avg("Column3"))
-					.where("1=2")
-					.where("2=3", Where.OR)
-					.where(f->f.lower("x") + " = y")
-					.where(f->f.upper("z") + " = u", Where.AND)
+					.with("cte", b.select("1 as id"))
+					.update("table_1")
+					.set("name = :value").addParameter(":value", 123)
+					.set(f->"typ = " + f.upper("'x'"))
+					.join("cte", Join.INNER_JOIN, "cte.id = t1.id")
 				),
 				getQueryUpdateWith(false),
 				getQueryUpdateWith(true)
@@ -532,29 +531,27 @@ public abstract class AbstractInstanceTest {
 		return new Object[] {
 			new Object[] {
 				f(
-					b->b.delete("SomeTable")
-					.where("1= :id").addParameter(":id", 123)
-					.where("2=3", Where.OR)
-					.where(f->f.lower("x") + " = y")
-					.where(f->f.upper("z") + " = u", Where.AND)
+					b->b.delete("table_1")
+					.where("id = :id")
+					.where("id = :id", Where.OR)
+					.where(f->"id = :id")
+					.where(f->"id = :id", Where.OR)
+					.addParameter(":id", 1)
 				),
 				getQueryDeleteBasic(false),
 				getQueryDeleteBasic(true)
 			},
 			new Object[] {
 				f(
-					b->b.delete("SomeTable")
-					.join("AnotherTable", Join.INNER_JOIN, "1 = 1")
-					.join("AnotherTable2", "at2", Join.INNER_JOIN, "2 = 2")
-					.join(b.select("A as B"), "subSelect", Join.INNER_JOIN, "3 = 3")
-					.join("AnotherTable3", Join.INNER_JOIN, f->f.max("1 = 1"))
-					.join("AnotherTable4", "at4", Join.INNER_JOIN, f->f.max("2 = 2"))
-					.join(b.select("A as C"), "subSelect2", Join.INNER_JOIN, f->f.max("3 = 3"))
+					b->b.delete("table_1", "t1")
+					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
+					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
+					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
+					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
+					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
+					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
 					
-					.where("1=2")
-					.where("2=3", Where.OR)
-					.where(f->f.lower("x") + " = y")
-					.where(f->f.upper("z") + " = u", Where.AND)
+					.where("st7.id = 1")
 				),
 				getQueryDeleteJoins(false),
 				getQueryDeleteJoins(true)
@@ -562,12 +559,9 @@ public abstract class AbstractInstanceTest {
 			new Object[] {
 				f(
 					b->b
-					.with("withName", b.select("1=1"))
-					.delete("SomeTable")
-					.where("1=2")
-					.where("2=3", Where.OR)
-					.where(f->f.lower("x") + " = y")
-					.where(f->f.upper("z") + " = u", Where.AND)
+					.with("cte", b.select("1 as id"))
+					.delete("table_1", "t1")
+					.join("cte", Join.INNER_JOIN, "cte.id = t1.id")
 				),
 				getQueryDeleteWith(false),
 				getQueryDeleteWith(true)
@@ -591,16 +585,16 @@ public abstract class AbstractInstanceTest {
 		return new Object[] {
 			new Object[] {
 				f(b->b
-					.select("A")
-					.from("SomeTable")
+					.select("id, name, typ")
+					.from("table_1")
 				),
 				getQuerySelect_fromString(false),
 				getQuerySelect_fromString(true)
 			},
 			new Object[] {
 				f(b->b
-					.select("A")
-					.from("SomeTable", "a")
+					.select("id, name, typ")
+					.from("table_1", "a")
 				),
 				getQuerySelect_fromStringAlias(false),
 				getQuerySelect_fromStringAlias(true)
@@ -630,9 +624,9 @@ public abstract class AbstractInstanceTest {
 			},
 			new Object[] {
 				f(b->b
-					.with("b", b.select("2=2"))
-					.select("A")
-					.from("SomeTable")
+					.with("cte", b.select("42 as a"))
+					.select("a")
+					.from("cte")
 				),
 				getQuerySelect_with(false),
 				getQuerySelect_with(true)
@@ -641,12 +635,12 @@ public abstract class AbstractInstanceTest {
 				// this is recursive
 				f(b->b
 					.with(
-						"b",
+						"cte",
 						b.multiSelect(b.select("1 AS A"))
-						.union(b.select("2 AS A").from("b"))
+						.union(b.select("2 AS A").from("cte"))
 					)
 					.select("A")
-					.from("SomeTable")
+					.from("cte")
 				),
 				getQuerySelect_withRecursive(false),
 				getQuerySelect_withRecursive(true)
@@ -749,13 +743,15 @@ public abstract class AbstractInstanceTest {
 			String expectedGet, String expectedCreate,
 			ThrowingConsumer<B, Exception> execute
 		) throws Exception {
-		try (Connection connection = getConnection()) {
+		try (Connection connection = (USE_REAL_DB ? getConnection() : mock(Connection.class))) {
 			QueryBuilder queryBuilder = new QueryBuilder(instance, connection);
 			B actual = create.apply(queryBuilder);
 			assertEquals(expectedGet, actual.getSql());
 			assertEquals(expectedCreate, actual.createSql());
 			
-			execute.accept(actual);
+			if (USE_REAL_DB) {
+				execute.accept(actual);
+			}
 		}
 	}
 	

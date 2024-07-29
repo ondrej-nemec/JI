@@ -42,11 +42,19 @@ public class WithBuilder {
 	}
 	
 	public DeleteBuilder delete(String table) {
-		return new DeleteBuilderImpl(connection, instance, table, withs);
+		return delete(table, null);
+	}
+	
+	public DeleteBuilder delete(String table, String alias) {
+		return new DeleteBuilderImpl(connection, instance, table, alias, withs);
 	}
 
 	public InsertBuilder insert(String table) {
-		return new InsertBuilderImpl(connection, instance, table, withs);
+		return insert(table, null);
+	}
+
+	public InsertBuilder insert(String table, String alias) {
+		return new InsertBuilderImpl(connection, instance, table, alias, withs);
 	}
 
 	public UpdateBuilder update(String table) {

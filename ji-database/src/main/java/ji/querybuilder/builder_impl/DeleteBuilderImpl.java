@@ -26,22 +26,24 @@ public class DeleteBuilderImpl implements DeleteBuilder, SingleExecute, Parametr
 	private final Connection connection;
 	private final DbInstance instance;
 	private final String table;
+	private final String alias;
 	private final List<Tuple2<String, Where>> wheres;
 	private final List<Joining> joins;
 	private final Map<String, String> parameters;
 	
 	private final List<Tuple2<String, SubSelect>> withs;
 
-	public DeleteBuilderImpl(Connection connection, DbInstance instance, String table) {
-		this(connection, instance, table, new LinkedList<>());
+	public DeleteBuilderImpl(Connection connection, DbInstance instance, String table, String alias) {
+		this(connection, instance, table, alias, new LinkedList<>());
 	}
 	
 	public DeleteBuilderImpl(
-			Connection connection, DbInstance instance, String table,
+			Connection connection, DbInstance instance, String table, String alias,
 			List<Tuple2<String, SubSelect>> withs) {
 		this.connection = connection;
 		this.instance = instance;
 		this.table = table;
+		this.alias = alias;
 		this.parameters = new HashMap<>();
 		this.wheres = new LinkedList<>();
 		this.joins = new LinkedList<>();
@@ -54,6 +56,10 @@ public class DeleteBuilderImpl implements DeleteBuilder, SingleExecute, Parametr
 	
 	public String getTable() {
 		return table;
+	}
+	
+	public String getAlias() {
+		return alias;
 	}
 	
 	public List<Tuple2<String, Where>> getWheres() {
