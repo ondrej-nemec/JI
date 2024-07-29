@@ -27,8 +27,23 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	}
 
 	@Override
+	protected String getCreateTableWithPrimary() {
+		return 
+			"CREATE TABLE SomeTable ("
+				+ "Column1 SERIAL NOT NULL,"
+				+ " Column2 INT DEFAULT 42 UNIQUE NULL,"
+				+ " PRIMARY KEY (Column1),"
+				+ " PRIMARY KEY (Column7, Column8),"
+				+ " CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
+				+ " CONSTRAINT FK_Column4 FOREIGN KEY (Column4) REFERENCES DifferentTable(DifferentColumn) ON DELETE CASCADE ON UPDATE NO ACTION,"
+				+ " CONSTRAINT FK_Column5 FOREIGN KEY (Column5) REFERENCES DifferentTable2(DifferentColumn2) ON DELETE RESTRICT ON UPDATE SET DEFAULT,"
+				+ " CONSTRAINT FK_Column6 FOREIGN KEY (Column6) REFERENCES DifferentTable3(DifferentColumn3) ON DELETE SET NULL"
+			+ ")";
+	}
+
+	@Override
 	protected String getAlterTable() {
-		return "ALTER TABLE SomeTable"
+		return "ALTER TABLE table_to_alter"
 			+ " ADD Column1 INT NOT NULL,"
 			+ " ADD Column2 INT DEFAULT 42 UNIQUE NULL,"
 			+ " ADD CONSTRAINT FK_Column3 FOREIGN KEY (Column3) REFERENCES AnotherTable(AnotherColumn),"
@@ -42,17 +57,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getDeleteTable() {
-		return "DROP TABLE SomeTable";
+		return "DROP TABLE table_to_delete";
 	}
 
 	@Override
 	protected String getCreateView_fromString(boolean create) {
 		return "CREATE VIEW SomeView AS SELECT A FROM SomeTable";
-	}
-
-	@Override
-	protected String getCreateView_fromStringAlias(boolean create) {
-		return "CREATE VIEW SomeView AS SELECT A FROM SomeTable AS a";
 	}
 
 	@Override
@@ -99,22 +109,22 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getAlterView_fromString(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM SomeTable";
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT A FROM SomeTable";
 	}
 
 	@Override
 	protected String getAlterView_fromStringAlias(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM SomeTable AS a";
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT A FROM SomeTable AS a";
 	}
 
 	@Override
 	protected String getAlterView_fromSelect(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS SELECT A FROM (SELECT 1 AS A) AS a";
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT A FROM (SELECT 1 AS A) AS a";
 	}
 
 	@Override
 	protected String getAlterView_fromMultiSelect(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS"
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS"
 			+ " SELECT A"
 			+ " FROM ("
 				+ "SELECT 1 AS A"
@@ -125,7 +135,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getAlterView(boolean create) {
-		return "DROP VIEW SomeView; CREATE VIEW SomeView AS"
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS"
 			+ " SELECT A, COUNT(B) as B"
 			+ " FROM SomeTable"
 			+ " JOIN AnotherTable ON 1 = 1"
@@ -151,17 +161,17 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getDeleteView() {
-		return "DROP VIEW SomeView";
+		return "DROP VIEW view_to_delete";
 	}
 
 	@Override
 	protected String getCreateIndex() {
-		return "CREATE INDEX IndexName ON SomeTable(Column1, Column2)";
+		return "CREATE INDEX index_name ON table_for_index(id, name)";
 	}
 
 	@Override
 	protected String getDeleteIndex() {
-		return "DROP INDEX IndexName";
+		return "DROP INDEX index_to_delete";
 	}
 
 	@Override
@@ -170,7 +180,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	}
 
 	@Override
-	protected String getQueryInsertFromSelect() {
+	protected String getQueryInsertFromSelect(boolean create) {
 		return "WITH cte AS ("
 				+ "SELECT 'A' as A"
 			+ ")"
@@ -321,69 +331,69 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getBatch(boolean create) {
-		return "SELECT 1=1; SELECT a=" + (create ? "123" : ":id") + ";";
+		return "SELECT 1 as a; SELECT " + (create ? "123" : ":id") + " as b;";
 	}
 
 	/***********************/
 	
 	@Override
 	protected String getFunctions_concat() {
-		return "CONCAT(a, b, c)";
+		return "SELECT CONCAT(', name, ') FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_groupConcat() {
-		return "STRING_AGG(a, ';')";
+		return "SELECT STRING_AGG(name, ',') FROM table_for_functions GROUP BY name";
 	}
 
 	@Override
 	protected String getFunctions_cast() {
-		return "CAST(a AS FLOAT)";
+		return "SELECT CAST(id AS FLOAT) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_max() {
-		return "MAX(a)";
+		return "SELECT MAX(id) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_min() {
-		return "MIN(a)";
+		return "SELECT MIN(id) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_avg() {
-		return "AVG(a)";
+		return "SELECT AVG(id) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_sum() {
-		return "SUM(a)";
+		return "SELECT SUM(id) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_count() {
-		return "COUNT(a)";
+		return "SELECT COUNT(id) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_lower() {
-		return "LOWER(a)";
+		return "SELECT LOWER(name) FROM table_for_functions";
 	}
 
 	@Override
 	protected String getFunctions_upper() {
-		return "UPPER(a)";
+		return "SELECT UPPER(name) FROM table_for_functions";
 	}
 
 	@Override
 	protected Connection getConnection() throws SQLException {
 		Properties props = new Properties();
 		props.setProperty("user", "postgres");
-		props.setProperty("password", ""); // TODO
+		props.setProperty("password", "SomeP@ssw0rd");
 		props.setProperty("serverTimezone", "Europe/Prague");
 		props.setProperty("allowMultiQueries", "true");
-		return DriverManager.getConnection("jdbc:postgresql://localhost/query_builder", props);
+		return DriverManager.getConnection("jdbc:postgresql://localhost:5433/query_builder", props);
 	}
 	
 }

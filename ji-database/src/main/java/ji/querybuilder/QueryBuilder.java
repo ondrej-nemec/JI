@@ -157,8 +157,8 @@ public class QueryBuilder implements QueryBuilderFactory {
 	}
 
 	@Override
-	public DeleteIndexBuilder deleteIndex(String name, String table) {
-		return new DeleteIndexBuilderImpl(connection, instance, name, table);
+	public DeleteIndexBuilder deleteIndex(String name) {
+		return new DeleteIndexBuilderImpl(connection, instance, name);
 	}
 
 	@Override

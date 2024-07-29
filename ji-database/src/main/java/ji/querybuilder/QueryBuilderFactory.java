@@ -66,7 +66,7 @@ public interface QueryBuilderFactory {
 
 	CreateIndexBuilder createIndex(String name, String table, String... columns);
 
-	DeleteIndexBuilder deleteIndex(String name, String table);
+	DeleteIndexBuilder deleteIndex(String name);
 	
 	WithBuilder with(String alias, SelectBuilder builder);
 	
