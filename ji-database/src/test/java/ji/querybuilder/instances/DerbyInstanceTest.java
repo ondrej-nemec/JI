@@ -16,13 +16,11 @@ public class DerbyInstanceTest extends AbstractInstanceTest {
 		return null;
 	}
 
-
 	@Override
 	protected String getFunctions_groupConcat() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	protected String getFunctions_cast() {
@@ -30,13 +28,11 @@ public class DerbyInstanceTest extends AbstractInstanceTest {
 		return null;
 	}
 
-
 	@Override
 	protected String getFunctions_max() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	protected String getFunctions_min() {
@@ -44,20 +40,17 @@ public class DerbyInstanceTest extends AbstractInstanceTest {
 		return null;
 	}
 
-
 	@Override
 	protected String getFunctions_avg() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
 	@Override
 	protected String getFunctions_sum() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	protected String getFunctions_count() {
@@ -86,13 +79,11 @@ public class DerbyInstanceTest extends AbstractInstanceTest {
 		return null;
 	}
 
-
 	@Override
 	protected String getCreateTableWithPrimary() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	protected String getAlterTable() {
@@ -100,6 +91,11 @@ public class DerbyInstanceTest extends AbstractInstanceTest {
 		return null;
 	}
 
+	@Override
+	protected String getAlterTableRename() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	protected String getDeleteTable() {

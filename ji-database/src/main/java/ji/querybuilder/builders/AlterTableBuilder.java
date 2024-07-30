@@ -9,6 +9,9 @@ import ji.querybuilder.enums.OnAction;
 
 public interface AlterTableBuilder extends Builder {
 
+	// TODO rename table
+	// TODO set settings https://stackoverflow.com/a/4146313/8240462
+	
 	default AlterTableBuilder addColumn(String name, ColumnType type, ColumnSetting... settings) {
 		return addColumn(name, type, null, settings);
 	}

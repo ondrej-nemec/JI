@@ -180,6 +180,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 			}
 			sql.append(set);
 		});
+		LinkedList<Tuple2<String, Where>> wheres = new LinkedList<>(updateBuilder.getWheres());
 		ObjectBuilder<Boolean> firstJoin = new ObjectBuilder<>(true);
 		updateBuilder.getJoins().forEach(join->{
 			if (firstJoin.get()) {
@@ -189,11 +190,12 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 					create ? join.getBuilder().createSql() : join.getBuilder().getSql(),
 					join.getAlias()
 				));
+				wheres.addFirst(new Tuple2<>(join.getOn(), null));
 			} else {
 				createJoin(join, sql, create);
 			}
 		});
-		createWhere(updateBuilder.getWheres(), sql, create);
+		createWhere(wheres, sql, create);
 		return sql.toString();
 	}
 
@@ -305,6 +307,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 
 	@Override
 	public String createSql(AlterTableBuilderImpl alterTable) {
+		// TODO check only one rename at once https://stackoverflow.com/a/74110573/8240462
 		List<String> rows = new LinkedList<>();
 		List<String> constains = new LinkedList<>();
 		iterateList(
@@ -342,7 +345,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 	
 	/****************************/
 
-	// TODO test
 	protected String toString(ColumnType type) {
 		switch (type.getType()) {
 			case STRING:
@@ -354,7 +356,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		}
 	}
 
-	// TODO test
 	protected String toString(ColumnSetting settings) {
 		switch (settings) {
 			case AUTO_INCREMENT: return "SERIAL";
@@ -366,7 +367,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		}
 	}
 
-	// TODO test
 	protected String toString(OnAction action) {
 		switch (action) {
 			case RESTRICT: return "RESTRICT";
@@ -378,7 +378,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		}
 	}
 
-	// TODO test
 	protected String toString(Join join) {
 		switch(join) {
 			case FULL_OUTER_JOIN: throw new RuntimeException("Full Outer Join is not supported by mysql");
@@ -389,7 +388,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		}
 	}
 
-	// TODO test
 	protected String toString(SelectJoin join) {
 		switch(join) {
 			case UNION_ALL: return "UNION ALL";
@@ -417,16 +415,6 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 			StringBuilder sql, List<T> list,
 			Function<T, String> onFirst, Function<T, String> onOthers, Function<T, String> otherwise) {
 		iterateList(s->sql.append(s), list, onFirst, onOthers, otherwise);
-		/*ObjectBuilder<Boolean> first = new ObjectBuilder<>(true);
-		list.forEach(item->{
-			if (first.get()) {
-				first.set(false);
-				sql.append(onFirst.apply(item));
-			} else {
-				sql.append(onOthers.apply(item));
-			}
-			sql.append(otherwise.apply(item));
-		});*/
 	}
 	
 	private String getWithAlias(String table, String alias) {
@@ -499,7 +487,7 @@ public class PostgreSqlQueryBuilder implements DbInstance {
 		);
 		iterateList(
 			sql, builder.getHaving(),
-			i->" HAVING ", i->", ", i->i
+			i->" HAVING ", i->" AND ", i->i
 		);
 		iterateList(
 			sql, builder.getOrderBy(),

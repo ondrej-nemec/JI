@@ -34,7 +34,7 @@ import ji.querybuilder.builders.SelectBuilder;
 import ji.querybuilder.builders.UpdateBuilder;
 import ji.querybuilder.builders.WithBuilder;
 
-public class QueryBuilder implements QueryBuilderFactory {
+public class QueryBuilder implements QueryBuilderFactory, PreparedQueries {
 
 	private final DbInstance instance;
 	private final Connection connection;
@@ -103,7 +103,8 @@ public class QueryBuilder implements QueryBuilderFactory {
 
 	@Override
 	public InsertBuilder insert(String table) {
-		return insert(table, null);
+		// return insert(table, null); // cannot select between preparedQuery.insert and this.insert
+		return new InsertBuilderImpl(connection, instance, table, null);
 	}
 	
 	@Override

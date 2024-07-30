@@ -27,7 +27,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " FK_column_1 INT,"
 			+ " FK_column_2 INT,"
 			+ " FK_column_3 INT,"
-			+ " FK_column_3 INT,"
+			+ " FK_column_4 INT,"
 			+ " PRIMARY KEY (Primary_column),"
 			+ " CONSTRAINT FK_FK_column_1 FOREIGN KEY (FK_column_1) REFERENCES table_for_index(id),"
 			+ " CONSTRAINT FK_FK_column_2 FOREIGN KEY (FK_column_2) REFERENCES table_for_index(id) ON DELETE CASCADE ON UPDATE NO ACTION,"
@@ -54,8 +54,14 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " ADD Add_column_2 INT DEFAULT 42 UNIQUE NULL,"
 			+ " ADD CONSTRAINT FK_Add_column_1 FOREIGN KEY (Add_column_1) REFERENCES table_for_index(id),"
 			+ " ADD CONSTRAINT FK_Add_column_2 FOREIGN KEY (Add_column_2) REFERENCES table_for_index(id) ON DELETE CASCADE ON UPDATE NO ACTION,"
-			+ " DROP CONSTRAINT FK_to_delete, DROP COLUMN id,"
-			+ " ALTER COLUMN Column_to_modify_type TYPE FLOAT,"
+			+ " DROP CONSTRAINT FK_to_delete,"
+			+ " DROP COLUMN Column_to_delete,"
+			+ " ALTER COLUMN Column_to_modify_type TYPE FLOAT";
+	}
+
+	@Override
+	protected String getAlterTableRename() {
+		return "ALTER TABLE table_to_alter"
 			+ " RENAME COLUMN Column_to_rename TO Renamed_column";
 	}
 
@@ -95,15 +101,15 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
 			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
 			
-			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " JOIN table_5 ON t1.id = table_5.id"
 			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
 			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
-			+ " WHERE (t1.id = 1) OR (t.id != 1) AND (t1.id = t2.id) OR (t1.id = t5.id)"
+			+ " WHERE (t1.id = 1) OR (t1.id != 1) AND (t1.id = table_2.id) OR (t1.id = t6.id)"
 			+ " GROUP BY t1.id, t1.name"
 			+ (
 				create
-					? " HAVING 'AAAA' != 'BBBB', MAX(t1.id) < 10"
-					: " HAVING :a != :b, MAX(t1.id) < :max_id"
+					? " HAVING 'AAAA' != 'BBBB' AND MAX(t1.id) < 10"
+					: " HAVING :a != :b AND MAX(t1.id) < :max_id"
 			)
 			+ " ORDER BY t1.id, MAX(t1.id)"
 			+ " LIMIT 10 OFFSET 15";
@@ -111,12 +117,12 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getAlterView_fromString(boolean create) {
-		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT A FROM SomeTable";
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT id FROM table_1";
 	}
 
 	@Override
 	protected String getAlterView_fromStringAlias(boolean create) {
-		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT A FROM SomeTable AS a";
+		return "DROP VIEW view_to_alter; CREATE VIEW view_to_alter AS SELECT id FROM table_1 AS a";
 	}
 
 	@Override
@@ -145,16 +151,16 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
 			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
 			
-			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " JOIN table_5 ON t1.id = table_5.id"
 			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
 			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
 			
-			+ " WHERE (t1.id = 1) OR (t.id != 1) AND (t1.id = t2.id) OR (t1.id = t5.id)"
+			+ " WHERE (t1.id = 1) OR (t1.id != 1) AND (t1.id = table_2.id) OR (t1.id = t6.id)"
 			+ " GROUP BY t1.id, t1.name"
 			+ (
 				create
-					? " HAVING 'AAAA' != 'BBBB', MAX(t1.id) < 10"
-					: " HAVING :a != :b, MAX(t1.id) < :max_id"
+					? " HAVING 'AAAA' != 'BBBB' AND MAX(t1.id) < 10"
+					: " HAVING :a != :b AND MAX(t1.id) < :max_id"
 			)
 			+ " ORDER BY t1.id, MAX(t1.id)"
 			+ " LIMIT 10 OFFSET 15";
@@ -183,7 +189,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 	@Override
 	protected String getQueryInsertFromSelect(boolean create) {
 		return "WITH cte AS (SELECT id, name FROM table_2 WHERE (id = 2))"
-			+ "INSERT INTO table_1 (id, name, type)"
+			+ "INSERT INTO table_1 (id, name, typ)"
 			+ " SELECT id, name, " + (create ? "'X'" : ":type") + " FROM cte";
 	}
 
@@ -200,20 +206,21 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "UPDATE table_1 AS t1"
 			+ " SET name = " + (create ? "123" : ":value") + ", typ = UPPER('x')"
 			+ " FROM table_2"
-			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
+			+ " LEFT JOIN table_3 AS t3 ON table_2.id = t3.id"
 			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
-			+ " JOIN table_5 ON t5.id = table_5.id"
-			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
-			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
-			+ " WHERE (st7.id = 1)";
+			+ " JOIN table_5 ON table_2.id = table_5.id"
+			+ " LEFT JOIN table_6 AS t6 ON table_2.id = t6.id"
+			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON table_2.id = st7.id"
+			+ " WHERE (table_2.id = t1.id) AND (t1.id = 1)";
 	}
 
 	@Override
 	protected String getQueryUpdateWith(boolean create) {
 		return "WITH cte AS (SELECT 1 as id)"
-			+ "UPDATE table_1"
+			+ "UPDATE table_1 AS t1"
 			+ " SET name = " + (create ? "123" : ":value") + ", typ = UPPER('x')"
-			+ " FROM cte";
+			+ " FROM cte"
+			+ " WHERE (cte.id = t1.id)";
 	}
 
 	@Override
@@ -228,7 +235,7 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 		return "DELETE FROM table_1 AS t1"
 			+ " USING table_2, table_3 AS t3, (SELECT * FROM table_4) AS st4, table_5, table_6 AS t6, (SELECT * FROM table_7) AS st7"
 			+ " WHERE (t1.id = table_2.id) AND (t1.id = t3.id) AND (t3.id = st4.id)"
-			+ " AND (t5.id = table_5.id) AND (t1.id = t6.id) AND (t1.id = st7.id)"
+			+ " AND (t1.id = table_5.id) AND (t1.id = t6.id) AND (t1.id = st7.id)"
 			+ " AND (st7.id = 1)";
 	}
 
@@ -277,15 +284,15 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 			+ " LEFT JOIN table_3 AS t3 ON t1.id = t3.id"
 			+ " RIGHT JOIN (SELECT * FROM table_4) AS st4 ON t3.id = st4.id"
 			
-			+ " JOIN table_5 ON t5.id = table_5.id"
+			+ " JOIN table_5 ON t1.id = table_5.id"
 			+ " LEFT JOIN table_6 AS t6 ON t1.id = t6.id"
 			+ " RIGHT JOIN (SELECT * FROM table_7) AS st7 ON t1.id = st7.id"
-			+ " WHERE (t1.id = 1) OR (t.id != 1) AND (t1.id = t2.id) OR (t1.id = t5.id)"
+			+ " WHERE (t1.id = 1) OR (t1.id != 1) AND (t1.id = table_2.id) OR (t1.id = t6.id)"
 			+ " GROUP BY t1.id, t1.name"
 			+ (
 				create
-					? " HAVING 'AAAA' != 'BBBB', MAX(t1.id) < 10"
-					: " HAVING :a != :b, MAX(t1.id) < :max_id"
+					? " HAVING 'AAAA' != 'BBBB' AND MAX(t1.id) < 10"
+					: " HAVING :a != :b AND MAX(t1.id) < :max_id"
 			)
 			+ " ORDER BY t1.id, MAX(t1.id)"
 			+ " LIMIT 10 OFFSET 15";
@@ -293,21 +300,22 @@ public class PostgresSqlInstanceTest extends AbstractInstanceTest {
 
 	@Override
 	protected String getQueryMultipleSelect(boolean create) {
-		return "SELECT 1=1"
+		return "SELECT " + (create ? "321" : ":id") + " as id, name FROM table_5"
 			+ " UNION"
-			+ " SELECT 1=1"
+			+ " SELECT id, name FROM table_5"
 			+ " INTERSECT"
-			+ " SELECT 1=1"
+			+ " SELECT id, name FROM table_5"
 			+ " UNION ALL"
-			+ " SELECT 1=1"
+			+ " SELECT id, name FROM table_5"
 			+ " EXCEPT"
-			+ " SELECT 1=1"
-			+ " ORDER BY ColA, " + (create ? "321" : ":id") + ", COUNT(ColB)";
+			+ " SELECT id, name FROM table_5"
+			+ " ORDER BY name, id";
 	}
 
 	@Override
 	protected String getBatch(boolean create) {
-		return "SELECT 1 as a; SELECT " + (create ? "123" : ":id") + " as b;";
+		return "SELECT " + (create ? "123" : ":id") + ", ':x' as a;"
+				+ " SELECT " + (create ? "123" : ":id") + ", '" + (create ? "1" : ":x") + "' as b;";
 	}
 
 	/***********************/

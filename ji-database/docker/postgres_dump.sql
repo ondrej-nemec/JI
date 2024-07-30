@@ -3,7 +3,7 @@ create table table_to_delete (
 );
 
 create table table_for_index (
-	id int,
+	id int PRIMARY KEY,
 	name varchar(10)
 );
 create index index_to_delete ON table_for_index(id);
@@ -12,7 +12,8 @@ create table table_to_alter (
 	id int,
 	Column_to_modify_type int,
 	Column_to_rename int,
-	CONSTRAINT FK_to_delete FOREIGN KEY (id) REFERENCES table_for_index(id)
+	Column_to_delete int,
+	CONSTRAINT FK_to_delete FOREIGN KEY (Column_to_delete) REFERENCES table_for_index(id)
 );
 
 create view view_to_delete AS select 1 as a;

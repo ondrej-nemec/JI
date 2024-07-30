@@ -1,6 +1,7 @@
 package ji.querybuilder.instances;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 import java.sql.Connection;
@@ -19,7 +20,9 @@ import ji.common.structures.ThrowingConsumer;
 import ji.querybuilder.Builder;
 import ji.querybuilder.DbInstance;
 import ji.querybuilder.QueryBuilder;
+import ji.querybuilder.builders.AlterTableBuilder;
 import ji.querybuilder.builders.AlterViewBuilder;
+import ji.querybuilder.builders.CreateTableBuilder;
 import ji.querybuilder.builders.CreateViewBuilder;
 import ji.querybuilder.builders.DeleteBuilder;
 import ji.querybuilder.builders.InsertBuilder;
@@ -126,7 +129,7 @@ public abstract class AbstractInstanceTest {
 	
 	@Test
 	@Parameters(method="dataCreateTable")
-	public void testCreateTable(Function<QueryBuilder, CreateViewBuilder> create, String getSql) throws Exception {
+	public void testCreateTable(Function<QueryBuilder, CreateTableBuilder> create, String getSql) throws Exception {
 		test(create, getSql, b->b.execute()); // VERIFY ?
 	}
 	
@@ -149,7 +152,7 @@ public abstract class AbstractInstanceTest {
 					.addColumn("FK_column_1", ColumnType.integer())
 					.addColumn("FK_column_2", ColumnType.integer())
 					.addColumn("FK_column_3", ColumnType.integer())
-					.addColumn("FK_column_3", ColumnType.integer())
+					.addColumn("FK_column_4", ColumnType.integer())
 					
 					.addForeignKey("FK_column_1", "table_for_index", "id")
 					.addForeignKey("FK_column_2", "table_for_index", "id", OnAction.CASCADE, OnAction.NO_ACTION)
@@ -174,24 +177,58 @@ public abstract class AbstractInstanceTest {
 	protected abstract String getCreateTable();
 
 	protected abstract String getCreateTableWithPrimary();
+	
 	@Test
-	public void testAlterTable() throws Exception {
-		test(
-			b->b.alterTable("table_to_alter")
-			.addColumn("Add_column_1", ColumnType.integer(), ColumnSetting.NOT_NULL)
-			.addColumn("Add_column_2", ColumnType.integer(), 42, ColumnSetting.UNIQUE, ColumnSetting.NULL)
-			.addForeignKey("Add_column_1", "table_for_index", "id")
-			.addForeignKey("Add_column_2", "table_for_index", "id", OnAction.CASCADE, OnAction.NO_ACTION)
-			.deleteColumn("id")
-			.deleteForeingKey("FK_to_delete")
-			.modifyColumnType("Column_to_modify_type", ColumnType.floatType())
-			.renameColumn("Column_to_rename", "Renamed_column", ColumnType.integer()),
-			getAlterTable(),
-			b->b.execute() // VERIFY ?
-		);
+	@Parameters(method="dataAlterTable")
+	public void testAlterTable(Function<QueryBuilder, AlterTableBuilder> create, String getSql) throws Exception {
+		test(create, getSql, b->b.execute()); // VERIFY ?
+		
+	}
+	
+	public Object[] dataAlterTable() {
+		return new Object[] {
+			new Object[] {
+				f(
+					b->b.alterTable("table_to_alter")
+					.addColumn("Add_column_1", ColumnType.integer(), ColumnSetting.NOT_NULL)
+					.addColumn("Add_column_2", ColumnType.integer(), 42, ColumnSetting.UNIQUE, ColumnSetting.NULL)
+					.addForeignKey("Add_column_1", "table_for_index", "id")
+					.addForeignKey("Add_column_2", "table_for_index", "id", OnAction.CASCADE, OnAction.NO_ACTION)
+					.deleteColumn("Column_to_delete")
+					.deleteForeingKey("FK_to_delete")
+					.modifyColumnType("Column_to_modify_type", ColumnType.floatType())
+				),
+				getAlterTable()	
+			},
+			new Object[] {
+				// postgres allow only one rename and nothing more
+				f(
+					b->b.alterTable("table_to_alter")
+					.renameColumn("Column_to_rename", "Renamed_column", ColumnType.integer())
+				),
+				getAlterTableRename()	
+			},
+			// full query with all options - not supported by all dbs
+			/*new Object[] {
+				f(
+					b->b.alterTable("table_to_alter")
+					.addColumn("Add_column_1", ColumnType.integer(), ColumnSetting.NOT_NULL)
+					.addColumn("Add_column_2", ColumnType.integer(), 42, ColumnSetting.UNIQUE, ColumnSetting.NULL)
+					.addForeignKey("Add_column_1", "table_for_index", "id")
+					.addForeignKey("Add_column_2", "table_for_index", "id", OnAction.CASCADE, OnAction.NO_ACTION)
+					.deleteColumn("Column_to_delete")
+					.deleteForeingKey("FK_to_delete")
+					.modifyColumnType("Column_to_modify_type", ColumnType.floatType())
+					.renameColumn("Column_to_rename", "Renamed_column", ColumnType.integer())
+				),
+				getAlterTable()	
+			}*/
+		};
 	}
 	
 	protected abstract String getAlterTable();
+	
+	protected abstract String getAlterTableRename();
 
 	@Test
 	public void testDeleteTable() throws Exception {
@@ -252,7 +289,7 @@ public abstract class AbstractInstanceTest {
 			new Object[] {
 				f(b->b
 					.createView("some_view")
-					
+
 					.select("t1.id")
 					.select("t1.name")
 					.select(f->f.max("t1.id") + " as max_id")
@@ -262,14 +299,14 @@ public abstract class AbstractInstanceTest {
 					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
 					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
 					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
-					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
+					.join("table_5", Join.INNER_JOIN, f->"t1.id = table_5.id")
 					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
 					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
 					
 					.where("t1.id = 1")
-					.where("t.id != 1", Where.OR)
-					.where(f->"t1.id = t2.id")
-					.where(f->"t1.id = t5.id", Where.OR)
+					.where("t1.id != 1", Where.OR)
+					.where(f->"t1.id = table_2.id")
+					.where(f->"t1.id = t6.id", Where.OR)
 					
 					.groupBy("t1.id")
 					.groupBy("t1.name")
@@ -308,8 +345,8 @@ public abstract class AbstractInstanceTest {
 			new Object[] {
 				f(b->b
 					.alterView("view_to_alter")
-					.select("A")
-					.from("SomeTable")
+					.select("id")
+					.from("table_1")
 				),
 				getAlterView_fromString(false),
 				getAlterView_fromString(true)
@@ -317,8 +354,8 @@ public abstract class AbstractInstanceTest {
 			new Object[] {
 				f(b->b
 					.alterView("view_to_alter")
-					.select("A")
-					.from("SomeTable", "a")
+					.select("id")
+					.from("table_1", "a")
 				),
 				getAlterView_fromStringAlias(false),
 				getAlterView_fromStringAlias(true)
@@ -351,7 +388,7 @@ public abstract class AbstractInstanceTest {
 			new Object[] {
 				f(b->b
 					.alterView("view_to_alter")
-					
+
 					.select("t1.id")
 					.select("t1.name")
 					.select(f->f.max("t1.id") + " as max_id")
@@ -361,14 +398,14 @@ public abstract class AbstractInstanceTest {
 					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
 					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
 					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
-					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
+					.join("table_5", Join.INNER_JOIN, f->"t1.id = table_5.id")
 					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
 					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
 					
 					.where("t1.id = 1")
-					.where("t.id != 1", Where.OR)
-					.where(f->"t1.id = t2.id")
-					.where(f->"t1.id = t5.id", Where.OR)
+					.where("t1.id != 1", Where.OR)
+					.where(f->"t1.id = table_2.id")
+					.where(f->"t1.id = t6.id", Where.OR)
 					
 					.groupBy("t1.id")
 					.groupBy("t1.name")
@@ -444,7 +481,7 @@ public abstract class AbstractInstanceTest {
 					.with("cte", b.select("id, name").from("table_2").where("id = 2"))
 					.insert("table_1")
 					.fromSelect(
-						Arrays.asList("id", "name", "type"),
+						Arrays.asList("id", "name", "typ"),
 						b.select("id", "name", ":type")
 						.from("cte")
 						.addParameter(":type", 'X')
@@ -488,14 +525,14 @@ public abstract class AbstractInstanceTest {
 					.set("name = :value").addParameter(":value", 123)
 					.set(f->"typ = " + f.upper("'x'"))
 
-					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
-					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
+					.join("table_2", Join.INNER_JOIN, "table_2.id = t1.id")
+					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "table_2.id = t3.id")
 					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
-					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
-					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
-					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
+					.join("table_5", Join.INNER_JOIN, f->"table_2.id = table_5.id")
+					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"table_2.id = t6.id")
+					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"table_2.id = st7.id")
 					
-					.where("st7.id = 1")
+					.where("t1.id = 1")
 				),
 				getQueryUpdateJoins(false),
 				getQueryUpdateJoins(true)
@@ -504,7 +541,7 @@ public abstract class AbstractInstanceTest {
 				f(
 					b->b
 					.with("cte", b.select("1 as id"))
-					.update("table_1")
+					.update("table_1", "t1")
 					.set("name = :value").addParameter(":value", 123)
 					.set(f->"typ = " + f.upper("'x'"))
 					.join("cte", Join.INNER_JOIN, "cte.id = t1.id")
@@ -547,7 +584,7 @@ public abstract class AbstractInstanceTest {
 					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
 					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
 					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
-					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
+					.join("table_5", Join.INNER_JOIN, f->"t1.id = table_5.id")
 					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
 					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
 					
@@ -656,14 +693,14 @@ public abstract class AbstractInstanceTest {
 					.join("table_2", Join.INNER_JOIN, "t1.id = table_2.id")
 					.join("table_3", "t3", Join.LEFT_OUTER_JOIN, "t1.id = t3.id")
 					.join(b.select("*").from("table_4"), "st4", Join.RIGHT_OUTER_JOIN, "t3.id = st4.id")
-					.join("table_5", Join.INNER_JOIN, f->"t5.id = table_5.id")
+					.join("table_5", Join.INNER_JOIN, f->"t1.id = table_5.id")
 					.join("table_6", "t6", Join.LEFT_OUTER_JOIN, f->"t1.id = t6.id")
 					.join(b.select("*").from("table_7"), "st7", Join.RIGHT_OUTER_JOIN, f->"t1.id = st7.id")
 					
 					.where("t1.id = 1")
-					.where("t.id != 1", Where.OR)
-					.where(f->"t1.id = t2.id")
-					.where(f->"t1.id = t5.id", Where.OR)
+					.where("t1.id != 1", Where.OR)
+					.where(f->"t1.id = table_2.id")
+					.where(f->"t1.id = t6.id", Where.OR)
 					
 					.groupBy("t1.id")
 					.groupBy("t1.name")
@@ -702,13 +739,13 @@ public abstract class AbstractInstanceTest {
 	public void testQueryMultipleSelect() throws Exception{
 		test(f(
 			b->b
-			.multiSelect(b.select("1=1"))
-			.union(b.select("1=1"))
-			.intersect(b.select("1=1"))
-			.unionAll(b.select("1=1"))
-			.except(b.select("1=1"))
-			.orderBy("ColA, :id")
-			.orderBy(f->f.count("ColB"))
+			.multiSelect(b.select(":id as id, name").from("table_5"))
+			.union(b.select("id, name").from("table_5"))
+			.intersect(b.select("id, name").from("table_5"))
+			.unionAll(b.select("id, name").from("table_5"))
+			.except(b.select("id, name").from("table_5"))
+			.orderBy("name")
+			.orderBy(f->"id")
 			.addParameter(":id", 321)
 		), getQueryMultipleSelect(false), getQueryMultipleSelect(true), b->b.fetchAll()); // VERIFY?
 	}
@@ -722,8 +759,8 @@ public abstract class AbstractInstanceTest {
 		test(f(
 			b->b
 			.batch()
-			.addBatch(b.select("1 as a"))
-			.addBatch(b.select(":id as b"))
+			.addBatch(b.select(":id, ':x' as a"))
+			.addBatch(b.select(":id, ':x' as b").addParameter(":x", 1))
 			.addParameter(":id", 123)
 		), getBatch(false), getBatch(true), b->b.execute()); // VERIFY ?
 	}
@@ -750,7 +787,11 @@ public abstract class AbstractInstanceTest {
 			assertEquals(expectedCreate, actual.createSql());
 			
 			if (USE_REAL_DB) {
+				connection.setAutoCommit(false);
 				execute.accept(actual);
+				connection.rollback();
+			} else {
+				fail("Read db was not tested");
 			}
 		}
 	}

@@ -100,6 +100,12 @@ public class MySqlInstanceTest extends AbstractInstanceTest {
 		return null;
 	}
 
+	@Override
+	protected String getAlterTableRename() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	@Override
 	protected String getDeleteTable() {
